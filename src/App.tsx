@@ -1,8 +1,6 @@
 import {
   ArrowLeft,
   ExternalLink,
-  Film,
-  Fullscreen,
   LayoutPanelLeft,
   Play,
   Presentation,
@@ -124,17 +122,23 @@ function Home({
       <section className="hero">
         <div className="hero-copy">
           <p className="eyebrow">Video-linked rich presentation archive</p>
-          <h1>動画と資料をひとつのURLで届ける</h1>
+          <h1>動画の資料をあとから読む</h1>
           <p>
-            撮影用の右1/3領域を確保したWebプレゼンと、視聴者が後から読める全幅ビューを同じ資料から提供します。
+            YouTubeで扱ったテーマの資料を、ブラウザでそのまま閲覧できる形で公開します。
           </p>
         </div>
-        <div className="hero-panel" aria-label="Layout preview">
-          <div className="preview-slide">
-            <span>1280 x 1080 slide</span>
-          </div>
-          <div className="preview-sidecar">
-            <span>Future studio panel</span>
+        <div className="hero-panel audience-preview" aria-label="Presentation preview">
+          <div className="preview-window">
+            <div className="preview-window-bar">
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className="preview-window-body">
+              <span className="preview-label">web deck</span>
+              <strong>動画と連動した<br />プレゼン資料</strong>
+              <p>スライド単位のURLで共有できます。</p>
+            </div>
           </div>
         </div>
       </section>
@@ -224,13 +228,5 @@ function EmptyState({ title, body }: { title: string; body: string }) {
       <h1>{title}</h1>
       <p>{body}</p>
     </main>
-  )
-}
-
-export function ModeIcon({ mode }: { mode: 'audience' | 'studio' }) {
-  return mode === 'audience' ? (
-    <Fullscreen size={18} aria-hidden />
-  ) : (
-    <Film size={18} aria-hidden />
   )
 }

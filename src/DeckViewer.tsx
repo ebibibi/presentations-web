@@ -96,24 +96,28 @@ export function DeckViewer({
           <h1>{deck.meta.title}</h1>
         </div>
         <div className="viewer-actions">
-          <button
-            type="button"
-            className={mode === 'audience' ? 'active' : ''}
-            onClick={() => setMode('audience')}
-            title="全幅表示"
-          >
-            <Fullscreen size={18} aria-hidden />
-            全幅
-          </button>
-          <button
-            type="button"
-            className={mode === 'studio' ? 'active' : ''}
-            onClick={() => setMode('studio')}
-            title="撮影用レイアウト"
-          >
-            <Film size={18} aria-hidden />
-            撮影
-          </button>
+          {initialMode === 'studio' ? (
+            <>
+              <button
+                type="button"
+                className={mode === 'audience' ? 'active' : ''}
+                onClick={() => setMode('audience')}
+                title="閲覧表示"
+              >
+                <Fullscreen size={18} aria-hidden />
+                閲覧
+              </button>
+              <button
+                type="button"
+                className={mode === 'studio' ? 'active' : ''}
+                onClick={() => setMode('studio')}
+                title="撮影用レイアウト"
+              >
+                <Film size={18} aria-hidden />
+                撮影
+              </button>
+            </>
+          ) : null}
           {deck.meta.youtube?.url ? (
             <a href={deck.meta.youtube.url} target="_blank" rel="noreferrer">
               <ExternalLink size={18} aria-hidden />

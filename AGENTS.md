@@ -21,6 +21,7 @@ This repository is intended to be public. Use English for code comments, README 
 - Prefer reusable slide components before adding one-off patterns.
 - Preserve the 1280 x 1080 slide canvas for studio mode.
 - Preserve the right-side studio panel as the future home for notes, live transcription, and AI guidance.
+- Public visitors should be guided to audience/read-only deck pages. Studio mode is for the site owner only and should not be promoted in the public archive UI.
 - Links and text selection inside slides should remain usable. Avoid full-screen pointer overlays.
 - Treat each deck as public content unless access control is implemented and verified. Do not include private, customer, family, or employer-sensitive details.
 - Do not add large binary assets unless they are required for the deck and are reasonably optimized for Cloudflare Pages.
@@ -54,5 +55,5 @@ npm run build
 For visual deck changes, also inspect at least:
 
 - `/decks/{slug}`
-- `/decks/{slug}/studio`
+- `/decks/{slug}/studio` when changing owner recording workflows
 - a mobile viewport around `390 x 844`

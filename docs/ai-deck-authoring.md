@@ -10,7 +10,9 @@ A deck is not a PowerPoint file. It is a small content module:
 - `slides.tsx` renders the visual slide components.
 - The site renders the same deck in audience mode and studio mode.
 
-Audience mode is for viewers reading the material later. Studio mode reserves the right third of the screen for camera, notes, transcription, and future AI guidance while keeping a 1280 x 1080 slide canvas on the left.
+Audience mode is for viewers reading the material later. It is the public default.
+
+Studio mode is for the site owner recording videos. It reserves the right third of the screen for camera, notes, transcription, and future AI guidance while keeping a 1280 x 1080 slide canvas on the left. Do not promote studio mode in public viewer-facing UI.
 
 ## File Layout
 
@@ -140,6 +142,8 @@ Keep the first draft compact. A good initial AI-generated deck is usually 5-12 s
 
 ## Studio Mode
 
+Studio mode is owner-only. It is reachable by direct URL, for example `/decks/{slug}/studio`, but it should not be a primary public navigation path.
+
 Studio mode uses the right-side panel for:
 
 - speaker notes
@@ -152,6 +156,8 @@ Do not remove or repurpose that area for the slide itself. The slide should rema
 ## Audience Mode
 
 Audience mode should be readable after the video is published.
+
+This is the main experience for everyone except the owner.
 
 Make sure:
 
