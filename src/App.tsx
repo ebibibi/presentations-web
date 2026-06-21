@@ -177,7 +177,11 @@ function DeckCard({ deck, onOpen }: { deck: DeckBundle; onOpen: () => void }) {
             loading="lazy"
           />
         ) : (
-          <Presentation size={44} aria-hidden />
+          <div className="deck-thumb-fallback">
+            <Presentation size={34} aria-hidden />
+            <strong>{deck.meta.title}</strong>
+            <span>1280 x 1080 web deck</span>
+          </div>
         )}
       </div>
       <div className="deck-card-body">

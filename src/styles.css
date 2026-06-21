@@ -227,6 +227,33 @@ main {
   width: 100%;
 }
 
+.deck-thumb-fallback {
+  align-items: start;
+  background:
+    linear-gradient(135deg, rgba(20, 117, 111, 0.18), transparent 42%),
+    linear-gradient(155deg, transparent 62%, rgba(216, 93, 74, 0.2)),
+    #eee8db;
+  display: grid;
+  gap: 12px;
+  height: 100%;
+  padding: 28px;
+  width: 100%;
+}
+
+.deck-thumb-fallback strong {
+  align-self: end;
+  color: var(--ink);
+  font-size: 28px;
+  line-height: 1.08;
+  max-width: 520px;
+}
+
+.deck-thumb-fallback span {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .deck-card-body {
   display: flex;
   flex: 1;
