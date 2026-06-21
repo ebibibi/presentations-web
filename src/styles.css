@@ -787,6 +787,11 @@ main {
     gap: 8px;
   }
 
+  .site-header .auth-login,
+  .site-header .auth-status {
+    display: none;
+  }
+
   .auth-user span {
     display: none;
   }
