@@ -93,6 +93,53 @@ a {
   text-decoration: none;
 }
 
+.site-header nav {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.auth-status {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.auth-login {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  min-height: 38px;
+}
+
+.auth-login span {
+  color: var(--coral);
+  font-size: 12px;
+  max-width: 220px;
+}
+
+.auth-user {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.auth-user span,
+.auth-user button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  display: inline-flex;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 10px;
+}
+
+.auth-user button {
+  width: 36px;
+}
+
 main {
   margin: 0 auto;
   max-width: 1180px;
@@ -513,6 +560,32 @@ main {
   text-align: center;
 }
 
+.studio-login-gate {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  margin: 42px auto;
+  max-width: 560px;
+  padding: 42px 24px;
+  text-align: center;
+}
+
+.studio-login-gate h2 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.studio-login-gate p {
+  color: var(--muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
 .remotion-slide {
   background: #fbf8ee;
   color: #17201b;
@@ -708,6 +781,14 @@ main {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .site-header nav {
+    gap: 8px;
+  }
+
+  .auth-user span {
+    display: none;
   }
 
   .hero-copy h1 {

@@ -11,7 +11,9 @@ import {
 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Player, type PlayerRef } from '@remotion/player'
+import { AuthControls } from './AuthControls'
 import { DeckTimeline } from './DeckTimeline'
+import type { AuthState } from './auth'
 import type { DeckBundle } from './types'
 
 const fps = 30
@@ -21,11 +23,17 @@ type ViewerMode = 'audience' | 'studio'
 export function DeckViewer({
   deck,
   initialMode,
-  onBack
+  auth,
+  onBack,
+  onOpenStudio,
+  onAuthChange
 }: {
   deck: DeckBundle
   initialMode: ViewerMode
+  auth: AuthState
   onBack: () => void
+  onOpenStudio: () => void
+  onAuthChange: (auth: AuthState) => void
 }) {
   const [slideIndex, setSlideIndex] = useState(() => getInitialSlideIndex(deck))
   const [mode, setMode] = useState<ViewerMode>(initialMode)
@@ -83,6 +91,7 @@ export function DeckViewer({
 
   const currentSlide = deck.meta.slides[slideIndex]
   const isStudio = mode === 'studio'
+  const isStudioRoute = initialMode === 'studio'
 
   return (
     <main className="viewer-page">
@@ -96,7 +105,7 @@ export function DeckViewer({
           <h1>{deck.meta.title}</h1>
         </div>
         <div className="viewer-actions">
-          {initialMode === 'studio' ? (
+          {isStudioRoute && auth.canRecord ? (
             <>
               <button
                 type="button"
@@ -118,6 +127,12 @@ export function DeckViewer({
               </button>
             </>
           ) : null}
+          {!isStudioRoute && auth.canRecord ? (
+            <button type="button" onClick={onOpenStudio} title="撮影用レイアウト">
+              <Film size={18} aria-hidden />
+              撮影
+            </button>
+          ) : null}
           {deck.meta.youtube?.url ? (
             <a href={deck.meta.youtube.url} target="_blank" rel="noreferrer">
               <ExternalLink size={18} aria-hidden />
@@ -127,36 +142,41 @@ export function DeckViewer({
         </div>
       </header>
 
-      <section className={isStudio ? 'stage-shell studio' : 'stage-shell audience'}>
-        <div className="slide-frame">
-          <Player
-            ref={playerRef}
-            component={DeckTimeline}
-            durationInFrames={Math.max(totalFrames, 1)}
-            compositionWidth={1280}
-            compositionHeight={1080}
-            fps={fps}
-            controls={false}
-            inputProps={{ deck }}
-            style={{ width: '100%', height: '100%' }}
-          />
-          <button
-            type="button"
-            className="nav-zone nav-zone-left"
-            onClick={() => goToSlide(slideIndex - 1)}
-            aria-label="前のスライド"
-          >
-            <ChevronLeft size={28} aria-hidden />
-          </button>
-          <button
-            type="button"
-            className="nav-zone nav-zone-right"
-            onClick={() => goToSlide(slideIndex + 1)}
-            aria-label="次のスライド"
-          >
-            <ChevronRight size={28} aria-hidden />
-          </button>
-        </div>
+      {isStudioRoute && !auth.canRecord ? (
+        <StudioLoginGate auth={auth} onAuthChange={onAuthChange} />
+      ) : null}
+
+      {isStudioRoute && !auth.canRecord ? null : (
+        <section className={isStudio ? 'stage-shell studio' : 'stage-shell audience'}>
+          <div className="slide-frame">
+            <Player
+              ref={playerRef}
+              component={DeckTimeline}
+              durationInFrames={Math.max(totalFrames, 1)}
+              compositionWidth={1280}
+              compositionHeight={1080}
+              fps={fps}
+              controls={false}
+              inputProps={{ deck }}
+              style={{ width: '100%', height: '100%' }}
+            />
+            <button
+              type="button"
+              className="nav-zone nav-zone-left"
+              onClick={() => goToSlide(slideIndex - 1)}
+              aria-label="前のスライド"
+            >
+              <ChevronLeft size={28} aria-hidden />
+            </button>
+            <button
+              type="button"
+              className="nav-zone nav-zone-right"
+              onClick={() => goToSlide(slideIndex + 1)}
+              aria-label="次のスライド"
+            >
+              <ChevronRight size={28} aria-hidden />
+            </button>
+          </div>
 
         {isStudio ? (
           <aside className="studio-panel" aria-label="Studio panel">
@@ -184,26 +204,48 @@ export function DeckViewer({
             ) : null}
           </aside>
         ) : null}
-      </section>
+        </section>
+      )}
 
-      <footer className="viewer-footer">
-        <button type="button" onClick={() => goToSlide(slideIndex - 1)}>
-          <ChevronLeft size={18} aria-hidden />
-          前へ
-        </button>
-        <span>
-          {slideIndex + 1} / {deck.meta.slides.length}
-        </span>
-        <button type="button" onClick={() => goToSlide(slideIndex + 1)}>
-          次へ
-          <ChevronRight size={18} aria-hidden />
-        </button>
-        <button type="button" onClick={() => playerRef.current?.play()}>
-          <Play size={18} aria-hidden />
-          再生
-        </button>
-      </footer>
+      {isStudioRoute && !auth.canRecord ? null : (
+        <footer className="viewer-footer">
+          <button type="button" onClick={() => goToSlide(slideIndex - 1)}>
+            <ChevronLeft size={18} aria-hidden />
+            前へ
+          </button>
+          <span>
+            {slideIndex + 1} / {deck.meta.slides.length}
+          </span>
+          <button type="button" onClick={() => goToSlide(slideIndex + 1)}>
+            次へ
+            <ChevronRight size={18} aria-hidden />
+          </button>
+          <button type="button" onClick={() => playerRef.current?.play()}>
+            <Play size={18} aria-hidden />
+            再生
+          </button>
+        </footer>
+      )}
     </main>
+  )
+}
+
+function StudioLoginGate({
+  auth,
+  onAuthChange
+}: {
+  auth: AuthState
+  onAuthChange: (auth: AuthState) => void
+}) {
+  return (
+    <section className="studio-login-gate">
+      <Film size={42} aria-hidden />
+      <h2>{auth.loading ? 'ログイン状態を確認中です' : '撮影モードはログインが必要です'}</h2>
+      <p>
+        このモードは資料作成者の撮影用です。ログインしていない人は通常の資料閲覧ページを利用できます。
+      </p>
+      <AuthControls auth={auth} onAuthChange={onAuthChange} />
+    </section>
   )
 }
 

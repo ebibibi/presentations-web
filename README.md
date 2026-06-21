@@ -76,10 +76,30 @@ Production custom domain:
 
 Set `VITE_GA_MEASUREMENT_ID` in the Cloudflare Pages environment.
 
+## Authentication
+
+The public archive is readable without login. Recording mode is owner-only.
+
+Authentication uses Google Identity Services and Cloudflare Pages Functions:
+
+- Frontend receives a Google ID token.
+- `/api/auth/login` verifies the token with Google.
+- Only emails in `ALLOWED_OWNER_EMAILS` receive a signed session cookie.
+- Users with `canRecord: true` see the recording button.
+- Direct access to `/decks/{slug}/studio` shows a login gate unless the session can record.
+
+Cloudflare Pages environment variables:
+
+- `GOOGLE_CLIENT_ID` — Google OAuth web client ID.
+- `ALLOWED_OWNER_EMAILS` — comma-separated list of emails allowed to record.
+- `AUTH_SECRET` — long random secret used to sign session cookies.
+
+The current allowed owner email is configured in Cloudflare, not hard-coded in the app.
+
 ## Future Work
 
 - YouTube Data API sync for titles, publication dates, and thumbnails.
 - Build-time OGP image generation from the first slide.
-- Private and members-only decks through an auth layer.
+- Per-user deck ownership and SaaS-grade authorization.
 - PR-based AI deck generation workflow.
 - Optional Remotion rendering pipeline for generated video assets.

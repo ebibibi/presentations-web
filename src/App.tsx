@@ -7,8 +7,13 @@ import {
   Search
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { AuthControls } from './AuthControls'
 import { DeckViewer } from './DeckViewer'
 import { initializeAnalytics, trackPageView } from './analytics'
+import {
+  type AuthState,
+  loadAuthState
+} from './auth'
 import { getDecks } from './content'
 import type { DeckBundle } from './types'
 
@@ -41,6 +46,7 @@ function navigate(path: string) {
 
 export function App() {
   const [route, setRoute] = useState<Route>(getRoute)
+  const [auth, setAuth] = useState<AuthState>(initialAuthState)
   const decks = useMemo(() => getDecks(), [])
 
   useEffect(() => {
@@ -49,12 +55,36 @@ export function App() {
     return () => window.removeEventListener('popstate', listener)
   }, [])
 
+  useEffect(() => {
+    let cancelled = false
+
+    loadAuthState()
+      .then((nextAuth) => {
+        if (!cancelled) {
+          setAuth(nextAuth)
+        }
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setAuth({
+            ...initialAuthState,
+            loading: false,
+            error: error instanceof Error ? error.message : 'Failed to load auth state'
+          })
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   if (route.name === 'deck') {
     const deck = decks.find((candidate) => candidate.meta.slug === route.slug)
 
     if (!deck) {
       return (
-        <Shell>
+        <Shell auth={auth} onAuthChange={setAuth}>
           <EmptyState
             title="資料が見つかりません"
             body="URLを確認するか、一覧から資料を選んでください。"
@@ -67,19 +97,38 @@ export function App() {
       <DeckViewer
         deck={deck}
         initialMode={route.mode}
+        auth={auth}
         onBack={() => navigate('/')}
+        onOpenStudio={() => navigate(`/decks/${deck.meta.slug}/studio${window.location.hash}`)}
+        onAuthChange={setAuth}
       />
     )
   }
 
   return (
-    <Shell>
+    <Shell auth={auth} onAuthChange={setAuth}>
       <Home decks={decks} onOpenDeck={(slug) => navigate(`/decks/${slug}`)} />
     </Shell>
   )
 }
 
-function Shell({ children }: { children: React.ReactNode }) {
+const initialAuthState: AuthState = {
+  loading: true,
+  enabled: false,
+  googleClientId: '',
+  authenticated: false,
+  canRecord: false
+}
+
+function Shell({
+  auth,
+  onAuthChange,
+  children
+}: {
+  auth: AuthState
+  onAuthChange: (auth: AuthState) => void
+  children: React.ReactNode
+}) {
   return (
     <>
       <header className="site-header">
@@ -89,6 +138,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         </button>
         <nav aria-label="Primary">
           <a href="https://ebisuda.net/">ebisuda.net</a>
+          <AuthControls auth={auth} onAuthChange={onAuthChange} />
         </nav>
       </header>
       {children}

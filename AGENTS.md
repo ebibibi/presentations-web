@@ -22,11 +22,13 @@ This repository is intended to be public. Use English for code comments, README 
 - Preserve the 1280 x 1080 slide canvas for studio mode.
 - Preserve the right-side studio panel as the future home for notes, live transcription, and AI guidance.
 - Public visitors should be guided to audience/read-only deck pages. Studio mode is for the site owner only and should not be promoted in the public archive UI.
+- Recording access is controlled by the auth session returned from `/api/auth/session`. Do not show owner recording controls unless `canRecord` is true.
 - Links and text selection inside slides should remain usable. Avoid full-screen pointer overlays.
 - Treat each deck as public content unless access control is implemented and verified. Do not include private, customer, family, or employer-sensitive details.
 - Do not add large binary assets unless they are required for the deck and are reasonably optimized for Cloudflare Pages.
 - Keep mobile reading usable. The slide canvas can remain fixed-format, but surrounding controls and archive pages must not overflow on 390px-wide screens.
 - Keep the MVP deployment path simple: static build, GitHub Actions, Cloudflare Pages.
+- Auth secrets and allowed owner emails belong in Cloudflare Pages environment variables, not in source code.
 
 ## AI Deck Creation Flow
 

@@ -144,6 +144,8 @@ Keep the first draft compact. A good initial AI-generated deck is usually 5-12 s
 
 Studio mode is owner-only. It is reachable by direct URL, for example `/decks/{slug}/studio`, but it should not be a primary public navigation path.
 
+Only a logged-in user with `canRecord: true` should see recording controls. Public users should only see the audience deck.
+
 Studio mode uses the right-side panel for:
 
 - speaker notes
