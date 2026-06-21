@@ -1,6 +1,6 @@
 slug: platform-introduction
 title: Web Presentation Platform Concept
-summary: 動画撮影と視聴者向け共有を両立する、Remotion/Reactベースのプレゼンテーション基盤のコンセプト資料。
+summary: HTML、React、Remotionで作る撮影用プレゼンテーション基盤の実演用サンプル。
 status: draft
 visibility: public
 createdAt: "2026-06-21"
@@ -11,14 +11,22 @@ tags:
   - youtube
 slides:
   - id: opening
-    title: Platform concept
-    durationInFrames: 120
-    notes: 最初のMVPは、動画一覧、資料一覧、資料ビューに集中する。
+    title: HTML presentation
+    durationInFrames: 170
+    notes: まず、PowerPointではなくHTML/Reactで撮影用プレゼンを作れることを見せる。
+  - id: code
+    title: Code generated decks
+    durationInFrames: 170
+    notes: 資料がコードなので、AIに生成させたり、PRでレビューしたりできる。
+  - id: motion
+    title: Remotion motion timeline
+    durationInFrames: 170
+    notes: アニメーション、動画、3D、コード実行風の演出を同じReact表現として扱える。
   - id: studio-layout
-    title: Studio-first layout
-    durationInFrames: 150
-    notes: 撮影時は右1/3を顔・文字起こし・話者支援領域として予約する。
+    title: Recording surface
+    durationInFrames: 170
+    notes: 撮影時は1920x1080の中で、左1280x1080を資料、右640x1080を予約領域として使う。
   - id: archive
     title: Archive experience
-    durationInFrames: 150
-    notes: 視聴者は動画と資料を同じページで確認できる。
+    durationInFrames: 170
+    notes: 撮影後は視聴者がURLひとつで資料を読み返せる。

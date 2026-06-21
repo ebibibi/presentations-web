@@ -18,6 +18,9 @@ import type { AuthState } from './auth'
 import type { DeckBundle } from './types'
 
 const fps = 30
+const seekTransitionFrames = 24
+const seekDurationMs = 420
+const settledFrameOffset = 112
 
 type ViewerMode = 'audience' | 'studio'
 
@@ -41,6 +44,7 @@ export function DeckViewer({
   const playerRef = useRef<PlayerRef>(null)
   const recordingPlayerRef = useRef<PlayerRef>(null)
   const recordingSurfaceRef = useRef<HTMLDivElement>(null)
+  const smoothSeekRef = useRef<number | null>(null)
   const slideStarts = useMemo(() => getSlideStarts(deck), [deck])
   const totalFrames = useMemo(
     () =>
@@ -51,21 +55,98 @@ export function DeckViewer({
     [deck]
   )
 
+  const getSlideSettledFrame = useCallback(
+    (index: number) => {
+      const duration = deck.meta.slides[index]?.durationInFrames ?? 120
+      return (slideStarts[index] ?? 0) + Math.min(settledFrameOffset, Math.max(0, duration - 1))
+    },
+    [deck.meta.slides, slideStarts]
+  )
+
+  const setPlayersFrame = useCallback((frame: number) => {
+    playerRef.current?.seekTo(frame)
+    recordingPlayerRef.current?.seekTo(frame)
+  }, [])
+
+  const getCurrentPlayerFrame = useCallback(() => {
+    return (
+      playerRef.current?.getCurrentFrame() ??
+      recordingPlayerRef.current?.getCurrentFrame() ??
+      getSlideSettledFrame(slideIndex)
+    )
+  }, [getSlideSettledFrame, slideIndex])
+
+  const animatePlayersToFrame = useCallback(
+    (fromFrame: number, toFrame: number, onComplete: () => void) => {
+      if (smoothSeekRef.current !== null) {
+        window.cancelAnimationFrame(smoothSeekRef.current)
+      }
+
+      setPlayersFrame(fromFrame)
+      const startedAt = performance.now()
+
+      const step = (now: number) => {
+        const progress = Math.min(1, (now - startedAt) / seekDurationMs)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        setPlayersFrame(Math.round(fromFrame + (toFrame - fromFrame) * eased))
+
+        if (progress < 1) {
+          smoothSeekRef.current = window.requestAnimationFrame(step)
+          return
+        }
+
+        smoothSeekRef.current = null
+        setPlayersFrame(toFrame)
+        onComplete()
+      }
+
+      smoothSeekRef.current = window.requestAnimationFrame(step)
+    },
+    [setPlayersFrame]
+  )
+
   const goToSlide = useCallback(
     (index: number) => {
       const nextIndex = Math.max(0, Math.min(deck.meta.slides.length - 1, index))
-      setSlideIndex(nextIndex)
-      playerRef.current?.seekTo(slideStarts[nextIndex] ?? 0)
-      recordingPlayerRef.current?.seekTo(slideStarts[nextIndex] ?? 0)
-      window.history.replaceState(null, '', `#${nextIndex + 1}`)
+
+      if (nextIndex === slideIndex) {
+        return
+      }
+
+      const targetFrame = getSlideSettledFrame(nextIndex)
+      const currentDuration = deck.meta.slides[slideIndex]?.durationInFrames ?? 120
+      const forwardTransitionStart =
+        (slideStarts[slideIndex] ?? 0) + Math.max(0, currentDuration - seekTransitionFrames)
+      const startFrame = nextIndex > slideIndex ? forwardTransitionStart : getCurrentPlayerFrame()
+
+      animatePlayersToFrame(startFrame, targetFrame, () => {
+        setSlideIndex(nextIndex)
+        window.history.replaceState(null, '', `#${nextIndex + 1}`)
+      })
     },
-    [deck.meta.slides.length, slideStarts]
+    [
+      animatePlayersToFrame,
+      deck.meta.slides,
+      getCurrentPlayerFrame,
+      getSlideSettledFrame,
+      slideIndex,
+      slideStarts
+    ]
   )
 
   useEffect(() => {
-    playerRef.current?.seekTo(slideStarts[slideIndex] ?? 0)
-    recordingPlayerRef.current?.seekTo(slideStarts[slideIndex] ?? 0)
-  }, [slideIndex, slideStarts])
+    const settledFrame = getSlideSettledFrame(slideIndex)
+    playerRef.current?.seekTo(settledFrame)
+    recordingPlayerRef.current?.seekTo(settledFrame)
+  }, [getSlideSettledFrame, slideIndex])
+
+  useEffect(() => {
+    return () => {
+      if (smoothSeekRef.current !== null) {
+        window.cancelAnimationFrame(smoothSeekRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -173,6 +254,7 @@ export function DeckViewer({
               compositionWidth={1280}
               compositionHeight={1080}
               fps={fps}
+              initialFrame={getSlideSettledFrame(slideIndex)}
               controls={false}
               inputProps={{ deck }}
               style={{ width: '100%', height: '100%' }}
@@ -248,6 +330,7 @@ export function DeckViewer({
                 compositionWidth={1280}
                 compositionHeight={1080}
                 fps={fps}
+                initialFrame={getSlideSettledFrame(slideIndex)}
                 controls={false}
                 inputProps={{ deck }}
                 style={{ width: '100%', height: '100%' }}

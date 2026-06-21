@@ -8,6 +8,7 @@ const port = 5182
 const baseUrl = `http://127.0.0.1:${port}`
 const deckPath = '/decks/platform-introduction/studio'
 const outputPath = 'tmp/recording-surface.png'
+const slideOutputPrefix = 'tmp/recording-surface-slide'
 const root = join(process.cwd(), 'dist')
 const contentTypes = new Map([
   ['.html', 'text/html; charset=utf-8'],
@@ -105,11 +106,24 @@ try {
   assertBox(boxes.reserved, { x: 1280, y: 0, width: 640, height: 1080 }, 'reserved')
 
   await page.screenshot({ path: outputPath })
+  const totalSlides = await getTotalSlides(page)
+  const slideScreenshots = [`${slideOutputPrefix}-1.png`]
+  await page.screenshot({ path: slideScreenshots[0] })
+
+  for (let index = 2; index <= totalSlides; index += 1) {
+    await page.keyboard.press('ArrowRight')
+    await page.waitForTimeout(750)
+    const path = `${slideOutputPrefix}-${index}.png`
+    await page.screenshot({ path })
+    slideScreenshots.push(path)
+  }
+
   await browser.close()
 
   console.log('Recording surface check passed.')
   console.log(JSON.stringify(boxes, null, 2))
   console.log(`Screenshot: ${outputPath}`)
+  console.log(`Slide screenshots: ${slideScreenshots.join(', ')}`)
 } finally {
   server.close()
 }
@@ -131,4 +145,10 @@ function assertBox(actual, expected, label) {
       )
     }
   }
+}
+
+async function getTotalSlides(page) {
+  const text = await page.locator('.viewer-footer span').textContent()
+  const total = Number.parseInt(text?.split('/').at(1)?.trim() || '', 10)
+  return Number.isFinite(total) ? total : 1
 }
