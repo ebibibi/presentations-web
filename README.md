@@ -88,11 +88,11 @@ Authentication uses Google Identity Services and Cloudflare Pages Functions:
 - Users with `canRecord: true` see the recording button.
 - Direct access to `/decks/{slug}/studio` shows a login gate unless the session can record.
 
-Cloudflare Pages environment variables:
+Runtime configuration:
 
-- `GOOGLE_CLIENT_ID` — Google OAuth web client ID.
-- `ALLOWED_OWNER_EMAILS` — comma-separated list of emails allowed to record.
-- `AUTH_SECRET` — long random secret used to sign session cookies.
+- `GOOGLE_CLIENT_ID` — Google OAuth web client ID in `wrangler.toml`.
+- `ALLOWED_OWNER_EMAILS` — comma-separated Cloudflare Pages secret for emails allowed to record.
+- `AUTH_SECRET` — long random Cloudflare Pages secret used to sign session cookies.
 
 The current allowed owner email is configured in Cloudflare, not hard-coded in the app.
 

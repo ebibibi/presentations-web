@@ -1,4 +1,6 @@
 name = "presentations-ebisuda-net"
 compatibility_date = "2026-06-21"
 pages_build_output_dir = "dist"
-keep_vars = true
+
+[vars]
+GOOGLE_CLIENT_ID = "806024345622-ad55n6c3d3gnj52k8s0i5dp3s9kv1amp.apps.googleusercontent.com"
