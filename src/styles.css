@@ -634,14 +634,6 @@ main {
     min-height: auto;
   }
 
-  .hero-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .preview-sidecar {
-    min-height: 140px;
-  }
-
   .viewer-actions {
     justify-content: flex-start;
   }
@@ -674,13 +666,40 @@ main {
   }
 
   .toolbar,
-  .card-actions,
   .viewer-footer {
     align-items: stretch;
     flex-direction: column;
   }
 
+  .hero-panel {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .preview-slide {
+    font-size: 24px;
+  }
+
+  .preview-sidecar {
+    font-size: 14px;
+    padding: 14px;
+  }
+
+  .card-actions {
+    align-items: stretch;
+  }
+
   .search {
     max-width: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .preview-slide {
+    font-size: 22px;
+  }
+
+  .preview-sidecar {
+    font-size: 13px;
+    padding: 10px;
   }
 }
