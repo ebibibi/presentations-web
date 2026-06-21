@@ -28,7 +28,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
         Web Presentation Platform
       </h1>
       <p>
-        動画撮影のための表示と、視聴者が後から読むための資料共有を、同じReactコードから届ける。
+        撮影用表示と視聴者向け共有を、同じReactコードから届ける。
       </p>
       <div className="opening-bars" style={{ opacity: accent }}>
         <span />
@@ -50,9 +50,9 @@ function StudioLayoutSlide({ frame }: SlideRenderContext) {
       <div>
         <span className="slide-kicker">studio layout</span>
         <h1>
-          左2/3は資料
+          左2/3 資料
           <br />
-          右1/3は撮影支援
+          右1/3 撮影支援
         </h1>
       </div>
       <div className="layout-diagram">
@@ -84,7 +84,7 @@ function ArchiveSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide archive-slide">
       <span className="slide-kicker">archive</span>
-      <h1>動画と資料の導線を短くする</h1>
+      <h1>動画と資料をすぐ往復する</h1>
       <div className="archive-steps">
         <div style={{ opacity: first }}>
           <strong>1</strong>
