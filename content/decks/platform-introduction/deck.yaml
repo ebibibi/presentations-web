@@ -1,0 +1,24 @@
+slug: platform-introduction
+title: Web Presentation Platform Concept
+summary: 動画撮影と視聴者向け共有を両立する、Remotion/Reactベースのプレゼンテーション基盤のコンセプト資料。
+status: draft
+visibility: public
+createdAt: "2026-06-21"
+updatedAt: "2026-06-21"
+tags:
+  - platform
+  - remotion
+  - youtube
+slides:
+  - id: opening
+    title: Platform concept
+    durationInFrames: 120
+    notes: 最初のMVPは、動画一覧、資料一覧、資料ビューに集中する。
+  - id: studio-layout
+    title: Studio-first layout
+    durationInFrames: 150
+    notes: 撮影時は右1/3を顔・文字起こし・話者支援領域として予約する。
+  - id: archive
+    title: Archive experience
+    durationInFrames: 150
+    notes: 視聴者は動画と資料を同じページで確認できる。
