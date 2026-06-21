@@ -13,6 +13,7 @@ This repository is intended to be public. Use English for code comments, README 
 - Keep metadata and slide component counts in sync.
 - Use `status: draft` for unpublished work.
 - Use `visibility: public | members | private` even though access control is not implemented yet.
+- Read [docs/ai-deck-authoring.md](docs/ai-deck-authoring.md) before creating or heavily editing a deck.
 
 ## Implementation Rules
 
@@ -21,6 +22,25 @@ This repository is intended to be public. Use English for code comments, README 
 - Preserve the 1280 x 1080 slide canvas for studio mode.
 - Preserve the right-side studio panel as the future home for notes, live transcription, and AI guidance.
 - Links and text selection inside slides should remain usable. Avoid full-screen pointer overlays.
+- Treat each deck as public content unless access control is implemented and verified. Do not include private, customer, family, or employer-sensitive details.
+- Do not add large binary assets unless they are required for the deck and are reasonably optimized for Cloudflare Pages.
+- Keep mobile reading usable. The slide canvas can remain fixed-format, but surrounding controls and archive pages must not overflow on 390px-wide screens.
+- Keep the MVP deployment path simple: static build, GitHub Actions, Cloudflare Pages.
+
+## AI Deck Creation Flow
+
+When asked to create a new deck:
+
+1. Choose a short lowercase slug, for example `copilot-cowork-ga`.
+2. Create `content/decks/{slug}/deck.yaml`.
+3. Create `content/decks/{slug}/slides.tsx`.
+4. Write metadata first: title, summary, status, visibility, dates, tags, optional YouTube data, and slide entries.
+5. Implement exactly one rendered slide component per slide metadata entry.
+6. Keep the first version focused. Prefer 5-12 strong slides over many text-heavy slides.
+7. Use Remotion only where timing or animation improves the presentation.
+8. Verify desktop and mobile layouts before finishing.
+
+If a user asks for a deck from a rough topic, produce a complete first draft without asking for every detail. Use `status: draft` until the user explicitly approves publication.
 
 ## Verification
 
@@ -30,3 +50,9 @@ Run before handing off code changes:
 npm run lint
 npm run build
 ```
+
+For visual deck changes, also inspect at least:
+
+- `/decks/{slug}`
+- `/decks/{slug}/studio`
+- a mobile viewport around `390 x 844`
