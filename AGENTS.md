@@ -21,6 +21,7 @@ This repository is intended to be public. Use English for code comments, README 
 - Prefer reusable slide components before adding one-off patterns.
 - Preserve the 1280 x 1080 slide canvas for studio mode.
 - Preserve the right-side studio panel as the future home for notes, live transcription, and AI guidance.
+- Preserve the dedicated 1920 x 1080 recording surface: 1280 x 1080 slide area on the left and 640 x 1080 reserved area on the right.
 - Public visitors should be guided to audience/read-only deck pages. Studio mode is for the site owner only and should not be promoted in the public archive UI.
 - Recording access is controlled by the auth session returned from `/api/auth/session`. Do not show owner recording controls unless `canRecord` is true.
 - Links and text selection inside slides should remain usable. Avoid full-screen pointer overlays.
@@ -59,3 +60,9 @@ For visual deck changes, also inspect at least:
 - `/decks/{slug}`
 - `/decks/{slug}/studio` when changing owner recording workflows
 - a mobile viewport around `390 x 844`
+
+When changing the recording workflow, run:
+
+```bash
+npm run check:recording
+```

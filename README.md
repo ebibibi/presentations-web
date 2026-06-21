@@ -53,6 +53,7 @@ Open the local URL printed by Vite.
 ```bash
 npm run lint
 npm run build
+npm run check:recording
 ```
 
 ## Deployment
@@ -95,6 +96,17 @@ Runtime configuration:
 - `AUTH_SECRET` — long random Cloudflare Pages secret used to sign session cookies.
 
 The current allowed owner email is configured in Cloudflare, not hard-coded in the app.
+
+## Recording Surface
+
+Owner studio pages include a dedicated recording surface:
+
+- 1920 x 1080 total output.
+- 1280 x 1080 slide area on the left.
+- 640 x 1080 reserved area on the right.
+- The `全画面撮影` button fullscreenes only that recording surface, not the whole studio page.
+
+Run `npm run check:recording` to render the production build in Chromium, enter recording fullscreen, assert the dimensions, and write `tmp/recording-surface.png`.
 
 ## Future Work
 

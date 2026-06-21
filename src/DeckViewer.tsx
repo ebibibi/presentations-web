@@ -5,6 +5,7 @@ import {
   ExternalLink,
   Film,
   Fullscreen,
+  MonitorCheck,
   PanelRight,
   Play,
   StickyNote
@@ -38,6 +39,8 @@ export function DeckViewer({
   const [slideIndex, setSlideIndex] = useState(() => getInitialSlideIndex(deck))
   const [mode, setMode] = useState<ViewerMode>(initialMode)
   const playerRef = useRef<PlayerRef>(null)
+  const recordingPlayerRef = useRef<PlayerRef>(null)
+  const recordingSurfaceRef = useRef<HTMLDivElement>(null)
   const slideStarts = useMemo(() => getSlideStarts(deck), [deck])
   const totalFrames = useMemo(
     () =>
@@ -53,6 +56,7 @@ export function DeckViewer({
       const nextIndex = Math.max(0, Math.min(deck.meta.slides.length - 1, index))
       setSlideIndex(nextIndex)
       playerRef.current?.seekTo(slideStarts[nextIndex] ?? 0)
+      recordingPlayerRef.current?.seekTo(slideStarts[nextIndex] ?? 0)
       window.history.replaceState(null, '', `#${nextIndex + 1}`)
     },
     [deck.meta.slides.length, slideStarts]
@@ -60,6 +64,7 @@ export function DeckViewer({
 
   useEffect(() => {
     playerRef.current?.seekTo(slideStarts[slideIndex] ?? 0)
+    recordingPlayerRef.current?.seekTo(slideStarts[slideIndex] ?? 0)
   }, [slideIndex, slideStarts])
 
   useEffect(() => {
@@ -93,6 +98,10 @@ export function DeckViewer({
   const isStudio = mode === 'studio'
   const isStudioRoute = initialMode === 'studio'
 
+  const openRecordingFullscreen = useCallback(async () => {
+    await recordingSurfaceRef.current?.requestFullscreen()
+  }, [])
+
   return (
     <main className="viewer-page">
       <header className="viewer-header">
@@ -124,6 +133,14 @@ export function DeckViewer({
               >
                 <Film size={18} aria-hidden />
                 撮影
+              </button>
+              <button
+                type="button"
+                onClick={openRecordingFullscreen}
+                title="撮影サーフェスだけを全画面表示"
+              >
+                <MonitorCheck size={18} aria-hidden />
+                全画面撮影
               </button>
             </>
           ) : null}
@@ -206,6 +223,52 @@ export function DeckViewer({
         ) : null}
         </section>
       )}
+
+      {isStudioRoute && auth.canRecord ? (
+        <section className="recording-inspector" aria-label="Recording output">
+          <div className="recording-inspector-header">
+            <div>
+              <p>Recording output</p>
+              <h2>1920 x 1080 capture surface</h2>
+            </div>
+            <span>
+              slide 1280 x 1080 / reserved 640 x 1080
+            </span>
+          </div>
+          <div
+            ref={recordingSurfaceRef}
+            className="recording-surface"
+            aria-label="Fullscreen recording surface"
+          >
+            <div className="recording-slide-frame">
+              <Player
+                ref={recordingPlayerRef}
+                component={DeckTimeline}
+                durationInFrames={Math.max(totalFrames, 1)}
+                compositionWidth={1280}
+                compositionHeight={1080}
+                fps={fps}
+                controls={false}
+                inputProps={{ deck }}
+                style={{ width: '100%', height: '100%' }}
+              />
+              <button
+                type="button"
+                className="recording-nav-zone recording-nav-zone-left"
+                onClick={() => goToSlide(slideIndex - 1)}
+                aria-label="前のスライド"
+              />
+              <button
+                type="button"
+                className="recording-nav-zone recording-nav-zone-right"
+                onClick={() => goToSlide(slideIndex + 1)}
+                aria-label="次のスライド"
+              />
+            </div>
+            <aside className="recording-reserved-area" aria-hidden="true" />
+          </div>
+        </section>
+      ) : null}
 
       {isStudioRoute && !auth.canRecord ? null : (
         <footer className="viewer-footer">

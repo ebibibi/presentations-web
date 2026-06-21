@@ -524,6 +524,84 @@ main {
   margin: 0;
 }
 
+.recording-inspector {
+  margin: 24px auto 0;
+  max-width: 1800px;
+}
+
+.recording-inspector-header {
+  align-items: end;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.recording-inspector-header p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+.recording-inspector-header h2 {
+  font-size: 18px;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.recording-inspector-header span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.recording-surface {
+  aspect-ratio: 16 / 9;
+  background: #080a09;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  overflow: hidden;
+  width: 100%;
+}
+
+.recording-surface:fullscreen {
+  aspect-ratio: auto;
+  height: 100vh;
+  width: 100vw;
+}
+
+.recording-slide-frame {
+  background: #fbf8ee;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.recording-reserved-area {
+  background: #080a09;
+  height: 100%;
+  width: 100%;
+}
+
+.recording-nav-zone {
+  background: transparent;
+  border: 0;
+  bottom: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 50%;
+}
+
+.recording-nav-zone-left {
+  left: 0;
+}
+
+.recording-nav-zone-right {
+  right: 0;
+}
+
 .video-embed {
   aspect-ratio: 16 / 9;
   border: 1px solid rgba(247, 245, 239, 0.22);
