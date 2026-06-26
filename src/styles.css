@@ -1219,3 +1219,554 @@ main {
     font-size: 13px;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Deck: external-integration (Claude Code course, episode 14)        */
+/* ------------------------------------------------------------------ */
+
+.e14-slide {
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.e14-slide h1 {
+  font-size: 72px;
+  line-height: 1.02;
+  margin: 14px 0 0;
+  max-width: 1100px;
+}
+
+.e14-slide .e14-cmd {
+  background: rgba(20, 117, 111, 0.12);
+  border-radius: 10px;
+  color: var(--teal);
+  font-size: 0.86em;
+  padding: 2px 14px;
+}
+
+.e14-slide .e14-vs {
+  color: var(--coral);
+}
+
+.e14-note {
+  color: #57625a;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.e14-judge {
+  background: rgba(20, 117, 111, 0.08);
+  border-left: 6px solid var(--teal);
+  border-radius: 12px;
+  color: #2c352f;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 22px 30px;
+}
+
+.e14-tag {
+  align-self: flex-start;
+  background: var(--teal);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 8px 20px;
+}
+
+.e14-tag-muted {
+  background: #e7e3d8;
+  color: #6c756e;
+}
+
+/* Opening */
+.e14-opening {
+  justify-content: center;
+  gap: 64px;
+}
+
+.e14-opening-copy h1 {
+  font-size: 96px;
+  margin-top: 18px;
+}
+
+.e14-goal-row {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e14-goal-row > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 34px;
+}
+
+.e14-goal-row strong {
+  color: var(--coral);
+  font-size: 34px;
+}
+
+.e14-goal-row span {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.e14-goal-row p {
+  font-size: 26px;
+  margin: 0;
+}
+
+/* Why connect */
+.e14-connect {
+  align-items: center;
+  display: flex;
+  gap: 36px;
+}
+
+.e14-connect-core {
+  background: var(--ink);
+  border-radius: 24px;
+  color: #fff;
+  flex: 0 0 auto;
+  padding: 36px 40px;
+  text-align: center;
+}
+
+.e14-connect-core strong {
+  display: block;
+  font-size: 44px;
+}
+
+.e14-connect-core p {
+  color: #c7cec9;
+  font-size: 24px;
+  margin: 10px 0 0;
+}
+
+.e14-connect-link {
+  color: var(--teal);
+  font-size: 64px;
+  font-weight: 800;
+}
+
+.e14-connect-services {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.e14-connect-services span {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  font-size: 30px;
+  font-weight: 700;
+  padding: 20px 30px;
+}
+
+/* What is MCP */
+.e14-port {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 44px 48px;
+}
+
+.e14-port strong {
+  font-size: 46px;
+}
+
+.e14-port p {
+  font-size: 32px;
+  margin: 0;
+}
+
+/* Terminal stage (MCP add / direct API) */
+.e14-how-stage {
+  align-items: stretch;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1.05fr 0.95fr;
+}
+
+.e14-terminal {
+  background: #11201c;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.e14-terminal-bar {
+  align-items: center;
+  background: #0a1612;
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+}
+
+.e14-terminal-bar span {
+  background: #3a4843;
+  border-radius: 50%;
+  height: 14px;
+  width: 14px;
+}
+
+.e14-terminal-bar strong {
+  color: #8aa39b;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.e14-terminal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 32px 30px;
+}
+
+.e14-terminal-body code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 27px;
+  line-height: 1.35;
+}
+
+.e14-prompt {
+  color: #fff;
+}
+
+.e14-output {
+  color: #6fd3a8;
+}
+
+.e14-examples,
+.e14-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.e14-examples > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 26px;
+}
+
+.e14-examples strong {
+  font-size: 28px;
+}
+
+.e14-examples span {
+  color: #57625a;
+  font-size: 24px;
+}
+
+.e14-steps > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  gap: 22px;
+  padding: 20px 26px;
+}
+
+.e14-steps strong {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 26px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  width: 50px;
+}
+
+.e14-steps span {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+/* Context bars */
+.e14-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.e14-bar-row {
+  align-items: center;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 320px 1fr 300px;
+}
+
+.e14-bar-label {
+  font-size: 30px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.e14-bar-track {
+  background: #e7e3d8;
+  border-radius: 999px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.e14-bar-track i {
+  border-radius: 999px;
+  display: block;
+  height: 100%;
+}
+
+.e14-bar-val {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.e14-bar-val small {
+  color: #57625a;
+  font-size: 22px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+/* Compare cards (control, choose) */
+.e14-compare,
+.e14-choose {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e14-compare-card,
+.e14-choose-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 38px 40px;
+}
+
+.e14-compare-accent,
+.e14-choose-accent {
+  border-color: rgba(20, 117, 111, 0.45);
+  box-shadow: 0 18px 50px rgba(20, 117, 111, 0.18);
+}
+
+.e14-compare-card strong,
+.e14-choose-card strong {
+  font-size: 38px;
+}
+
+.e14-compare-card p,
+.e14-choose-card p {
+  font-size: 28px;
+  margin: 0;
+}
+
+/* Confession */
+.e14-confession {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e14-confession-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 44px 48px;
+}
+
+.e14-confession-card p {
+  font-size: 34px;
+  margin: 0;
+}
+
+.e14-confession-result {
+  align-items: center;
+  display: grid;
+  gap: 14px 28px;
+  grid-template-columns: 1fr auto;
+}
+
+.e14-confession-result span {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.e14-confession-result strong {
+  background: rgba(216, 93, 74, 0.14);
+  border-radius: 12px;
+  color: var(--coral);
+  font-size: 34px;
+  justify-self: start;
+  padding: 6px 24px;
+}
+
+/* Fit columns */
+.e14-fit {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+.e14-fit-col {
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 34px 38px;
+}
+
+.e14-fit-good {
+  background: rgba(20, 117, 111, 0.08);
+  border: 1px solid rgba(20, 117, 111, 0.3);
+}
+
+.e14-fit-bad {
+  background: rgba(216, 93, 74, 0.07);
+  border: 1px solid rgba(216, 93, 74, 0.28);
+}
+
+.e14-fit-head {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.e14-fit-good .e14-fit-head {
+  color: var(--teal);
+}
+
+.e14-fit-bad .e14-fit-head {
+  color: var(--coral);
+}
+
+.e14-fit-col p {
+  font-size: 27px;
+  margin: 0;
+}
+
+/* Recap */
+.e14-recap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.e14-recap > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: flex;
+  gap: 24px;
+  padding: 24px 30px;
+}
+
+.e14-check {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 28px;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
+  width: 52px;
+}
+
+.e14-recap p {
+  font-size: 31px;
+  margin: 0;
+}
+
+/* Next */
+.e14-next {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e14-next-card {
+  background: var(--ink);
+  border-radius: 26px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 44px 48px;
+}
+
+.e14-next-card strong {
+  color: var(--mustard);
+  font-size: 30px;
+}
+
+.e14-next-card span {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.e14-next-card p {
+  color: #c7cec9;
+  font-size: 28px;
+  margin: 0;
+}
+
+.e14-cta {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .e14-how-stage,
+  .e14-goal-row,
+  .e14-compare,
+  .e14-choose,
+  .e14-fit {
+    grid-template-columns: 1fr;
+  }
+
+  .e14-connect {
+    flex-direction: column;
+  }
+
+  .e14-bar-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .e14-bar-label {
+    text-align: left;
+  }
+}
