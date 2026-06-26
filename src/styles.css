@@ -448,6 +448,14 @@ main {
   grid-template-columns: minmax(0, 1fr);
 }
 
+/* Audience slides are nearly square (1280x1080); cap the width so the whole
+   slide fits within the viewport height instead of overflowing into a
+   vertical scroll. min() keeps it full-width on narrow/mobile screens. */
+.stage-shell.audience .slide-frame {
+  width: min(100%, calc((100dvh - 168px) * (1280 / 1080)));
+  margin-inline: auto;
+}
+
 .stage-shell.studio {
   grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
 }
