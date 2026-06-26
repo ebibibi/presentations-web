@@ -1,0 +1,61 @@
+slug: external-integration
+title: 第14回 外部連携の全て ─ MCP vs 直接API
+summary: Claude Codeを外の世界とつなぐ2つの道、MCPと直接APIを正直に比較する。手軽さのMCPと、コンテキスト効率・制御性で勝る直接API。自分はどちらを選ぶかを判断できるようになる。Claude Codeの使い方コース 第14回。
+status: draft
+visibility: members
+createdAt: "2026-06-26"
+updatedAt: "2026-06-26"
+tags:
+  - claude-code
+  - mcp
+  - api
+  - course
+slides:
+  - id: opening
+    title: 外部連携の全て
+    durationInFrames: 170
+    notes: 第14回スタート。Claude Codeを「外の世界」とつなぐ話。今日のゴールは2つ。①外とつなぐ2つの道（MCPと直接API）を知る ②自分はどっちを選ぶか判断できるようになる。便利さと正直な比較の回。
+  - id: why-connect
+    title: そもそも外部連携とは
+    durationInFrames: 170
+    notes: Claude Code単体はこのPCの中だけで完結している。カレンダー・メール・Todo・GitHub・Notionなど外のサービスとつなぐと、一気に「秘書」になる。たとえ=助手に外線電話と社外の鍵を渡すイメージ。つなぎ方には2つの道がある、という前振り。
+  - id: what-is-mcp
+    title: MCPとは何か
+    durationInFrames: 175
+    notes: 1つ目の道がMCP（Model Context Protocol）。AIと外部サービスをつなぐための共通規格。たとえ=USB-Cの差し込み口。MCPサーバーを足すと、Claude Codeがそのサービスのツールを自動で発見して使えるようになる。業界標準として対応サービスが増えてきている。
+  - id: mcp-how
+    title: MCPの使い方は驚くほど簡単
+    durationInFrames: 170
+    notes: 「claude mcp add サーバー名」コマンド1つ、または「◯◯のMCPを繋いで」と頼むだけ。設定ファイルに保存され次回起動時も自動接続。例=Notion（ノート検索・作成）/ GitHub（Issue・PR）/ Google Calendar / Slack。公式サーバーとコミュニティ製がある。差すだけで使える手軽さが最大の魅力。
+  - id: direct-api
+    title: もう一つの道 ─ 直接API
+    durationInFrames: 180
+    notes: 2つ目の道。Claude Codeはターミナルで動く＝シェルもPythonも実行できる。だからcurlやrequestsでAPIを直接叩ける。「このAPIを叩くスクリプトを書いて」と頼むだけ。一度書けばコマンド一発、第13回のスキルでラップすれば繰り返し使える。たとえ=自分専用の道具を一本作る。MCP=道具を渡す / 直接API=自分で道具を使う。
+  - id: tradeoff-context
+    title: トレードオフ① コンテキスト
+    durationInFrames: 185
+    notes: ここからが本題、正直な比較。MCPは繋ぐだけでツール定義がコンテキストに積まれる（第13回で出た犯人の正体）。数字で見ると桁違い。MCPサーバー1つ＝約13,000〜18,000トークン、対してスキルでラップした直接API＝約225トークン。/contextで追加前後を比較すると一目瞭然。便利さの裏に隠れたコストがある。
+  - id: tradeoff-control
+    title: トレードオフ② 安定性と制御
+    durationInFrames: 180
+    notes: もう1つの軸。MCPは認証（OAuthトークンの更新失敗など）や、サブエージェントから呼べない問題が起きることがある。直接スクリプトはトークンも実行も自分で管理＝完全に制御できる。サブエージェントからもBash経由で確実に動く。手間はかかるが、壊れにくく自分でコントロールできる。
+  - id: confession
+    title: 正直に告白します
+    durationInFrames: 180
+    notes: 信頼を勝ち取る回。私は実際にMCPを全部やめて、外部連携をすべて直接APIスクリプトに移行した。理由は、私の使い方が「毎日同じ操作を繰り返す」自動化中心だから。移行後、コンテキストの無駄も認証まわりの事故も激減した。MCPが悪いのではなく、自分の使い方に合わなかったという話。
+  - id: when-mcp
+    title: でもMCPが悪いわけじゃない
+    durationInFrames: 175
+    notes: フェアに。MCPが向く場面=色々なサービスをとりあえず繋いで試す探索フェーズ／公式サーバーが充実している連携／自分でスクリプトを書かない・たまにしか使わないので動的なツール発見が活きるとき。向かない=毎日使う軽量API、コンテキスト節約が最優先のとき。大事なのは優劣でなくトレードオフを理解すること。
+  - id: how-to-choose
+    title: どっちを選ぶ？判断の物差し
+    durationInFrames: 175
+    notes: 判断基準をシンプルに。繰り返す・決まった操作→直接API＋スキル（コンテキスト効率と制御性）。手軽に色々試したい・たまにしか使わない→MCP（追加の速さ）。最後は「コンテキストと相談して選ぶ」。第13回のダイエット術と地続きの考え方。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 160
+    notes: 外部連携には2つの道。MCP=差すだけで使える手軽さ、でもコンテキストを食う。直接API＋スキル=手間はかかるがコンテキスト効率と制御性で勝る。私は直接APIに全面移行した。優劣でなくトレードオフ。自分の使い方で選ぶ。
+  - id: next
+    title: 次回予告
+    durationInFrames: 160
+    notes: 次回は第15回「第2の脳 & 私の実際の使い方」。概念と実践を1本で。CLAUDE.mdやObsidianを使った、人間とAIが共有する知識の作り方。チャンネル登録とメンバーシップもよろしく！
