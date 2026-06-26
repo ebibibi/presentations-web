@@ -1820,3 +1820,1875 @@ main {
     text-align: left;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Deck: second-brain (Claude Code course, episode 15)                 */
+/* ------------------------------------------------------------------ */
+
+.e15-slide {
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.e15-slide h1 {
+  font-size: 72px;
+  line-height: 1.02;
+  margin: 14px 0 0;
+  max-width: 1100px;
+}
+
+.e15-slide .e15-vs {
+  color: var(--violet);
+}
+
+.e15-note {
+  color: #57625a;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.e15-judge {
+  background: rgba(20, 117, 111, 0.08);
+  border-left: 6px solid var(--teal);
+  border-radius: 12px;
+  color: #2c352f;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 22px 30px;
+}
+
+.e15-tag {
+  align-self: flex-start;
+  background: var(--teal);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 8px 20px;
+}
+
+.e15-tag-muted {
+  background: #e7e3d8;
+  color: #6c756e;
+}
+
+/* Opening */
+.e15-opening {
+  justify-content: center;
+  gap: 64px;
+}
+
+.e15-opening-copy h1 {
+  font-size: 96px;
+  margin-top: 18px;
+}
+
+.e15-goal-row {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e15-goal-row > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 34px;
+}
+
+.e15-goal-row strong {
+  color: var(--violet);
+  font-size: 34px;
+}
+
+.e15-goal-row span {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.e15-goal-row p {
+  font-size: 26px;
+  margin: 0;
+}
+
+/* Second brain ─ shared notebook */
+.e15-connect {
+  align-items: stretch;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: 1fr 1.3fr 1fr;
+}
+
+.e15-connect-side {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  padding: 36px 30px;
+  text-align: center;
+}
+
+.e15-connect-side strong {
+  font-size: 40px;
+}
+
+.e15-connect-side p {
+  color: #57625a;
+  font-size: 26px;
+  margin: 0;
+}
+
+.e15-connect-core {
+  align-items: center;
+  background: var(--ink);
+  border-radius: 24px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  padding: 36px 40px;
+  text-align: center;
+}
+
+.e15-connect-core strong {
+  font-size: 48px;
+}
+
+.e15-connect-core p {
+  color: #c7cec9;
+  font-size: 26px;
+  margin: 0;
+}
+
+/* Auto Memory / goodmorning terminal stage */
+.e15-how-stage {
+  align-items: stretch;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1.05fr 0.95fr;
+}
+
+.e15-terminal {
+  background: #11201c;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.e15-terminal-bar {
+  align-items: center;
+  background: #0a1612;
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+}
+
+.e15-terminal-bar span {
+  background: #3a4843;
+  border-radius: 50%;
+  height: 14px;
+  width: 14px;
+}
+
+.e15-terminal-bar strong {
+  color: #8aa39b;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.e15-terminal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 32px 30px;
+}
+
+.e15-terminal-body code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 27px;
+  line-height: 1.35;
+}
+
+.e15-prompt {
+  color: #fff;
+}
+
+.e15-output {
+  color: #6fd3a8;
+}
+
+.e15-examples,
+.e15-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.e15-examples > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 26px;
+}
+
+.e15-examples strong {
+  font-size: 28px;
+}
+
+.e15-examples span {
+  color: #57625a;
+  font-size: 24px;
+}
+
+.e15-steps > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  gap: 22px;
+  padding: 20px 26px;
+}
+
+.e15-steps strong {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 26px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  width: 50px;
+}
+
+.e15-steps span {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+/* Port card (recall) */
+.e15-port {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 44px 48px;
+}
+
+.e15-port strong {
+  font-size: 46px;
+}
+
+.e15-port p {
+  font-size: 32px;
+  margin: 0;
+}
+
+/* Compare / choose cards */
+.e15-compare,
+.e15-choose {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e15-compare-card,
+.e15-choose-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 38px 40px;
+}
+
+.e15-choose-accent {
+  border-color: rgba(20, 117, 111, 0.45);
+  box-shadow: 0 18px 50px rgba(20, 117, 111, 0.18);
+}
+
+.e15-compare-card strong,
+.e15-choose-card strong {
+  font-size: 38px;
+}
+
+.e15-compare-card p,
+.e15-choose-card p {
+  font-size: 28px;
+  margin: 0;
+}
+
+/* goodnight (confession archetype) */
+.e15-confession {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e15-confession-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 44px 48px;
+}
+
+.e15-confession-card p {
+  font-size: 34px;
+  margin: 0;
+}
+
+.e15-confession-result {
+  align-items: center;
+  display: grid;
+  gap: 14px 28px;
+  grid-template-columns: 1fr auto;
+}
+
+.e15-confession-result span {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.e15-confession-result strong {
+  background: rgba(122, 90, 248, 0.14);
+  border-radius: 12px;
+  color: var(--violet);
+  font-size: 34px;
+  justify-self: start;
+  padding: 6px 24px;
+}
+
+/* Vault layers (fit columns) */
+.e15-fit {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+.e15-fit-col {
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 34px 38px;
+}
+
+.e15-fit-good {
+  background: rgba(20, 117, 111, 0.08);
+  border: 1px solid rgba(20, 117, 111, 0.3);
+}
+
+.e15-fit-side {
+  background: rgba(122, 90, 248, 0.07);
+  border: 1px solid rgba(122, 90, 248, 0.28);
+}
+
+.e15-fit-head {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.e15-fit-good .e15-fit-head {
+  color: var(--teal);
+}
+
+.e15-fit-side .e15-fit-head {
+  color: var(--violet);
+}
+
+.e15-fit-col p {
+  font-size: 27px;
+  margin: 0;
+}
+
+/* Culmination pieces */
+.e15-pieces {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e15-pieces > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 30px 34px;
+}
+
+.e15-pieces strong {
+  color: var(--teal);
+  font-size: 34px;
+}
+
+.e15-pieces span {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+/* Recap */
+.e15-recap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.e15-recap > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: flex;
+  gap: 24px;
+  padding: 24px 30px;
+}
+
+.e15-check {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 28px;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
+  width: 52px;
+}
+
+.e15-recap p {
+  font-size: 31px;
+  margin: 0;
+}
+
+/* Next */
+.e15-next {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e15-next-card {
+  background: var(--ink);
+  border-radius: 26px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 44px 48px;
+}
+
+.e15-next-card strong {
+  color: var(--mustard);
+  font-size: 30px;
+}
+
+.e15-next-card span {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.e15-next-card p {
+  color: #c7cec9;
+  font-size: 28px;
+  margin: 0;
+}
+
+.e15-cta {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .e15-how-stage,
+  .e15-goal-row,
+  .e15-compare,
+  .e15-choose,
+  .e15-fit,
+  .e15-pieces {
+    grid-template-columns: 1fr;
+  }
+
+  .e15-connect {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Deck: self-verification (Claude Code course, episode 16)           */
+/* ------------------------------------------------------------------ */
+
+.e16-slide {
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.e16-slide h1 {
+  font-size: 72px;
+  line-height: 1.02;
+  margin: 14px 0 0;
+  max-width: 1100px;
+}
+
+.e16-slide .e16-vs {
+  color: var(--coral);
+}
+
+.e16-note {
+  color: #57625a;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.e16-judge {
+  background: rgba(20, 117, 111, 0.08);
+  border-left: 6px solid var(--teal);
+  border-radius: 12px;
+  color: #2c352f;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 22px 30px;
+}
+
+.e16-tag {
+  align-self: flex-start;
+  background: var(--teal);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 8px 20px;
+}
+
+.e16-tag-muted {
+  background: #e7e3d8;
+  color: #6c756e;
+}
+
+.e16-tag-warn {
+  background: var(--coral);
+}
+
+/* Opening */
+.e16-opening {
+  justify-content: center;
+  gap: 64px;
+}
+
+.e16-opening-copy h1 {
+  font-size: 96px;
+  margin-top: 18px;
+}
+
+.e16-goal-row {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e16-goal-row > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 34px;
+}
+
+.e16-goal-row strong {
+  color: var(--coral);
+  font-size: 34px;
+}
+
+.e16-goal-row span {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.e16-goal-row p {
+  font-size: 26px;
+  margin: 0;
+}
+
+/* Single card (port-style: for-engineers, screenshot, bridge) */
+.e16-port {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 44px 48px;
+}
+
+.e16-port strong {
+  font-size: 46px;
+}
+
+.e16-port p {
+  font-size: 32px;
+  margin: 0;
+}
+
+/* Terminal stage (tdd loop / typecheck / review) */
+.e16-how-stage {
+  align-items: stretch;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1.05fr 0.95fr;
+}
+
+.e16-terminal {
+  background: #11201c;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.e16-terminal-bar {
+  align-items: center;
+  background: #0a1612;
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+}
+
+.e16-terminal-bar span {
+  background: #3a4843;
+  border-radius: 50%;
+  height: 14px;
+  width: 14px;
+}
+
+.e16-terminal-bar strong {
+  color: #8aa39b;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.e16-terminal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 32px 30px;
+}
+
+.e16-terminal-body code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 27px;
+  line-height: 1.35;
+}
+
+.e16-prompt {
+  color: #fff;
+}
+
+.e16-output {
+  color: #6fd3a8;
+}
+
+.e16-fail {
+  color: #e8927f;
+}
+
+.e16-examples,
+.e16-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.e16-examples > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 26px;
+}
+
+.e16-examples strong {
+  font-size: 28px;
+}
+
+.e16-examples span {
+  color: #57625a;
+  font-size: 24px;
+}
+
+.e16-steps > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  gap: 22px;
+  padding: 20px 26px;
+}
+
+.e16-steps strong {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 26px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  width: 50px;
+}
+
+.e16-steps span {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+/* Compare cards (instruct vs verify) */
+.e16-compare {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e16-compare-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 38px 40px;
+}
+
+.e16-compare-accent {
+  border-color: rgba(20, 117, 111, 0.45);
+  box-shadow: 0 18px 50px rgba(20, 117, 111, 0.18);
+}
+
+.e16-compare-card strong {
+  font-size: 38px;
+}
+
+.e16-compare-card p {
+  font-size: 28px;
+  margin: 0;
+}
+
+/* My real hooks (principle cards) */
+.e16-hooks {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.e16-hooks > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  border-top: 6px solid var(--violet);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px 30px;
+}
+
+.e16-hooks strong {
+  color: var(--violet);
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 30px;
+}
+
+.e16-hooks span {
+  font-size: 26px;
+  line-height: 1.45;
+}
+
+/* Fit columns (philosophy) */
+.e16-fit {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.e16-fit-col {
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 34px 38px;
+}
+
+.e16-fit-good {
+  background: rgba(20, 117, 111, 0.08);
+  border: 1px solid rgba(20, 117, 111, 0.3);
+}
+
+.e16-fit-bad {
+  background: rgba(216, 93, 74, 0.07);
+  border: 1px solid rgba(216, 93, 74, 0.28);
+}
+
+.e16-fit-head {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.e16-fit-good .e16-fit-head {
+  color: var(--teal);
+}
+
+.e16-fit-bad .e16-fit-head {
+  color: var(--coral);
+}
+
+.e16-fit-col p {
+  font-size: 27px;
+  margin: 0;
+}
+
+/* Recap */
+.e16-recap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.e16-recap > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: flex;
+  gap: 24px;
+  padding: 22px 30px;
+}
+
+.e16-check {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 28px;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
+  width: 52px;
+}
+
+.e16-recap p {
+  font-size: 30px;
+  margin: 0;
+}
+
+/* Next */
+.e16-next {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e16-next-card {
+  background: var(--ink);
+  border-radius: 26px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 44px 48px;
+}
+
+.e16-next-card strong {
+  color: var(--mustard);
+  font-size: 30px;
+}
+
+.e16-next-card span {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.e16-next-card p {
+  color: #c7cec9;
+  font-size: 28px;
+  margin: 0;
+}
+
+.e16-cta {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .e16-how-stage,
+  .e16-goal-row,
+  .e16-compare,
+  .e16-hooks,
+  .e16-fit {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Deck: building-big (Claude Code course, episode 17)                 */
+/* ------------------------------------------------------------------ */
+
+.e17-slide {
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.e17-slide h1 {
+  font-size: 72px;
+  line-height: 1.02;
+  margin: 14px 0 0;
+  max-width: 1100px;
+}
+
+.e17-slide .e17-cmd {
+  background: rgba(20, 117, 111, 0.12);
+  border-radius: 10px;
+  color: var(--teal);
+  font-size: 0.86em;
+  padding: 2px 14px;
+}
+
+.e17-slide .e17-vs {
+  color: var(--coral);
+}
+
+.e17-note {
+  color: #57625a;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.e17-judge {
+  background: rgba(20, 117, 111, 0.08);
+  border-left: 6px solid var(--teal);
+  border-radius: 12px;
+  color: #2c352f;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 22px 30px;
+}
+
+.e17-tag {
+  align-self: flex-start;
+  background: var(--teal);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 8px 20px;
+}
+
+.e17-tag-muted {
+  background: #e7e3d8;
+  color: #6c756e;
+}
+
+/* Opening */
+.e17-opening {
+  justify-content: center;
+  gap: 64px;
+}
+
+.e17-opening-copy h1 {
+  font-size: 96px;
+  margin-top: 18px;
+}
+
+.e17-goal-row {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e17-goal-row > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 34px;
+}
+
+.e17-goal-row strong {
+  color: var(--coral);
+  font-size: 34px;
+}
+
+.e17-goal-row span {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.e17-goal-row p {
+  font-size: 26px;
+  margin: 0;
+}
+
+/* Terminal stage (spec / github / claude -p) */
+.e17-how-stage {
+  align-items: stretch;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1.05fr 0.95fr;
+}
+
+.e17-terminal {
+  background: #11201c;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.e17-terminal-bar {
+  align-items: center;
+  background: #0a1612;
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+}
+
+.e17-terminal-bar span {
+  background: #3a4843;
+  border-radius: 50%;
+  height: 14px;
+  width: 14px;
+}
+
+.e17-terminal-bar strong {
+  color: #8aa39b;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.e17-terminal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 32px 30px;
+}
+
+.e17-terminal-body code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 27px;
+  line-height: 1.35;
+}
+
+.e17-prompt {
+  color: #fff;
+}
+
+.e17-output {
+  color: #6fd3a8;
+}
+
+.e17-examples,
+.e17-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.e17-examples > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 26px;
+}
+
+.e17-examples strong {
+  font-size: 28px;
+}
+
+.e17-examples span {
+  color: #57625a;
+  font-size: 24px;
+}
+
+.e17-steps > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  gap: 22px;
+  padding: 20px 26px;
+}
+
+.e17-steps strong {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 26px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  width: 50px;
+}
+
+.e17-steps span {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+/* Compare cards (problem, who-decides, writer/reviewer, sdk) */
+.e17-compare {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e17-compare-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 38px 40px;
+}
+
+.e17-compare-accent {
+  border-color: rgba(20, 117, 111, 0.45);
+  box-shadow: 0 18px 50px rgba(20, 117, 111, 0.18);
+}
+
+.e17-compare-card strong {
+  font-size: 38px;
+}
+
+.e17-compare-card p {
+  font-size: 28px;
+  margin: 0;
+}
+
+/* Parallel sessions */
+.e17-parallel {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.e17-parallel-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 34px 32px;
+}
+
+.e17-parallel-dot {
+  border-radius: 50%;
+  height: 22px;
+  width: 22px;
+}
+
+.e17-parallel-card strong {
+  font-size: 34px;
+}
+
+.e17-parallel-card p {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.e17-parallel-card small {
+  color: #57625a;
+  font-size: 22px;
+}
+
+/* Pipeline flow */
+.e17-flow {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.e17-flow-step {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+}
+
+.e17-flow-step > span {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  font-size: 30px;
+  font-weight: 800;
+  padding: 22px 34px;
+}
+
+.e17-flow-arrow {
+  color: var(--teal);
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+/* Principle cards */
+.e17-principles {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e17-principle-card {
+  background: rgba(20, 117, 111, 0.08);
+  border: 1px solid rgba(20, 117, 111, 0.3);
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 34px 38px;
+}
+
+.e17-principle-card strong {
+  color: var(--teal);
+  font-size: 34px;
+}
+
+.e17-principle-card p {
+  font-size: 27px;
+  margin: 0;
+}
+
+/* Recap */
+.e17-recap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.e17-recap > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: flex;
+  gap: 24px;
+  padding: 24px 30px;
+}
+
+.e17-check {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 28px;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
+  width: 52px;
+}
+
+.e17-recap p {
+  font-size: 31px;
+  margin: 0;
+}
+
+/* Next */
+.e17-next {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e17-next-card {
+  background: var(--ink);
+  border-radius: 26px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 44px 48px;
+}
+
+.e17-next-card strong {
+  color: var(--mustard);
+  font-size: 30px;
+}
+
+.e17-next-card span {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.e17-next-card p {
+  color: #c7cec9;
+  font-size: 28px;
+  margin: 0;
+}
+
+.e17-cta {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .e17-how-stage,
+  .e17-goal-row,
+  .e17-compare,
+  .e17-parallel,
+  .e17-principles {
+    grid-template-columns: 1fr;
+  }
+
+  .e17-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .e17-flow-step {
+    flex-direction: column;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Deck: claude-anywhere (Claude Code course, episode 18 / finale)     */
+/* ------------------------------------------------------------------ */
+
+.e18-slide {
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.e18-slide h1 {
+  font-size: 72px;
+  line-height: 1.02;
+  margin: 14px 0 0;
+  max-width: 1100px;
+}
+
+.e18-slide .e18-vs {
+  color: var(--coral);
+}
+
+.e18-note {
+  color: #57625a;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.e18-judge {
+  background: rgba(20, 117, 111, 0.08);
+  border-left: 6px solid var(--teal);
+  border-radius: 12px;
+  color: #2c352f;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 22px 30px;
+}
+
+.e18-tag {
+  align-self: flex-start;
+  background: var(--teal);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 8px 20px;
+}
+
+.e18-tag-muted {
+  background: #e7e3d8;
+  color: #6c756e;
+}
+
+/* Opening */
+.e18-opening {
+  justify-content: center;
+  gap: 64px;
+}
+
+.e18-opening-copy h1 {
+  font-size: 96px;
+  margin-top: 18px;
+}
+
+.e18-goal-row {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e18-goal-row > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 34px;
+}
+
+.e18-goal-row strong {
+  color: var(--coral);
+  font-size: 34px;
+}
+
+.e18-goal-row span {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.e18-goal-row p {
+  font-size: 26px;
+  margin: 0;
+}
+
+/* From phone (core + flow) */
+.e18-connect {
+  align-items: center;
+  display: flex;
+  gap: 36px;
+}
+
+.e18-connect-core {
+  background: var(--ink);
+  border-radius: 24px;
+  color: #fff;
+  flex: 0 0 auto;
+  padding: 36px 40px;
+  text-align: center;
+}
+
+.e18-connect-core strong {
+  display: block;
+  font-size: 40px;
+}
+
+.e18-connect-core p {
+  color: #c7cec9;
+  font-size: 24px;
+  margin: 10px 0 0;
+}
+
+.e18-connect-link {
+  color: var(--teal);
+  font-size: 64px;
+  font-weight: 800;
+}
+
+.e18-connect-services {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.e18-connect-services span {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  font-size: 30px;
+  font-weight: 700;
+  padding: 20px 30px;
+}
+
+/* Card hero (ccdb / context-core) */
+.e18-port {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 44px 48px;
+}
+
+.e18-port strong {
+  font-size: 46px;
+}
+
+.e18-port p {
+  font-size: 32px;
+  margin: 0;
+}
+
+/* Terminal stage (Discord demo) */
+.e18-how-stage {
+  align-items: stretch;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1.05fr 0.95fr;
+}
+
+.e18-terminal {
+  background: #11201c;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.e18-terminal-bar {
+  align-items: center;
+  background: #0a1612;
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+}
+
+.e18-terminal-bar span {
+  background: #3a4843;
+  border-radius: 50%;
+  height: 14px;
+  width: 14px;
+}
+
+.e18-terminal-bar strong {
+  color: #8aa39b;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.e18-terminal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 32px 30px;
+}
+
+.e18-terminal-body code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 27px;
+  line-height: 1.35;
+}
+
+.e18-prompt {
+  color: #fff;
+}
+
+.e18-output {
+  color: #6fd3a8;
+}
+
+.e18-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.e18-steps > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  gap: 22px;
+  padding: 20px 26px;
+}
+
+.e18-steps strong {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 26px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  width: 50px;
+}
+
+.e18-steps span {
+  font-size: 27px;
+  font-weight: 700;
+}
+
+/* Surfaces grid (anywhere) */
+.e18-surfaces {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e18-surfaces > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 28px 34px;
+}
+
+.e18-surfaces strong {
+  color: var(--violet);
+  font-size: 34px;
+}
+
+.e18-surfaces span {
+  color: #57625a;
+  font-size: 27px;
+}
+
+/* Compare cards (anytime, your-way) */
+.e18-compare,
+.e18-choose {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.e18-compare-card,
+.e18-choose-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 38px 40px;
+}
+
+.e18-compare-accent,
+.e18-choose-accent {
+  border-color: rgba(20, 117, 111, 0.45);
+  box-shadow: 0 18px 50px rgba(20, 117, 111, 0.18);
+}
+
+.e18-compare-card strong,
+.e18-choose-card strong {
+  font-size: 38px;
+}
+
+.e18-compare-card p,
+.e18-choose-card p {
+  font-size: 28px;
+  margin: 0;
+}
+
+/* Backbone (dark-accent confession card) */
+.e18-confession {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e18-confession-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 44px 48px;
+}
+
+.e18-confession-card p {
+  font-size: 34px;
+  margin: 0;
+}
+
+.e18-confession-result {
+  align-items: center;
+  display: grid;
+  gap: 14px 28px;
+  grid-template-columns: 1fr auto;
+}
+
+.e18-confession-result span {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.e18-confession-result strong {
+  background: rgba(20, 117, 111, 0.14);
+  border-radius: 12px;
+  color: var(--teal);
+  font-size: 32px;
+  justify-self: start;
+  padding: 6px 24px;
+}
+
+/* Journey timeline */
+.e18-journey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.e18-journey-step {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex: 1 1 240px;
+  gap: 18px;
+  padding: 22px 26px;
+}
+
+.e18-journey-step strong {
+  background: var(--mustard);
+  border-radius: 50%;
+  color: var(--ink);
+  flex: 0 0 auto;
+  font-size: 24px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  width: 48px;
+}
+
+.e18-journey-step span {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+/* Recap */
+.e18-recap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.e18-recap > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: flex;
+  gap: 24px;
+  padding: 24px 30px;
+}
+
+.e18-check {
+  background: var(--teal);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 28px;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
+  width: 52px;
+}
+
+.e18-recap p {
+  font-size: 31px;
+  margin: 0;
+}
+
+/* Finale */
+.e18-next {
+  justify-content: center;
+  gap: 40px;
+}
+
+.e18-next-card {
+  background: var(--ink);
+  border-radius: 26px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 44px 48px;
+}
+
+.e18-next-card strong {
+  color: var(--mustard);
+  font-size: 30px;
+}
+
+.e18-next-card span {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.e18-next-card p {
+  color: #c7cec9;
+  font-size: 28px;
+  margin: 0;
+}
+
+.e18-cta {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .e18-how-stage,
+  .e18-goal-row,
+  .e18-surfaces,
+  .e18-compare,
+  .e18-choose {
+    grid-template-columns: 1fr;
+  }
+
+  .e18-connect {
+    flex-direction: column;
+  }
+
+  .e18-journey-step {
+    flex: 1 1 100%;
+  }
+}

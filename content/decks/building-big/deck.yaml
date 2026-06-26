@@ -1,0 +1,59 @@
+slug: building-big
+title: 第17回 大規模開発 ─ CI/CD・SDK
+summary: 大きい仕事をどう渡すか、そしてClaude Codeをパイプラインにどう組み込むか。仕様書を先に書き、別視点でレビューさせ、並列で走らせる。さらにGitHub連携・claude -p・SDKでCI/CDの中にClaudeを置く。Claude Codeの使い方コース 第17回。
+status: draft
+visibility: members
+createdAt: "2026-06-26"
+updatedAt: "2026-06-26"
+tags:
+  - claude-code
+  - course
+slides:
+  - id: opening
+    title: 大規模開発
+    durationInFrames: 175
+    notes: 第17回スタート。エンジニア向けの🔴回。今日のゴールは2つ。①大きい仕事の上手な渡し方を知る ②Claude Codeをパイプライン（CI/CD・SDK）に組み込む。前半は仕事の渡し方、後半は自動化の土台づくり。
+  - id: dump-problem
+    title: 「そのまま渡す」問題
+    durationInFrames: 175
+    notes: 大きいタスクを丸ごと「これ全部やって」と渡すと2つの事故が起きる。①途中でコンテキストが切れて、最初の指示を忘れる ②全体像がないまま進み、方向がズレて大きな手戻りになる。地図なしで大工事を始めるイメージ。だから準備が要る。
+  - id: spec-first
+    title: 仕様書を先に書く
+    durationInFrames: 180
+    notes: 解決策その1。SPEC.mdパターン。いきなり実装させず、まずClaudeにこちらをインタビューさせて仕様書を作らせる。実装前にその仕様書をコンテキストに読み込ませる→方向のズレが消える。設計図を先に描いてから工事する、当たり前のことをAIにもやる。
+  - id: who-decides
+    title: 誰が何を決めるか
+    durationInFrames: 175
+    notes: 仕様づくりの肝は役割分担。人間が決める＝要件・優先順位（何を作るか・何を大事にするか）。Claudeが決める＝実装方法（どう作るか）。この線引きを仕様書ではっきり分ける。人間は判断に集中し、実装の細部はClaudeに任せる。
+  - id: writer-reviewer
+    title: Writer / Reviewer
+    durationInFrames: 180
+    notes: 解決策その2。実装役と別のレビュー役を分ける。セッション1が実装（Writer）、セッション2は別のClaudeがレビュー（Reviewer）。同じ頭だと自分のミスに気づきにくい→わざと「別の視点」を作って間違いを捕まえる。一人二役より、別人格の二段構え。
+  - id: parallel
+    title: 並列セッション
+    durationInFrames: 180
+    notes: 解決策その3。複数のClaude Codeを同時に走らせる。それぞれ別タスク・別の独立したコンテキストなので干渉しない。第9回のサブエージェントの発展形＝独立した作業者を並べるイメージ。大規模ほど並列が効く。
+  - id: github
+    title: GitHub統合
+    durationInFrames: 180
+    notes: ここから後半、パイプライン編。/install-github-app 一発でGitHub Appをセットアップ。Mention Action＝Issue/PRに @claude と書くとClaudeが応答・作業。PR Action＝PRを自動でコードレビューし影響範囲を分析。ツール権限は設定で管理。チームの開発フローにClaudeが住み着く。
+  - id: claude-p
+    title: claude -p ─ 非対話モード
+    durationInFrames: 175
+    notes: claude -p は非対話モード。対話画面を開かず、パイプラインやスクリプトからClaude Codeを呼べる。stdin/stdoutでつなぐので、ログ解析の自動化・バッチ処理・大規模マイグレーションに向く。人が座っていなくても回る使い方。
+  - id: sdk
+    title: Claude Code SDK
+    durationInFrames: 180
+    notes: もっと細かく制御したいなら公式SDK。TypeScript／Pythonからimportして使う。claude -p より細かい制御＝ツール権限・モデル・並列度を指定できる。既定は読み取り専用で安全、書き込みは allowedTools で明示的に許可する。プログラムにClaudeを埋め込む正式な入口。
+  - id: pipeline
+    title: パイプラインに組み込む
+    durationInFrames: 180
+    notes: 全体像。CI/CDの流れの中でClaudeが動く＝コミット→レビュー→解析→デプロイのどこにでも差し込める。ただし鉄則は2つ。権限は最小限（既定読み取り・書き込みは明示）／人間のレビューは必須。自動化しても最終確認は人が握る。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 165
+    notes: 大きい仕事は丸投げせず、仕様書を先に書く（人間=要件／Claude=実装）。Writer/Reviewerで別視点を作り、並列セッションで広げる。パイプラインには /install-github-app・claude -p・SDKで組み込む。権限は最小限・レビューは必須。
+  - id: next
+    title: 次回予告
+    durationInFrames: 165
+    notes: 次回は第18回「Discordからも使えるよ ─ どこからでもClaude Code」。ターミナルの外、スマホやチャットからClaude Codeを動かす話。チャンネル登録とメンバーシップ登録もよろしくお願いします！
