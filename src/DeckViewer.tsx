@@ -19,7 +19,10 @@ import type { DeckBundle } from './types'
 
 const fps = 30
 const seekTransitionFrames = 24
-const seekDurationMs = 420
+// Slide entrances are authored to settle over ~112 frames (~3.7s). Scrub
+// through them slowly so the motion reads as a smooth reveal instead of an
+// instant snap during navigation/recording.
+const seekDurationMs = 1500
 const settledFrameOffset = 112
 
 type ViewerMode = 'audience' | 'studio'
@@ -348,7 +351,22 @@ export function DeckViewer({
                 aria-label="次のスライド"
               />
             </div>
-            <aside className="recording-reserved-area" aria-hidden="true" />
+            <aside className="recording-reserved-area">
+              <div className="recording-notes">
+                <span className="recording-notes-count">
+                  {slideIndex + 1} / {deck.meta.slides.length}
+                </span>
+                <h2 className="recording-notes-title">{currentSlide.title}</h2>
+                <p className="recording-notes-body">
+                  {currentSlide.notes ?? 'このスライドにはまだノートがありません。'}
+                </p>
+                {deck.meta.slides[slideIndex + 1] ? (
+                  <span className="recording-notes-next">
+                    次 → {deck.meta.slides[slideIndex + 1].title}
+                  </span>
+                ) : null}
+              </div>
+            </aside>
           </div>
         </section>
       ) : null}
