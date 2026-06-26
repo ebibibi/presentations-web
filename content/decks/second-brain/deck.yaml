@@ -1,0 +1,61 @@
+slug: second-brain
+title: 第15回 第2の脳 ─ セッションをまたいで記憶を残す
+summary: Claudeはセッションを閉じると会話を忘れる。人間が寝ると忘れるのと同じ。だから外に「第2の脳」をつくる。人間もAIも同じノートを読み書きし、Auto Memoryで好みやフィードバックが自動で貯まる。これまで学んだ機能はすべてこの第2の脳の上に乗る。Claude Codeの使い方コース 第15回。
+status: draft
+visibility: members
+createdAt: "2026-06-26"
+updatedAt: "2026-06-26"
+tags:
+  - claude-code
+  - memory
+  - obsidian
+  - course
+slides:
+  - id: opening
+    title: 第2の脳
+    durationInFrames: 170
+    notes: 第15回スタート。テーマは「記憶」。Claudeはセッションを閉じると会話を忘れてしまう。今日のゴールは2つ。①記憶の限界を知る ②人間とAIが共有する「第2の脳」を設計する。シリーズの集大成に近い、いちばん大事な回。
+  - id: memory-limit
+    title: 記憶には限界がある
+    durationInFrames: 170
+    notes: まず現実から。Claudeはセッションを閉じると、その会話の中身を全部忘れる。人間が一晩寝ると細かい話を忘れるのと同じ。だから「昨日の続き」を毎回ゼロから説明し直すことになる。これを解決するのが今日の話。
+  - id: second-brain
+    title: 第2の脳とは
+    durationInFrames: 175
+    notes: 解決のカギは「外に記憶を置く」こと。人間もAIも同じノートを読み書きする、共有のメモ帳=第2の脳。たとえ=2人で1冊のノートを使うイメージ。片方が書けばもう片方も読める。双方向に読み書きできるのがポイント。
+  - id: auto-memory
+    title: Auto Memory ─ 自動でたまる記憶
+    durationInFrames: 175
+    notes: まず標準機能から。~/.claude/MEMORY.md に、Claudeがあなたの好み・フィードバック・プロジェクト情報を自動で書き溜めてくれる。「次からはこうして」と言うと覚えてくれる。ただし断片的なメモなので、これだけだと全体像は持てない。
+  - id: notebook
+    title: 外部の「メモ帳」を持つ
+    durationInFrames: 175
+    notes: Auto Memoryは便利だけど断片的。だから構造化した知識ベースを別に用意する。デイリーノート・プロジェクト・リソースに整理された外部メモ帳。たとえ=付箋メモ（Auto Memory）と、ちゃんとした手帳（知識ベース）の両方を持つイメージ。
+  - id: my-vault
+    title: 私のVault
+    durationInFrames: 180
+    notes: 実例を見せます。私はObsidianという知識ツールをこの第2の脳にしている。デイリーノート（日々の記録）／プロジェクト（進行中の仕事）／リソース（蓄積した知識）の3層構造。これをClaudeが直接読み書きする。人間とAI共通の脳になっている。
+  - id: goodmorning
+    title: /goodmorning
+    durationInFrames: 175
+    notes: ここから第2の脳の上で動く実践。朝「おはよう」と言うと、第2の脳から「今日やること」が出てくる。裏ではHook・スキル・サブエージェントが連携して、予定とタスクをまとめてくれる。これまで学んだ機能の合わせ技。
+  - id: recall
+    title: 「思い出して」
+    durationInFrames: 175
+    notes: 新しいセッションを開いて「思い出して」と言うだけ。Claudeが第2の脳をたどって、前回の続きを自動で復元してくれる。記憶が消える問題を、外部ノートで埋める仕組み。毎回ゼロから説明しなくてよくなる。
+  - id: goodnight
+    title: /goodnight
+    durationInFrames: 170
+    notes: 1日の終わりは「おやすみ」。その日のデイリーノートをもとに、Claudeが日記を自動生成して第2の脳に記録する。書けば書くほど脳が育っていく。記録のループが回り始める。
+  - id: culmination
+    title: 集大成
+    durationInFrames: 180
+    notes: ここが今日のクライマックス。第2の脳という土台の上に、これまで学んだ機能が全部乗る。CLAUDE.md（ルール）／カスタムコマンド／Hook（自動化）／サブエージェント（分担）。バラバラだった点が、ひとつの仕組みとしてつながる。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 160
+    notes: 今日のまとめ。Claudeはセッションを閉じると忘れる。だから外に第2の脳を持つ。人間もAIも同じノートを読み書きする。Auto Memoryで自動でたまり、これまでの機能は全部その上に乗る。記憶を外に出すと、毎日が地続きになる。
+  - id: next
+    title: 次回予告
+    durationInFrames: 160
+    notes: 次回は第16回「自己検証 ─ テスト駆動 & 高度なHook」。Claudeに自分の仕事をチェックさせる話。テストを先に書く考え方と、もう一歩進んだHookの使い方。チャンネル登録とメンバーシップもよろしくお願いします！

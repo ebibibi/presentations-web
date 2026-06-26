@@ -1,0 +1,59 @@
+slug: claude-anywhere
+title: 第18回 Discordからも使えるよ ─ どこからでもClaude Code
+summary: Claude Codeはターミナル専用ツールじゃない。外出先からスマホのDiscordで指示を投げ、帰宅したら作業が終わっている。橋渡しはOSSのccdb。公式のWeb/Desktop/IDE/CLIも含め「どこからでも動く」を示し、全18回を貫いた「コンテキスト管理」で締めくくる。Claude Codeの使い方コース 第18回・最終回。
+status: draft
+visibility: members
+createdAt: "2026-06-26"
+updatedAt: "2026-06-26"
+tags:
+  - claude-code
+  - course
+slides:
+  - id: opening
+    title: どこからでもClaude Code
+    durationInFrames: 175
+    notes: 最終回スタート。Claude Codeはターミナルの中だけのツールじゃない。今日のゴールは2つ。①ターミナル以外からClaude Codeを動かす ②全18回のシリーズを締めくくる。難易度は🟢、肩の力を抜いて聞ける回。
+  - id: from-phone
+    title: 実はスマホから使ってる
+    durationInFrames: 170
+    notes: 告白から入る。私は外出中、スマホから指示を投げている。出先で「これやっといて」と送って、帰宅したら作業が終わっている。ターミナルの前に座っていなくてもClaude Codeは働ける、という体験を共有する。
+  - id: discord-demo
+    title: Discord連携の実演
+    durationInFrames: 180
+    notes: 実際の流れをステップで見せる。①Discordにスレッドを作る ②メッセージで指示を投稿 ③Claude Codeが反応して作業する ④結果がDiscordに返ってくる。スマホでその返信を確認すれば完了。チャット1本で開発が回る様子を体感してもらう。
+  - id: ccdb
+    title: 仕組みは ccdb
+    durationInFrames: 175
+    notes: 橋渡しの正体はccdb（claude-code-discord-bridge）。DiscordとClaude Codeをつなぐ自作ツールで、OSSとして公開している。セットアップすれば誰でも同じことができる。難しい魔法ではなく、再現可能な仕組みだと伝える。
+  - id: anywhere
+    title: どこからでも入れる
+    durationInFrames: 175
+    notes: 入口はDiscordだけじゃない。公式にもCloud（Claude Code Web）/ Desktopアプリ / IDE拡張 / CLIと複数の選択肢がある。自分の状況に合った入口を選べばいい。ターミナルは数ある入口の1つにすぎない。
+  - id: anytime
+    title: いつでも・どこでも
+    durationInFrames: 170
+    notes: 場所と時間の制約から解放される。移動中・スキマ時間・ソファの上からでも指示を投げられる。まとまった作業時間を確保しなくても、思いついた瞬間に動かせる。これが「どこからでも」の本当の価値。
+  - id: backbone
+    title: シリーズの背骨
+    durationInFrames: 175
+    notes: ここから振り返り。全18回を通して、ずっと根っこにあったテーマは「コンテキスト管理」だった。どの回も、AIに正しい文脈を渡す工夫の話に行き着いていた。今日の「どこからでも」も、結局は文脈を運ぶ話の延長線上にある。
+  - id: journey
+    title: 学びの旅
+    durationInFrames: 180
+    notes: 旅路を1枚で振り返る。CLAUDE.md → カスタムコマンド → Hooks → サブエージェント → MCP → 第2の脳。すべてが「どうコンテキストを設計し、渡し、育てるか」でつながっていた。バラバラな機能ではなく一本の道だった。
+  - id: context-core
+    title: コンテキスト管理が全ての基本
+    durationInFrames: 170
+    notes: 締めのメッセージ。ツールやコマンドは入口で、本質はいつもコンテキスト管理。良い文脈を渡せばClaude Codeは強力な相棒になる。この一点さえ押さえれば、新しい機能が出ても応用が効く。
+  - id: your-way
+    title: あなたの使い方次第
+    durationInFrames: 170
+    notes: Claude Codeはどこからでも動く。あとは、それをどう使うかはあなた次第。テンプレ通りでなく、自分の生活と仕事に合わせて道具を組み立てていってほしい。シリーズはここで一区切り、でも実践はここから始まる。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 160
+    notes: 今日のまとめ。Claude Codeはターミナル専用じゃない。Discord連携(ccdb)や公式のWeb/Desktop/IDE/CLIでどこからでも動く。そして全18回を貫いたのはコンテキスト管理。最後は自分の使い方で決まる。
+  - id: finale
+    title: 全18回完結・ありがとう
+    durationInFrames: 175
+    notes: 最終回の締め。全18回、最後までご視聴ありがとうございました。次回予告ではなく、シリーズの完結とお礼の回。これからもClaude Codeを一緒に楽しんでいきましょう。チャンネル登録とメンバーシップ登録もよろしくお願いします！

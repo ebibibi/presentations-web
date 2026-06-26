@@ -1,0 +1,59 @@
+slug: self-verification
+title: 第16回 自己検証 ─ テスト駆動 & 高度なHook
+summary: Claudeに「自分の仕事を自分で検証する手段」を渡す。テストを渡せばClaudeは失敗を見つけて自分で直す自己修正ループになる。さらに第8回のHookを発展させ、型チェック・Claude同士のレビュー・私の実例まで踏み込む。Claude Codeの使い方コース 第16回（難易度🔴 エンジニア向け）。
+status: draft
+visibility: members
+createdAt: "2026-06-26"
+updatedAt: "2026-06-26"
+tags:
+  - claude-code
+  - course
+slides:
+  - id: opening
+    title: 自己検証
+    durationInFrames: 175
+    notes: 第16回スタート。テーマは「自己検証」。今日のゴールは2つ。①テストで品質を上げる ②Hookで検証を仕組み化する。前半がテスト駆動、後半が第8回から発展した高度なHook。Claudeに自分で答え合わせさせる回。
+  - id: for-engineers
+    title: ここからエンジニア向け
+    durationInFrames: 165
+    notes: 正直に断っておく。第16回からはプログラムを書く方向けの内容。非エンジニアの方は第15回までで実用上は十分。ここから先は難易度🔴だけど、たとえ話を交えて噛み砕いて説明するので、興味があればぜひ。
+  - id: instruct-vs-verify
+    title: 指示するだけ vs 検証を渡す
+    durationInFrames: 180
+    notes: 公式が言う最もレバレッジが高いこと＝Claudeに自分の仕事を検証する手段を渡すこと。たとえ＝「美味しい料理を作って」と頼むより「この味見テストに合格する料理を作って」と頼むほうが確実。ゴールの基準を渡せば自分で答え合わせできる。
+  - id: tdd-loop
+    title: テスト駆動の自己修正ループ
+    durationInFrames: 182
+    notes: テストを渡す→Claudeが実行→失敗→原因を直す→再実行→成功。この自己修正ループが回る。人間が逐一チェックしなくても、テストが合格するまでClaude自身が直し続ける。テスト駆動開発(TDD)と非常に相性が良い。ターミナル演出で実演。
+  - id: screenshot-check
+    title: スクリーンショットで見た目を検証
+    durationInFrames: 170
+    notes: 検証はコードのテストだけじゃない。UI変更ならスクリーンショットを撮ってClaudeに見せ「この画面、デザイン通り?」と聞ける。テキストの合否だけでなく、見た目という主観的なゴールも検証の対象にできる。
+  - id: bridge-to-hooks
+    title: Hookの応用へ
+    durationInFrames: 165
+    notes: ここで橋渡し。第8回で学んだHook（特定のタイミングで自動実行する仕組み）を、ここからは検証に応用する。手動で検証するのではなく、Hookで検証そのものを自動化していく。基本から高度な実例へ。
+  - id: typecheck-hook
+    title: 型チェックHook
+    durationInFrames: 180
+    notes: 高度なHook①。ファイルを編集するたびに自動でtsc --noEmit（型チェック）を走らせる。型エラーが出たらその内容をClaudeに返し、Claudeが自動で修正する。人が見張らなくても、編集と検証がワンセットで回る。ターミナル演出で実演。
+  - id: claude-reviews-claude
+    title: Claude→Claudeの審査
+    durationInFrames: 178
+    notes: 高度なHook②。Hookからclaude -pで別のClaudeインスタンスを起動し、新しく書いた関数が既存の関数と重複していないかを審査させる。Claudeの仕事をもう一人のClaudeがレビューする二重チェックの仕組み。
+  - id: my-real-hooks
+    title: 私の実際のHook
+    durationInFrames: 178
+    notes: 私が実際に使っているHookの実例を3つ。SessionStart＝起動時にプロジェクトの文脈を自動ロード。Stop＝作業ログをObsidianに自動保存。UserPromptSubmit＝送信前にメッセージを前処理（言語設定など）。検証以外にも応用が効く。
+  - id: philosophy
+    title: 検証は仕組みに組み込む
+    durationInFrames: 170
+    notes: 今日の核心。検証を「人に毎回やらせる」のではなく「仕組みに組み込む」。テストもHookも、一度作れば自動で回り続ける。人間は基準を決める側に回り、答え合わせはClaudeと仕組みに任せる。これが品質を底上げする一番の近道。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 162
+    notes: 自己検証はレバレッジ最大。テストを渡せば失敗→修正→成功の自己修正ループが回る。UIはスクショで検証。Hookは型チェック・Claude同士の審査まで発展できる。検証は人ではなく仕組みに組み込む。
+  - id: next
+    title: 次回予告
+    durationInFrames: 160
+    notes: 次回は第17回「大規模開発 ─ CI/CD・SDK」。個人の道具から、チームと本番運用のスケールへ。CI/CDへの組み込みやSDKでの自動化を扱う。チャンネル登録とメンバーシップもよろしく！
