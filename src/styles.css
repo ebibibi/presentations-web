@@ -945,6 +945,29 @@ main {
   margin: 0;
 }
 
+.cta-card-link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.cta-card-link:hover,
+.cta-card-link:focus-visible {
+  border-color: var(--teal);
+  box-shadow: 0 16px 44px rgba(20, 117, 111, 0.2);
+}
+
+.cta-link {
+  align-self: flex-start;
+  background: rgba(20, 117, 111, 0.12);
+  border-radius: 999px;
+  color: var(--teal);
+  font-size: 21px;
+  font-weight: 700;
+  margin-top: 4px;
+  padding: 6px 16px;
+}
+
 @media (max-width: 720px) {
   .cta-grid {
     grid-template-columns: 1fr;

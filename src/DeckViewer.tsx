@@ -39,6 +39,10 @@ export function DeckViewer({
 }) {
   const [slideIndex, setSlideIndex] = useState(() => getInitialSlideIndex(deck))
   const [mode, setMode] = useState<ViewerMode>(initialMode)
+  // Tracks the slide we are heading to, updated synchronously on every
+  // navigation so a key/click mid-animation advances from the in-flight target
+  // instead of the last-committed slide.
+  const targetIndexRef = useRef(slideIndex)
   const playerRef = useRef<PlayerRef>(null)
   const recordingPlayerRef = useRef<PlayerRef>(null)
   const recordingSurfaceRef = useRef<HTMLDivElement>(null)
@@ -102,9 +106,12 @@ export function DeckViewer({
     (index: number) => {
       const nextIndex = Math.max(0, Math.min(deck.meta.slides.length - 1, index))
 
-      if (nextIndex === slideIndex) {
+      // Compare against the in-flight target (not the committed slide) so
+      // navigation works even while an entrance animation is still playing.
+      if (nextIndex === targetIndexRef.current) {
         return
       }
+      targetIndexRef.current = nextIndex
 
       // Always start from the destination slide's first frame and play its
       // entrance through to the settled frame, mirroring the play button.
@@ -120,9 +127,13 @@ export function DeckViewer({
       animatePlayersToFrame,
       deck.meta.slides.length,
       getSlideSettledFrame,
-      slideIndex,
       slideStarts
     ]
+  )
+
+  const goRelative = useCallback(
+    (delta: number) => goToSlide(targetIndexRef.current + delta),
+    [goToSlide]
   )
 
   useEffect(() => {
@@ -143,12 +154,12 @@ export function DeckViewer({
     const handler = (event: KeyboardEvent) => {
       if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
         event.preventDefault()
-        goToSlide(slideIndex + 1)
+        goRelative(1)
       }
 
       if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
         event.preventDefault()
-        goToSlide(slideIndex - 1)
+        goRelative(-1)
       }
 
       if (event.key === 'Home') {
@@ -164,7 +175,7 @@ export function DeckViewer({
 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [deck.meta.slides.length, goToSlide, slideIndex])
+  }, [deck.meta.slides.length, goRelative, goToSlide])
 
   const currentSlide = deck.meta.slides[slideIndex]
   const isStudio = mode === 'studio'
@@ -253,7 +264,7 @@ export function DeckViewer({
             <button
               type="button"
               className="nav-zone nav-zone-left"
-              onClick={() => goToSlide(slideIndex - 1)}
+              onClick={() => goRelative(-1)}
               aria-label="前のスライド"
             >
               <ChevronLeft size={28} aria-hidden />
@@ -261,7 +272,7 @@ export function DeckViewer({
             <button
               type="button"
               className="nav-zone nav-zone-right"
-              onClick={() => goToSlide(slideIndex + 1)}
+              onClick={() => goRelative(1)}
               aria-label="次のスライド"
             >
               <ChevronRight size={28} aria-hidden />
@@ -329,13 +340,13 @@ export function DeckViewer({
               <button
                 type="button"
                 className="recording-nav-zone recording-nav-zone-left"
-                onClick={() => goToSlide(slideIndex - 1)}
+                onClick={() => goRelative(-1)}
                 aria-label="前のスライド"
               />
               <button
                 type="button"
                 className="recording-nav-zone recording-nav-zone-right"
-                onClick={() => goToSlide(slideIndex + 1)}
+                onClick={() => goRelative(1)}
                 aria-label="次のスライド"
               />
             </div>
@@ -361,14 +372,14 @@ export function DeckViewer({
 
       {isStudioRoute && !auth.canRecord ? null : (
         <footer className="viewer-footer">
-          <button type="button" onClick={() => goToSlide(slideIndex - 1)}>
+          <button type="button" onClick={() => goRelative(-1)}>
             <ChevronLeft size={18} aria-hidden />
             前へ
           </button>
           <span>
             {slideIndex + 1} / {deck.meta.slides.length}
           </span>
-          <button type="button" onClick={() => goToSlide(slideIndex + 1)}>
+          <button type="button" onClick={() => goRelative(1)}>
             次へ
             <ChevronRight size={18} aria-hidden />
           </button>
