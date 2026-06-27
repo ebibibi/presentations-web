@@ -11,8 +11,13 @@ This repository is intended to be public. Use English for code comments, README 
 - Deck metadata lives in `content/decks/*/deck.yaml`.
 - Deck visuals live in `content/decks/*/slides.tsx`.
 - Keep metadata and slide component counts in sync.
-- Use `status: draft` for unpublished work.
-- Use `visibility: public | members | private` even though access control is not implemented yet.
+- `status` drives visibility (see `src/visibility.ts`):
+  - `public` — listed in the archive and openable by anyone.
+  - `unlisted` — openable by direct URL, hidden from the archive list.
+  - `draft` / `private` — hidden from the public; only a signed-in owner (`auth.canRecord`) sees and can open them. Use this for a deck staged before its video airs.
+  - **To publish, change `status: draft` to `status: public` and merge — that one line is the switch.**
+  - This is UI-level gating: a draft deck's content still ships in the static bundle, so it is not hard access control.
+- `visibility` is currently unused metadata; gate on `status`.
 - Read [docs/ai-deck-authoring.md](docs/ai-deck-authoring.md) before creating or heavily editing a deck.
 
 ## Implementation Rules
