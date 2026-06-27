@@ -1,9 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { spring, useVideoConfig } from 'remotion'
 import type { SlideModule, SlideRenderContext } from '../../../src/types'
+import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
+  { render: (props) => <CtaSlide {...props} /> },
   { render: (props) => <ForEngineersSlide {...props} /> },
   { render: (props) => <InstructVsVerifySlide {...props} /> },
   { render: (props) => <TddLoopSlide {...props} /> },
@@ -15,7 +17,8 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <PhilosophySlide {...props} /> },
   { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <NextSlide {...props} /> }
+  { render: (props) => <NextSlide {...props} /> },
+  { render: (props) => <CtaSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.
@@ -45,6 +48,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
 
   return (
     <section className="remotion-slide e16-slide e16-opening">
+      <LogoMark />
       <div className="motion-grid" />
       <div className="e16-opening-copy" style={lift(title, 48)}>
         <span className="slide-kicker">Claude Codeの使い方コース ─ 第16回</span>

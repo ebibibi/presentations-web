@@ -14,6 +14,10 @@ slides:
     title: 自己検証
     durationInFrames: 175
     notes: 第16回スタート。テーマは「自己検証」。今日のゴールは2つ。①テストで品質を上げる ②Hookで検証を仕組み化する。前半がテスト駆動、後半が第8回から発展した高度なHook。Claudeに自分で答え合わせさせる回。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
   - id: for-engineers
     title: ここからエンジニア向け
     durationInFrames: 165
@@ -62,3 +66,7 @@ slides:
     title: 次回予告
     durationInFrames: 160
     notes: 次回は第17回「大規模開発 ─ CI/CD・SDK」。個人の道具から、チームと本番運用のスケールへ。CI/CDへの組み込みやSDKでの自動化を扱う。チャンネル登録とメンバーシップもよろしく！
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。最後にもう一度、高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。
