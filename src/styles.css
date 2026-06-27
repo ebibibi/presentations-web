@@ -359,6 +359,20 @@ main {
   padding: 4px 9px;
 }
 
+.card-meta .card-status-hidden {
+  background: rgba(216, 93, 74, 0.12);
+  border-color: rgba(216, 93, 74, 0.4);
+  color: var(--coral);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.owner-note {
+  color: var(--coral);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .deck-card h2 {
   font-size: 22px;
   line-height: 1.18;

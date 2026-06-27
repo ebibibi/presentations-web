@@ -1,7 +1,7 @@
 slug: platform-introduction
 title: Web Presentation Platform Concept
 summary: HTML、React、Remotionで作る撮影用プレゼンテーション基盤の実演用サンプル。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-06-21"
 updatedAt: "2026-06-21"

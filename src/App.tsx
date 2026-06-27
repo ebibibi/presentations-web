@@ -15,6 +15,7 @@ import {
   loadAuthState
 } from './auth'
 import { getDecks } from './content'
+import { isDeckAccessible, isDeckListed, isPublished } from './visibility'
 import type { DeckBundle } from './types'
 
 initializeAnalytics()
@@ -93,6 +94,21 @@ export function App() {
       )
     }
 
+    if (!isDeckAccessible(deck.meta.status, auth.canRecord)) {
+      return (
+        <Shell auth={auth} onAuthChange={setAuth}>
+          <EmptyState
+            title={auth.loading ? '確認しています…' : 'この資料はまだ公開されていません'}
+            body={
+              auth.loading
+                ? 'アクセス権を確認しています。'
+                : '動画の公開に合わせて公開されます。資料作成者はログインすると閲覧できます。'
+            }
+          />
+        </Shell>
+      )
+    }
+
     return (
       <DeckViewer
         deck={deck}
@@ -107,7 +123,11 @@ export function App() {
 
   return (
     <Shell auth={auth} onAuthChange={setAuth}>
-      <Home decks={decks} onOpenDeck={(slug) => navigate(`/decks/${slug}`)} />
+      <Home
+        decks={decks}
+        isOwner={auth.canRecord}
+        onOpenDeck={(slug) => navigate(`/decks/${slug}`)}
+      />
     </Shell>
   )
 }
@@ -148,13 +168,17 @@ function Shell({
 
 function Home({
   decks,
+  isOwner,
   onOpenDeck
 }: {
   decks: DeckBundle[]
+  isOwner: boolean
   onOpenDeck: (slug: string) => void
 }) {
   const [query, setQuery] = useState('')
-  const visibleDecks = decks.filter((deck) => {
+  const listedDecks = decks.filter((deck) => isDeckListed(deck.meta.status, isOwner))
+  const hiddenCount = listedDecks.filter((deck) => !isPublished(deck.meta.status)).length
+  const visibleDecks = listedDecks.filter((deck) => {
     const text = [
       deck.meta.title,
       deck.meta.summary,
@@ -203,6 +227,9 @@ function Home({
           />
         </label>
         <span>{visibleDecks.length} decks</span>
+        {isOwner && hiddenCount > 0 ? (
+          <span className="owner-note">オーナー表示：非公開 {hiddenCount} 件を含む</span>
+        ) : null}
       </section>
 
       <section className="deck-grid" aria-label="Presentation archive">
@@ -240,7 +267,9 @@ function DeckCard({ deck, onOpen }: { deck: DeckBundle; onOpen: () => void }) {
       </div>
       <div className="deck-card-body">
         <div className="card-meta">
-          <span>{deck.meta.status}</span>
+          <span className={isPublished(deck.meta.status) ? undefined : 'card-status-hidden'}>
+            {deck.meta.status}
+          </span>
           <span>{deck.meta.slides.length} slides</span>
         </div>
         <h2>{deck.meta.title}</h2>
