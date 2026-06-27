@@ -16,6 +16,10 @@ slides:
     title: スキル & コンテキスト最適化
     durationInFrames: 170
     notes: 第13回スタート。今日のゴールは2つ。①スキルで繰り返す仕事を覚えさせる ②/contextでコンテキストを可視化して最適化する。スキルを足すとコンテキストにも効いてくる、という流れでつなげる。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
   - id: skill-vs-command
     title: スキルとは何か
     durationInFrames: 170
@@ -72,3 +76,7 @@ slides:
     title: 次回予告
     durationInFrames: 160
     notes: 次回は第14回「外部連携の全て ─ MCP vs 直接API」。今日チラッと出たMCPを正面から扱う。チャンネル登録とメンバーシップもよろしく！
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。最後にもう一度、高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。

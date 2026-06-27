@@ -14,6 +14,10 @@ slides:
     title: どこからでもClaude Code
     durationInFrames: 175
     notes: 最終回スタート。Claude Codeはターミナルの中だけのツールじゃない。今日のゴールは2つ。①ターミナル以外からClaude Codeを動かす ②全18回のシリーズを締めくくる。難易度は🟢、肩の力を抜いて聞ける回。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
   - id: from-phone
     title: 実はスマホから使ってる
     durationInFrames: 170
@@ -62,3 +66,7 @@ slides:
     title: 全18回完結・ありがとう
     durationInFrames: 175
     notes: 最終回の締め。全18回、最後までご視聴ありがとうございました。次回予告ではなく、シリーズの完結とお礼の回。これからもClaude Codeを一緒に楽しんでいきましょう。チャンネル登録とメンバーシップ登録もよろしくお願いします！
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。最後にもう一度、高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。

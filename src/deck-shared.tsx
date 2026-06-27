@@ -1,0 +1,76 @@
+/* eslint-disable react-refresh/only-export-components */
+import { spring, useVideoConfig } from 'remotion'
+import type { SlideRenderContext } from './types'
+
+// ─────────────────────────────────────────────────────────────────────────
+// Shared branding & call-to-action template.
+// Edit BRAND below and EVERY deck updates at once (logo, like/subscribe/
+// membership/note copy). The logo slide-2 and the closing slide both render
+// the CtaSlide from here.
+// ─────────────────────────────────────────────────────────────────────────
+export const BRAND = {
+  // Logo file lives in public/brand/. Swap this file (or the path) to rebrand
+  // every deck's opening and CTA slides.
+  logoSrc: '/brand/ebi-logo.png',
+  channelName: '胡田のチャンネル',
+  cta: {
+    title: '応援お願いします！',
+    subtitle: 'チャンネルとこのコースは、みなさんの応援で続きます',
+    actions: [
+      { icon: '👍', label: '高評価', body: '役に立ったら「いいね」をお願いします' },
+      { icon: '🔔', label: 'チャンネル登録', body: '新着を見逃さないように登録を' },
+      { icon: '⭐', label: 'メンバーシップ', body: 'このコースはメンバーシップ限定。続きはこちら' },
+      { icon: '📝', label: 'note メンバーシップ', body: 'note でも限定記事・深掘り解説を配信中' }
+    ]
+  }
+}
+
+function entrance(frame: number, fps: number, delay = 0) {
+  return spring({
+    frame: frame - delay,
+    fps,
+    config: { damping: 18, stiffness: 110 }
+  })
+}
+
+function lift(value: number, distance = 32) {
+  return {
+    opacity: value,
+    transform: `translateY(${(1 - value) * distance}px)`
+  }
+}
+
+export function LogoMark({ className }: { className?: string }) {
+  return <img src={BRAND.logoSrc} alt="" className={className ?? 'deck-logo'} />
+}
+
+export function CtaSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const head = entrance(frame, fps)
+
+  return (
+    <section className="remotion-slide cta-slide">
+      <div className="motion-grid" />
+      <div className="cta-head" style={lift(head, 36)}>
+        <img src={BRAND.logoSrc} alt="" className="cta-logo" />
+        <div>
+          <h1>{BRAND.cta.title}</h1>
+          <p>{BRAND.cta.subtitle}</p>
+        </div>
+      </div>
+      <div className="cta-grid">
+        {BRAND.cta.actions.map((action, index) => (
+          <div
+            key={action.label}
+            className="cta-card"
+            style={lift(entrance(frame, fps, 24 + index * 10), 26)}
+          >
+            <span className="cta-icon">{action.icon}</span>
+            <strong>{action.label}</strong>
+            <p>{action.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}

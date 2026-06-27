@@ -14,6 +14,10 @@ slides:
     title: 大規模開発
     durationInFrames: 175
     notes: 第17回スタート。エンジニア向けの🔴回。今日のゴールは2つ。①大きい仕事の上手な渡し方を知る ②Claude Codeをパイプライン（CI/CD・SDK）に組み込む。前半は仕事の渡し方、後半は自動化の土台づくり。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
   - id: dump-problem
     title: 「そのまま渡す」問題
     durationInFrames: 175
@@ -62,3 +66,7 @@ slides:
     title: 次回予告
     durationInFrames: 165
     notes: 次回は第18回「Discordからも使えるよ ─ どこからでもClaude Code」。ターミナルの外、スマホやチャットからClaude Codeを動かす話。チャンネル登録とメンバーシップ登録もよろしくお願いします！
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。最後にもう一度、高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。

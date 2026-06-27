@@ -16,6 +16,10 @@ slides:
     title: 外部連携の全て
     durationInFrames: 170
     notes: 第14回スタート。Claude Codeを「外の世界」とつなぐ話。今日のゴールは2つ。①外とつなぐ2つの道（MCPと直接API）を知る ②自分はどっちを選ぶか判断できるようになる。便利さと正直な比較の回。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
   - id: why-connect
     title: そもそも外部連携とは
     durationInFrames: 170
@@ -64,3 +68,7 @@ slides:
     title: 次回予告
     durationInFrames: 160
     notes: 次回は第15回「第2の脳 & 私の実際の使い方」。概念と実践を1本で。CLAUDE.mdやObsidianを使った、人間とAIが共有する知識の作り方。チャンネル登録とメンバーシップもよろしく！
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。最後にもう一度、高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。

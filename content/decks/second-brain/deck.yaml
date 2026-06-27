@@ -16,6 +16,10 @@ slides:
     title: 第2の脳
     durationInFrames: 170
     notes: 第15回スタート。テーマは「記憶」。Claudeはセッションを閉じると会話を忘れてしまう。今日のゴールは2つ。①記憶の限界を知る ②人間とAIが共有する「第2の脳」を設計する。シリーズの集大成に近い、いちばん大事な回。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
   - id: memory-limit
     title: 記憶には限界がある
     durationInFrames: 170
@@ -64,3 +68,7 @@ slides:
     title: 次回予告
     durationInFrames: 160
     notes: 次回は第16回「自己検証 ─ テスト駆動 & 高度なHook」。Claudeに自分の仕事をチェックさせる話。テストを先に書く考え方と、もう一歩進んだHookの使い方。チャンネル登録とメンバーシップもよろしくお願いします！
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。最後にもう一度、高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。

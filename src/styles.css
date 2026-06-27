@@ -869,6 +869,99 @@ main {
 }
 
 /* ------------------------------------------------------------------ */
+/* Shared: brand logo + call-to-action slide (every deck)             */
+/* ------------------------------------------------------------------ */
+.deck-logo {
+  position: absolute;
+  top: 56px;
+  right: 64px;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  z-index: 3;
+}
+
+.cta-slide {
+  justify-content: center;
+  gap: 56px;
+}
+
+.cta-head {
+  align-items: center;
+  display: flex;
+  gap: 32px;
+}
+
+.cta-logo {
+  border-radius: 50%;
+  box-shadow: var(--shadow);
+  flex: 0 0 auto;
+  height: 150px;
+  width: 150px;
+}
+
+.cta-head h1 {
+  margin: 0;
+}
+
+.cta-head p {
+  color: #57625a;
+  font-size: 30px;
+  margin: 10px 0 0;
+}
+
+.cta-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.cta-card {
+  align-items: flex-start;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 30px 34px;
+}
+
+.cta-icon {
+  font-size: 52px;
+  line-height: 1;
+}
+
+.cta-card strong {
+  font-size: 34px;
+}
+
+.cta-card p {
+  color: #57625a;
+  font-size: 26px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .cta-grid {
+    grid-template-columns: 1fr;
+  }
+  .cta-head {
+    flex-direction: column;
+    text-align: center;
+  }
+  .deck-logo {
+    width: 84px;
+    height: 84px;
+    top: 20px;
+    right: 20px;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Shared: SKILL.md code panel (episode 13)                           */
 /* ------------------------------------------------------------------ */
 .skillmd {
