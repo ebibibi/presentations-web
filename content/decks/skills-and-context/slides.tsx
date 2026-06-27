@@ -6,6 +6,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
   { render: (props) => <SkillVsCommandSlide {...props} /> },
   { render: (props) => <SkillCreateSlide {...props} /> },
+  { render: (props) => <SkillStructureSlide {...props} /> },
   { render: (props) => <SkillDesignSlide {...props} /> },
   { render: (props) => <SkillModeSlide {...props} /> },
   { render: (props) => <ContextViewSlide {...props} /> },
@@ -131,6 +132,61 @@ function SkillCreateSlide({ frame }: SlideRenderContext) {
           ))}
         </div>
       </div>
+    </section>
+  )
+}
+
+function SkillStructureSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const tree = entrance(frame, fps, 22)
+
+  const treeLines = [
+    ['.claude/skills/weekly-report/', 'e13-tree-root'],
+    ['├─ SKILL.md', 'e13-tree-file'],
+    ['├─ scripts/', 'e13-tree-dir'],
+    ['│    └─ collect.sh', 'e13-tree-sub'],
+    ['└─ reference/', 'e13-tree-dir'],
+    ['     └─ format.md', 'e13-tree-sub']
+  ] as const
+
+  const parts = [
+    ['SKILL.md', '本体。説明・手順・判断基準を書く入口', false],
+    ['scripts/', 'シェルやPythonの「道具」を同梱。説明だけでなく実際に実行できる', true],
+    ['reference/', 'APIリファレンスやテンプレを格納。必要なときだけ読む', false]
+  ] as const
+
+  return (
+    <section className="remotion-slide e13-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">ファイル構造</span>
+        <h1>スキルの正体はフォルダ</h1>
+      </div>
+      <div className="e13-structure">
+        <div className="e13-tree" style={lift(tree, 28)}>
+          {treeLines.map(([text, cls]) => (
+            <code key={text} className={cls}>
+              {text}
+            </code>
+          ))}
+        </div>
+        <div className="e13-parts">
+          {parts.map(([name, body, accent], index) => (
+            <div
+              key={name}
+              className={accent ? 'e13-part e13-part-accent' : 'e13-part'}
+              style={lift(entrance(frame, fps, 34 + index * 12), 26)}
+            >
+              <strong>{name}</strong>
+              <p>{body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="e13-note" style={lift(entrance(frame, fps, 78), 18)}>
+        常に読むのは説明文だけ。本体は呼ばれたとき、reference は必要なときだけ。
+        <b>だからスキルを増やしてもコンテキストを食わない。</b>
+      </p>
     </section>
   )
 }

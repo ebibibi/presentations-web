@@ -4252,3 +4252,87 @@ main {
   position: relative;
   z-index: 2;
 }
+
+/* episode 13 — skill file structure slide */
+.e13-structure {
+  align-items: stretch;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+}
+
+.e13-tree {
+  background: #171f1b;
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  padding: 34px 36px;
+}
+
+.e13-tree code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 27px;
+  line-height: 1.3;
+  white-space: pre;
+}
+
+.e13-tree-root {
+  color: #8aa39b;
+}
+
+.e13-tree-file {
+  color: #fbf8ee;
+  font-weight: 700;
+}
+
+.e13-tree-dir {
+  color: var(--mustard);
+  font-weight: 700;
+}
+
+.e13-tree-sub {
+  color: #9fb3aa;
+}
+
+.e13-parts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.e13-part {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 26px;
+}
+
+.e13-part-accent {
+  border-color: rgba(20, 117, 111, 0.45);
+  box-shadow: 0 14px 40px rgba(20, 117, 111, 0.16);
+}
+
+.e13-part strong {
+  color: var(--teal);
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 28px;
+}
+
+.e13-part p {
+  font-size: 25px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .e13-structure {
+    grid-template-columns: 1fr;
+  }
+}

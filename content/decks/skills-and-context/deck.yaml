@@ -24,6 +24,10 @@ slides:
     title: スキルの作り方
     durationInFrames: 170
     notes: 「◯◯のスキルを作って」とClaude Codeに頼むだけ。.claude/skills/ にMarkdownが作られる。例=週報スキル「先週のログを集めて→このフォーマットで→上司に送る」。
+  - id: skill-structure
+    title: スキルの正体はフォルダ
+    durationInFrames: 185
+    notes: スキルは1枚のMarkdownではなく「フォルダ」。中身は3つ。①SKILL.md＝本体（説明・手順・判断基準）②scripts/＝シェルやPythonの「道具」を同梱できる→AIは手順を説明するだけでなく実際に実行できる（毎回同じ処理は確実・速い）③reference/＝APIリファレンスやテンプレートなどの参照資料を置ける。ポイントは読み込みのタイミング。常に読まれるのは説明文（description）だけ、本体は呼ばれた時、reference は必要になった時だけ。だからスキルを増やしてもコンテキストを食わない＝今日のテーマ（最適化）と直結。
   - id: skill-design
     title: 設計のコツは3つ
     durationInFrames: 170
