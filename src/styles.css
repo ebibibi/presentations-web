@@ -4336,3 +4336,82 @@ main {
     grid-template-columns: 1fr;
   }
 }
+
+/* episode 13 — skill ecosystem slide (skill-creator + shared sources) */
+.e13-ecosystem {
+  align-items: stretch;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+
+.e13-creator-card {
+  background: #fff;
+  border: 1px solid rgba(20, 117, 111, 0.45);
+  border-radius: 22px;
+  box-shadow: 0 16px 44px rgba(20, 117, 111, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  padding: 36px 38px;
+}
+
+.e13-creator-card strong {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 44px;
+}
+
+.e13-creator-card p {
+  font-size: 27px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.e13-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.e13-sources > div {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 20px 26px;
+}
+
+.e13-sources strong {
+  font-size: 27px;
+}
+
+.e13-sources code {
+  color: var(--mustard);
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 22px;
+  justify-self: end;
+}
+
+.e13-sources p {
+  font-size: 23px;
+  grid-column: 1 / -1;
+  line-height: 1.45;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .e13-ecosystem {
+    grid-template-columns: 1fr;
+  }
+  .e13-sources > div {
+    grid-template-columns: 1fr;
+  }
+  .e13-sources code {
+    justify-self: start;
+  }
+}
