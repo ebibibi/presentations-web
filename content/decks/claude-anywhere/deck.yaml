@@ -1,10 +1,11 @@
 slug: claude-anywhere
 title: 第18回 Discordからも使えるよ ─ どこからでもClaude Code
 summary: Claude Codeはターミナル専用ツールじゃない。外出先からスマホのDiscordで指示を投げ、帰宅したら作業が終わっている。橋渡しはOSSのccdb。公式のWeb/Desktop/IDE/CLIも含め「どこからでも動く」を示し、全18回を貫いた「コンテキスト管理」で締めくくる。Claude Codeの使い方コース 第18回・最終回。
-status: draft
+status: public
 visibility: members
 createdAt: "2026-06-26"
 updatedAt: "2026-06-26"
+order: 18
 tags:
   - claude-code
   - course

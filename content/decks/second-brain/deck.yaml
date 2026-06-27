@@ -1,10 +1,11 @@
 slug: second-brain
 title: 第15回 第2の脳 ─ セッションをまたいで記憶を残す
 summary: Claudeはセッションを閉じると会話を忘れる。人間が寝ると忘れるのと同じ。だから外に「第2の脳」をつくる。人間もAIも同じノートを読み書きし、Auto Memoryで好みやフィードバックが自動で貯まる。これまで学んだ機能はすべてこの第2の脳の上に乗る。Claude Codeの使い方コース 第15回。
-status: draft
+status: public
 visibility: members
 createdAt: "2026-06-26"
 updatedAt: "2026-06-26"
+order: 15
 tags:
   - claude-code
   - memory

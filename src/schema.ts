@@ -22,6 +22,9 @@ export const deckMetaSchema = z.object({
   visibility: z.enum(['public', 'members', 'private']),
   createdAt: z.string().min(1),
   updatedAt: z.string().min(1),
+  // Sort key for the archive list (ascending). Lower shows first; decks
+  // without an order fall back to newest-first after the ordered ones.
+  order: z.number().optional(),
   tags: z.array(z.string()).default([]),
   youtube: youtubeSchema.optional(),
   slides: z.array(slideMetaSchema).min(1)

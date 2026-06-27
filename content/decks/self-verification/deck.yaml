@@ -1,10 +1,11 @@
 slug: self-verification
 title: 第16回 自己検証 ─ テスト駆動 & 高度なHook
 summary: Claudeに「自分の仕事を自分で検証する手段」を渡す。テストを渡せばClaudeは失敗を見つけて自分で直す自己修正ループになる。さらに第8回のHookを発展させ、型チェック・Claude同士のレビュー・私の実例まで踏み込む。Claude Codeの使い方コース 第16回（難易度🔴 エンジニア向け）。
-status: draft
+status: public
 visibility: members
 createdAt: "2026-06-26"
 updatedAt: "2026-06-26"
+order: 16
 tags:
   - claude-code
   - course
