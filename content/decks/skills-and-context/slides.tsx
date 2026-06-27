@@ -7,6 +7,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <SkillVsCommandSlide {...props} /> },
   { render: (props) => <SkillCreateSlide {...props} /> },
   { render: (props) => <SkillStructureSlide {...props} /> },
+  { render: (props) => <SkillEcosystemSlide {...props} /> },
   { render: (props) => <SkillDesignSlide {...props} /> },
   { render: (props) => <SkillModeSlide {...props} /> },
   { render: (props) => <ContextViewSlide {...props} /> },
@@ -186,6 +187,50 @@ function SkillStructureSlide({ frame }: SlideRenderContext) {
       <p className="e13-note" style={lift(entrance(frame, fps, 78), 18)}>
         常に読むのは説明文だけ。本体は呼ばれたとき、reference は必要なときだけ。
         <b>だからスキルを増やしてもコンテキストを食わない。</b>
+      </p>
+    </section>
+  )
+}
+
+function SkillEcosystemSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const creator = entrance(frame, fps, 22)
+
+  const sources = [
+    ['Anthropic 公式', 'anthropics/skills', '文書作成・設計など多数（skill-creator もここ）'],
+    ['Microsoft Azure', 'microsoft/azure-skills', 'Azure 操作の専門スキル'],
+    ['コミュニティ', 'GitHub ほか', '有志が大量に公開']
+  ] as const
+
+  return (
+    <section className="remotion-slide e13-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">公式 &amp; コミュニティ</span>
+        <h1>ゼロから作らなくていい</h1>
+      </div>
+      <div className="e13-ecosystem">
+        <div className="e13-creator-card" style={lift(creator, 28)}>
+          <span className="e13-tag">Anthropic 公式</span>
+          <strong>skill-creator</strong>
+          <p>
+            「スキルを作るスキル」。<b>対話しながら設計・改善</b>してくれる。
+            Claude本体に組み込み済み。
+          </p>
+        </div>
+        <div className="e13-sources">
+          {sources.map(([name, repo, body], index) => (
+            <div key={name} style={lift(entrance(frame, fps, 36 + index * 12), 24)}>
+              <strong>{name}</strong>
+              <code>{repo}</code>
+              <p>{body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="e13-note" style={lift(entrance(frame, fps, 80), 18)}>
+        導入は <code className="e13-cmd">/plugin marketplace add …</code> で追加して入れるだけ。
+        <b>まず探す → 無ければ作る</b> が効率的。
       </p>
     </section>
   )

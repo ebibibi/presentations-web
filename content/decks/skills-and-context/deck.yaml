@@ -28,6 +28,10 @@ slides:
     title: スキルの正体はフォルダ
     durationInFrames: 185
     notes: スキルは1枚のMarkdownではなく「フォルダ」。中身は3つ。①SKILL.md＝本体（説明・手順・判断基準）②scripts/＝シェルやPythonの「道具」を同梱できる→AIは手順を説明するだけでなく実際に実行できる（毎回同じ処理は確実・速い）③reference/＝APIリファレンスやテンプレートなどの参照資料を置ける。ポイントは読み込みのタイミング。常に読まれるのは説明文（description）だけ、本体は呼ばれた時、reference は必要になった時だけ。だからスキルを増やしてもコンテキストを食わない＝今日のテーマ（最適化）と直結。
+  - id: skill-ecosystem
+    title: ゼロから作らなくていい
+    durationInFrames: 185
+    notes: スキルは自分で書くだけじゃない。①作るのを手伝ってくれる公式スキル「skill-creator」（Anthropic公式リポジトリ anthropics/skills 収録、Claude本体に組み込み済み）。「スキル作って」より賢く、対話しながら設計・改善してくれる。②公開スキルを“借りる”：Anthropic公式（anthropics/skills＝文書作成や設計など多数）、Microsoft公式のAzureスキル（microsoft/azure-skills＝Azure操作の専門スキル）、その他コミュニティでも大量に共有。③導入はプラグイン経由で簡単。「/plugin marketplace add ...」でマーケットを追加して入れるだけ。まず探す→無ければskill-creatorで作る、が効率的。
   - id: skill-design
     title: 設計のコツは3つ
     durationInFrames: 170
