@@ -1,0 +1,70 @@
+slug: made-with-ai
+title: 最近AIと一緒に作ったもの、全部見せます
+summary: この1ヶ月、ほぼ全ての作業をAIと一緒に進めた。その中で生まれた「作ったもの」と「作った仕組み」を、1ネタ1スライドで棚卸しする。頼み方さえ覚えれば、個人でもここまで作れるという実例集。
+status: public
+visibility: public
+createdAt: "2026-06-27"
+updatedAt: "2026-06-27"
+order: 100
+tags:
+  - ai
+  - claude-code
+  - showcase
+  - automation
+slides:
+  - id: opening
+    title: 最近AIと一緒に作ったもの、全部見せます
+    durationInFrames: 170
+    notes: 配信オープニング。今日のテーマ=最近AIと一緒に作ったものと、その裏側の仕組みを全部見せる。掴み=この1ヶ月、AIと一緒に作業したセッションは407回。ほとんどの仕事と細かい作業をAIと進めている、という事実から入る。
+  - id: by-the-numbers
+    title: 数字で見る、この1ヶ月
+    durationInFrames: 160
+    notes: 規模感を数字で。407セッション（直近1ヶ月、AIと一緒に作業した回数）/ 15以上の個人開発リポジトリが並行で動いている / 複数のClaude Codeが同時に走っている。「片手間」ではなく、AIが日常の作業基盤になっている話。
+  - id: section-products
+    title: ＜作ったもの＞
+    durationInFrames: 110
+    notes: 章の切り替え。ここからは「作ったもの」＝目に見えるプロダクト編。Webサービス・サイト・ラボ環境など、AIと一緒にゼロから立ち上げたものを順番に見せる。
+  - id: product-presentations
+    title: Webプレゼン配信プラットフォーム
+    durationInFrames: 175
+    notes: 今まさに表示しているこのスライド自体がそれ。presentations.ebisuda.net。ブラウザで動くプレゼン基盤を、1日（約9セッション）でMVPまで構築。観客が後から読む閲覧モードと、自分が収録するスタジオモードを分離。スライドはコードで書くのでアニメーションも自由。今日のこのデッキもAIが新規作成した。
+  - id: product-debate
+    title: 論点マップ
+    durationInFrames: 170
+    notes: debate.ebisuda.net。日本の政治・政策のニュースを、賛成/反対だけでなく「どんな論点があるか」を中立に可視化するサイト。各党の立場を出典付きで整理。収集→承認→AI生成のパイプラインで論点記事を量産し、静的サイトとして配信。「みんなの意見ボード」で読者が立場を投票できる機能も追加。
+  - id: product-shogi
+    title: 実戦詰将棋の将棋サイト
+    durationInFrames: 170
+    notes: shogi.ebisuda.net。最初は手作りの詰将棋を数問。そこからプロ用エンジン（やねうら王）の公開データ500万問から良問を厳選し、最終的に「エンジンと自由に対局しながら手数順に反復練習する」方式へ進化。ブラウザ内でAIエンジンを動かすための込み入った環境問題（本番だけ起きる不具合）も粘って解決した。
+  - id: product-hyperv
+    title: ネストHyper-V 検証ラボ
+    durationInFrames: 175
+    notes: 事務所の1台のサーバーの上に、丸ごと仮想のWindows環境を建てる検証ラボ。Active Directory・フェイルオーバークラスタ・Kerberosまで、コマンド一発の自動構築に。ADフォレストが約1時間22分で勝手に立ち上がる。@IT新連載「Microsoft MVP胡田のAI検証ラボ」で、わざと障害を仕込んで原因究明する題材にも使っている。
+  - id: product-ccdb
+    title: チャットからAIに開発を頼む橋渡し
+    durationInFrames: 170
+    notes: 普段使っているチャットツールから、そのままClaude Codeにタスクを投げられるブリッジ（OSSとして公開）。出先のスマホからでも「これ直して」「これ作って」と話しかけるだけで、AIが裏で開発を進めて結果を返す。このライブの準備（リサーチ・スライド作成）も、この仕組みの上で動いている。
+  - id: section-mechanisms
+    title: ＜作った仕組み＞
+    durationInFrames: 110
+    notes: 章の切り替え。ここからは「作った仕組み」＝目に見えにくいけど効いている裏側の自動化編。一度作ると毎日勝手に効いてくる仕掛けを紹介する。
+  - id: mech-second-brain
+    title: 自動で育つ「第2の脳」
+    durationInFrames: 170
+    notes: 知識管理（Obsidian）を人間とAIの共有メモにしている。日々の会話やgitの記録から、プロジェクトの状況メモが自動で最新化され、技術的な知見はWikiとして自動で整理・蓄積されていく。次に同じ問題にぶつかったとき、AIがその蓄積を読んで即答できる。書けば書くほど賢くなる脳。
+  - id: mech-issue-driven
+    title: Issueを書けば、AIが回す開発フロー
+    durationInFrames: 170
+    notes: 「困りごと」をIssueとして登録すると、AIが内容を仕分けし、ブランチを切って修正、PRを作るところまで自動で進む。人間は方針の承認と最終チェックだけ。問い合わせ受付→トリアージ→修正→レビューという一連の流れを、AIが当番のように回してくれる。
+  - id: mech-parallel
+    title: 複数のAIを同時に走らせる
+    durationInFrames: 170
+    notes: 1ヶ月407セッションの正体。1つのAIに順番待ちさせるのではなく、調べ物・実装・レビューを複数のClaude Codeに同時に任せる。作業場所（worktree）を分けてぶつからないようにしているので、並行で進んでも壊れない。自分は監督役。これが「片手間に見えて量が多い」種明かし。
+  - id: mech-keyless
+    title: セキュリティも一気に底上げ
+    durationInFrames: 165
+    notes: 個人開発のクラウド接続を、固定のAPIキー方式から、鍵を持たないID認証方式へ横断で一斉移行。キーの流出・ローテ漏れで全部止まるリスクを、AIにまとめて潰してもらった。地味だが効く「作った仕組み」。漏れていたトークンを過去の履歴ごと消す掃除も同時に実施。
+  - id: recap
+    title: 頼み方を覚えれば、ここまで作れる
+    durationInFrames: 160
+    notes: まとめ。作ったもの（プレゼン基盤・論点マップ・将棋・検証ラボ・開発ブリッジ）と、作った仕組み（自動で育つ第2の脳・Issue駆動開発・複数AI並走・セキュリティ底上げ）。共通しているのは、自分は「何を作りたいか／何を直したいか」を伝えているだけ、ということ。AIへの頼み方さえ掴めば、個人でもこれだけのものが作れる時代になった。
