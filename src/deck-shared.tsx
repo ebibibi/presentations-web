@@ -5,9 +5,17 @@ import type { SlideRenderContext } from './types'
 // ─────────────────────────────────────────────────────────────────────────
 // Shared branding & call-to-action template.
 // Edit BRAND below and EVERY deck updates at once (logo, like/subscribe/
-// membership/note copy). The logo slide-2 and the closing slide both render
-// the CtaSlide from here.
+// membership/note copy + links). The logo slide-2 and the closing slide both
+// render the CtaSlide from here.
 // ─────────────────────────────────────────────────────────────────────────
+export type CtaAction = {
+  icon: string
+  label: string
+  body: string
+  href?: string
+  linkLabel?: string
+}
+
 export const BRAND = {
   // Logo file lives in public/brand/. Swap this file (or the path) to rebrand
   // every deck's opening and CTA slides.
@@ -19,8 +27,20 @@ export const BRAND = {
     actions: [
       { icon: '👍', label: '高評価', body: '役に立ったら「いいね」をお願いします' },
       { icon: '🔔', label: 'チャンネル登録・通知オン', body: '登録＋ベルマークで新着を見逃さない' },
-      { icon: '⭐', label: 'メンバーシップ', body: 'メンバー限定動画や、1対1で質問できるプランがあります' },
-      { icon: '📝', label: 'note メンバーシップ', body: '200本以上の有料記事が読み放題' }
+      {
+        icon: '⭐',
+        label: 'メンバーシップ',
+        body: 'メンバー限定動画や、1対1で質問できるプランがあります',
+        href: 'https://www.youtube.com/channel/UCn_7IV61pGOfoiC5Lc8nHUw/join',
+        linkLabel: 'YouTube で参加する'
+      },
+      {
+        icon: '📝',
+        label: 'note メンバーシップ',
+        body: '200本以上の有料記事が読み放題',
+        href: 'https://note.com/ebibibi/membership',
+        linkLabel: 'note.com/ebibibi/membership'
+      }
     ]
   }
 }
@@ -59,17 +79,36 @@ export function CtaSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <div className="cta-grid">
-        {BRAND.cta.actions.map((action, index) => (
-          <div
-            key={action.label}
-            className="cta-card"
-            style={lift(entrance(frame, fps, 24 + index * 10), 26)}
-          >
-            <span className="cta-icon">{action.icon}</span>
-            <strong>{action.label}</strong>
-            <p>{action.body}</p>
-          </div>
-        ))}
+        {BRAND.cta.actions.map((action: CtaAction, index) => {
+          const style = lift(entrance(frame, fps, 24 + index * 10), 26)
+          const inner = (
+            <>
+              <span className="cta-icon">{action.icon}</span>
+              <strong>{action.label}</strong>
+              <p>{action.body}</p>
+              {action.href ? (
+                <span className="cta-link">{action.linkLabel ?? action.href} →</span>
+              ) : null}
+            </>
+          )
+
+          return action.href ? (
+            <a
+              key={action.label}
+              className="cta-card cta-card-link"
+              href={action.href}
+              target="_blank"
+              rel="noreferrer"
+              style={style}
+            >
+              {inner}
+            </a>
+          ) : (
+            <div key={action.label} className="cta-card" style={style}>
+              {inner}
+            </div>
+          )
+        })}
       </div>
     </section>
   )
