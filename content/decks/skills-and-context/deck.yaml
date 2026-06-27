@@ -1,0 +1,57 @@
+slug: skills-and-context
+title: 第13回 スキル & コンテキスト最適化
+summary: スキルで「仕事のやり方」を覚えさせ、/contextでコンテキストの中身を可視化し、必要なものだけを積み込む設計を身につける。Claude Codeの使い方コース 第13回。
+status: draft
+visibility: members
+createdAt: "2026-06-26"
+updatedAt: "2026-06-26"
+tags:
+  - claude-code
+  - skills
+  - context
+  - course
+slides:
+  - id: opening
+    title: スキル & コンテキスト最適化
+    durationInFrames: 170
+    notes: 第13回スタート。今日のゴールは2つ。①スキルで繰り返す仕事を覚えさせる ②/contextでコンテキストを可視化して最適化する。スキルを足すとコンテキストにも効いてくる、という流れでつなげる。
+  - id: skill-vs-command
+    title: スキルとは何か
+    durationInFrames: 170
+    notes: 第6回のカスタムコマンド=テンプレート（同じ文章を毎回注入）。スキル=仕事のやり方マニュアル（判断基準・手順・注意事項）。たとえ=レシピカード vs 料理の教科書。スキルは「なぜそうするか」まで書ける。
+  - id: skill-create
+    title: スキルの作り方
+    durationInFrames: 170
+    notes: 「◯◯のスキルを作って」とClaude Codeに頼むだけ。.claude/skills/ にMarkdownが作られる。例=週報スキル「先週のログを集めて→このフォーマットで→上司に送る」。
+  - id: skill-design
+    title: 設計のコツは3つ
+    durationInFrames: 170
+    notes: 失敗例①長すぎる→Claudeが迷子（1ページに収める）。失敗例②曖昧→毎回違う結果（判断基準を具体的に）。コツ=短く・具体的に・判断基準を明示。
+  - id: skill-mode
+    title: 自分でやるか、部下に任せるか
+    durationInFrames: 180
+    notes: インライン=スキルの内容がメインの机にそのまま注入（会話の流れを引き継げる）。context fork=サブエージェントの別の机で実行（メインの机を消費しない）。たとえ=自分で料理 vs 出前。forkはagent指定で専門エージェントも選べる（第9回が活きる）。判断=結果だけ欲しい→fork / 会話の続き→インライン。
+  - id: context-view
+    title: /context で中身を覗く
+    durationInFrames: 170
+    notes: 「/context」と打つだけで内訳が見える。CLAUDE.md / rules / skills / hooks がそれぞれどれだけ場所を取っているか。知らないうちに食っているものが見つかる。ステータスバーで残量を常時表示するのもおすすめ。
+  - id: context-eaters
+    title: コンテキストを食う犯人たち
+    durationInFrames: 180
+    notes: 大きいファイルの全文読み込み / MCPのツール定義（接続するだけで場所を取る・第14回で詳しく）/ スキルの説明文が長すぎ / 会話が長くなりすぎて過去のやり取りが蓄積。
+  - id: context-diet
+    title: 4つのダイエット術
+    durationInFrames: 180
+    notes: ①サブエージェントに分離（大量のファイル読みは任せる・第9回）②スキルは短く（1ページ・判断基準だけ）③大きいファイルは部分読み（「◯◯の部分だけ読んで」）④使わないMCPは外す。/compactで会話を要約して継続も有効（第7回）。
+  - id: balance
+    title: 全部入りより、必要なものだけ
+    durationInFrames: 170
+    notes: 便利さ vs コンテキストコストはトレードオフ。たとえ=旅行カバンに詰めすぎると本当に必要なものが入らない。毎日使う機能は常時ON、たまにしか使わないものは必要時だけ有効化。自分の使い方に合わせて調整する。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 160
+    notes: スキル=仕事のやり方を覚えさせる。実行モードはインラインとfork。/contextで可視化して、4つのダイエット術で最適化。便利さとコストのバランスは自分で決める。
+  - id: next
+    title: 次回予告
+    durationInFrames: 160
+    notes: 次回は第14回「外部連携の全て ─ MCP vs 直接API」。今日チラッと出たMCPを正面から扱う。チャンネル登録とメンバーシップもよろしく！
