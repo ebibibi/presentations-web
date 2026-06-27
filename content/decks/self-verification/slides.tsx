@@ -13,6 +13,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <ClaudeReviewsClaudeSlide {...props} /> },
   { render: (props) => <MyRealHooksSlide {...props} /> },
   { render: (props) => <PhilosophySlide {...props} /> },
+  { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
   { render: (props) => <NextSlide {...props} /> }
 ]
@@ -364,6 +365,40 @@ function PhilosophySlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e16-judge" style={lift(entrance(frame, fps, 60), 18)}>
         答え合わせをClaudeと仕組みに任せるのが、<b>品質を底上げする一番の近道。</b>
+      </p>
+    </section>
+  )
+}
+
+function DemoSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const items: ReadonlyArray<readonly [string, string]> = [
+    ['テスト駆動ループ', 'テストを渡し、失敗→修正→成功まで自走させる'],
+    ['スクショ検証', 'UIのスクリーンショットを見せて「デザイン通り?」と確認する'],
+    ['型チェックHook', 'ファイル編集後に tsc が自動で走り、型エラーを自動修正']
+  ]
+
+  return (
+    <section className="remotion-slide e16-slide demo-slide">
+      <div style={lift(heading, 24)}>
+        <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
+        <h1>ここで手を動かす</h1>
+      </div>
+      <div className="demo-list">
+        {items.map(([title, body], index) => (
+          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
+            <span className="demo-num">{index + 1}</span>
+            <div>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
+        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
       </p>
     </section>
   )

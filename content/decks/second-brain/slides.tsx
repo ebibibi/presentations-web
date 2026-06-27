@@ -13,6 +13,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <RecallSlide {...props} /> },
   { render: (props) => <GoodnightSlide {...props} /> },
   { render: (props) => <CulminationSlide {...props} /> },
+  { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
   { render: (props) => <NextSlide {...props} /> }
 ]
@@ -385,6 +386,40 @@ function CulminationSlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e15-judge" style={lift(entrance(frame, fps, 74), 18)}>
         バラバラだった点が、<b>ひとつの仕組み</b>としてつながる。これがシリーズの集大成。
+      </p>
+    </section>
+  )
+}
+
+function DemoSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const items: ReadonlyArray<readonly [string, string]> = [
+    ['/goodmorning', '第2の脳から「今日やること」が出てくる様子を見せる'],
+    ['「思い出して」', '別セッションで前回の作業の続きが復元される'],
+    ['/goodnight', '1日の記録から日記が自動生成される']
+  ]
+
+  return (
+    <section className="remotion-slide e15-slide demo-slide">
+      <div style={lift(heading, 24)}>
+        <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
+        <h1>ここで手を動かす</h1>
+      </div>
+      <div className="demo-list">
+        {items.map(([title, body], index) => (
+          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
+            <span className="demo-num">{index + 1}</span>
+            <div>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
+        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
       </p>
     </section>
   )

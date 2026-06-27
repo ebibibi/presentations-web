@@ -13,6 +13,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <ConfessionSlide {...props} /> },
   { render: (props) => <WhenMcpSlide {...props} /> },
   { render: (props) => <HowToChooseSlide {...props} /> },
+  { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
   { render: (props) => <NextSlide {...props} /> }
 ]
@@ -385,6 +386,40 @@ function HowToChooseSlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e14-judge" style={lift(note, 18)}>
         最後は<b>コンテキストと相談して選ぶ</b>。第13回のダイエット術と地続きの考え方。
+      </p>
+    </section>
+  )
+}
+
+function DemoSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const items: ReadonlyArray<readonly [string, string]> = [
+    ['MCPを追加', '「claude mcp add」でサーバーを足し、/context で増えた分を見る'],
+    ['直接APIで実行', 'スクリプトでAPIを叩き、結果をClaudeに渡して分析させる'],
+    ['コンテキストを比較', '同じ操作をMCP版と直接API版で実行し、使用量を実測']
+  ]
+
+  return (
+    <section className="remotion-slide e14-slide demo-slide">
+      <div style={lift(heading, 24)}>
+        <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
+        <h1>ここで手を動かす</h1>
+      </div>
+      <div className="demo-list">
+        {items.map(([title, body], index) => (
+          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
+            <span className="demo-num">{index + 1}</span>
+            <div>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
+        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
       </p>
     </section>
   )

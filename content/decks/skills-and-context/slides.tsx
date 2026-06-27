@@ -7,6 +7,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <SkillVsCommandSlide {...props} /> },
   { render: (props) => <SkillCreateSlide {...props} /> },
   { render: (props) => <SkillStructureSlide {...props} /> },
+  { render: (props) => <SkillMdExampleSlide {...props} /> },
   { render: (props) => <SkillEcosystemSlide {...props} /> },
   { render: (props) => <SkillDesignSlide {...props} /> },
   { render: (props) => <SkillModeSlide {...props} /> },
@@ -14,6 +15,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <ContextEatersSlide {...props} /> },
   { render: (props) => <ContextDietSlide {...props} /> },
   { render: (props) => <BalanceSlide {...props} /> },
+  { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
   { render: (props) => <NextSlide {...props} /> }
 ]
@@ -187,6 +189,57 @@ function SkillStructureSlide({ frame }: SlideRenderContext) {
       <p className="e13-note" style={lift(entrance(frame, fps, 78), 18)}>
         常に読むのは説明文だけ。本体は呼ばれたとき、reference は必要なときだけ。
         <b>だからスキルを増やしてもコンテキストを食わない。</b>
+      </p>
+    </section>
+  )
+}
+
+function SkillMdExampleSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const panel = entrance(frame, fps, 22)
+
+  const lines: ReadonlyArray<readonly [string, string]> = [
+    ['---', 'skillmd-delim'],
+    ['name: weekly-report', 'skillmd-key'],
+    ['description: 先週のログを集めて週報を作る', 'skillmd-key'],
+    ['---', 'skillmd-delim'],
+    ['', 'skillmd-txt'],
+    ['# 週報を作る', 'skillmd-h'],
+    ['', 'skillmd-txt'],
+    ['## 手順', 'skillmd-h'],
+    ['1. scripts/collect.sh でログを集める', 'skillmd-txt'],
+    ['2. 下のフォーマットに整える', 'skillmd-txt'],
+    ['3. 上司向けの言葉づかいにする', 'skillmd-txt'],
+    ['', 'skillmd-txt'],
+    ['## 判断基準', 'skillmd-h'],
+    ['- 1件1行。専門用語は避ける', 'skillmd-txt'],
+    ['- 日付・件数は具体的に書く', 'skillmd-txt']
+  ]
+
+  return (
+    <section className="remotion-slide e13-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">SKILL.md の実例</span>
+        <h1>中身はこんな感じ</h1>
+      </div>
+      <div className="skillmd" style={lift(panel, 28)}>
+        <div className="skillmd-bar">
+          <span />
+          <span />
+          <span />
+          <strong>weekly-report/SKILL.md</strong>
+        </div>
+        <div className="skillmd-body">
+          {lines.map(([text, cls], index) => (
+            <code key={`line-${index}`} className={cls}>
+              {text || ' '}
+            </code>
+          ))}
+        </div>
+      </div>
+      <p className="e13-note" style={lift(entrance(frame, fps, 64), 18)}>
+        先頭の <b>name / description</b> でClaudeが「いつ使うか」を判断。本体に手順と判断基準を書く。
       </p>
     </section>
   )
@@ -440,6 +493,40 @@ function BalanceSlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e13-judge" style={lift(note, 20)}>
         毎日使う機能は常時ON、たまにしか使わないものは必要なときだけ。<b>自分の使い方に合わせて調整する。</b>
+      </p>
+    </section>
+  )
+}
+
+function DemoSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const items: ReadonlyArray<readonly [string, string]> = [
+    ['スキルを作る', '「週報をまとめるスキルを作って」→ SKILL.md が生成される様子を見せる'],
+    ['スキルに仕事をさせる', '作ったスキルを呼んで、実際に週報を作らせる'],
+    ['/context で可視化', 'スキル追加の前後でコンテキスト使用量を比べる']
+  ]
+
+  return (
+    <section className="remotion-slide e13-slide demo-slide">
+      <div style={lift(heading, 24)}>
+        <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
+        <h1>ここで手を動かす</h1>
+      </div>
+      <div className="demo-list">
+        {items.map(([title, body], index) => (
+          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
+            <span className="demo-num">{index + 1}</span>
+            <div>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
+        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
       </p>
     </section>
   )

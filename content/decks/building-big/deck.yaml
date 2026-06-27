@@ -50,6 +50,10 @@ slides:
     title: パイプラインに組み込む
     durationInFrames: 180
     notes: 全体像。CI/CDの流れの中でClaudeが動く＝コミット→レビュー→解析→デプロイのどこにでも差し込める。ただし鉄則は2つ。権限は最小限（既定読み取り・書き込みは明示）／人間のレビューは必須。自動化しても最終確認は人が握る。
+  - id: demo
+    title: ここで手を動かす
+    durationInFrames: 180
+    notes: 説明だけで終わらせず、画面に映して実際にやってみせる。(1) SPEC.md を作る ─ Claudeにインタビューさせて仕様書を先に生成する。(2) Writer / Reviewer ─ 別セッションのClaudeに書かせ、別のClaudeにレビューさせる。(3) GitHub統合 / claude -p ─ @claudeでPRレビュー、パイプラインから非対話実行。
   - id: recap
     title: 今日のまとめ
     durationInFrames: 165

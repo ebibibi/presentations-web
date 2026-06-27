@@ -13,6 +13,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <ClaudePSlide {...props} /> },
   { render: (props) => <SdkSlide {...props} /> },
   { render: (props) => <PipelineSlide {...props} /> },
+  { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
   { render: (props) => <NextSlide {...props} /> }
 ]
@@ -387,6 +388,40 @@ function PipelineSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
+    </section>
+  )
+}
+
+function DemoSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const items: ReadonlyArray<readonly [string, string]> = [
+    ['SPEC.md を作る', 'Claudeにインタビューさせて仕様書を先に生成する'],
+    ['Writer / Reviewer', '別セッションのClaudeに書かせ、別のClaudeにレビューさせる'],
+    ['GitHub統合 / claude -p', '@claudeでPRレビュー、パイプラインから非対話実行']
+  ]
+
+  return (
+    <section className="remotion-slide e17-slide demo-slide">
+      <div style={lift(heading, 24)}>
+        <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
+        <h1>ここで手を動かす</h1>
+      </div>
+      <div className="demo-list">
+        {items.map(([title, body], index) => (
+          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
+            <span className="demo-num">{index + 1}</span>
+            <div>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
+        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
+      </p>
     </section>
   )
 }
