@@ -18,11 +18,6 @@ import type { AuthState } from './auth'
 import type { DeckBundle } from './types'
 
 const fps = 30
-const seekTransitionFrames = 24
-// Slide entrances are authored to settle over ~112 frames (~3.7s). Scrub
-// through them slowly so the motion reads as a smooth reveal instead of an
-// instant snap during navigation/recording.
-const seekDurationMs = 1500
 const settledFrameOffset = 112
 
 type ViewerMode = 'audience' | 'studio'
@@ -71,14 +66,6 @@ export function DeckViewer({
     recordingPlayerRef.current?.seekTo(frame)
   }, [])
 
-  const getCurrentPlayerFrame = useCallback(() => {
-    return (
-      playerRef.current?.getCurrentFrame() ??
-      recordingPlayerRef.current?.getCurrentFrame() ??
-      getSlideSettledFrame(slideIndex)
-    )
-  }, [getSlideSettledFrame, slideIndex])
-
   const animatePlayersToFrame = useCallback(
     (fromFrame: number, toFrame: number, onComplete: () => void) => {
       if (smoothSeekRef.current !== null) {
@@ -86,12 +73,15 @@ export function DeckViewer({
       }
 
       setPlayersFrame(fromFrame)
+      // Advance at the deck's native frame rate so arrow-key navigation plays
+      // the entrance at the same speed as the "再生" (play) button — not a fast
+      // scrub. Linear progress keeps it 1:1 with real playback.
+      const durationMs = Math.max(1, (Math.abs(toFrame - fromFrame) / fps) * 1000)
       const startedAt = performance.now()
 
       const step = (now: number) => {
-        const progress = Math.min(1, (now - startedAt) / seekDurationMs)
-        const eased = 1 - Math.pow(1 - progress, 3)
-        setPlayersFrame(Math.round(fromFrame + (toFrame - fromFrame) * eased))
+        const progress = Math.min(1, (now - startedAt) / durationMs)
+        setPlayersFrame(Math.round(fromFrame + (toFrame - fromFrame) * progress))
 
         if (progress < 1) {
           smoothSeekRef.current = window.requestAnimationFrame(step)
@@ -116,11 +106,10 @@ export function DeckViewer({
         return
       }
 
+      // Always start from the destination slide's first frame and play its
+      // entrance through to the settled frame, mirroring the play button.
+      const startFrame = slideStarts[nextIndex] ?? getSlideSettledFrame(nextIndex)
       const targetFrame = getSlideSettledFrame(nextIndex)
-      const currentDuration = deck.meta.slides[slideIndex]?.durationInFrames ?? 120
-      const forwardTransitionStart =
-        (slideStarts[slideIndex] ?? 0) + Math.max(0, currentDuration - seekTransitionFrames)
-      const startFrame = nextIndex > slideIndex ? forwardTransitionStart : getCurrentPlayerFrame()
 
       animatePlayersToFrame(startFrame, targetFrame, () => {
         setSlideIndex(nextIndex)
@@ -129,8 +118,7 @@ export function DeckViewer({
     },
     [
       animatePlayersToFrame,
-      deck.meta.slides,
-      getCurrentPlayerFrame,
+      deck.meta.slides.length,
       getSlideSettledFrame,
       slideIndex,
       slideStarts
