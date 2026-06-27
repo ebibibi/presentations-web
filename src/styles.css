@@ -793,6 +793,145 @@ main {
   max-width: 1020px;
 }
 
+/* ------------------------------------------------------------------ */
+/* Shared: live-demo cue slide (used by every course deck)            */
+/* ------------------------------------------------------------------ */
+.demo-slide {
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.demo-kicker {
+  color: var(--coral);
+}
+
+.demo-badge {
+  align-items: center;
+  background: rgba(216, 93, 74, 0.12);
+  border: 1px solid rgba(216, 93, 74, 0.4);
+  border-radius: 999px;
+  color: var(--coral);
+  display: inline-flex;
+  font-size: 22px;
+  font-weight: 800;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 8px 22px;
+}
+
+.demo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.demo-list > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--coral);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 24px;
+  padding: 22px 30px;
+}
+
+.demo-num {
+  background: var(--coral);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 26px;
+  font-weight: 800;
+  height: 54px;
+  line-height: 54px;
+  text-align: center;
+  width: 54px;
+}
+
+.demo-list strong {
+  display: block;
+  font-size: 31px;
+}
+
+.demo-list p {
+  color: #57625a;
+  font-size: 25px;
+  line-height: 1.45;
+  margin: 4px 0 0;
+}
+
+.demo-foot {
+  color: #57625a;
+  font-size: 28px;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Shared: SKILL.md code panel (episode 13)                           */
+/* ------------------------------------------------------------------ */
+.skillmd {
+  background: #11201c;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.skillmd-bar {
+  align-items: center;
+  background: #0a1612;
+  display: flex;
+  gap: 10px;
+  padding: 14px 22px;
+}
+
+.skillmd-bar span {
+  background: #3a4843;
+  border-radius: 50%;
+  height: 13px;
+  width: 13px;
+}
+
+.skillmd-bar strong {
+  color: #8aa39b;
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.skillmd-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 22px 32px;
+}
+
+.skillmd-body code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 22px;
+  line-height: 1.32;
+  white-space: pre-wrap;
+}
+
+.skillmd-delim {
+  color: #5f6f68;
+}
+
+.skillmd-key {
+  color: var(--mustard);
+  font-weight: 700;
+}
+
+.skillmd-h {
+  color: #6fd3a8;
+  font-weight: 700;
+}
+
+.skillmd-txt {
+  color: #e7e2d5;
+}
+
 .showcase-orbit {
   border: 2px solid rgba(20, 117, 111, 0.35);
   border-radius: 999px;

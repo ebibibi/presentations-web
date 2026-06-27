@@ -50,6 +50,10 @@ slides:
     title: あなたの使い方次第
     durationInFrames: 170
     notes: Claude Codeはどこからでも動く。あとは、それをどう使うかはあなた次第。テンプレ通りでなく、自分の生活と仕事に合わせて道具を組み立てていってほしい。シリーズはここで一区切り、でも実践はここから始まる。
+  - id: demo
+    title: ここで手を動かす
+    durationInFrames: 180
+    notes: ここで実演。説明だけで終わらせず画面に映して実際にやってみせる。まずスマホ(Discord)からスレッドにメッセージを送って指示する。するとClaudeが反応して作業を進める様子を見せる。最後にスマホに結果が返り、完了を確認する。
   - id: recap
     title: 今日のまとめ
     durationInFrames: 160

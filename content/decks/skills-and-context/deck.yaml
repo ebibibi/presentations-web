@@ -28,6 +28,10 @@ slides:
     title: スキルの正体はフォルダ
     durationInFrames: 185
     notes: スキルは1枚のMarkdownではなく「フォルダ」。中身は3つ。①SKILL.md＝本体（説明・手順・判断基準）②scripts/＝シェルやPythonの「道具」を同梱できる→AIは手順を説明するだけでなく実際に実行できる（毎回同じ処理は確実・速い）③reference/＝APIリファレンスやテンプレートなどの参照資料を置ける。ポイントは読み込みのタイミング。常に読まれるのは説明文（description）だけ、本体は呼ばれた時、reference は必要になった時だけ。だからスキルを増やしてもコンテキストを食わない＝今日のテーマ（最適化）と直結。
+  - id: skillmd-example
+    title: SKILL.md の実例
+    durationInFrames: 185
+    notes: 実物を見せる。先頭の「---」で囲んだ部分がフロントマター。name（スキル名）とdescription（いつ使うか）の2つが超重要——Claudeはまずこの説明文だけを読んで「今この仕事に使えるか」を判断する。だからdescriptionは具体的に書く。その下が本体で、見出しで「手順」「フォーマット」「判断基準」を整理。scripts/collect.sh のように同梱した道具を手順から呼ぶ。短く・具体的に、が効く。撮影では実ファイルをエディタで開いて1ブロックずつ指さしながら説明する。
   - id: skill-ecosystem
     title: ゼロから作らなくていい
     durationInFrames: 185
@@ -56,6 +60,10 @@ slides:
     title: 全部入りより、必要なものだけ
     durationInFrames: 170
     notes: 便利さ vs コンテキストコストはトレードオフ。たとえ=旅行カバンに詰めすぎると本当に必要なものが入らない。毎日使う機能は常時ON、たまにしか使わないものは必要時だけ有効化。自分の使い方に合わせて調整する。
+  - id: demo
+    title: ここで手を動かす
+    durationInFrames: 180
+    notes: 実演パート。画面を見せながら実際にやる。①「週報をまとめるスキルを作って」と頼み、.claude/skills/ にSKILL.mdが生成される様子を見せる→中身も開く。②スキルを呼んで仕事をさせる。③/context を打って、スキル追加の前後でコンテキスト使用量を比較する。説明だけで終わらせず、必ず手を動かして見せるのがこの回の肝。
   - id: recap
     title: 今日のまとめ
     durationInFrames: 160

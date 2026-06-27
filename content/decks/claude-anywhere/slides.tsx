@@ -13,6 +13,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <JourneySlide {...props} /> },
   { render: (props) => <ContextCoreSlide {...props} /> },
   { render: (props) => <YourWaySlide {...props} /> },
+  { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
   { render: (props) => <FinaleSlide {...props} /> }
 ]
@@ -342,6 +343,40 @@ function YourWaySlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e18-judge" style={lift(note, 18)}>
         シリーズはここで一区切り。でも<b>実践はここから始まる。</b>
+      </p>
+    </section>
+  )
+}
+
+function DemoSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const items: ReadonlyArray<readonly [string, string]> = [
+    ['スマホ(Discord)から指示', 'スレッドにメッセージを送る'],
+    ['Claudeが作業', '反応して作業を進める様子を見せる'],
+    ['結果が返る', 'スマホに結果が返り、完了を確認する']
+  ]
+
+  return (
+    <section className="remotion-slide e18-slide demo-slide">
+      <div style={lift(heading, 24)}>
+        <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
+        <h1>ここで手を動かす</h1>
+      </div>
+      <div className="demo-list">
+        {items.map(([title, body], index) => (
+          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
+            <span className="demo-num">{index + 1}</span>
+            <div>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
+        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
       </p>
     </section>
   )
