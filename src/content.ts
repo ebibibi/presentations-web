@@ -21,7 +21,14 @@ export function getDecks(): DeckBundle[] {
 
   cachedDecks = Object.entries(deckMetaFiles)
     .map(([path, raw]) => buildDeck(path, raw))
-    .sort((left, right) => right.meta.createdAt.localeCompare(left.meta.createdAt))
+    .sort((left, right) => {
+      const leftOrder = left.meta.order ?? Number.POSITIVE_INFINITY
+      const rightOrder = right.meta.order ?? Number.POSITIVE_INFINITY
+      if (leftOrder !== rightOrder) {
+        return leftOrder - rightOrder
+      }
+      return right.meta.createdAt.localeCompare(left.meta.createdAt)
+    })
 
   return cachedDecks
 }

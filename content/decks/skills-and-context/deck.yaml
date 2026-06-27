@@ -1,10 +1,11 @@
 slug: skills-and-context
 title: 第13回 スキル & コンテキスト最適化
 summary: スキルで「仕事のやり方」を覚えさせ、/contextでコンテキストの中身を可視化し、必要なものだけを積み込む設計を身につける。Claude Codeの使い方コース 第13回。
-status: draft
+status: public
 visibility: members
 createdAt: "2026-06-26"
 updatedAt: "2026-06-26"
+order: 13
 tags:
   - claude-code
   - skills

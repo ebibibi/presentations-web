@@ -1,10 +1,11 @@
 slug: external-integration
 title: 第14回 外部連携の全て ─ MCP vs 直接API
 summary: Claude Codeを外の世界とつなぐ2つの道、MCPと直接APIを正直に比較する。手軽さのMCPと、コンテキスト効率・制御性で勝る直接API。自分はどちらを選ぶかを判断できるようになる。Claude Codeの使い方コース 第14回。
-status: draft
+status: public
 visibility: members
 createdAt: "2026-06-26"
 updatedAt: "2026-06-26"
+order: 14
 tags:
   - claude-code
   - mcp

@@ -1,10 +1,11 @@
 slug: building-big
 title: 第17回 大規模開発 ─ CI/CD・SDK
 summary: 大きい仕事をどう渡すか、そしてClaude Codeをパイプラインにどう組み込むか。仕様書を先に書き、別視点でレビューさせ、並列で走らせる。さらにGitHub連携・claude -p・SDKでCI/CDの中にClaudeを置く。Claude Codeの使い方コース 第17回。
-status: draft
+status: public
 visibility: members
 createdAt: "2026-06-26"
 updatedAt: "2026-06-26"
+order: 17
 tags:
   - claude-code
   - course
