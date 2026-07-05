@@ -71,7 +71,7 @@ function PrivateSlide({ spec, frame }: { spec: PrivateSlideSpec } & SlideRenderC
 
   return (
     <section className={`remotion-slide private-slide private-${spec.layout}`}>
-      <LogoMark />
+      {spec.layout === 'title' ? <LogoMark /> : null}
       <div className="private-grid" />
       <div className="private-head" style={lift(head, 42)}>
         {spec.kicker ? <span className="slide-kicker">{spec.kicker}</span> : null}
