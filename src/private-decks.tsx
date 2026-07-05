@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { spring, useVideoConfig } from 'remotion'
 import { z } from 'zod'
-import { LogoMark } from './deck-shared'
+import { CtaSlide, LogoMark } from './deck-shared'
 import { deckMetaSchema } from './schema'
 import type { DeckBundle, SlideRenderContext } from './types'
 
@@ -28,7 +28,7 @@ const privatePanelSchema = z.object({
 })
 
 const privateSlideSpecSchema = z.object({
-  layout: z.enum(['title', 'metrics', 'timeline', 'process', 'split', 'lesson', 'closing']),
+  layout: z.enum(['cta', 'title', 'metrics', 'timeline', 'process', 'split', 'lesson', 'closing']),
   kicker: z.string().optional(),
   title: z.string(),
   subtitle: z.string().optional(),
@@ -65,9 +65,17 @@ export function toPrivateDeckBundle(document: PrivateDeckDocument): DeckBundle {
   }
 }
 
-function PrivateSlide({ spec, frame }: { spec: PrivateSlideSpec } & SlideRenderContext) {
+function PrivateSlide({
+  spec,
+  frame,
+  durationInFrames
+}: { spec: PrivateSlideSpec } & SlideRenderContext) {
   const { fps } = useVideoConfig()
   const head = entrance(frame, fps)
+
+  if (spec.layout === 'cta') {
+    return <CtaSlide frame={frame} durationInFrames={durationInFrames} />
+  }
 
   return (
     <section className={`remotion-slide private-slide private-${spec.layout}`}>
