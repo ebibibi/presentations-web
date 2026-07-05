@@ -14,10 +14,11 @@ This repository is intended to be public. Use English for code comments, README 
 - `status` drives visibility (see `src/visibility.ts`):
   - `public` — listed in the archive and openable by anyone.
   - `unlisted` — openable by direct URL, hidden from the archive list.
-  - `draft` / `private` — hidden from the public; only a signed-in owner (`auth.canRecord`) sees and can open them. Use this for a deck staged before its video airs.
+  - `draft` — hidden from the public; only a signed-in owner (`auth.canRecord`) sees and can open it. Draft deck code still ships in the static bundle.
+  - `private` — owner-only hard access content served from `/api/private/decks` after session verification. Do not put private deck text in `content/decks` or any public bundle.
   - **To publish, change `status: draft` to `status: public` and merge — that one line is the switch.**
   - This is UI-level gating: a draft deck's content still ships in the static bundle, so it is not hard access control.
-- `visibility` is currently unused metadata; gate on `status`.
+- `visibility` is descriptive metadata; route access is still gated on `status`.
 - Read [docs/ai-deck-authoring.md](docs/ai-deck-authoring.md) before creating or heavily editing a deck.
 
 ## Implementation Rules

@@ -80,6 +80,8 @@ Set `VITE_GA_MEASUREMENT_ID` in the Cloudflare Pages environment.
 ## Authentication
 
 The public archive is readable without login. Recording mode is owner-only.
+Private decks are also owner-only and are served from Cloudflare KV through
+Pages Functions; their text should not be committed into this public repository.
 
 Authentication uses Google Identity Services and Cloudflare Pages Functions:
 
@@ -88,12 +90,14 @@ Authentication uses Google Identity Services and Cloudflare Pages Functions:
 - Only emails in `ALLOWED_OWNER_EMAILS` receive a signed session cookie.
 - Users with `canRecord: true` see the recording button.
 - Direct access to `/decks/{slug}/studio` shows a login gate unless the session can record.
+- `/api/private/decks` returns KV-backed private deck data only when the session has `canRecord: true`.
 
 Runtime configuration:
 
 - `GOOGLE_CLIENT_ID` — Google OAuth web client ID in `wrangler.toml`.
 - `ALLOWED_OWNER_EMAILS` — comma-separated Cloudflare Pages secret for emails allowed to record.
 - `AUTH_SECRET` — long random Cloudflare Pages secret used to sign session cookies.
+- `PRIVATE_DECKS` — Cloudflare KV namespace binding. Key `decks` stores owner-only deck JSON.
 
 The current allowed owner email is configured in Cloudflare, not hard-coded in the app.
 

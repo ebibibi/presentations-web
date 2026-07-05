@@ -69,6 +69,7 @@ Rules:
 
 - Use `status: draft` for new decks.
 - Use `visibility: public` unless access control is implemented.
+- Use the private deck API, not `content/decks`, for material that must not ship in the public JavaScript bundle.
 - Keep `slides` in the same order as the rendered components in `slides.tsx`.
 - The number of metadata slide entries must equal the number of rendered slide entries.
 - Put speaker notes in `notes`; studio mode can display them.
@@ -192,6 +193,18 @@ Do not include:
 - unlicensed copyrighted assets
 
 If unsure, omit the detail and add a TODO in the deck notes.
+
+## Private Decks
+
+Private decks are data-driven decks stored outside the public repository and
+public static bundle.
+
+- Store private deck JSON in the Cloudflare KV namespace bound as `PRIVATE_DECKS`.
+- Use key `decks`; the value is an array of private deck documents or `{ "decks": [] }`.
+- `/api/private/decks` returns that data only after the signed auth session has `canRecord: true`.
+- The generic renderer lives in `src/private-decks.tsx`; the private text does not.
+- Keep `status: private` and `visibility: private` in each private deck's metadata.
+- Do not commit private deck JSON, paid-article details, customer material, or personal/private data into this public repository.
 
 ## Verification Checklist
 
