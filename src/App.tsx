@@ -6,7 +6,7 @@ import {
   Presentation,
   Search
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AuthControls } from './AuthControls'
 import { DeckViewer } from './DeckViewer'
 import { initializeAnalytics, trackPageView } from './analytics'
@@ -14,7 +14,7 @@ import {
   type AuthState,
   loadAuthState
 } from './auth'
-import { getDecks } from './content'
+import { getDecks, loadPrivateDecks } from './content'
 import { isDeckAccessible, isDeckListed, isPublished } from './visibility'
 import type { DeckBundle } from './types'
 
@@ -48,13 +48,65 @@ function navigate(path: string) {
 export function App() {
   const [route, setRoute] = useState<Route>(getRoute)
   const [auth, setAuth] = useState<AuthState>(initialAuthState)
-  const decks = useMemo(() => getDecks(), [])
+  const publicDecks = useMemo(() => getDecks(), [])
+  const [privateDecks, setPrivateDecks] = useState<DeckBundle[]>([])
+  const [privateDecksState, setPrivateDecksState] = useState<{
+    loading: boolean
+    error?: string
+  }>({ loading: false })
+  const decks = useMemo(
+    () => [...publicDecks, ...privateDecks],
+    [privateDecks, publicDecks]
+  )
+  const handleAuthChange = useCallback((nextAuth: AuthState) => {
+    if (!nextAuth.canRecord) {
+      setPrivateDecks([])
+      setPrivateDecksState({ loading: false })
+    }
+
+    setAuth(nextAuth)
+  }, [])
 
   useEffect(() => {
     const listener = () => setRoute(getRoute())
     window.addEventListener('popstate', listener)
     return () => window.removeEventListener('popstate', listener)
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    if (!auth.canRecord) {
+      return undefined
+    }
+
+    Promise.resolve()
+      .then(() => {
+        if (!cancelled) {
+          setPrivateDecksState({ loading: true })
+        }
+        return loadPrivateDecks()
+      })
+      .then((nextDecks) => {
+        if (!cancelled) {
+          setPrivateDecks(nextDecks)
+          setPrivateDecksState({ loading: false })
+        }
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setPrivateDecks([])
+          setPrivateDecksState({
+            loading: false,
+            error: error instanceof Error ? error.message : 'Failed to load private decks'
+          })
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [auth.canRecord])
 
   useEffect(() => {
     let cancelled = false
@@ -83,9 +135,31 @@ export function App() {
   if (route.name === 'deck') {
     const deck = decks.find((candidate) => candidate.meta.slug === route.slug)
 
+    if (!deck && (auth.loading || privateDecksState.loading)) {
+      return (
+        <Shell auth={auth} onAuthChange={handleAuthChange}>
+          <EmptyState
+            title="資料を確認しています"
+            body="公開資料とオーナー専用資料のアクセス権を確認しています。"
+          />
+        </Shell>
+      )
+    }
+
+    if (!deck && auth.enabled && !auth.canRecord) {
+      return (
+        <Shell auth={auth} onAuthChange={handleAuthChange}>
+          <EmptyState
+            title="ログインが必要な資料です"
+            body="このURLはオーナー専用資料の可能性があります。ebibibi@gmail.com でログインすると閲覧できます。"
+          />
+        </Shell>
+      )
+    }
+
     if (!deck) {
       return (
-        <Shell auth={auth} onAuthChange={setAuth}>
+        <Shell auth={auth} onAuthChange={handleAuthChange}>
           <EmptyState
             title="資料が見つかりません"
             body="URLを確認するか、一覧から資料を選んでください。"
@@ -96,7 +170,7 @@ export function App() {
 
     if (!isDeckAccessible(deck.meta.status, auth.canRecord)) {
       return (
-        <Shell auth={auth} onAuthChange={setAuth}>
+        <Shell auth={auth} onAuthChange={handleAuthChange}>
           <EmptyState
             title={auth.loading ? '確認しています…' : 'この資料はまだ公開されていません'}
             body={
@@ -116,16 +190,17 @@ export function App() {
         auth={auth}
         onBack={() => navigate('/')}
         onOpenStudio={() => navigate(`/decks/${deck.meta.slug}/studio${window.location.hash}`)}
-        onAuthChange={setAuth}
+        onAuthChange={handleAuthChange}
       />
     )
   }
 
   return (
-    <Shell auth={auth} onAuthChange={setAuth}>
+    <Shell auth={auth} onAuthChange={handleAuthChange}>
       <Home
         decks={decks}
         isOwner={auth.canRecord}
+        privateDecksError={privateDecksState.error}
         onOpenDeck={(slug) => navigate(`/decks/${slug}`)}
       />
     </Shell>
@@ -169,10 +244,12 @@ function Shell({
 function Home({
   decks,
   isOwner,
+  privateDecksError,
   onOpenDeck
 }: {
   decks: DeckBundle[]
   isOwner: boolean
+  privateDecksError?: string
   onOpenDeck: (slug: string) => void
 }) {
   const [query, setQuery] = useState('')
@@ -229,6 +306,9 @@ function Home({
         <span>{visibleDecks.length} decks</span>
         {isOwner && hiddenCount > 0 ? (
           <span className="owner-note">オーナー表示：非公開 {hiddenCount} 件を含む</span>
+        ) : null}
+        {isOwner && privateDecksError ? (
+          <span className="owner-note">非公開資料の取得失敗: {privateDecksError}</span>
         ) : null}
       </section>
 

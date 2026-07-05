@@ -4,3 +4,9 @@ pages_build_output_dir = "dist"
 
 [vars]
 GOOGLE_CLIENT_ID = "806024345622-ad55n6c3d3gnj52k8s0i5dp3s9kv1amp.apps.googleusercontent.com"
+
+# Hard-access storage for owner-only decks. Values are readable only through
+# Pages Functions after a signed owner session is verified.
+[[kv_namespaces]]
+binding = "PRIVATE_DECKS"
+id = "5f6a3d05b41e47639b8dd49c870bc0ab"

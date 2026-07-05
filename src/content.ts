@@ -1,4 +1,5 @@
 import YAML from 'yaml'
+import { privateDeckDocumentSchema, toPrivateDeckBundle } from './private-decks'
 import { deckMetaSchema } from './schema'
 import type { DeckBundle, DeckMeta, SlideModule } from './types'
 
@@ -33,6 +34,19 @@ export function getDecks(): DeckBundle[] {
   return cachedDecks
 }
 
+export async function loadPrivateDecks(): Promise<DeckBundle[]> {
+  const response = await fetch('/api/private/decks', { cache: 'no-store' })
+
+  if (!response.ok) {
+    const result = await safeJson(response)
+    throw new Error(result.error || 'Failed to load private decks')
+  }
+
+  const result = await safeJson(response)
+  const documents = privateDeckDocumentSchema.array().parse(result.decks ?? [])
+  return documents.map(toPrivateDeckBundle)
+}
+
 function buildDeck(path: string, raw: string): DeckBundle {
   const parsed = deckMetaSchema.parse(YAML.parse(raw)) satisfies DeckMeta
   const deckDir = path.replace('/deck.yaml', '')
@@ -54,5 +68,13 @@ function buildDeck(path: string, raw: string): DeckBundle {
       ...slide,
       ...parsed.slides[index]
     }))
+  }
+}
+
+async function safeJson(response: Response) {
+  try {
+    return (await response.json()) as { decks?: unknown; error?: string }
+  } catch {
+    return {}
   }
 }
