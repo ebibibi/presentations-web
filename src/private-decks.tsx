@@ -47,7 +47,7 @@ export const privateDeckDocumentSchema = z.object({
 })
 
 type PrivateDeckDocument = z.infer<typeof privateDeckDocumentSchema>
-type PrivateSlideSpec = z.infer<typeof privateSlideSpecSchema>
+export type DataDrivenSlideSpec = z.infer<typeof privateSlideSpecSchema>
 
 export function toPrivateDeckBundle(document: PrivateDeckDocument): DeckBundle {
   if (document.meta.slides.length !== document.visualSlides.length) {
@@ -60,16 +60,16 @@ export function toPrivateDeckBundle(document: PrivateDeckDocument): DeckBundle {
     meta: document.meta,
     slides: document.visualSlides.map((spec, index) => ({
       ...document.meta.slides[index],
-      render: (props) => <PrivateSlide spec={spec} {...props} />
+      render: (props) => <DataDrivenSlide spec={spec} {...props} />
     }))
   }
 }
 
-function PrivateSlide({
+export function DataDrivenSlide({
   spec,
   frame,
   durationInFrames
-}: { spec: PrivateSlideSpec } & SlideRenderContext) {
+}: { spec: DataDrivenSlideSpec } & SlideRenderContext) {
   const { fps } = useVideoConfig()
   const head = entrance(frame, fps)
 
@@ -102,7 +102,7 @@ function PrivateSlideBody({
   frame,
   fps
 }: {
-  spec: PrivateSlideSpec
+  spec: DataDrivenSlideSpec
   frame: number
   fps: number
 }) {

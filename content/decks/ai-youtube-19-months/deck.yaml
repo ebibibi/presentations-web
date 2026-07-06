@@ -1,0 +1,74 @@
+slug: ai-youtube-19-months
+title: AIに5つのYouTubeチャンネルを19ヶ月任せた結果
+summary: 19ヶ月・4,807本のAI YouTube運営実験を、収益・失敗要因・自律PDCAの限界から振り返る公開スライド。
+status: public
+visibility: public
+createdAt: "2026-07-05"
+updatedAt: "2026-07-06"
+order: 101
+tags:
+  - ai
+  - youtube
+  - automation
+  - language-learning
+slides:
+  - id: opening
+    title: Opening
+    durationInFrames: 150
+    notes: "note記事を元にした公開スライド。19ヶ月すべてが完全自律ではなく、自作プログラム中心の運用からAI判断委任へ移行した実験として紹介する。"
+  - id: subscribe-opening
+    title: Subscribe
+    durationInFrames: 150
+    notes: "冒頭のチャンネル登録・高評価お願いスライド。ロゴを大きく見せる。"
+  - id: what-built
+    title: What I Built
+    durationInFrames: 150
+    notes: "まず何を作ったのかを説明する。作ったのは一般的な雑多チャンネルではなく、言語学習チャンネル5つ。JP→EN、EN→JP、EN→ES、JP→ZH、JP→EN聞き流しという複数の言語ペア・形式を並行して検証した。"
+  - id: scale
+    title: Scale
+    durationInFrames: 150
+    notes: "まず規模感。5チャンネル、19ヶ月、4,807本、464MBの一次データ。ここまでやるとAI動画運用の肌触りが数字で見える。"
+  - id: timeline
+    title: Timeline
+    durationInFrames: 150
+    notes: "最初から全部AI任せではない点を明確にする。自作プログラム期、AI支援拡大、AIへの運営判断委任、完全自律フェーズ、完結という時系列。"
+  - id: revenue
+    title: Revenue
+    durationInFrames: 150
+    notes: "収益の結論。直近月は$1.38、約210円。2026年3月以降の実測は$0.58から$3.79。目標月10万円との差を強調する。"
+  - id: peak-and-crash
+    title: Peak and Crash
+    durationInFrames: 150
+    notes: "2026年2月に月33.4万viewsまで到達したが、2026年3月の通常動画中心への転換後に再生数が約8分の1へ落ち、6月は4.1万views。"
+  - id: dilemma
+    title: Dilemma
+    durationInFrames: 150
+    notes: "最大の構造要因。伸ばせるShortsは稼げず、稼げるNormalは伸びない。3月の方針転換は合理的に見えたが、露出装置を失った。"
+  - id: recommendation
+    title: Recommendation
+    durationInFrames: 150
+    notes: "関連動画流入が19ヶ月ずっと0.1から1.3%。維持率やメタデータを改善しても推薦に乗らなかった。AI量産コンテンツの敵は視聴者よりプラットフォーム。"
+  - id: pdca
+    title: AI PDCA
+    durationInFrames: 150
+    notes: "AIの局所最適化は実際に効いた。維持率改善、Shorts平均再生数10倍、A/BテストでBGM廃止、成功パターン横展開、障害自己復旧。"
+  - id: limits
+    title: Limits
+    durationInFrames: 150
+    notes: "AIは回すことは得意だが、降りる判断は苦手。改善報告が前向きに積み上がるほど撤退判断が遠のく。"
+  - id: incidents
+    title: Incidents
+    durationInFrames: 150
+    notes: "量産システムのバグは被害も量産する。重複1,700本、100フレーズが8フレーズ、サムネ不一致、戦略AIの勝手な下方修正。"
+  - id: cost
+    title: Cost
+    durationInFrames: 150
+    notes: "自己負担はほぼ電気代だったが、実使用量は本物。自費なら月1万円超の赤字。痛みのないコストが撤退判断を遅らせた。"
+  - id: closing
+    title: Closing
+    durationInFrames: 150
+    notes: "締め。収益目標には負けたが、自律PDCAの実証、AI進化の定点観測、464MBの一次データ、撤退基準の学習という価値が残った。"
+  - id: subscribe-closing
+    title: Subscribe
+    durationInFrames: 150
+    notes: "最後のチャンネル登録・高評価お願いスライド。ロゴを大きく見せて締める。"
