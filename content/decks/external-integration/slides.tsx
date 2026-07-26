@@ -149,7 +149,7 @@ function McpHowSlide({ frame }: SlideRenderContext) {
     <section className="remotion-slide e14-slide">
       <div style={lift(heading, 24)}>
         <span className="slide-kicker">MCPの使い方</span>
-        <h1>追加はコマンド1つ</h1>
+        <h1>入り口は2つ</h1>
       </div>
       <div className="e14-how-stage">
         <div className="e14-terminal" style={lift(terminal, 28)}>
@@ -157,11 +157,21 @@ function McpHowSlide({ frame }: SlideRenderContext) {
             <span />
             <span />
             <span />
-            <strong>claude</strong>
+            <strong>自分で入れる</strong>
           </div>
           <div className="e14-terminal-body">
             <code className="e14-prompt">&gt; claude mcp add notion</code>
             <code className="e14-output">✓ connected — 次回起動時も自動でつながる</code>
+          </div>
+          <div className="e14-terminal-bar e14-terminal-bar-second">
+            <span />
+            <span />
+            <span />
+            <strong>プラグインが連れてくる</strong>
+          </div>
+          <div className="e14-terminal-body">
+            <code className="e14-prompt">&gt; /plugin marketplace add ...</code>
+            <code className="e14-output">✓ azure-skills → MCPサーバー3個が同時に入る</code>
           </div>
         </div>
         <div className="e14-examples">
@@ -175,6 +185,11 @@ function McpHowSlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e14-note" style={lift(entrance(frame, fps, 90), 18)}>
         「Notionを繋いで」と頼むだけでもOK。<b>差すだけで使える手軽さ</b>が最大の魅力。
+        <br />
+        <small>
+          ただし2つ目は要注意。<b>自分で入れた覚えがなくてもMCPは増える。</b>
+          私は claude mcp add を一度も使っていないのに、プラグイン経由で4サーバー入っていた。
+        </small>
       </p>
     </section>
   )
