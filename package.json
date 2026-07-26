@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc -b && vite build",
+    "build": "node scripts/check-decks.mjs && tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
-    "check:recording": "npm run build && node scripts/check-recording-surface.mjs"
+    "check:recording": "npm run build && node scripts/check-recording-surface.mjs",
+    "check:decks": "node scripts/check-decks.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.481",
