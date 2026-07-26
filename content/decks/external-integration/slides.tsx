@@ -228,17 +228,18 @@ function TradeoffContextSlide({ frame }: SlideRenderContext) {
   const heading = entrance(frame, fps)
 
   const bars = [
-    ['Azure MCP（68ツール）', 1, '約24,000', 'var(--coral)'],
-    ['スキル + 直接API', 0.009, '約225', 'var(--teal)']
+    ['昔（全スキーマを先読み）', 1, '約24,000', 'var(--coral)'],
+    ['今（ツール検索が既定）', 0.034, '約800', 'var(--teal)']
   ] as const
 
   return (
     <section className="remotion-slide e14-slide">
       <div style={lift(heading, 24)}>
         <span className="slide-kicker">トレードオフ ①</span>
-        <h1>
-          つなぐだけで<code className="e14-cmd">/context</code>を食う
-        </h1>
+        <p className="e14-oldclaim">
+          「MCPはつなぐだけで<code className="e14-cmd">/context</code>を食う」
+        </p>
+        <h1>その常識は、もう古い</h1>
       </div>
       <div className="e14-bars">
         {bars.map(([label, ratio, value, color], index) => {
@@ -262,10 +263,10 @@ function TradeoffContextSlide({ frame }: SlideRenderContext) {
         })}
       </div>
       <p className="e14-note" style={lift(entrance(frame, fps, 74), 18)}>
-        第13回で出た「コンテキストを食う犯人」の正体。<b>桁が2つ違う。</b>
+        同じAzure MCP（68ツール）で<b>96.6%減</b>。載るのはツール名とサーバー説明だけ。
         <br />
         <small>
-          実測値: @azure/mcp のツール定義は68ツール・83KB。Azureのリソースを1つも触らなくても常時載る。
+          ただしゼロではない。使う瞬間にそのツールのスキーマが会話へ展開される（1本あたり約1,000〜2,400文字）。
         </small>
       </p>
     </section>
@@ -318,14 +319,18 @@ function ConfessionSlide({ frame }: SlideRenderContext) {
           理由は、私の使い方が「毎日同じ操作を繰り返す」自動化中心だから。
         </p>
         <div className="e14-confession-result">
-          <span>コンテキストの無駄</span>
-          <strong>激減</strong>
-          <span>認証まわりの事故</span>
-          <strong>激減</strong>
+          <span>当時の理由：コンテキスト</span>
+          <strong>もう弱い</strong>
+          <span>今も残る理由：制御性</span>
+          <strong className="e14-still">効いている</strong>
         </div>
       </div>
       <p className="e14-note" style={lift(note, 18)}>
         MCPが悪いのではなく、<b>自分の使い方に合わなかった</b>という話。
+        <br />
+        <small>
+          移行した当時はツール検索がなく、繋ぐだけで重かった。その理由は消えた。それでも続けているのはトレードオフ②のほう。
+        </small>
       </p>
     </section>
   )
@@ -338,7 +343,7 @@ function WhenMcpSlide({ frame }: SlideRenderContext) {
   const right = entrance(frame, fps, 36)
 
   const fit = ['色々なサービスをとりあえず試す探索フェーズ', '公式サーバーが充実している連携', 'たまにしか使わず、自分で書かないとき']
-  const unfit = ['毎日使う軽量なAPI', 'コンテキスト節約が最優先のとき']
+  const unfit = ['毎日使う軽量なAPI', '認証や実行を自分で握りたいとき']
 
   return (
     <section className="remotion-slide e14-slide">
@@ -384,7 +389,7 @@ function HowToChooseSlide({ frame }: SlideRenderContext) {
         <div className="e14-choose-card e14-choose-accent" style={lift(left, 30)}>
           <span className="e14-tag">直接API + スキル</span>
           <strong>繰り返す・決まった操作</strong>
-          <p>コンテキスト効率と制御性で勝る。毎日の自動化はこちら。</p>
+          <p>制御性で勝る。認証も実行も自分で握れる。毎日の自動化はこちら。</p>
         </div>
         <div className="e14-choose-card" style={lift(right, 30)}>
           <span className="e14-tag e14-tag-muted">MCP</span>
@@ -393,7 +398,7 @@ function HowToChooseSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <p className="e14-judge" style={lift(note, 18)}>
-        最後は<b>コンテキストと相談して選ぶ</b>。第13回のダイエット術と地続きの考え方。
+        コンテキストではもう決まらない。最後は<b>どこまで自分で握りたいか</b>で選ぶ。
       </p>
     </section>
   )
@@ -404,9 +409,9 @@ function DemoSlide({ frame }: SlideRenderContext) {
   const heading = entrance(frame, fps)
 
   const items: ReadonlyArray<readonly [string, string]> = [
-    ['MCPを追加', '「claude mcp add」でサーバーを足し、/context で増えた分を見る'],
-    ['直接APIで実行', 'スクリプトでAPIを叩き、結果をClaudeに渡して分析させる'],
-    ['コンテキストを比較', '同じ操作をMCP版と直接API版で実行し、使用量を実測']
+    ['既定で /context', 'Azure MCPを繋いだ状態で「68 tools · 0 tokens」を見せる'],
+    ['先読みに戻す', 'ENABLE_TOOL_SEARCH=false で起動し、約24,000トークン載るのを見せる'],
+    ['直接APIで実行', 'スクリプトでAPIを叩き、結果をClaudeに渡して分析させる']
   ]
 
   return (

@@ -1841,6 +1841,16 @@ main {
   color: var(--coral);
 }
 
+.e14-slide .e14-oldclaim {
+  color: #8d9689;
+  font-size: 34px;
+  font-weight: 700;
+  margin: 6px 0 2px;
+  text-decoration: line-through;
+  text-decoration-color: rgba(216, 93, 74, 0.55);
+  text-decoration-thickness: 3px;
+}
+
 /* Qualified because .remotion-slide p (class + element) outranks a bare class
    and would otherwise override both the size and the colour. */
 .e14-slide .e14-note {
@@ -2231,6 +2241,13 @@ main {
   font-size: 34px;
   justify-self: start;
   padding: 6px 24px;
+}
+
+/* The second verdict is still valid, so it must not read as the same
+   "no longer true" badge as the first. */
+.e14-confession-result strong.e14-still {
+  background: rgba(20, 117, 111, 0.12);
+  color: var(--teal);
 }
 
 /* Fit columns */
