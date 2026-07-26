@@ -1,0 +1,86 @@
+slug: agentic-loops
+title: 第19回 ループ設計 ─ Claude Codeに仕事を回させる
+summary: Anthropic公式記事「Getting started with loops」「Building verification loops in Claude Code with skills」とgihyo.jpの解説をもとに、Claude CodeでAIエージェントを活用する4種類のループを整理する。ターンベース、ゴールベース、時間ベース、プロアクティブの使い分け、検証ループ、品質維持、トークン管理、最初の導入方法までを扱うClaude Codeの使い方コース追加回。本編は第18回で完結済み。
+status: public
+visibility: members
+createdAt: "2026-07-09"
+updatedAt: "2026-07-26"
+order: 19
+tags:
+  - claude-code
+  - agents
+  - loops
+  - course
+slides:
+  - id: opening
+    title: ループ設計
+    durationInFrames: 175
+    notes: 第19回、追加回。冒頭で「本編は第18回で完結、これは追加回」とはっきり言う（第18回の最終回を見た人が混乱しないように）。元記事はAnthropic公式「Getting started with loops」（2026-06-30）と「Building verification loops in Claude Code with skills」（2026-07-22）、日本語整理はgihyo.jp（2026-07-09）。今日のゴールは、ユーザーが各ターンを進める使い方から、止まる条件まで含めてClaude Codeに仕事を回させる設計へ進むこと。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
+  - id: why-now
+    title: なぜ今ループなのか
+    durationInFrames: 170
+    notes: 公式記事では、通常のプロンプトもユーザーが各ターンを進める手動ループとして扱われている。ユーザーのプロンプトで開始し、Claudeが完了または追加文脈が必要だと判断したら止まる。ここから、停止条件や実行間隔まで設計していくのが今回の話。
+  - id: definition
+    title: ループの定義
+    durationInFrames: 175
+    notes: Anthropicの定義は、エージェントが停止条件を満たすまで作業サイクルを繰り返すもの。分類観点は、何をきっかけに動くか、どこで止まるか、Claude Codeのどの基本機能を使うか、どの作業に向くか。
+  - id: four-types
+    title: 4種類のループ
+    durationInFrames: 185
+    notes: 公式記事では、ターンベース、ゴールベース、時間ベース、プロアクティブの4分類。機能の名前だけではなく、トリガー、停止条件、Claude Codeのプリミティブ、向いている作業で選ぶ。
+  - id: turn-based
+    title: ターンベース
+    durationInFrames: 175
+    notes: ユーザーのプロンプトで始まり、Claudeが完了した、または追加文脈が必要だと判断したら止まる。短い作業や定期的でない作業向け。自己検証はSKILL.mdで強化できる。UI変更なら、編集だけで終わらせず、起動、操作、コンソール確認、パフォーマンストレース/監査まで書ける。
+  - id: verification-loops
+    title: 自作の前に、組み込みを使う
+    durationInFrames: 180
+    notes: 検証ループの回。公式記事（2026-07-22）の要点。前のスライドで「検証手順をSKILL.mdに書く」と言ったが、その前に組み込みを知っておく。①`/verify`＝ビルドして動かして変化を実際に観察する組み込みスキル ②CLAUDE.mdにビルドとテストのコマンドを書いておく＝Claudeに推測させない ③`/code-review`＝別の文脈のレビュー役（GitHub連携のCode Reviewはresearch preview）④それでも毎回手で直しているものだけを自分のスキルにする（skill-creatorに取材させるのが速い・第13回の内容）。締めのメッセージは「型チェック・lint・テストの失敗はすでに検証されている。スキルにすべきは、自分が毎回手で確かめている残りの部分だけ」。第16回の自己検証回の続きとして繋げると自然。
+  - id: goal-based
+    title: ゴールベース
+    durationInFrames: 178
+    notes: /goalで「できた」の条件を先に渡す。条件を満たすまで、または指定した最大ターン数に達するまで繰り返す。テスト通過数やLighthouse 90点以上のように、機械的に確認できる基準と相性が良い。
+  - id: time-based
+    title: 時間ベース
+    durationInFrames: 178
+    notes: /loopで指定間隔ごとにプロンプトを再実行する。PRのレビューコメントやCI失敗のように、外部システムの変化を見張る仕事に向く。停止条件は、ユーザーがキャンセルする、またはPRがマージされる・キューが空になるなど作業が完了すること。ただし/loopは自分のコンピューター上で動く。クラウド側に移したい場合は/scheduleでルーチンを作る。
+  - id: proactive
+    title: プロアクティブ
+    durationInFrames: 185
+    notes: イベントやスケジュールをきっかけに、人間がリアルタイムで促さなくても動くループ。バグ報告、Issueトリアージ、移行作業、依存関係更新など、繰り返し発生して手順を定義しやすい仕事向け。公式記事では/schedule、/goal、Dynamic workflows、Auto modeの組み合わせ例が紹介されている。/scheduleとDynamic workflowsはresearch preview扱い。
+  - id: quality
+    title: 品質維持
+    durationInFrames: 175
+    notes: ループを回すほど、品質の基準が重要になる。Claudeは既存コードベースのパターンに従うため、コードベース自体を整える。よい結果の基準はスキルに書く。必要なドキュメントへアクセスしやすくする。別エージェントにレビューさせる（組み込みの`/code-review`スキル、またはGitHub向けのCode Review）。いちばん大事なのは最後——失敗したら、その場の修正だけでなく、今後の反復すべてに効く仕組みへ戻すこと。
+  - id: token-control
+    title: トークン管理
+    durationInFrames: 175
+    notes: ループは便利だが、放っておくと使用量が増える。適切な機能とモデルを選ぶ。成功条件と停止条件を明確にする。小さく試してから広げる。決まった処理はスクリプトに任せる。頻度は対象の変化に合わせる。/usage、/goal、/workflowsで使用量を確認する。Dynamic workflowsは数百のエージェントを起動し得るため、大きく回す前に小さい範囲で確認する。
+  - id: model-effort
+    title: モデルとeffortも設計対象
+    durationInFrames: 170
+    notes: gihyo.jpの補足で触れられている通り、Claude Codeのモデル選択とeffortレベルもループ設計に関係する。モデルは能力範囲、effortはどれだけファイルを読み、ツールを使い、検証してから戻るかに効く。必要な文脈・スキル・ツール・範囲が適切でも誤るなら大きいモデル、ファイルを読まない・テストしない・早く止まるならeffortを上げる、という切り分け。
+  - id: choose-loop
+    title: どれを選ぶか
+    durationInFrames: 180
+    notes: 公式記事の締めの表をそのまま日本語化したスライド。ターンベースは確認を渡す（検証スキル）。ゴールベースは停止条件を渡す（/goal）。時間ベースは起動タイミングを渡す（/loop・/schedule）。プロアクティブはプロンプトそのものを渡す（全部＋workflow）。右端の列が「実際に打つもの」なので、視聴者が一時停止してメモするならこの1枚。まずは一番単純な形から始め、必要な場面だけ複雑にする。
+  - id: demo
+    title: ここで手を動かす
+    durationInFrames: 185
+    notes: 実演パート。①普通のターンベースでUI変更を頼む。②SKILL.mdに検証手順を書いて自己検証を強化する。③/goalでLighthouseやテスト通過の停止条件を渡す。④/loopでPRを5分ごとに確認する例を見せる。説明だけで終わらせず、ループの「止まる条件」を画面で見せる。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 165
+    notes: ループとは停止条件まで作業サイクルを回す設計。4分類はターン、ゴール、時間、プロアクティブ。品質はスキル、レビュー、ドキュメントで支える。トークンは境界、モデル、effort、スクリプトで管理する。最初は自分がボトルネックになっている作業を1つ選ぶ。
+  - id: sources
+    title: 参考リンク
+    durationInFrames: 170
+    notes: 出典スライド。Anthropic公式記事2本（ループ設計 2026-06-30 / 検証ループ 2026-07-22）とgihyo.jp記事、モデル・effortの記事を明示する。記事にない断定は避け、公式の用語と日付を確認済みであることを伝える。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。最後にもう一度、高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。
