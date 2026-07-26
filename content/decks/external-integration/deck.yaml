@@ -4,7 +4,7 @@ summary: Claude Codeを外の世界とつなぐ2つの道、MCPと直接APIを�
 status: public
 visibility: members
 createdAt: "2026-06-26"
-updatedAt: "2026-06-26"
+updatedAt: "2026-07-26"
 order: 14
 tags:
   - claude-code
@@ -39,7 +39,7 @@ slides:
   - id: tradeoff-context
     title: トレードオフ① コンテキスト
     durationInFrames: 185
-    notes: ここからが本題、正直な比較。MCPは繋ぐだけでツール定義がコンテキストに積まれる（第13回で出た犯人の正体）。数字で見ると桁違い。MCPサーバー1つ＝約13,000〜18,000トークン、対してスキルでラップした直接API＝約225トークン。/contextで追加前後を比較すると一目瞭然。便利さの裏に隠れたコストがある。
+    notes: ここからが本題、正直な比較。MCPは繋ぐだけでツール定義がコンテキストに積まれる（第13回で出た犯人の正体）。数字は自分の環境で実測したもの。Azure MCP（`@azure/mcp`）は68ツール・ツール定義のJSONが83KB＝約24,000トークン。対してスキルでラップした直接API＝約225トークン。桁が2つ違う。強調したいのは「Azureのリソースを1つも触っていないのに、繋いだ瞬間から常時この量が載る」こと。しかも `mysql` `redis` `servicefabric` のように今日使わないツールまで全部積まれる。`/context` で追加前後を比較すると一目瞭然。便利さの裏に隠れたコストがある。
   - id: tradeoff-control
     title: トレードオフ② 安定性と制御
     durationInFrames: 180
@@ -59,7 +59,7 @@ slides:
   - id: demo
     title: ここで手を動かす
     durationInFrames: 180
-    notes: 実演パート。画面に映して実際にやってみせる。①MCPを追加=「claude mcp add」でサーバーを足し、/context で増えた分を確認する ②直接APIで実行=スクリプトでAPIを叩き、結果をClaudeに渡して分析させる ③コンテキストを比較=同じ操作をMCP版と直接API版で実行し、使用量を実測する。説明だけで終わらせず、トレードオフを目の前で体感してもらう。
+    notes: 実演パート。題材はAzure MCP（`@azure/mcp`・68ツール）。①まず `/context` を打って、MCPなしの状態を見せる ②MCPを追加（`claude mcp add` または /plugin でazureを有効化）③もう一度 `/context`＝MCPサーバーの行が増えて合計が跳ねるのを見せる ④`/mcp` で68ツールぶら下がっているのを見せる ⑤直接APIの対比＝az CLIを叩くスクリプト1本が数百トークンで同じ仕事をすることを見せる。撮影の注意2点。(a) `npx -y @azure/mcp@latest` は初回ダウンロードが走るので、本番前に一度起動してキャッシュを温めておく。(b) ツールを実際に呼ぶとテナント/サブスクリプションの認証に行くので、デモは「繋いでコンテキストを食う」ところで止める（JBSテナントの情報を画面に出さない）。説明だけで終わらせず、トレードオフを目の前で体感してもらう。
   - id: recap
     title: 今日のまとめ
     durationInFrames: 160
