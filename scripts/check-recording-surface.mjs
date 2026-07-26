@@ -6,9 +6,10 @@ import { chromium } from '@playwright/test'
 
 const port = 5182
 const baseUrl = `http://127.0.0.1:${port}`
-const deckPath = '/decks/platform-introduction/studio'
-const outputPath = 'tmp/recording-surface.png'
-const slideOutputPrefix = 'tmp/recording-surface-slide'
+const deckSlug = process.env.DECK_SLUG || process.argv[2] || 'platform-introduction'
+const deckPath = `/decks/${deckSlug}/studio`
+const outputPath = `tmp/recording-surface-${deckSlug}.png`
+const slideOutputPrefix = `tmp/recording-surface-${deckSlug}-slide`
 const root = join(process.cwd(), 'dist')
 const contentTypes = new Map([
   ['.html', 'text/html; charset=utf-8'],
@@ -112,7 +113,14 @@ try {
 
   for (let index = 2; index <= totalSlides; index += 1) {
     await page.keyboard.press('ArrowRight')
-    await page.waitForTimeout(750)
+    // goToSlide plays the whole entrance at native speed before committing the
+    // new index, so wait for the counter instead of guessing a duration —
+    // a fixed sleep captures a half-animated slide and hides layout problems.
+    await page
+      .locator('.recording-notes-count')
+      .filter({ hasText: `${index} / ${totalSlides}` })
+      .waitFor({ timeout: 30000 })
+    await page.waitForTimeout(400)
     const path = `${slideOutputPrefix}-${index}.png`
     await page.screenshot({ path })
     slideScreenshots.push(path)
