@@ -228,8 +228,8 @@ function TradeoffContextSlide({ frame }: SlideRenderContext) {
   const heading = entrance(frame, fps)
 
   const bars = [
-    ['MCPサーバー 1つ', 1, '約13,000〜18,000', 'var(--coral)'],
-    ['スキル + 直接API', 0.014, '約225', 'var(--teal)']
+    ['Azure MCP（68ツール）', 1, '約24,000', 'var(--coral)'],
+    ['スキル + 直接API', 0.009, '約225', 'var(--teal)']
   ] as const
 
   return (
@@ -263,6 +263,10 @@ function TradeoffContextSlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e14-note" style={lift(entrance(frame, fps, 74), 18)}>
         第13回で出た「コンテキストを食う犯人」の正体。<b>桁が2つ違う。</b>
+        <br />
+        <small>
+          実測値: @azure/mcp のツール定義は68ツール・83KB。Azureのリソースを1つも触らなくても常時載る。
+        </small>
       </p>
     </section>
   )
