@@ -3796,6 +3796,10 @@ main {
   max-width: 1100px;
 }
 
+.e18-channels h1 {
+  font-size: 64px;
+}
+
 .e18-slide .e18-vs {
   color: var(--coral);
 }

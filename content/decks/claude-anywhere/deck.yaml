@@ -1,10 +1,10 @@
 slug: claude-anywhere
-title: 第18回 Discordからも使えるよ ─ どこからでもClaude Code
-summary: Claude Codeはターミナル専用ツールじゃない。外出先からスマホのDiscordで指示を投げ、帰宅したら作業が終わっている。橋渡しはOSSのccdb。公式のWeb/Desktop/IDE/CLIも含め「どこからでも動く」を示し、全18回を貫いた「コンテキスト管理」で締めくくる。Claude Codeの使い方コース 第18回・最終回。
+title: 第18回 どこからでもClaude Code
+summary: Claude Codeを机の前だけで使う時代は終わった。公式のRemote Control、Web、Desktop＋Dispatch、Channelsを整理し、DiscordからClaude/Codexの複数セッションを運用するOSS「CCDB」との違いも正直に比較する。Claude Codeの使い方コース 第18回・本編最終回。
 status: public
 visibility: members
 createdAt: "2026-06-26"
-updatedAt: "2026-06-26"
+updatedAt: "2026-07-29"
 order: 18
 tags:
   - claude-code
@@ -18,22 +18,30 @@ slides:
     title: 応援お願いします！
     durationInFrames: 150
     notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
+  - id: native-options
+    title: 公式だけでも4つの入口
+    durationInFrames: 185
+    notes: 2026年7月時点の公式機能を先に整理する。①Remote Control＝ローカルのCLI/VS Codeセッションをブラウザ・Claudeモバイルアプリから継続 ②Claude Code on the web＝Anthropic管理のクラウド環境でGitHubリポジトリを処理 ③Desktop＋Dispatch＝スマホから依頼してDesktop上のCodeセッションを起動 ④Channels＝Discord・Telegram・iMessageなどから実行中セッションへイベントを送る。機能はresearch previewを含むため、撮影時にも公式ドキュメントを開いて「現在の仕様」と断る。出典 https://code.claude.com/docs/en/remote-control
+  - id: remote-control
+    title: Remote ControlとWebの違い
+    durationInFrames: 185
+    notes: 同じclaude.ai/codeやモバイルアプリを入口に使っても、実行場所が違う。Remote Controlは自分のPC上で動き、ローカルファイル・MCP・ツール・設定をそのまま使える代わりにローカルプロセスを動かしておく。WebはAnthropic管理の隔離VMで動き、ローカルPC不要・並列タスク向き。Remote Controlは `claude remote-control` / `claude --remote-control` / セッション内 `/remote-control`。出典 https://code.claude.com/docs/en/remote-control と https://code.claude.com/docs/en/web-quickstart
+  - id: official-channels
+    title: 公式ChannelsにもDiscordがある
+    durationInFrames: 185
+    notes: CCDBを出す前に、公式ChannelsがDiscord・Telegram・iMessageをサポートしている事実を正直に紹介する。Channelsはresearch previewで、MCPサーバーから「いま開いているセッション」にイベントをpushする仕組み。Discord公式プラグインを入れ、`claude --channels plugin:discord@claude-plugins-official` で起動する。メッセージを受ける間はセッションを開いておく必要がある。出典 https://code.claude.com/docs/en/channels
+  - id: ccdb
+    title: CCDBはDiscordを作業台にする
+    durationInFrames: 185
+    notes: 公式Channelsを否定せず用途の違いを説明する。CCDB（Claude & Codex Discord Bridge）はDiscordスレッド1つをAIセッション1つとして管理し、ClaudeとCodexのバックエンド切替、複数セッションの並行運用、ファイル添付、APIからのセッション起動、セッション間の観測・claim・引き継ぎまで含むOSS。単一の実行中セッションへイベントをpushするChannelsより、Discordそのものを複数AIの作業台・履歴・監査画面にしたい場合に向く。
+  - id: discord-demo
+    title: CCDBの実演
+    durationInFrames: 180
+    notes: 実際の流れをステップで見せる。①Discordにスレッドを作る ②メッセージで指示を投稿 ③Claude CodeまたはCodexが反応して作業する ④結果とファイルがDiscordに返る。別スレッドでは別セッションが並行して動けるところまで見せる。
   - id: from-phone
     title: 実はスマホから使ってる
     durationInFrames: 170
-    notes: 告白から入る。私は外出中、スマホから指示を投げている。出先で「これやっといて」と送って、帰宅したら作業が終わっている。ターミナルの前に座っていなくてもClaude Codeは働ける、という体験を共有する。
-  - id: discord-demo
-    title: Discord連携の実演
-    durationInFrames: 180
-    notes: 実際の流れをステップで見せる。①Discordにスレッドを作る ②メッセージで指示を投稿 ③Claude Codeが反応して作業する ④結果がDiscordに返ってくる。スマホでその返信を確認すれば完了。チャット1本で開発が回る様子を体感してもらう。
-  - id: ccdb
-    title: 仕組みは ccdb
-    durationInFrames: 175
-    notes: 橋渡しの正体はccdb（claude-code-discord-bridge）。DiscordとClaude Codeをつなぐ自作ツールで、OSSとして公開している。セットアップすれば誰でも同じことができる。難しい魔法ではなく、再現可能な仕組みだと伝える。
-  - id: anywhere
-    title: どこからでも入れる
-    durationInFrames: 175
-    notes: 入口はDiscordだけじゃない。公式にもCloud（Claude Code Web）/ Desktopアプリ / IDE拡張 / CLIと複数の選択肢がある。自分の状況に合った入口を選べばいい。ターミナルは数ある入口の1つにすぎない。
+    notes: 私の実例。スマホのDiscordから「これやっといて」と送り、結果を同じスレッドで確認する。ここでは「公式でもできるが、私はCCDBでDiscordを作業台にしている」と位置づけ、公式機能と自作OSSを混同しない。
   - id: anytime
     title: いつでも・どこでも
     durationInFrames: 170
@@ -61,7 +69,7 @@ slides:
   - id: recap
     title: 今日のまとめ
     durationInFrames: 160
-    notes: 今日のまとめ。Claude Codeはターミナル専用じゃない。Discord連携(ccdb)や公式のWeb/Desktop/IDE/CLIでどこからでも動く。そして全18回を貫いたのはコンテキスト管理。最後は自分の使い方で決まる。
+    notes: 今日のまとめ。公式にはRemote Control、Web、Desktop＋Dispatch、Channelsがある。ローカルの続きを操るのか、クラウドへ仕事を投げるのか、外部イベントを実行中セッションへ送るのかで選ぶ。CCDBはDiscordを複数AIセッションの作業台にする別解。そして全18回を貫いたのはコンテキスト管理。
   - id: finale
     title: 全18回完結・ありがとう
     durationInFrames: 175
