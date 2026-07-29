@@ -6,10 +6,12 @@ import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
   { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <FromPhoneSlide {...props} /> },
-  { render: (props) => <DiscordDemoSlide {...props} /> },
+  { render: (props) => <NativeOptionsSlide {...props} /> },
+  { render: (props) => <RemoteControlSlide {...props} /> },
+  { render: (props) => <OfficialChannelsSlide {...props} /> },
   { render: (props) => <CcdbSlide {...props} /> },
-  { render: (props) => <AnywhereSlide {...props} /> },
+  { render: (props) => <DiscordDemoSlide {...props} /> },
+  { render: (props) => <FromPhoneSlide {...props} /> },
   { render: (props) => <AnytimeSlide {...props} /> },
   { render: (props) => <BackboneSlide {...props} /> },
   { render: (props) => <JourneySlide {...props} /> },
@@ -71,6 +73,95 @@ function OpeningSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function NativeOptionsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const options = [
+    ['Remote Control', 'ローカルの続きをスマホ・Webから'],
+    ['Web', 'クラウドへタスクを投げる'],
+    ['Desktop + Dispatch', 'スマホからDesktopの仕事を起動'],
+    ['Channels', 'Discord等から実行中セッションへpush']
+  ]
+
+  return (
+    <section className="remotion-slide e18-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">まずはネイティブ機能</span>
+        <h1>公式だけでも4つの入口</h1>
+      </div>
+      <div className="e18-surfaces">
+        {options.map(([name, body], index) => (
+          <div key={name} style={lift(entrance(frame, fps, 26 + index * 10), 24)}>
+            <strong>{name}</strong>
+            <span>{body}</span>
+          </div>
+        ))}
+      </div>
+      <p className="e18-judge" style={lift(entrance(frame, fps, 78), 18)}>
+        「どこから使うか」より、<b>どこで動かすか・何を起点にするか</b>で選ぶ。
+      </p>
+    </section>
+  )
+}
+
+function RemoteControlSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const local = entrance(frame, fps, 22)
+  const cloud = entrance(frame, fps, 36)
+
+  return (
+    <section className="remotion-slide e18-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">Remote ControlとWeb</span>
+        <h1>同じ画面でも、動く場所が違う</h1>
+      </div>
+      <div className="e18-compare">
+        <div className="e18-compare-card e18-compare-accent" style={lift(local, 30)}>
+          <span className="e18-tag">Remote Control</span>
+          <strong>自分のPCで動く</strong>
+          <p>ローカルのファイル・MCP・ツール・設定を保ったまま、スマホやWebから続きを操作。</p>
+        </div>
+        <div className="e18-compare-card" style={lift(cloud, 30)}>
+          <span className="e18-tag e18-tag-muted">Claude Code on the web</span>
+          <strong>Anthropicのクラウドで動く</strong>
+          <p>GitHubのリポジトリを隔離VMへ複製。PCを開かず、複数タスクを並列で投げる。</p>
+        </div>
+      </div>
+      <p className="e18-note" style={lift(entrance(frame, fps, 78), 18)}>
+        ローカルの続きなら <b>Remote Control</b>、独立仕事を任せるなら <b>Web</b>。
+      </p>
+    </section>
+  )
+}
+
+function OfficialChannelsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const card = entrance(frame, fps, 24)
+
+  return (
+    <section className="remotion-slide e18-slide e18-channels">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">公式Channels</span>
+        <h1>いまは公式にもDiscord連携がある</h1>
+      </div>
+      <div className="e18-port" style={lift(card, 30)}>
+        <span className="e18-tag">Research preview</span>
+        <strong>外部イベントを「開いているセッション」へpush</strong>
+        <p>
+          Discord・Telegram・iMessageの公式プラグインを用意。
+          メッセージやCI通知を受け、同じ場所へ返信できる。
+        </p>
+      </div>
+      <p className="e18-note" style={lift(entrance(frame, fps, 62), 18)}>
+        ただし、受信中はClaude Codeセッションを<b>動かしておく</b>。ここが次のCCDBとの違い。
+      </p>
+    </section>
+  )
+}
+
 function FromPhoneSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
@@ -111,12 +202,17 @@ function DiscordDemoSlide({ frame }: SlideRenderContext) {
   const heading = entrance(frame, fps)
   const terminal = entrance(frame, fps, 22)
 
-  const steps = ['Discordにスレッドを作る', 'メッセージで指示を投稿', 'Claude Codeが反応して作業', '結果がDiscordに返ってくる']
+  const steps = [
+    'Discordにスレッドを作る',
+    'メッセージで指示を投稿',
+    'Claude / Codexが反応して作業',
+    '結果とファイルがDiscordに返る'
+  ]
 
   return (
     <section className="remotion-slide e18-slide">
       <div style={lift(heading, 24)}>
-        <span className="slide-kicker">Discord連携の実演</span>
+        <span className="slide-kicker">CCDBの実演</span>
         <h1>チャット1本で開発が回る</h1>
       </div>
       <div className="e18-how-stage">
@@ -157,51 +253,19 @@ function CcdbSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide e18-slide">
       <div style={lift(heading, 24)}>
-        <span className="slide-kicker">仕組みは ccdb</span>
-        <h1>Discord ⇄ Claude Code の橋</h1>
+        <span className="slide-kicker">CCDBという別解</span>
+        <h1>Discordそのものを作業台にする</h1>
       </div>
       <div className="e18-port" style={lift(port, 30)}>
-        <span className="e18-tag">claude-code-discord-bridge</span>
-        <strong>DiscordとClaude CodeをつなぐOSS</strong>
+        <span className="e18-tag">Claude &amp; Codex Discord Bridge</span>
+        <strong>1スレッド = 1 AIセッション</strong>
         <p>
-          私が作って<b>OSSとして公開</b>している。セットアップすれば、
-          誰でも自分のDiscordから同じことができる。
+          Claude / Codexの切替、複数セッション、添付、API起動、セッション間連携まで。
+          私が作り、<b>OSSとして公開</b>している。
         </p>
       </div>
       <p className="e18-note" style={lift(note, 18)}>
-        魔法ではなく、再現可能な仕組み。手元の環境に橋を架けるだけ。
-      </p>
-    </section>
-  )
-}
-
-function AnywhereSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const heading = entrance(frame, fps)
-
-  const surfaces = [
-    ['Cloud / Web', 'Claude Code Web から'],
-    ['Desktop', '公式デスクトップアプリ'],
-    ['IDE', 'エディタ拡張の中で'],
-    ['CLI', 'おなじみのターミナル']
-  ]
-
-  return (
-    <section className="remotion-slide e18-slide">
-      <div style={lift(heading, 24)}>
-        <span className="slide-kicker">どこからでも入れる</span>
-        <h1>入口は1つじゃない</h1>
-      </div>
-      <div className="e18-surfaces">
-        {surfaces.map(([name, body], index) => (
-          <div key={name} style={lift(entrance(frame, fps, 26 + index * 10), 24)}>
-            <strong>{name}</strong>
-            <span>{body}</span>
-          </div>
-        ))}
-      </div>
-      <p className="e18-judge" style={lift(entrance(frame, fps, 78), 18)}>
-        Discord連携も公式の選択肢も。<b>ターミナルは数ある入口の1つ</b>にすぎない。
+        Channelsは「実行中セッションへの入口」。CCDBは<b>DiscordをAIの作業場所にする</b>。
       </p>
     </section>
   )
@@ -391,9 +455,9 @@ function RecapSlide({ frame }: SlideRenderContext) {
   const heading = entrance(frame, fps)
 
   const points = [
-    'Claude Codeはターミナル専用じゃない',
-    'Discord連携(ccdb)でどこからでも指示できる',
-    '公式にもWeb / Desktop / IDE / CLIの入口がある',
+    '公式はRemote Control / Web / Desktop / Channels',
+    'ローカル・クラウド・イベントpushを目的で選ぶ',
+    'CCDBはDiscordを複数AIセッションの作業台にする',
     '全18回を貫いたのはコンテキスト管理。最後は使い方次第'
   ]
 
