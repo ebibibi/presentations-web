@@ -1,0 +1,62 @@
+slug: captivecrunch-misread
+title: 「ホテルのWi-Fiを使うな」は誤読 ─ CaptiveCrunch警告の原文を読む
+summary: Midnight Blizzardの新キャンペーンCaptiveCrunchを巡り「マイクロソフトがホテルWi-Fi禁止を緊急警告」という見出しが並んだ。だがMicrosoftの原文はそう言っていない。しかもその見出しは、報告書の中で最も効く対策を落として最も効かない対策だけを残している。一次情報を読むと何が見えるかの実例。
+status: draft
+visibility: public
+createdAt: "2026-08-03"
+updatedAt: "2026-08-03"
+order: 101
+tags:
+  - security
+  - microsoft
+  - entra-id
+  - media-literacy
+slides:
+  - id: opening
+    title: 「ホテルのWi-Fiを使うな」は誤読
+    durationInFrames: 175
+    notes: 掴み。7月31日にMicrosoftが出した脅威インテリジェンス記事「CaptiveCrunch」を受けて、各社に「マイクロソフトが緊急警告、ホテルのWi-Fiは使うな」という見出しが並んだ。でも原文にそんな文はない。今日はその原文を一緒に読んで、何が落ちたのかを見ていく。テーマは2つ。①この攻撃が実際どういうものか ②見出しがなぜ危険か。
+  - id: headlines
+    title: 各社の見出しはこうなった
+    durationInFrames: 165
+    notes: まず事実確認。Forbesと日本版を含め、複数媒体が「ホテルWi-Fiを使うな」「緊急警告」というトーンで報じた。私も最初に読んだとき腑に落ちなくて、一次ソースに当たった。結論から言うと、見出しは煽っているだけでなく、対策の優先順位を逆にしてしまっている。ここが今日の本題。
+  - id: original-text
+    title: Microsoftが実際に書いた2文
+    durationInFrames: 185
+    notes: 原文の該当箇所はこの2文だけ。untrustworthy=信頼できないものとして扱え。Prefer...whenever practical=実務上可能な範囲で私設回線を優先しろ。禁止ではない。宛先もcorporate travelers、つまり企業の出張者であって、Windowsユーザー一般への緊急警告でもない。MSTICが日常的に出している脅威インテリジェンス記事の一本。
+  - id: not-wifi
+    title: 攻撃されているのはWi-Fiではない
+    durationInFrames: 190
+    notes: ここが一番重要。侵害されているのは電波ではなく、Wi-Fi接続時に出てくるログインページ、つまりキャプティブポータルのゲートウェイ機器。この機器が接続端末に配るDNSリゾルバも兼ねていたので、管理権限を取った攻撃者はDNS応答を偽造して任意の宛先に飛ばせた。だからWPA3でもパスワード付きでも関係ない。「暗号化されてない公衆Wi-Fiは危ない」という10年来の啓発モデルとは脅威の所在が違う。
+  - id: three-paths
+    title: TLSは破られていない
+    durationInFrames: 195
+    notes: では暗号化されたHTTPSからどうやって認証情報を奪うのか。答えは奪っていない。3つの経路は全部、ユーザー自身に正規の操作をさせる形を取る。①偽アップデート＋ClickFixでRATやインフォスティーラーを自分で実行させる ②AiTMの偽サインインページ ③デバイスコードフローの悪用。攻撃者は暗号を破る必要がない。
+  - id: device-code
+    title: 一番厄介なのはデバイスコード
+    durationInFrames: 195
+    notes: 3番目を詳しく。7月16日以降に一部のランディングページへ追加された手口。攻撃者側がEntra IDの認証要求を起こし、ユーザーには本物のmicrosoft.comのサインインページで表示コードを入力させる。ユーザーから見て偽サイトの痕跡はどこにもない。URLをよく見て偽サイトを見抜きましょうという教育では原理的に防げない。ここが今回の報告の核心。
+  - id: vpn-gap
+    title: 「Wi-Fiを避ける」で守れる範囲
+    durationInFrames: 185
+    notes: 見出しに従って「ホテルのWi-Fiを使わない」「VPNを張る」だけを実行するとどうなるか。VPNは経路上の盗聴には効くが、キャプティブポータルを通過する前の通信には効かない。ユーザーが自分の手でマルウェアを実行する経路にも、デバイスコードの詐取にも効かない。つまり見出しの対策は、今回の3経路のどれも止められない。
+  - id: real-priority
+    title: 原文の最優先はネットワークの話ではない
+    durationInFrames: 190
+    notes: Microsoftの推奨事項の筆頭はこれ。blocking device code flow wherever possible。条件付きアクセスでデバイスコードフローを塞ぐこと。次いでパスキー等のフィッシング耐性MFA、ポータル経由で出てきた更新・証明書・診断ツールを一切ダウンロードしない運用、企業管理のトラベルルーター、ClickFix系の教育。ネットワークの話は5番目くらいに出てくる条件付きの推奨にすぎない。
+  - id: detection
+    title: 検知は今日から回せる
+    durationInFrames: 180
+    notes: 実務向け。Microsoftが提示しているハンティングの着眼点は実装しやすい。Windowsが起動時に行う接続確認、NCSIプローブから2分以内のファイル生成を疑う、というもの。IoCも公開されているので、プロキシやDNSのログで遡及調査がすぐ回せる。マルウェアはGo製RATのCornFlakeとPowerShell製インフォスティーラーのChocoShell。
+  - id: two-messages
+    title: 出張者に伝えるのはこの2つだけ
+    durationInFrames: 175
+    notes: 周知は絞ったほうが効く。①接続直後にポータルから出てくる更新や証明書の類は何であれ入れるな ②サインイン画面でコードを入力させられたら、自分が始めた認証か必ず確認しろ。前者は行動として明確、後者は今回追加された最新手口をピンポイントで塞ぐ。「ホテルのWi-Fiを使うな」より実行可能で、実効性も高い。
+  - id: recap
+    title: なぜ一次情報を読むのか
+    durationInFrames: 180
+    notes: まとめ。見出しが短くなければならない事情は理解できる。ただ今回のように、原文が最優先と名指しした対策が見出しから消えて、条件付きで述べた項目が断定形の命令になって残ると、読者の対策リソースは間違った方向に配分される。一次情報を読む価値はこういうところにある。実際、私も最初は腑に落ちなかっただけで、読んでみたら中身は全然違う話だった。
+  - id: sources
+    title: 出典と続き
+    durationInFrames: 160
+    notes: 出典。Microsoft Security Blogの原文と、記事版はTech News JPに書いた。概要欄にリンクを置いておくので、実際に条件付きアクセスを触る人は原文のRecommendationsまで読んでほしい。チャンネル登録もよろしくお願いします。
