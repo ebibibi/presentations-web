@@ -38,9 +38,9 @@ slides:
     durationInFrames: 220
     notes: Outlook、Teams、SharePointなどMicrosoft純正アプリも例外ではありません。Microsoftが自社のテナントでアプリ登録し、Application IDを持たせています。各顧客テナントには利用や同意に応じてService principal、管理画面でいうEnterprise applicationが作られます。顧客テナントの作成直後からMicrosoftの全アプリが並ぶという意味ではありません。
   - id: why-id
-    title: そもそも、なぜIDが必要？
+    title: 会社のデータは、誰にでも渡せない
     durationInFrames: 210
-    notes: 会社のメールやファイルは匿名の相手へ渡せません。誰が来たか、どの組織か、何を許すか、後から誰の操作として記録するかを判断する材料がIDです。
+    notes: 会社のメール、ファイル、チャットは、誰にでも渡せるものではありません。だからMicrosoft 365は、データを利用させる前に「あなたは誰ですか」と確認します。その人が誰かを確かめるためにIDが必要です。まずはこの一点だけ押さえます。
   - id: why-not-my-id
     title: 自分のIDをアプリに貸せばいい？
     durationInFrames: 220
