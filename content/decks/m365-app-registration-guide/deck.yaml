@@ -1,0 +1,79 @@
+slug: m365-app-registration-guide
+title: はじめてのM365アプリ登録 ─ 情シスに正しく頼むための入門
+summary: Outlook、SharePoint、Teamsの自動化やAIアプリを作りたい一般ユーザー向けに、Microsoft Entra IDのアプリ登録、Microsoft Graph、DelegatedとApplication-only、管理者同意、最小権限、情シスへの申請項目を図解する。
+status: draft
+visibility: public
+createdAt: "2026-08-06"
+updatedAt: "2026-08-06"
+order: 102
+tags:
+  - microsoft-365
+  - entra-id
+  - microsoft-graph
+  - security
+  - ai
+slides:
+  - id: opening
+    title: はじめてのM365アプリ登録
+    durationInFrames: 190
+    notes: この動画は、AIツールや業務アプリを初めて作ろうとして、情シスから「アプリ登録できないので使えません」と言われた人のための入門です。難しい設定手順ではなく、情シスと会話するための地図を作ります。何が難しいか、どこが危ないか、どうすれば安全な提案になるかを順に見ます。
+  - id: blocked
+    title: 「登録できない」で止まった
+    durationInFrames: 180
+    notes: 典型的な場面です。作りたい側は、メールやファイルをAIに扱わせたいだけ。ところが情シスからアプリ登録不可と言われる。ここで両者が見ているものが違います。利用者は便利な機能を見ている一方、情シスは会社データへ入る新しい入口と、その入口を誰が管理し続けるかを見ています。
+  - id: everyday-vs-app
+    title: 普段の操作とアプリの違い
+    durationInFrames: 210
+    notes: 普段Outlookを使うときは、人がサインインし、その人の権限で、その人が操作します。アプリも最終的にはAPIを通じて同じクラウドデータを操作しますが、処理を繰り返し、自動化でき、人がいない状態でも動く設計も可能です。だから「誰として」「どの入口から」「どこまで」を先に決める必要があります。
+  - id: registration
+    title: アプリ登録は「身分証の台帳」
+    durationInFrames: 200
+    notes: Entra IDへのアプリ登録は、プログラム本体をアップロードする作業ではありません。MicrosoftのID基盤がそのアプリを識別し、トークンを発行できるように、名前、クライアントID、リダイレクトURI、資格情報、必要なAPI権限などの認証設定を登録します。登録しただけでメールやファイルを読めるわけではありません。
+  - id: three-keys
+    title: 会話に必要なのは3つだけ
+    durationInFrames: 185
+    notes: 初心者がまず区別するものは3つです。IDは誰として動くか。APIはどのサービスのどの機能を呼ぶか。PermissionはそのAPIで何をしてよいか。アプリ登録はこの3つを結びつける設計図です。以降はこの3つを順番に見ます。
+  - id: delegated
+    title: Delegated ─ 人の代理で動く
+    durationInFrames: 220
+    notes: Delegatedでは利用者がサインインし、アプリはその人の代理でAPIを呼びます。実際にできることは、アプリへ同意されたDelegated permissionと、サインインした利用者自身がアクセスできる範囲の両方を満たす部分です。アプリがFiles.Read.Allを持っていても、その人が元々見られないファイルまで読めるわけではありません。
+  - id: app-only
+    title: Application-only ─ アプリ自身で動く
+    durationInFrames: 220
+    notes: Application-onlyではサインイン中の利用者がいません。アプリ自身のIDで、バックグラウンド処理やバッチ、バックアップなどを実行します。Application permissionは管理者同意が必要で、権限によっては組織全体のデータへ到達できます。便利ですが、資格情報が漏れたときの影響も大きく、所有者、保管方法、監視、停止手順まで審査されます。
+  - id: same-name
+    title: 同じ名前でも到達範囲が違う
+    durationInFrames: 205
+    notes: Microsoft GraphにはDelegatedとApplicationの両方にFiles.Read.Allのような同名権限があります。Delegated版はサインイン利用者がアクセスできる全ファイルの読み取り。Application版は、サインイン利用者なしで全サイトコレクション内の全ファイルを読み取れる強い権限です。名前だけで判断せず、必ずTypeと説明を確認します。
+  - id: api
+    title: APIはM365の「公式受付窓口」
+    durationInFrames: 200
+    notes: APIはアプリがサービスへ依頼するための正式な窓口です。Microsoft Graphは、ユーザー、メール、予定表、OneDrive、SharePoint、Teamsなど多くのMicrosoftクラウドデータへアクセスする統一APIです。アプリは画面を人のようにクリックする代わりに、アクセストークンを添えてGraphのエンドポイントを呼びます。
+  - id: consent
+    title: Requested と Granted は別
+    durationInFrames: 205
+    notes: 開発者がAPI permissionを追加した段階はRequested、つまり希望を書いただけです。Consentによって初めてGrantedになります。低い権限を利用者自身が同意できるかはテナントのユーザー同意ポリシー次第です。Application permissionや多くの高権限Delegated permissionは管理者同意が必要です。登録、要求、同意を混同しないことが重要です。
+  - id: admin-review
+    title: 情シスは「権限名」だけを見ない
+    durationInFrames: 230
+    notes: 管理者は、目的、実行主体、対象データ、読み書きの範囲、資格情報、運用責任をセットで評価します。なぜ必要か。人がサインインできるか。全社データが本当に必要か。読み取りで足りるか。秘密や証明書をどこに置くか。誰が期限切れや事故に対応するか。これが説明できる依頼は、審査が格段に進めやすくなります。
+  - id: three-levers
+    title: 管理者が操作する3つのレバー
+    durationInFrames: 225
+    notes: 「管理者が一部だけ許可」の意味は分けて考えます。1つ目は誰が同意するか。管理者は組織を代表して同意できます。2つ目は誰がそのアプリへサインインできるか。ユーザー割り当てで制御できます。3つ目はアプリがどのデータへ届くか。これは選んだGraph権限や、ExchangeやSharePointなど各サービス側のスコープ制御で絞ります。ユーザー割り当てだけでApplication permissionのデータ範囲が狭くなるわけではありません。
+  - id: request-template
+    title: 情シスへの依頼はこの7項目
+    durationInFrames: 235
+    notes: 申請時はこの7項目を埋めます。アプリ名と目的、利用者、実行方式、呼ぶAPIと操作、必要な最小権限、リダイレクトURIや実行場所、運用責任者と停止方法です。「Graphを使いたい」ではなく、「本人が選択したSharePointファイルだけを要約する。サインイン必須のDelegated方式とし、要求する具体的な権限名と、その権限が許可する最大アクセス範囲も記載する」のように、実装上の利用対象と権限上の最大到達範囲を分けて書きます。
+  - id: safer-first
+    title: 安全な案から始める
+    durationInFrames: 210
+    notes: 利用者の操作として実行できる用途ではDelegatedを検討し、アプリに同意する範囲と利用者自身のアクセス範囲の両方を確認します。方式にかかわらず、読み取り、単一テナント、最小権限、小さな対象範囲、短い検証期間から始めます。Azure上で動かすなら、対応サービスではシークレットの代わりにマネージドIDを検討します。Application-onlyが必要なら理由を明示し、証明書などの資格情報管理、ログ、棚卸し、失効手順まで提案します。
+  - id: recap
+    title: 申請の本質は「入口の共同設計」
+    durationInFrames: 210
+    notes: まとめです。アプリ登録は権限付与でもコードの配置でもなく、アプリの身分証をEntra IDへ作ること。実際の到達範囲は、DelegatedかApplication-onlyか、API permissionと同意、そして各サービス側の制御で決まります。情シスへの依頼は、便利さの説明だけでなく、誰として、何を、どこまで、どう守るかを一緒に設計する相談です。
+  - id: sources
+    title: Microsoft公式ドキュメント
+    durationInFrames: 190
+    notes: 内容はMicrosoft Learnのアプリケーションモデル、Microsoft Graphの認証と認可、Microsoft identity platformの権限と同意、Microsoft Graph権限リファレンス、管理者同意ワークフローを根拠にしています。仕様や組織ポリシーは変わり得るため、実際の申請では情シスと最新の公式文書を確認してください。
