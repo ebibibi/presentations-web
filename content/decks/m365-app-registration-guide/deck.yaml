@@ -68,7 +68,7 @@ slides:
   - id: complete-flow
     title: Webアプリからメールを読むまで
     durationInFrames: 240
-    notes: 利用者がWebアプリを開いてMicrosoftでサインインします。Entra IDが人とアプリを確認し、許可された範囲を示すアクセストークンを発行します。Webアプリはトークンを添えてMicrosoft Graphへ依頼し、許可された場合だけデータが返ります。
+    notes: 利用者がWebアプリを開いてMicrosoftでサインインします。Microsoft Entra IDが人とアプリを確認し、許可された範囲を示す期限付き通行証、アクセストークンを発行します。WebアプリはEntra IDから受け取ったトークンを添えてMicrosoft Graphへ依頼し、許可された場合だけデータが返ります。
   - id: token
     title: パスワードではなく「期限付き通行証」
     durationInFrames: 210
@@ -117,6 +117,10 @@ slides:
     title: Application IDは「アプリを区別するため」
     durationInFrames: 225
     notes: 人のIDは人間を、Application IDはソフトウェアを識別します。APIはアプリ向けの受付窓口、Microsoft Graphは多くのMicrosoft 365サービスへつながる共通受付です。ID、権限、同意、認証情報を分けて管理します。
+  - id: end-summary
+    title: 覚えるのは、この3つ
+    durationInFrames: 200
+    notes: 本編の最後です。覚えることは三つです。人とアプリは別々のIDで確認する。APIへはMicrosoft Entra IDから発行されたアクセストークンを添えて依頼する。必要最小限の権限だけを選び、必要な人に同意してもらう。ここで解説本編はおしまいです。次のスライドはEbi Studyの案内です。
   - id: ebistudy
     title: 体系的に、順番に学びたい方へ
     durationInFrames: 190

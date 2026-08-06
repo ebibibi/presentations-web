@@ -7048,6 +7048,18 @@ main {
 .m365-managed-note { align-items: center; background: rgba(37, 99, 235, 0.08); border-radius: 15px; display: flex; font-size: 22px; gap: 13px; padding: 15px 22px; }
 .m365-managed-note svg, .m365-managed-note b { color: var(--m365-blue); }
 
+.m365-end-summary-slide { background: radial-gradient(circle at 18% 30%, rgba(37, 99, 235, 0.14), transparent 31%), radial-gradient(circle at 88% 82%, rgba(15, 138, 114, 0.12), transparent 27%), var(--paper); display: grid; gap: 34px; grid-template-columns: 0.82fr 1.18fr; grid-template-rows: 1fr auto; }
+.m365-end-summary-copy { align-self: center; }
+.m365-end-summary-copy > span { color: var(--m365-blue); font-size: 22px; font-weight: 900; letter-spacing: 0.12em; }
+.m365-end-summary-copy h1 { font-size: 82px; line-height: 1.02; }
+.m365-end-summary-copy h1 em { color: var(--m365-blue); font-style: normal; }
+.m365-end-summary-points { align-self: center; display: grid; gap: 16px; }
+.m365-end-summary-points > div { align-items: center; background: white; border: 1px solid var(--line); border-left: 7px solid var(--m365-green); border-radius: 18px; box-shadow: var(--shadow); display: grid; gap: 17px; grid-template-columns: auto 1fr; padding: 23px 27px; }
+.m365-end-summary-points span { align-items: center; background: var(--m365-green); border-radius: 50%; color: white; display: flex; font-size: 23px; font-weight: 900; height: 45px; justify-content: center; width: 45px; }
+.m365-end-summary-points strong { font-size: 27px; line-height: 1.35; }
+.m365-the-end { align-items: center; background: linear-gradient(135deg, #172554, #1d4ed8); border-radius: 19px; color: white; display: flex; font-size: 29px; gap: 14px; grid-column: 1 / -1; justify-content: center; padding: 20px 28px; }
+.m365-the-end b { color: #fbbf24; font-size: 42px; margin-left: 12px; }
+
 .m365-ebistudy-slide { background: radial-gradient(circle at 77% 50%, rgba(37, 99, 235, 0.2), transparent 30%), linear-gradient(135deg, #0f172a, #172554); color: white; display: grid; gap: 50px; grid-template-columns: 1.25fr 0.75fr; }
 .m365-ebistudy-copy > span { color: #93c5fd; font-size: 24px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
 .m365-ebistudy-copy h1 { color: white; font-size: 78px; }
@@ -7082,6 +7094,7 @@ main {
   .m365-fork-options,
   .m365-policy-split,
   .m365-credential-grid,
+  .m365-end-summary-slide,
   .m365-ebistudy-slide {
     grid-template-columns: 1fr;
   }
