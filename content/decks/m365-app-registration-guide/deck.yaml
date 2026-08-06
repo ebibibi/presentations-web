@@ -29,6 +29,10 @@ slides:
     title: あなたは、すでにIDを使っている
     durationInFrames: 210
     notes: OutlookやTeamsを開く前に、会社のメールアドレスとパスワード、多要素認証（MFA）などでサインインしています。これが人間としてのIDです。Microsoft 365はそのIDを見て、あなたが誰か、どの会社に所属するか、どのメールやチームを利用できるかを判断します。普段はアプリが隠しているので意識しないだけです。
+  - id: first-party-apps
+    title: Outlookも、Microsoftが先にアプリ登録済み
+    durationInFrames: 220
+    notes: Outlook、Teams、SharePointなど、Microsoft自身が作った純正アプリも例外ではありません。Microsoftが利用者へ提供する前に、自社のMicrosoft Entra IDへアプリとして登録し、Application IDを持たせています。各組織のEntra IDでは、利用や同意などに応じて、そのMicrosoftアプリを管理するためのService principal、管理画面でいうEnterprise applicationが作られます。Microsoftの全アプリが各テナントの作成直後からすべて並ぶ、という意味ではありません。
   - id: why-id
     title: そもそも、なぜIDが必要？
     durationInFrames: 210

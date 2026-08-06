@@ -32,6 +32,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <MadeAnAppSlide {...props} /> },
   { render: (props) => <SuddenWallSlide {...props} /> },
   { render: (props) => <AlreadyHaveIdSlide {...props} /> },
+  { render: (props) => <FirstPartyAppsSlide {...props} /> },
   { render: (props) => <WhyIdSlide {...props} /> },
   { render: (props) => <WhyNotMyIdSlide {...props} /> },
   { render: (props) => <TwoIdentitiesSlide {...props} /> },
@@ -138,6 +139,33 @@ function AlreadyHaveIdSlide({ frame }: SlideRenderContext) {
         <div className="m365-familiar-apps"><div><Mail /><span>Outlook</span></div><div><MessageSquare /><span>Teams</span></div></div>
       </div>
       <p className="m365-punch" style={lift(entrance(frame, fps, 70), 14)}>普段はOutlookやTeamsが隠しているので、<b>IDの仕組みを意識しない</b>だけ。</p>
+    </section>
+  )
+}
+
+function FirstPartyAppsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const apps = [[<Mail size={48} />, 'Outlook'], [<MessageSquare size={48} />, 'Teams'], [<Building2 size={48} />, 'SharePoint']]
+  return (
+    <section className="remotion-slide m365-slide">
+      <Header kicker="MICROSOFT APPS, TOO" title="Outlookも、Microsoftが先にアプリ登録済み" frame={frame} />
+      <div className="m365-first-party-flow">
+        <div className="m365-first-party-apps" style={lift(entrance(frame, fps, 18), 22)}>
+          <Badge tone="safe">Microsoft純正アプリ</Badge>
+          <div>{apps.map(([icon, label]) => <span key={String(label)}>{icon}<b>{label}</b></span>)}</div>
+        </div>
+        <ChevronRight size={42} />
+        <div className="m365-first-party-registration" style={lift(entrance(frame, fps, 38), 22)}>
+          <ShieldCheck size={66} />
+          <strong>Microsoftが<br />先にアプリ登録</strong>
+          <span>Application IDを持つ</span>
+        </div>
+      </div>
+      <p className="m365-punch" style={lift(entrance(frame, fps, 68), 14)}><b>自作アプリだけが特別なのではない。</b>純正アプリも同じIDの仕組みを使う。</p>
+      <div className="m365-first-party-note" style={lift(entrance(frame, fps, 82), 12)}>
+        <CircleAlert size={24} />
+        <span>各社の管理画面には、利用・同意などに応じて管理用の情報が作られる。最初から全Microsoftアプリが並ぶ、という意味ではない。</span>
+      </div>
     </section>
   )
 }
@@ -360,7 +388,7 @@ function RecapSlide({ frame }: SlideRenderContext) {
 
 function SourcesSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const sources = [['Application model', 'なぜ人とアプリの両方を登録するか', 'https://learn.microsoft.com/en-us/entra/identity-platform/application-model'], ['Microsoft Graph overview', 'M365サービスへつながる統一API', 'https://learn.microsoft.com/en-us/graph/overview'], ['Authentication and authorization basics', '登録・Delegated・Application-only', 'https://learn.microsoft.com/en-us/graph/auth/auth-concepts'], ['Access tokens', 'APIへ渡すセキュリティトークン', 'https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens'], ['Permissions and consent overview', '権限の要求と同意', 'https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview']]
+  const sources = [['Application model', 'なぜ人とアプリの両方を登録するか', 'https://learn.microsoft.com/en-us/entra/identity-platform/application-model'], ['Microsoft first-party applications', 'Microsoft純正アプリのIDと管理情報', 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/reference-office-365-application-contents'], ['Microsoft Graph overview', 'M365サービスへつながる統一API', 'https://learn.microsoft.com/en-us/graph/overview'], ['Authentication and authorization basics', '登録・Delegated・Application-only', 'https://learn.microsoft.com/en-us/graph/auth/auth-concepts'], ['Access tokens', 'APIへ渡すセキュリティトークン', 'https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens'], ['Permissions and consent overview', '権限の要求と同意', 'https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview']]
   return (
     <section className="remotion-slide m365-slide">
       <Header kicker="OFFICIAL SOURCES" title="Microsoft公式ドキュメント" frame={frame} />
