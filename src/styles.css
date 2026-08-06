@@ -6954,6 +6954,98 @@ main {
 .m365-sources svg { color: var(--m365-blue); }
 .m365-source-foot { color: var(--muted); font-size: 18px; margin: 2px 0 0; }
 
+.m365-profile-slide { background: radial-gradient(circle at 18% 58%, rgba(37, 99, 235, 0.11), transparent 31%), var(--paper); }
+.m365-profile-layout { align-items: stretch; display: grid; gap: 34px; grid-template-columns: 0.78fr 1.22fr; }
+.m365-profile-mark { align-items: center; background: linear-gradient(145deg, #172554, #1d4ed8); border-radius: 28px; box-shadow: 0 24px 60px rgba(29, 78, 216, 0.24); color: white; display: flex; flex-direction: column; gap: 10px; justify-content: center; min-height: 390px; padding: 34px; text-align: center; }
+.m365-profile-mark img { height: 82px; margin-bottom: 8px; object-fit: contain; width: 82px; }
+.m365-profile-mark strong { font-size: 46px; line-height: 1.02; }
+.m365-profile-mark span { color: #bfdbfe; font-size: 22px; font-weight: 800; }
+.m365-profile-facts { display: grid; gap: 14px; }
+.m365-profile-facts > div { align-items: center; background: white; border: 1px solid var(--line); border-left: 6px solid var(--m365-green); border-radius: 17px; display: flex; gap: 15px; padding: 20px 24px; }
+.m365-profile-facts svg { color: var(--m365-green); }
+.m365-profile-facts strong { font-size: 28px; }
+
+.m365-registration-bottom { display: grid; gap: 10px; }
+.m365-next-guide { align-items: center; background: #172554; border-radius: 999px; color: white; display: flex; font-size: 21px; font-weight: 900; justify-content: center; padding: 11px 22px; }
+
+.m365-click-flow { align-items: center; display: grid; gap: 13px; grid-template-columns: 1fr auto 1.16fr auto 0.82fr auto 1fr; }
+.m365-click-flow > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 9px; justify-content: center; min-height: 290px; padding: 22px 18px; text-align: center; }
+.m365-click-flow > div svg { color: var(--m365-blue); }
+.m365-click-flow strong { font-size: 25px; line-height: 1.3; }
+.m365-click-flow span { color: var(--muted); font-size: 19px; line-height: 1.4; }
+.m365-click-flow .m365-click-api { background: linear-gradient(145deg, #172554, #1d4ed8); color: white; }
+.m365-click-flow .m365-click-api svg, .m365-click-flow .m365-click-api span { color: white; }
+
+.m365-graph-history { align-items: center; background: white; border: 1px solid var(--line); border-radius: 17px; display: grid; font-size: 21px; gap: 12px; grid-template-columns: 1fr auto 1fr 1.35fr; padding: 16px 22px; text-align: center; }
+.m365-graph-history span { color: var(--muted); }
+.m365-graph-history strong { color: var(--m365-blue); font-size: 23px; }
+.m365-graph-history small { background: rgba(234, 88, 12, 0.09); border-radius: 10px; color: var(--m365-orange); font-size: 18px; font-weight: 800; padding: 10px; }
+
+.m365-two-paths-slide { background: radial-gradient(circle at 22% 55%, rgba(37, 99, 235, 0.11), transparent 33%), var(--paper); }
+.m365-token-fork { align-items: center; display: grid; gap: 0; grid-template-columns: 0.72fr 0.25fr 1.55fr; padding: 0 50px; }
+.m365-fork-start { align-items: center; background: linear-gradient(145deg, #172554, #1d4ed8); border-radius: 50%; color: white; display: flex; flex-direction: column; height: 240px; justify-content: center; text-align: center; width: 240px; }
+.m365-fork-start strong { font-size: 32px; line-height: 1.05; }
+.m365-fork-line { height: 250px; position: relative; }
+.m365-fork-line::before { background: var(--m365-blue); content: ''; height: 4px; left: 0; position: absolute; right: 0; top: 50%; }
+.m365-fork-line span::before, .m365-fork-line span::after { background: var(--m365-blue); content: ''; height: 4px; position: absolute; right: -28px; width: 100px; }
+.m365-fork-line span::before { top: 31%; transform: rotate(-28deg); }
+.m365-fork-line span::after { bottom: 31%; transform: rotate(28deg); }
+.m365-fork-options { display: grid; gap: 22px; grid-template-columns: repeat(2, 1fr); }
+.m365-fork-options > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; min-height: 310px; padding: 26px; text-align: center; }
+.m365-fork-options > div:first-child { border-top: 7px solid var(--m365-green); }
+.m365-fork-options > div:last-child { border-top: 7px solid var(--m365-orange); }
+.m365-fork-options strong { font-size: 31px; }
+.m365-fork-options span:last-child { color: var(--muted); font-size: 21px; }
+
+.m365-policy-split { display: grid; gap: 28px; grid-template-columns: repeat(2, 1fr); }
+.m365-policy-split > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 25px; box-shadow: var(--shadow); display: grid; gap: 10px 16px; grid-template-columns: auto 1fr; min-height: 380px; padding: 28px 34px; }
+.m365-policy-yes { border-top: 7px solid var(--m365-green) !important; }
+.m365-policy-no { border-top: 7px solid var(--m365-orange) !important; }
+.m365-policy-split > div > .m365-badge { grid-column: 1 / -1; justify-self: start; }
+.m365-policy-split > div > svg:not(:last-of-type) { color: var(--m365-blue); grid-row: 2 / 4; }
+.m365-policy-split strong { font-size: 31px; }
+.m365-policy-split p { color: var(--muted); font-size: 21px; margin: 0; }
+.m365-policy-split > div > svg:last-of-type { color: var(--muted); grid-column: 1; }
+.m365-policy-split b { color: var(--m365-blue); font-size: 25px; line-height: 1.35; }
+.m365-policy-split small { color: var(--muted); font-size: 18px; grid-column: 2; }
+
+.m365-handoff-list { display: grid; gap: 16px; }
+.m365-handoff-list > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 18px; display: grid; gap: 18px; grid-template-columns: 58px 1fr; padding: 19px 25px; }
+.m365-handoff-list > div > span { align-items: center; background: var(--m365-blue); border-radius: 50%; color: white; display: flex; font-size: 25px; font-weight: 900; height: 50px; justify-content: center; width: 50px; }
+.m365-handoff-list strong { font-size: 28px; }
+.m365-handoff-list p { color: var(--muted); font-size: 21px; margin: 3px 0 0; }
+.m365-owner-explain { align-items: center; background: rgba(15, 138, 114, 0.1); border: 1px solid rgba(15, 138, 114, 0.28); border-radius: 16px; display: grid; font-size: 22px; gap: 12px; grid-template-columns: auto auto 1fr; padding: 17px 23px; }
+.m365-owner-explain svg, .m365-owner-explain b { color: var(--m365-green); }
+
+.m365-credential-grid { display: grid; gap: 22px; grid-template-columns: repeat(3, 1fr); }
+.m365-credential-grid > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 23px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 9px; min-height: 350px; padding: 25px 23px; text-align: center; }
+.m365-credential-grid > div > span { border-radius: 999px; color: white; font-size: 18px; font-weight: 900; padding: 6px 13px; }
+.m365-credential-grid small { color: var(--muted); font-size: 19px; font-weight: 800; }
+.m365-credential-grid strong { font-size: 30px; line-height: 1.25; }
+.m365-credential-grid p { color: var(--muted); font-size: 20px; line-height: 1.4; margin: 0; }
+.m365-credential-safe { border-top: 7px solid var(--m365-green) !important; }
+.m365-credential-safe > span { background: var(--m365-green); }
+.m365-credential-safe svg { color: var(--m365-green); }
+.m365-credential-info { border-top: 7px solid var(--m365-blue) !important; }
+.m365-credential-info > span { background: var(--m365-blue); }
+.m365-credential-info svg { color: var(--m365-blue); }
+.m365-credential-warn { border-top: 7px solid var(--m365-orange) !important; }
+.m365-credential-warn > span { background: var(--m365-orange); }
+.m365-credential-warn svg { color: var(--m365-orange); }
+.m365-managed-note { align-items: center; background: rgba(37, 99, 235, 0.08); border-radius: 15px; display: flex; font-size: 22px; gap: 13px; padding: 15px 22px; }
+.m365-managed-note svg, .m365-managed-note b { color: var(--m365-blue); }
+
+.m365-ebistudy-slide { background: radial-gradient(circle at 77% 50%, rgba(37, 99, 235, 0.2), transparent 30%), linear-gradient(135deg, #0f172a, #172554); color: white; display: grid; gap: 50px; grid-template-columns: 1.25fr 0.75fr; }
+.m365-ebistudy-copy > span { color: #93c5fd; font-size: 24px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+.m365-ebistudy-copy h1 { color: white; font-size: 78px; }
+.m365-ebistudy-copy p { color: #dbeafe; font-size: 25px; line-height: 1.55; }
+.m365-ebistudy-copy a { align-items: center; background: white; border-radius: 999px; color: #1d4ed8; display: inline-flex; font-size: 29px; font-weight: 900; gap: 12px; margin-top: 16px; padding: 16px 25px; text-decoration: none; }
+.m365-ebistudy-badge { align-items: center; align-self: center; background: white; border-radius: 50%; color: #172554; display: flex; flex-direction: column; height: 380px; justify-content: center; justify-self: center; text-align: center; width: 380px; }
+.m365-ebistudy-badge img { height: 76px; margin-bottom: 8px; object-fit: contain; width: 76px; }
+.m365-ebistudy-badge strong { font-size: 31px; line-height: 1.1; }
+.m365-ebistudy-badge em { color: var(--m365-orange); font-size: 57px; font-style: normal; }
+.m365-ebistudy-badge span { color: var(--muted); font-size: 20px; font-weight: 800; margin-top: 8px; }
+
 @media (max-width: 720px) {
   .m365-opening,
   .m365-compare,
@@ -6967,6 +7059,16 @@ main {
   .m365-levers,
   .m365-request-layout,
   .m365-safer-list {
+    grid-template-columns: 1fr;
+  }
+
+  .m365-profile-layout,
+  .m365-click-flow,
+  .m365-token-fork,
+  .m365-fork-options,
+  .m365-policy-split,
+  .m365-credential-grid,
+  .m365-ebistudy-slide {
     grid-template-columns: 1fr;
   }
 }
