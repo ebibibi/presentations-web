@@ -195,13 +195,24 @@ function FirstPartyAppsSlide({ frame }: SlideRenderContext) {
 
 function WhyIdSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const questions = [['WHO', '誰が来た？'], ['WHERE', 'どの会社？'], ['WHAT', '何をしてよい？'], ['AUDIT', '誰の操作として記録？']]
   return (
     <section className="remotion-slide m365-slide">
-      <Header kicker="WHY ID?" title="そもそも、なぜIDが必要？" frame={frame} />
-      <div className="m365-four-questions">{questions.map(([label, body], i) => <div key={label} style={lift(entrance(frame, fps, 18 + i * 11), 24)}><span>{label}</span><strong>{body}</strong></div>)}</div>
-      <div className="m365-protected-data" style={lift(entrance(frame, fps, 70), 18)}><LockKeyhole size={45} /><div><strong>会社のメール・ファイル・チャット</strong><p>匿名の相手へ渡すことはできない</p></div></div>
-      <p className="m365-note">IDは単なる名前札ではなく、アクセスを判断し、操作を記録するための材料</p>
+      <Header kicker="WHY ID?" title="会社のデータは、誰にでも渡せない" frame={frame} />
+      <div className="m365-id-reason-flow">
+        <div className="m365-company-data" style={lift(entrance(frame, fps, 18), 24)}>
+          <LockKeyhole size={62} />
+          <strong>会社のデータ</strong>
+          <div><span><Mail size={27} />メール</span><span><FileText size={27} />ファイル</span><span><MessageSquare size={27} />チャット</span></div>
+        </div>
+        <ChevronRight size={48} />
+        <div className="m365-who-check" style={lift(entrance(frame, fps, 38), 24)}>
+          <ShieldCheck size={66} />
+          <span>利用する前に</span>
+          <strong>「あなたは誰？」</strong>
+          <b>を確認する</b>
+        </div>
+      </div>
+      <p className="m365-punch" style={lift(entrance(frame, fps, 70), 14)}>この<b>「誰かを確かめるため」</b>に、IDが必要。</p>
     </section>
   )
 }
