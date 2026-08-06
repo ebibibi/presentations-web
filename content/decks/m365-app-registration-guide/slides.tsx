@@ -55,6 +55,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <AdminViewSlide {...props} /> },
   { render: (props) => <RequestExampleSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
+  { render: (props) => <EndSummarySlide {...props} /> },
   { render: (props) => <EbiStudySlide {...props} /> },
   { render: (props) => <SourcesSlide {...props} /> },
   { render: (props) => <SourcesOperationsSlide {...props} /> }
@@ -311,7 +312,7 @@ function GraphSlide({ frame }: SlideRenderContext) {
 
 function CompleteFlowSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const steps = [['1', <User />, 'Webアプリを開く'], ['2', <ShieldCheck />, 'Microsoftでサインイン'], ['3', <IdCard />, '期限付き通行証を受け取る'], ['4', <Network />, 'Graphへメールを依頼'], ['5', <Mail />, '許可されたデータが返る']]
+  const steps = [['1', <User />, 'Webアプリを開く'], ['2', <ShieldCheck />, 'Microsoftでサインイン'], ['3', <IdCard />, 'Entra IDから期限付き通行証'], ['4', <Network />, 'Graphへメールを依頼'], ['5', <Mail />, '許可されたデータが返る']]
   return (
     <section className="remotion-slide m365-slide">
       <Header kicker="PUT IT ALL TOGETHER" title="Webアプリからメールを読むまで" frame={frame} />
@@ -477,6 +478,25 @@ function RecapSlide({ frame }: SlideRenderContext) {
       <Header kicker="RECAP" title="Application IDは、アプリを区別するため" frame={frame} />
       <div className="m365-recap m365-recap-five">{recap.map(([label, body], i) => <div key={label} style={lift(entrance(frame, fps, 16 + i * 10), 22)}><Check size={27} /><strong>{label}</strong><span>{body}</span></div>)}</div>
       <p className="m365-final-line" style={lift(entrance(frame, fps, 80), 16)}>自分のIDを貸さずに、<b>人とアプリの両方を確認して</b>実データへつなぐ。</p>
+    </section>
+  )
+}
+
+function EndSummarySlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const points = [
+    ['1', '人とアプリは、別々のIDで確認する'],
+    ['2', 'APIへは、Entra IDの通行証を添えて依頼する'],
+    ['3', '必要最小限の権限だけ、同意してもらう']
+  ]
+  return (
+    <section className="remotion-slide m365-slide m365-end-summary-slide">
+      <div className="m365-end-summary-copy" style={lift(entrance(frame, fps, 10), 34)}>
+        <span>SUMMARY</span>
+        <h1>覚えるのは、<br /><em>この3つ。</em></h1>
+      </div>
+      <div className="m365-end-summary-points">{points.map(([num, body], i) => <div key={num} style={lift(entrance(frame, fps, 24 + i * 12), 22)}><span>{num}</span><strong>{body}</strong></div>)}</div>
+      <div className="m365-the-end" style={lift(entrance(frame, fps, 70), 18)}><Check size={38} /><strong>本編はここまで。</strong><b>おしまい！</b></div>
     </section>
   )
 }
