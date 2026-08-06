@@ -7069,7 +7069,19 @@ main {
 .m365-ebistudy-badge img { height: 76px; margin-bottom: 8px; object-fit: contain; width: 76px; }
 .m365-ebistudy-badge strong { font-size: 31px; line-height: 1.1; }
 .m365-ebistudy-badge em { color: var(--m365-orange); font-size: 57px; font-style: normal; }
-.m365-ebistudy-badge span { color: var(--muted); font-size: 20px; font-weight: 800; margin-top: 8px; }
+.m365-thanks-slide { background: linear-gradient(135deg, #0f172a 0%, #172554 55%, #1d4ed8 100%); color: white; display: grid; gap: 30px; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto auto; overflow: hidden; }
+.m365-thanks-glow { background: radial-gradient(circle, rgba(96, 165, 250, 0.28), transparent 64%); height: 780px; position: absolute; right: -130px; top: -180px; width: 780px; }
+.m365-thanks-logo { height: 94px; left: 82px; object-fit: contain; position: absolute; top: 64px; width: 94px; z-index: 2; }
+.m365-thanks-copy { align-self: end; grid-column: 1 / -1; position: relative; z-index: 2; }
+.m365-thanks-copy > span { color: #93c5fd; font-size: 22px; font-weight: 900; letter-spacing: 0.12em; }
+.m365-thanks-copy h1 { color: white; font-size: 86px; line-height: 1.03; margin-top: 18px; max-width: 1150px; }
+.m365-thanks-copy h1 em { color: #fbbf24; font-style: normal; }
+.m365-thanks-actions { display: grid; gap: 24px; grid-column: 1 / -1; grid-template-columns: repeat(2, 1fr); position: relative; z-index: 2; }
+.m365-thanks-actions > div { align-items: center; background: rgba(255, 255, 255, 0.11); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 22px; display: grid; gap: 3px 18px; grid-template-columns: auto 1fr; padding: 25px 30px; }
+.m365-thanks-actions svg { color: #fbbf24; grid-row: 1 / 3; }
+.m365-thanks-actions strong { color: white; font-size: 35px; }
+.m365-thanks-actions span { color: #dbeafe; font-size: 22px; }
+.m365-thanks-slide .m365-thanks-final { color: #dbeafe; font-size: 25px; grid-column: 1 / -1; margin: 0; position: relative; text-align: center; z-index: 2; }
 
 @media (max-width: 720px) {
   .m365-opening,
@@ -7095,7 +7107,9 @@ main {
   .m365-policy-split,
   .m365-credential-grid,
   .m365-end-summary-slide,
-  .m365-ebistudy-slide {
+  .m365-ebistudy-slide,
+  .m365-thanks-slide,
+  .m365-thanks-actions {
     grid-template-columns: 1fr;
   }
 }

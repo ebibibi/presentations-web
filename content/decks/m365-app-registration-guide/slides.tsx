@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import {
   AppWindow,
+  Bell,
   Bot,
   Building2,
   CalendarDays,
@@ -20,6 +21,7 @@ import {
   Send,
   ShieldCheck,
   Sparkles,
+  ThumbsUp,
   User,
   UserCheck,
   Users
@@ -58,7 +60,8 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <EndSummarySlide {...props} /> },
   { render: (props) => <EbiStudySlide {...props} /> },
   { render: (props) => <SourcesSlide {...props} /> },
-  { render: (props) => <SourcesOperationsSlide {...props} /> }
+  { render: (props) => <SourcesOperationsSlide {...props} /> },
+  { render: (props) => <ThanksSlide {...props} /> }
 ]
 
 function entrance(frame: number, fps: number, delay = 0) {
@@ -506,7 +509,7 @@ function EbiStudySlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide m365-slide m365-ebistudy-slide">
       <div className="m365-ebistudy-copy" style={lift(entrance(frame, fps, 12), 34)}><span>Ebi Study</span><h1>体系的に、<br />順番に学びたい方へ。</h1><p>Microsoft資格・Windows Server・Azure・Claude Codeを<br />迷わず進められる動画講座にまとめています。</p><a href="https://study.ebisuda.net" target="_blank" rel="noreferrer">study.ebisuda.net <ChevronRight size={30} /></a></div>
-      <div className="m365-ebistudy-badge" style={lift(entrance(frame, fps, 34), 24)}><LogoMark /><strong>月額<br /><em>990円</em></strong><span>課金窓口はこちら</span></div>
+      <div className="m365-ebistudy-badge" style={lift(entrance(frame, fps, 34), 24)}><LogoMark /><strong>月額<br /><em>990円</em></strong></div>
     </section>
   )
 }
@@ -531,6 +534,25 @@ function SourcesOperationsSlide({ frame }: SlideRenderContext) {
       <Header kicker="OFFICIAL SOURCES ─ OPERATIONS" title="申請・運用・認証の根拠" frame={frame} />
       <div className="m365-sources">{sources.map(([title, desc, url], i) => <a href={url} target="_blank" rel="noreferrer" key={title} style={lift(entrance(frame, fps, 14 + i * 10), 18)}><span>{String(i + 7).padStart(2, '0')}</span><div><strong>{title}</strong><p>{desc}</p></div><ChevronRight size={26} /></a>)}</div>
       <p className="m365-source-foot">2026年8月6日確認 ｜ テナント設定・権限・管理画面は変更されるため、申請時に最新文書を確認</p>
+    </section>
+  )
+}
+
+function ThanksSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide m365-slide m365-thanks-slide">
+      <div className="m365-thanks-glow" />
+      <LogoMark className="m365-thanks-logo" />
+      <div className="m365-thanks-copy" style={lift(entrance(frame, fps, 8), 38)}>
+        <span>THANK YOU FOR WATCHING</span>
+        <h1>ご視聴、<br /><em>ありがとうございました！</em></h1>
+      </div>
+      <div className="m365-thanks-actions">
+        <div style={lift(entrance(frame, fps, 28), 24)}><ThumbsUp size={62} /><strong>高評価</strong><span>役に立ったらお願いします！</span></div>
+        <div style={lift(entrance(frame, fps, 42), 24)}><Bell size={62} /><strong>チャンネル登録</strong><span>次の解説もお見逃しなく！</span></div>
+      </div>
+      <p className="m365-thanks-final">これからも、難しいITを分かりやすく解説します。</p>
     </section>
   )
 }
