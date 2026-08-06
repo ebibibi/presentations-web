@@ -1258,6 +1258,286 @@ main {
   }
 }
 
+/* Beginner-first additions for m365-app-registration-guide */
+.m365-opening-beginner .m365-opening-copy h1 {
+  font-size: 94px;
+}
+
+.m365-opening-beginner .m365-opening-copy h1 em {
+  font-size: 1em;
+}
+
+.m365-live-build {
+  align-items: stretch;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr 0.85fr;
+}
+
+.m365-build-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  justify-content: center;
+}
+
+.m365-build-chat > div {
+  align-items: center;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 78px 1fr;
+  padding: 16px 20px;
+}
+
+.m365-build-chat span {
+  background: var(--m365-blue-soft);
+  border-radius: 999px;
+  color: var(--m365-blue);
+  font-size: 19px;
+  font-weight: 900;
+  padding: 8px;
+  text-align: center;
+}
+
+.m365-build-chat p {
+  font-size: 25px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.m365-browser-card {
+  align-items: center;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  justify-content: center;
+  overflow: hidden;
+  padding: 45px 28px 26px;
+  position: relative;
+  text-align: center;
+}
+
+.m365-browser-card > div {
+  align-items: center;
+  background: #eeeae0;
+  display: flex;
+  gap: 8px;
+  height: 34px;
+  left: 0;
+  padding: 0 14px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.m365-browser-card i {
+  background: #aaa398;
+  border-radius: 50%;
+  height: 10px;
+  width: 10px;
+}
+
+.m365-browser-card svg { color: var(--m365-blue); }
+.m365-browser-card strong { font-size: 30px; }
+.m365-browser-card button { background: var(--m365-blue); border: 0; border-radius: 10px; color: white; font-size: 22px; padding: 12px 20px; }
+.m365-browser-card small { color: var(--m365-green); font-size: 20px; font-weight: 800; }
+
+.m365-wall-stage {
+  align-items: center;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 0.8fr auto 1.2fr;
+}
+
+.m365-ready-app {
+  align-items: center;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  min-height: 280px;
+  text-align: center;
+}
+
+.m365-ready-app svg { color: var(--m365-green); }
+.m365-ready-app strong { font-size: 29px; }
+.m365-ready-app span { color: var(--muted); font-size: 23px; }
+.m365-word-wall { display: flex; flex-direction: column; gap: 13px; }
+.m365-word-wall > div { background: rgba(216, 93, 74, 0.1); border: 1px solid rgba(216, 93, 74, 0.35); border-radius: 15px; color: var(--coral); font-size: 30px; font-weight: 900; padding: 19px 24px; }
+.m365-next-guide { background: rgba(37, 99, 235, 0.1); border: 2px solid rgba(37, 99, 235, 0.34); border-radius: 999px; color: var(--m365-blue); font-size: 24px; font-weight: 900; margin-top: 20px; padding: 13px 24px; text-align: center; }
+.m365-beginner-question { align-items: center; background: #17201b; border-radius: 18px; color: white; display: grid; font-size: 25px; gap: 8px 14px; grid-template-columns: auto auto 1fr; padding: 20px 26px; }
+.m365-beginner-question svg { color: var(--mustard); }
+.m365-beginner-question strong { color: var(--mustard); }
+
+.m365-familiar-flow {
+  align-items: center;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 0.8fr auto 1.1fr auto 0.8fr;
+}
+
+.m365-person-card,
+.m365-entra-gate {
+  align-items: center;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  min-height: 285px;
+  padding: 26px;
+  text-align: center;
+}
+
+.m365-person-card svg { color: var(--m365-blue); }
+.m365-entra-gate { background: linear-gradient(145deg, #172554, #1d4ed8); color: white; }
+.m365-entra-gate span { color: #bfdbfe !important; }
+.m365-person-card strong, .m365-entra-gate strong { font-size: 27px; }
+.m365-person-card span, .m365-entra-gate span { color: var(--muted); font-size: 20px; }
+.m365-familiar-apps { display: flex; flex-direction: column; gap: 14px; }
+.m365-familiar-apps > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 15px; display: flex; font-size: 22px; font-weight: 800; gap: 12px; padding: 18px; }
+.m365-familiar-apps svg { color: var(--m365-purple); }
+
+.m365-four-questions { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); }
+.m365-four-questions > div { background: white; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 15px; min-height: 220px; padding: 27px; }
+.m365-four-questions span { color: var(--m365-blue); font-size: 20px; font-weight: 900; }
+.m365-four-questions strong { font-size: 31px; }
+.m365-protected-data { align-items: center; background: rgba(23, 32, 27, 0.05); border: 1px solid var(--line); border-radius: 17px; display: flex; gap: 20px; padding: 19px 25px; }
+.m365-protected-data svg { color: var(--m365-orange); }
+.m365-protected-data strong { font-size: 27px; }
+.m365-protected-data p { color: var(--muted); font-size: 22px; margin: 4px 0 0; }
+
+.m365-lend-id { align-items: stretch; display: grid; gap: 28px; grid-template-columns: 0.9fr 1.1fr; }
+.m365-badge-loan { align-items: center; background: white; border: 1px solid rgba(216, 93, 74, 0.35); border-radius: 23px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; justify-content: center; min-height: 365px; padding: 30px; position: relative; text-align: center; }
+.m365-badge-loan > svg:first-child { color: var(--m365-blue); }
+.m365-badge-loan > svg:nth-of-type(3) { color: var(--m365-purple); }
+.m365-badge-loan strong { font-size: 25px; }
+.m365-no-mark { color: var(--coral); font-size: 90px; font-weight: 900; position: absolute; right: 38px; top: 120px; }
+.m365-risk-list { display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+.m365-risk-list > div { align-items: center; background: rgba(216, 93, 74, 0.08); border: 1px solid rgba(216, 93, 74, 0.28); border-radius: 15px; display: grid; gap: 5px 13px; grid-template-columns: auto 1fr; padding: 17px 20px; }
+.m365-risk-list svg { color: var(--coral); grid-row: 1 / 3; }
+.m365-risk-list strong { font-size: 25px; }
+.m365-risk-list span { color: var(--muted); font-size: 20px; }
+
+.m365-two-id-cards { display: grid; gap: 28px; grid-template-columns: repeat(2, 1fr); }
+.m365-two-id-cards > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 23px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; min-height: 310px; padding: 30px; text-align: center; }
+.m365-two-id-cards > div > span { font-size: 20px; font-weight: 900; }
+.m365-two-id-cards strong { font-size: 34px; }
+.m365-two-id-cards p { color: var(--muted); font-size: 24px; margin: 0; }
+.m365-human-id { border-top: 7px solid var(--m365-blue) !important; color: var(--m365-blue); }
+.m365-app-id { border-top: 7px solid var(--m365-purple) !important; color: var(--m365-purple); }
+.m365-two-id-result { align-items: center; background: #17201b; border-radius: 16px; color: white; display: flex; font-size: 25px; gap: 12px; justify-content: center; padding: 18px 22px; }
+.m365-two-id-result svg:first-child { color: #60a5fa; }
+.m365-two-id-result svg:nth-of-type(2) { color: #a78bfa; }
+
+.m365-api-analogy { align-items: stretch; display: grid; gap: 24px; grid-template-columns: 1fr auto 1fr; }
+.m365-api-analogy > div:not(.m365-vs) { align-items: center; background: white; border: 1px solid var(--line); border-radius: 23px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 15px; justify-content: center; min-height: 350px; padding: 28px; text-align: center; }
+.m365-api-analogy svg { color: var(--m365-blue); }
+.m365-api-analogy strong { font-size: 30px; }
+.m365-api-analogy code { background: #17201b; border-radius: 10px; color: #9ce7d6; font-size: 24px; padding: 12px 17px; }
+.m365-ui-mail { border: 1px solid var(--line); border-radius: 10px; display: grid; font-size: 20px; gap: 12px; grid-template-columns: 1fr 1fr; padding: 12px; }
+.m365-ui-mail span { color: var(--m365-blue); }
+
+.m365-city-grid { display: grid; gap: 16px; grid-template-columns: repeat(5, 1fr); }
+.m365-city-grid > div { align-items: center; background: white; border: 1px solid var(--line); border-top: 6px solid var(--m365-blue); border-radius: 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; min-height: 290px; padding: 24px 16px; text-align: center; }
+.m365-city-grid svg { color: var(--m365-blue); height: 50px; width: 50px; }
+.m365-city-grid strong { font-size: 24px; }
+.m365-city-grid span { color: var(--muted); font-size: 19px; }
+.m365-city-grid small { background: var(--m365-blue-soft); border-radius: 999px; color: var(--m365-blue); font-size: 17px; font-weight: 800; margin-top: auto; padding: 7px 11px; }
+.m365-two-entrances { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+.m365-two-entrances span { align-items: center; background: rgba(23, 32, 27, 0.05); border-radius: 15px; display: flex; font-size: 22px; gap: 10px; padding: 17px 20px; }
+
+.m365-graph-hub { align-items: center; display: grid; gap: 16px; grid-template-columns: 0.8fr auto 1fr auto 1.1fr; }
+.m365-graph-app, .m365-graph-core { align-items: center; background: white; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; justify-content: center; min-height: 295px; padding: 26px; text-align: center; }
+.m365-graph-app svg { color: var(--m365-purple); }
+.m365-graph-app strong { font-size: 27px; }
+.m365-graph-core { background: linear-gradient(145deg, #172554, #1d4ed8); color: white; }
+.m365-graph-core strong { font-size: 28px; }
+.m365-graph-core span { color: #bfdbfe; font-size: 20px; }
+.m365-graph-services { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); }
+.m365-graph-services > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 13px; display: flex; flex-direction: column; gap: 5px; padding: 14px; }
+.m365-graph-services svg { color: var(--m365-blue); }
+.m365-graph-services span { font-size: 18px; font-weight: 800; }
+
+.m365-complete-flow { align-items: stretch; display: grid; gap: 12px; grid-template-columns: repeat(5, 1fr); }
+.m365-flow-unit { align-items: center; background: white; border: 1px solid var(--line); border-radius: 18px; display: flex; flex-direction: column; gap: 13px; justify-content: center; min-height: 310px; padding: 24px 18px; position: relative; text-align: center; }
+.m365-flow-unit > span { align-items: center; background: var(--m365-blue); border-radius: 50%; color: white; display: flex; font-size: 19px; font-weight: 900; height: 38px; justify-content: center; width: 38px; }
+.m365-flow-unit > svg:not(.m365-step-next) { color: var(--m365-blue); height: 52px; width: 52px; }
+.m365-flow-unit strong { font-size: 21px; line-height: 1.4; }
+.m365-step-next { color: var(--muted); position: absolute; right: -25px; top: 135px; z-index: 3; }
+.m365-check-both { align-items: center; background: rgba(15, 138, 114, 0.1); border-radius: 15px; display: flex; font-size: 24px; gap: 10px; justify-content: center; padding: 17px; }
+.m365-check-both svg, .m365-check-both b { color: var(--m365-green); }
+
+.m365-token-stage { align-items: center; display: grid; gap: 17px; grid-template-columns: 0.85fr auto 1.1fr auto 0.85fr; }
+.m365-password-card, .m365-token-card, .m365-api-check { align-items: center; background: white; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 11px; justify-content: center; min-height: 320px; padding: 25px; position: relative; text-align: center; }
+.m365-password-card svg { color: var(--coral); }
+.m365-password-card strong, .m365-api-check strong { font-size: 25px; }
+.m365-password-card span, .m365-api-check span { color: var(--muted); font-size: 20px; }
+.m365-password-card b { color: var(--coral); font-size: 58px; position: absolute; right: 24px; top: 20px; }
+.m365-token-card { background: linear-gradient(145deg, #eff6ff, white); border-color: rgba(37, 99, 235, 0.35); overflow: hidden; }
+.m365-token-card svg { color: var(--m365-blue); }
+.m365-token-card strong { color: var(--m365-blue); font-size: 27px; letter-spacing: 0.05em; }
+.m365-token-card p { color: var(--muted); font-size: 19px; line-height: 1.5; margin: 0; }
+.m365-token-scan { background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.24), transparent); bottom: 0; position: absolute; top: 0; width: 90px; }
+.m365-api-check svg { color: var(--m365-green); }
+
+.m365-id-vs-permission { align-items: center; display: grid; gap: 24px; grid-template-columns: 0.75fr auto 1.25fr; }
+.m365-id-vs-permission > div:first-child { align-items: center; background: white; border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 13px; justify-content: center; min-height: 340px; padding: 28px; text-align: center; }
+.m365-id-vs-permission > div:first-child svg { color: var(--m365-blue); }
+.m365-id-vs-permission strong { font-size: 30px; }
+.m365-id-vs-permission p { color: var(--muted); font-size: 21px; margin: 0; }
+.m365-plus { color: var(--m365-blue); font-size: 54px; font-weight: 900; }
+.m365-action-perms { display: flex; flex-direction: column; gap: 13px; }
+.m365-action-perms > div { align-items: center; background: white; border: 1px solid var(--line); border-radius: 15px; display: grid; gap: 13px; grid-template-columns: auto 1fr auto; padding: 17px 20px; }
+.m365-action-perms svg { color: var(--m365-orange); }
+.m365-action-perms span { font-size: 23px; font-weight: 800; }
+.m365-action-perms code { background: rgba(234, 88, 12, 0.09); border-radius: 8px; color: var(--m365-orange); font-size: 19px; padding: 7px 10px; }
+
+.m365-beginner-request { display: grid; gap: 27px; grid-template-columns: 0.65fr 1.35fr; }
+.m365-request-app { align-items: center; background: linear-gradient(145deg, #f0fdf8, white); border: 1px solid rgba(15, 138, 114, 0.34); border-radius: 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 18px; justify-content: center; min-height: 415px; padding: 28px; text-align: center; }
+.m365-request-app svg { color: var(--m365-green); }
+.m365-request-app strong { font-size: 30px; line-height: 1.35; }
+.m365-request-facts { display: grid; gap: 10px; grid-template-columns: repeat(2, 1fr); }
+.m365-request-facts > div { background: white; border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; gap: 6px; justify-content: center; padding: 15px 17px; }
+.m365-request-facts span { color: var(--m365-blue); font-size: 18px; font-weight: 900; }
+.m365-request-facts strong { font-size: 20px; line-height: 1.35; }
+.m365-recap-five { gap: 9px; }
+.m365-recap-five > div { padding-block: 13px; }
+
+@media (max-width: 720px) {
+  .m365-live-build,
+  .m365-wall-stage,
+  .m365-familiar-flow,
+  .m365-four-questions,
+  .m365-lend-id,
+  .m365-two-id-cards,
+  .m365-api-analogy,
+  .m365-city-grid,
+  .m365-two-entrances,
+  .m365-graph-hub,
+  .m365-complete-flow,
+  .m365-token-stage,
+  .m365-id-vs-permission,
+  .m365-beginner-request,
+  .m365-request-facts {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Shared: SKILL.md code panel (episode 13)                           */
 /* ------------------------------------------------------------------ */
@@ -6476,7 +6756,7 @@ main {
   background: rgba(37, 99, 235, 0.07);
   border: 1px solid rgba(37, 99, 235, 0.24);
   border-radius: 16px;
-  display: flex;
+  display: block;
   font-size: 28px;
   gap: 12px;
   line-height: 1.45;
