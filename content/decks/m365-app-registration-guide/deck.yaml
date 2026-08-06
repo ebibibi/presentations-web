@@ -124,7 +124,7 @@ slides:
   - id: ebistudy
     title: 体系的に、順番に学びたい方へ
     durationInFrames: 190
-    notes: 続けて体系的に学びたい方向けに、Ebi StudyでMicrosoft資格、Windows Server、Azure、Claude Codeの動画講座を提供しています。月額990円です。課金窓口はstudy.ebisuda.netです。
+    notes: 続けて体系的に学びたい方向けに、Ebi StudyでMicrosoft資格、Windows Server、Azure、Claude Codeの動画講座を提供しています。月額990円です。詳しくはstudy.ebisuda.netをご覧ください。
   - id: sources
     title: Microsoft公式ドキュメント
     durationInFrames: 195
@@ -133,3 +133,7 @@ slides:
     title: 申請・運用・認証の根拠
     durationInFrames: 195
     notes: アプリ登録権限の委任、Enterprise applicationのOwner、Managed Identity、証明書、Client Secret、Microsoft Graph権限に関する一次資料です。実際のテナント設定は申請時に最新文書で確認してください。
+  - id: thanks
+    title: ご視聴ありがとうございました！
+    durationInFrames: 190
+    notes: 最後までご視聴いただき、ありがとうございました。役に立ったら高評価とチャンネル登録をお願いします。これからもWindows、Azure、Microsoft 365、生成AIなどの難しいテーマを分かりやすく解説していきます。
