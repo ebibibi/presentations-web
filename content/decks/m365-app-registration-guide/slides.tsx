@@ -221,9 +221,9 @@ function RegistrationSlide({ frame }: SlideRenderContext) {
       <Header kicker="APP REGISTRATION" title="アプリ登録は「アプリの身元届」" frame={frame} />
       <div className="m365-registration">
         <div className="m365-id-card" style={lift(entrance(frame, fps, 20), 30)}><div className="m365-id-card-top"><Building2 size={42} /><span>Microsoft Entra ID の台帳</span></div><strong>MY AI APP</strong>{fields.map((field, i) => <div key={field} style={{ opacity: entrance(frame, fps, 34 + i * 8) }}><Check size={19} />{field}</div>)}</div>
-        <div className="m365-not-code" style={lift(entrance(frame, fps, 64), 24)}><FileText size={56} /><span>コード本体</span><b>預ける作業ではない</b></div>
+        <div className="m365-not-code" style={lift(entrance(frame, fps, 64), 24)}><FileText size={56} /><span>Webアプリの<br />ソースコード</span><b>Entra IDへは<br />アップロードしない</b><small>コードはWebサーバーなど<br />別の場所で動く</small></div>
       </div>
-      <p className="m365-punch">発行されるIDは、<b>公開の識別番号</b>。秘密の鍵でも、権限でもない。</p>
+      <p className="m365-punch">Entra IDへ登録するのは、<b>アプリの識別とサインインに必要な設定</b>。</p>
     </section>
   )
 }
