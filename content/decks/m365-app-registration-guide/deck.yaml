@@ -1,10 +1,10 @@
 slug: m365-app-registration-guide
 title: なぜアプリにもIDが必要？ ─ はじめてのM365アプリ登録
 summary: OutlookとTeamsを普段使うだけの一般ユーザーが、AIで作ったWebアプリをMicrosoft 365の実データへつなぐまでを、ID、API、Microsoft Graph、トークン、権限、申請、認証の順にゼロから理解する。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-08-06"
-updatedAt: "2026-08-06"
+updatedAt: "2026-08-08"
 order: 102
 tags:
   - microsoft-365
@@ -12,6 +12,11 @@ tags:
   - microsoft-graph
   - security
   - ai
+youtube:
+  id: n2RodbBpzeo
+  url: https://www.youtube.com/watch?v=n2RodbBpzeo
+  title: "なぜアプリにもIDが必要？"
+  publishedAt: "2026-08-08"
 slides:
   - id: opening
     title: なぜアプリにもIDが必要？
