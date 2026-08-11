@@ -1,6 +1,6 @@
 slug: managed-identity-resource-url
-title: マネージドIDの「リソースURL」とは何か
-summary: 前回の「なぜApplication IDが必要か」「ユーザー委任かアプリ単独か」を土台に、Resource URLがHTTP送信先ではなくAPIの識別子である理由を解説する。Microsoft Graph、Azure Resource Manager、Azure AI Searchを具体例に、audience、endpoint、Azure resource IDを整理する。
+title: resource と scope を混ぜない
+summary: Entra IDのv1 endpointで使うresource、v2 endpointで使うscope、Managed IdentityのローカルトークンAPIに残るresourceを明確に分離する。前回のMicrosoft Graphメール取得例からAzure AI Searchへつなぎ、トークンの対象と実際のAPI endpointが違う理由を10枚で整理する。
 status: draft
 visibility: public
 createdAt: "2026-08-11"
@@ -14,62 +14,42 @@ tags:
   - azure-ai-search
 slides:
   - id: opening
-    title: 前回の「誰が？」から今回の「誰向け？」へ
-    durationInFrames: 190
-    notes: M365アプリ登録入門の補完回です。前回は、なぜアプリにもIDが必要なのか、そしてユーザー委任なのかアプリ単独なのか、つまり「誰が、どのアプリを使って呼ぶのか」に集中しました。今回は、その呼び出す側が決まった後に必要な「どのAPI向けのトークンを取るのか」を説明します。これがResource URLです。
+    title: resource と scope を混ぜない
+    durationInFrames: 180
+    notes: 前回の「M365アプリ登録入門」の補完回です。前回は、なぜアプリにもIDが必要なのか、ユーザー委任なのかアプリ単独なのか、つまり「誰がAPIを呼ぶか」に集中しました。今回は「どのAPI向けのトークンを取るか」です。ただしresourceとscopeを同じ話として混ぜると分かりにくくなるため、まずEntra IDのv1とv2を明確に分けます。
   - id: viewer-question
-    title: なぜResource URLと実際の投げ先が違うのか
-    durationInFrames: 220
-    notes: 今回は、マネージドIDの設定で一番悩んだのがResource URLだった、という質問をいただきました。Microsoft LearnではResource URLにhttps://management.core.windows.net/と書く一方、実際のAPI要求はhttps://management.azure.com/へ送ります。URLで指定しているのに、なぜ投げ先と違うのか。最初から実際の投げ先をresourceへ入れれば分かりやすいのではないか。これが質問の中心です。
-  - id: identifier-not-location
-    title: URIは「場所」だけでなく「名前」にも使える
-    durationInFrames: 225
-    notes: 結論です。OAuthのresourceはHTTPの送信先ではなく、トークンを受け取るAPIの識別子です。RFC 8707もresourceを絶対URIで表し、そのURIはネットワーク上の場所である場合もあるが、単なる識別子でもよいとしています。URI形式を使うのは、APIの所有者がドメインやApp IDを使って衝突しにくい固有名を作れるからです。APIの身元は安定させたまま、実際のendpointはバージョン、リージョン、ゲートウェイなどで変えられます。これはマルチテナントが主因ではありません。単一テナントの独自APIでもapi://アプリIDのように、APIの識別子と通信先を分けます。マルチテナントでは同じAPIの身元を各テナントで共有できるため、この分離が特に便利になる、という順番です。
-  - id: previous-focus
-    title: 前回は「呼び出す側」を整理した
-    durationInFrames: 205
-    notes: 前回のおさらいです。Application IDは接続するソフトウェアを区別するために必要です。ユーザー委任ではユーザーがアプリを使い、アプリがユーザーの代理でAPIを呼びます。アプリ単独では人がいない状態で、アプリまたはAzureリソース自身のIDでAPIを呼びます。Managed Identityは、この後者でAzureリソース自身を識別・認証する手段です。前回決めたのは呼び出す主体です。
-  - id: missing-question
-    title: 呼び出す側とは別に、受け取るAPIを決める
-    durationInFrames: 205
-    notes: ユーザー委任かアプリ単独かが決まっても、まだトークンの受取人が決まっていません。Microsoft Graph向けなのか、Azure Resource Manager向けなのか、Azure AI Search向けなのかをEntra IDへ伝える必要があります。Resource URLは「誰が使うか」の答えではなく、その次の独立した問い「どのAPI向けか」の答えです。権限はさらに別の問いです。
-  - id: graph-example
-    title: 前回のMicrosoft Graphも同じ構造
-    durationInFrames: 220
-    notes: 前回の具体例へ当てはめます。サインインした本人がWebアプリから自分のメールを読むなら、呼び出す主体はユーザーとアプリ、つまりユーザー委任です。トークンの相手はMicrosoft Graphで、要求する権限はMail.Readです。実際の通信先はgraph.microsoft.comのme/messagesです。前回はResource URLという言葉を前面に出しませんでしたが、Graph向けトークンを取るという宛先の指定はすでに存在していました。なおv2のユーザー委任ではMail.Readなどをscopeとして要求し、アプリ単独ではhttps://graph.microsoft.com/.defaultを使います。
-  - id: token-flow
-    title: resourceがaudになるまで
-    durationInFrames: 205
-    notes: 前回整理した呼び出し元が、マネージドIDのトークンエンドポイントへresourceを指定します。Entra IDがアクセストークンを発行し、その対象はaudクレームに入ります。APIは受け取ったトークンのaudが自分向けかを検証します。呼び出し元のIDが正しくても、audが別のAPI向けなら受け付けられません。
-  - id: three-identifiers
-    title: endpoint・audience・resource ID
-    durationInFrames: 215
-    notes: Azure AI Searchを例に3種類を並べます。endpointはサービス固有のsearch.windows.net。audienceは全サービス共通のsearch.azure.com。Azure resource IDはsubscriptionから始まる管理上の住所です。URLらしく見えるかどうかではなく役割で見分けます。
-  - id: why-core
-    title: なぜLearnはmanagement.core.windows.netなのか
-    durationInFrames: 205
-    notes: 質問のLearnページは、任意のAzureサービスを呼ぶ一般例ではありません。Azure Resource Manager APIのList all subscriptionsをカスタムコネクタとして登録するチュートリアルです。そのためResource URLにもARMを表す識別子が入っています。Azure全体の共通値ではありません。
-  - id: arm-two-urls
-    title: ARMでも2つのURLが見える
+    title: 今回いただいた質問
     durationInFrames: 210
-    notes: 実際のResource Manager REST endpointはmanagement.azure.comです。一方、質問のコネクタ手順はresourceにmanagement.core.windows.netを指定します。現在のマネージドID公式例ではresourceにmanagement.azure.comを使う例もあります。似たURLを自己判断で置換せず、自分の認証方式と操作に対応する最新公式手順へ従います。
-  - id: two-planes
-    title: 管理プレーンとデータプレーン
+    notes: 質問は、LearnにResource URLとしてmanagement.core.windows.netと書くのに、実際のAPI要求はmanagement.azure.comへ送るのはなぜか、というものでした。さらにAzure AI Searchではsearch.azure.comとサービス固有のsearch.windows.netが出てきます。URLなのだから、実際の投げ先をそのまま指定すればよいのではないか。加えて調べるとresourceとscopeの両方が出てきて、何が違うのか。ここを整理します。
+  - id: acquisition-interfaces
+    title: 最初に3つを分ける
+    durationInFrames: 245
+    notes: 最重要スライドです。Entra IDのv1 token endpointへ直接要求する旧方式はresourceを使います。v2 token endpointへ直接要求する現在の方式はscopeを使い、アプリ単独ではリソース識別子の後ろに/.defaultを付けます。そしてManaged IdentityのローカルトークンAPIにもresourceという引数が残っています。これはアプリがEntraのv1 endpointを直接選んだという意味ではなく、Managed Identityブローカー側のAPI契約です。Azure AI Searchが3種類の認証APIを提供しているわけでもありません。
+  - id: recommended-path
+    title: 新規開発では何を使うか
     durationInFrames: 210
-    notes: 同じAzure AI Searchでも、サービスを作成・設定する操作は管理プレーン、インデックスを検索する操作はデータプレーンです。どちらを呼ぶかでendpoint、audience、必要なRBACロールが変わります。まず操作を一文で言えるようにするのが最初の一歩です。
-  - id: search-answer
-    title: Azure AI Searchの正しい対応表
+    notes: 新しく作るならAzure SDKにDefaultAzureCredentialを渡すのが基本です。SDKがトークン取得の詳細を抽象化します。自分でv2 token endpointへHTTP要求を書く場合もscopeを使います。Azure AI Search向けならscopeはhttps://search.azure.com/.defaultです。自分でコードを書くか、ライブラリを使うかでresourceとscopeが決まるわけではありません。ADALとv1は既存コードの互換性として読み、新規で積極的に選ぶものではありません。
+  - id: graph-bridge
+    title: 前回のMicrosoft Graph例につなぐ
+    durationInFrames: 230
+    notes: 前回のメール取得では、サインインしたユーザーの代理でGraphを呼ぶため、ユーザー委任のMail.Readを扱いました。v2では具体的なscopeであるMail.Readを要求します。アプリ単独ならGraphの/.defaultを使います。実際の通信先はgraph.microsoft.com/v1.0/me/messagesです。ここでGraph URLの/v1.0はGraph REST APIのバージョンであり、Entra OAuth v1 endpointとは無関係です。前回の「誰が」に、今回の「どのAPI向け」と「どこへ送る」を足しただけです。
+  - id: three-versions
+    title: 3種類のバージョンを混ぜない
     durationInFrames: 220
-    notes: 公開AzureでSearchのデータプレーンを呼ぶ場合、audienceまたはresourceはhttps://search.azure.com、v2のscopeはhttps://search.azure.com/.default、実際のendpointはサービス固有のhttps://サービス名.search.windows.netです。この3つが違っていて正常です。
-  - id: search-flow
-    title: Searchを呼ぶ最小フロー
-    durationInFrames: 215
-    notes: マネージドIDでSearch向けトークンを要求し、そのBearerトークンをサービス固有endpointへ送ります。さらにマネージドIDへSearch Index Data Readerなど必要最小限のデータプレーンロールを割り当てます。宛名が正しいことと、権限があることは別問題です。
-  - id: troubleshooting
-    title: 401と403を順番に切り分ける
-    durationInFrames: 215
-    notes: まず管理プレーンかデータプレーンか、次にトークンのaud、次にendpoint、最後にRBACを確認します。401ならトークンの宛名や認証を疑い、403ならロールや対象スコープを疑います。ただし実際のエラー本文を優先し、ステータスコードだけで断定はしません。ロール反映には時間がかかる場合があります。
+    notes: v1やv2という言葉も3種類あります。1つ目はトークンを要求するEntra OAuth endpointのv1/v2。2つ目はアクセストークン内のver 1.0/2.0。これはAPI側が決めるため、v2 endpointへ要求してもver 1.0のトークンが発行されることがあります。3つ目はGraphの/v1.0やSearchのapi-versionといった呼び出し先REST APIのバージョンです。3つは別物です。
+  - id: identifier-endpoint
+    title: トークンの対象とHTTP送信先は別
+    durationInFrames: 230
+    notes: resourceやv2 scopeの前半は、トークンをどのAPI向けに発行するかを示す識別子です。endpointはBearer tokenを付けて実際にHTTP要求を送る入口です。URIは場所だけでなく固有名にも使えます。APIの身元を安定させながら、実際の入口をサービス単位、リージョン、バージョンなどで分けられます。マルチテナントだから分けたのが主因ではありません。単一テナントの独自APIでも識別子とendpointは分かれます。
+  - id: service-map
+    title: Graph・ARM・Searchを対応表で見る
+    durationInFrames: 245
+    notes: Microsoft Graphは識別子とendpointのホスト名が同じなので直感的です。一方、質問のカスタムコネクタ手順はARMを表すResource URLとしてmanagement.core.windows.netを要求し、実際のARM endpointはmanagement.azure.comです。Azure AI Searchをv2で明示要求するscopeはsearch.azure.com/.default、実際のデータプレーンendpointはサービス名.search.windows.netです。同じに見える場合も違う場合もあり、文字列ではなく役割で見ます。
+  - id: managed-identity-flow
+    title: Managed IdentityでSearchを呼ぶ
+    durationInFrames: 230
+    notes: 実装ではSearch SDKにDefaultAzureCredentialを渡します。SDKまたはManaged IdentityブローカーがSearch向けのアクセストークンを取得します。そのBearer tokenをサービス固有のSearch endpointへ送ります。さらにSearch Index Data Readerなど、操作に合ったRBACロールが必要です。トークンの対象が正しいことと、権限があることは別です。生のManaged Identity endpointを使う公式例でresource引数が現れても、それはブローカーAPIの入力形式だと読みます。
   - id: recap
-    title: 3つの問いを混ぜない
+    title: 実務での読み分け
     durationInFrames: 190
-    notes: まとめです。前回は「誰が、どのアプリで呼ぶか」をユーザー委任とアプリ単独で整理しました。今回は「どのAPI向けのトークンか」をResource URLで指定します。そしてPermissionやRBACが「何を許すか」を決めます。この3つを混ぜません。Learnの値がmanagement.core.windows.netなのは、そのページがARMを呼ぶからです。Azure AI Searchならsearch.azure.comがaudienceです。
+    notes: まとめです。oauth2/tokenとresourceならEntra v1の旧方式。oauth2/v2.0/tokenとscopeなら現在の方式で、アプリ単独は/.defaultです。Managed IdentityのローカルAPIにあるresourceは、そのブローカーのAPI契約です。発行されたトークンのverや呼び出し先APIのバージョンとは別物です。そしてresourceやscopeが示すトークンの対象と、実際のHTTP endpointも別です。新規開発はAzure SDKとDefaultAzureCredentialを第一選択にします。
