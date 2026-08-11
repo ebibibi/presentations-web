@@ -86,18 +86,18 @@ function ViewerQuestionSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide mi-slide mi-viewer-question">
-      <Header kicker="VIEWER QUESTION" title="今回、こんな質問をいただきました" frame={frame} />
+      <Header kicker="VIEWER QUESTION" title="Learnで、突然この入力を求められた" frame={frame} />
       <div className="mi-question-quote" style={lift(entrance(frame, fps, 18), 28)}>
         <MessageCircleQuestion />
         <blockquote>
-          <code>Resource URL = management.core.windows.net</code><br />
-          なのに、実際は <code>management.azure.com</code> へ投げる。<br />
-          なぜ同じURLではないの？
+          リソース URL には<br />
+          <code>https://management.core.windows.net/</code><br />
+          と入力します。末尾の <code>/</code> まで正確に。
         </blockquote>
       </div>
       <div className="mi-question-followup mi-question-followup-two" style={lift(entrance(frame, fps, 52), 18)}>
-        <strong>Searchでは <code>resource</code> と <code>scope</code> の両方が出てくる？</strong>
-        <strong>これはSearch側のAPIの違い？ 認証側の違い？</strong>
+        <strong>呼び出したい対象APIが変わると<br />resource identifierも変わる<br /><code>Graph → https://graph.microsoft.com</code></strong>
+        <strong>この「URL」は何を表し、<br />誰が決め、どう選ぶのか？</strong>
       </div>
       <Source href={SOURCES.connector}>API とコネクタを認証する</Source>
     </section>
@@ -106,25 +106,22 @@ function ViewerQuestionSlide({ frame }: SlideRenderContext) {
 
 function AcquisitionInterfacesSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const cards = [
-    ['ENTRA v1', '/oauth2/token', 'resource=', '旧方式・既存互換'],
-    ['ENTRA v2', '/oauth2/v2.0/token', 'scope=', '委任: named scope ／ app-only: /.default'],
-    ['MANAGED IDENTITY BROKER', 'App Service endpoint / VM IMDS', 'resource=', 'ブローカーAPIの契約']
+  const resources = [
+    ['ARM · このLearn', 'https://management.core.windows.net/', '歴史的に使われるresource identifier'],
+    ['MICROSOFT GRAPH', 'https://graph.microsoft.com', 'Graph APIを表すresource identifier'],
+    ['AZURE AI SEARCH', 'https://search.azure.com', '公式scopeでは、この後ろに /.default']
   ]
   return (
     <section className="remotion-slide mi-slide">
-      <Header kicker="FIRST, SEPARATE THESE" title={<>同じ <code>resource</code> でも、入口が違う</>} frame={frame} />
-      <div className="mi-interface-cards">
-        {cards.map(([tag, endpoint, parameter, note], i) => <div key={tag} className={i === 1 ? 'is-current' : ''} style={lift(entrance(frame, fps, 18 + i * 13), 24)}><span>{tag}</span><strong>{endpoint}</strong><code>{parameter}</code><small>{note}</small></div>)}
+      <Header kicker="THE SHORT ANSWER" title={<>これはAPIごとの「トークンの宛先名」</>} frame={frame} />
+      <div className="mi-resource-identifiers">
+        {resources.map(([tag, resource, note], i) => <div key={tag} style={lift(entrance(frame, fps, 18 + i * 13), 24)}><span>{tag}</span><code>{resource}</code><small>{note}</small></div>)}
       </div>
-      <div className="mi-interface-answer" style={lift(entrance(frame, fps, 68), 16)}><CircleXMark /><strong><code>resource</code> / <code>scope</code>の差 ≠ APIの本数</strong><span>違うのは、トークン取得窓口の契約。</span></div>
-      <Source href={SOURCES.appServiceMi}>App Service managed identity REST endpoint</Source>
+      <div className="mi-resource-formats" style={lift(entrance(frame, fps, 62), 16)}><code>v1 · resource=〈識別子〉</code><code>v2 · scope=〈識別子〉/permission</code><strong>client credentialsは <code>/.default</code> 必須</strong></div>
+      <div className="mi-resource-rule" style={lift(entrance(frame, fps, 68), 16)}><TicketCheck /><strong>API提供側が定義する</strong><span>endpointから推測せず、公式ドキュメントの値を使う</span></div>
+      <Source href={SOURCES.scopes}>Microsoft identity platform · resource identifier</Source>
     </section>
   )
-}
-
-function CircleXMark() {
-  return <span className="mi-x-mark">×</span>
 }
 
 function RecommendedPathSlide({ frame }: SlideRenderContext) {
@@ -238,7 +235,7 @@ function RecapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const points = [
     ['ENTRA v1', '/oauth2/token', 'resource=...'],
-    ['ENTRA v2', '/oauth2/v2.0/token', '委任: named scope ／ app-only: /.default'],
+    ['ENTRA v2', '/oauth2/v2.0/token', '委任: named / .default\nclient credentials: /.default 必須'],
     ['MANAGED IDENTITY', 'local broker API', 'resource=... が残る'],
     ['SDK', 'DefaultAzureCredential', 'credential chainから選ぶ']
   ]

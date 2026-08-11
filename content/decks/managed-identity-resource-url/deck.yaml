@@ -18,13 +18,13 @@ slides:
     durationInFrames: 180
     notes: 前回の「M365アプリ登録入門」では、なぜアプリにもIDが必要なのか、ユーザー委任なのかアプリ単独なのか、つまり「誰がAPIを呼ぶか」に集中しました。今回は、その次に意識したい「どのAPIをたたくのか」です。トークンをどのAPI向けに取り、実際にどこへ要求を送るのか。その入り口としてresourceとscopeを整理します。
   - id: viewer-question
-    title: 今回いただいた質問
+    title: Learnで突然出てきたResource URL
     durationInFrames: 210
-    notes: 質問は、LearnにResource URLとしてmanagement.core.windows.netと書くのに、実際のAPI要求はmanagement.azure.comへ送るのはなぜか、というものでした。さらにAzure AI Searchではsearch.azure.comとサービス固有のsearch.windows.netが出てきます。URLなのだから、実際の投げ先をそのまま指定すればよいのではないか。加えて調べるとresourceとscopeの両方が出てきますが、これはSearch側のAPIの違いなのか。ここを整理します。
+    notes: 質問の出発点は、Learnのカスタムコネクタ手順です。セキュリティ設定で突然「リソースURLにはmanagement.core.windows.netを、末尾のスラッシュまで正確に入力」と言われます。しかし普段このURLへAPI要求を送るわけではなく、なぜ必要なのか説明もありません。さらに調べると、Graphならgraph.microsoft.com、Azure AI Searchならsearch.azure.comのようにAPIごとに別の値が出てきます。この値は何を表し、どう選べばよいのか。それが今回の質問です。
   - id: acquisition-interfaces
-    title: 最初に3つを分ける
+    title: APIごとに決められたトークンの宛先名
     durationInFrames: 245
-    notes: 最重要スライドです。Entra IDのv1 token endpointへ直接要求する旧方式はresourceを使います。v2 token endpointはscopeを使いますが、ユーザー委任ならMail.Readなどの名前付きscope、client credentialsなどのアプリ単独ならリソース識別子の後ろに/.defaultを付けます。そしてApp Service endpointやVM IMDSなどManaged IdentityのローカルトークンAPIにもresourceという引数が残っています。これはアプリがEntraのv1 endpointを直接選んだという意味ではなく、ブローカー側のAPI契約です。resourceとscopeの違いはSearch APIの本数ではなく、トークン取得窓口の契約の違いです。
+    notes: 最初に答えます。Resource URLは、Bearer tokenを付けてHTTP要求を送る場所ではありません。Entra IDへ「どのAPI向けのアクセストークンが欲しいか」を伝える、APIごとに登録・定義されたresource identifierです。URL形式でも所在地ではなく名前として使われます。そのためARM、Graph、Searchで値が変わります。APIの提供側が定義するため、利用者はendpointから推測せず、対象APIとクラウドに対応する公式ドキュメントの値を使います。v1ではresourceへ指定し、v2ではscopeのresource部分として使います。
   - id: recommended-path
     title: 新規開発では何を使うか
     durationInFrames: 210
@@ -52,4 +52,4 @@ slides:
   - id: recap
     title: 実務での読み分け
     durationInFrames: 190
-    notes: まとめです。oauth2/tokenとresourceならEntra v1の旧方式。oauth2/v2.0/tokenとscopeならv2で、ユーザー委任は名前付きscope、アプリ単独は/.defaultです。Managed IdentityのローカルAPIにあるresourceは、そのブローカーのAPI契約です。DefaultAzureCredentialは複数credentialから選ぶchainです。発行されたアクセストークンのver、呼び出し先APIのバージョン、実際のHTTP endpointを混ぜません。新規開発ではサービスSDKとTokenCredentialを第一選択にします。
+    notes: まとめです。oauth2/tokenとresourceならEntra v1の旧方式。oauth2/v2.0/tokenとscopeならv2です。ユーザー委任では名前付きscopeまたは/.defaultを利用でき、client credentialsではresource identifierに/.defaultを付けたscopeが必要です。Managed IdentityのローカルAPIにあるresourceは、そのブローカーのAPI契約です。DefaultAzureCredentialは複数credentialから選ぶchainです。発行されたアクセストークンのver、呼び出し先APIのバージョン、実際のHTTP endpointを混ぜません。新規開発ではサービスSDKとTokenCredentialを第一選択にします。
