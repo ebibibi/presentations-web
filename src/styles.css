@@ -7166,6 +7166,20 @@ main {
 .mi-question-followup { align-items: center; display: grid; gap: 18px; grid-template-columns: 160px 1fr 1.25fr; margin-top: 24px; }
 .mi-question-followup span { color: var(--mi-amber); font-size: 18px; font-weight: 900; letter-spacing: .08em; }
 .mi-question-followup strong { background: var(--mi-panel); border-radius: 13px; font-size: 21px; padding: 17px 20px; }
+.mi-uri-compare { display: grid; gap: 30px; grid-template-columns: 1fr 1fr; }
+.mi-uri-compare > div { align-items: center; background: var(--mi-panel); border: 1px solid rgba(100,233,255,.22); border-radius: 22px; display: flex; flex-direction: column; min-height: 270px; padding: 28px; text-align: center; }
+.mi-uri-compare svg { color: var(--mi-cyan); height: 56px; width: 56px; }
+.mi-uri-compare span { color: var(--mi-blue); font-size: 17px; font-weight: 900; letter-spacing: .12em; margin-top: 15px; }
+.mi-uri-compare strong { font-size: 29px; margin: 10px 0 16px; }
+.mi-uri-compare code { background: #06101d; border-radius: 9px; color: var(--mi-green); font-size: 19px; padding: 10px 14px; }
+.mi-uri-compare small { color: #b6c9dd; font-size: 17px; margin-top: 13px; }
+.mi-separation-reasons { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); margin-top: 20px; }
+.mi-separation-reasons span { background: rgba(70,167,255,.12); border-radius: 12px; color: #d9ebff; font-size: 18px; font-weight: 800; padding: 14px; text-align: center; }
+.mi-multitenant-answer { align-items: center; background: rgba(255,202,103,.1); border: 1px solid rgba(255,202,103,.3); border-radius: 14px; display: grid; gap: 14px; grid-template-columns: 230px 160px 1fr; margin-top: 19px; padding: 15px 21px; }
+.mi-multitenant-answer b { color: var(--mi-amber); font-size: 18px; }
+.mi-multitenant-answer strong { font-size: 21px; }
+.mi-multitenant-answer span { color: #c5d4e4; font-size: 16px; }
+.mi-multitenant-answer code { color: var(--mi-green); }
 .mi-question-list { display: grid; gap: 18px; }
 .mi-question-list > div { align-items: center; background: var(--mi-panel); border-left: 5px solid var(--mi-blue); border-radius: 14px; display: grid; gap: 18px; grid-template-columns: 34px 230px 1fr 150px; min-height: 96px; padding: 0 28px; }
 .mi-question-list svg { color: var(--mi-amber); }

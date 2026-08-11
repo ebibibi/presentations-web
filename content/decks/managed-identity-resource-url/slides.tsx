@@ -26,6 +26,7 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
   { render: (props) => <ViewerQuestionSlide {...props} /> },
+  { render: (props) => <IdentifierNotLocationSlide {...props} /> },
   { render: (props) => <PreviousFocusSlide {...props} /> },
   { render: (props) => <MissingQuestionSlide {...props} /> },
   { render: (props) => <GraphExampleSlide {...props} /> },
@@ -49,7 +50,8 @@ const SOURCES = {
   search: 'https://learn.microsoft.com/en-us/azure/search/search-get-started-rbac',
   searchRest: 'https://learn.microsoft.com/en-us/rest/api/searchservice/documents/search-get',
   searchRbac: 'https://learn.microsoft.com/en-us/azure/search/keyless-connections',
-  graphMessages: 'https://learn.microsoft.com/en-us/graph/api/user-list-messages'
+  graphMessages: 'https://learn.microsoft.com/en-us/graph/api/user-list-messages',
+  resourceIndicators: 'https://datatracker.ietf.org/doc/html/rfc8707#section-2'
 }
 
 function entrance(frame: number, fps: number, delay = 0) {
@@ -98,17 +100,47 @@ function ViewerQuestionSlide({ frame }: SlideRenderContext) {
       <div className="mi-question-quote" style={lift(entrance(frame, fps, 18), 28)}>
         <MessageCircleQuestion />
         <blockquote>
-          Microsoft Learnを読んでも、なぜResource URLが<br />
-          <code>https://management.core.windows.net/</code><br />
-          なのか分かりませんでした。
+          <code>resource=https://management.core.windows.net/</code><br />
+          と指定するのに、実際のAPIは<br />
+          <code>https://management.azure.com/</code>へ投げる。なぜ？
         </blockquote>
       </div>
       <div className="mi-question-followup" style={lift(entrance(frame, fps, 52), 18)}>
-        <span>さらに知りたい</span>
-        <strong>サービスごとに決まっている？</strong>
-        <strong>Azure AI Searchなら何を指定する？</strong>
+        <span>素朴な疑問</span>
+        <strong>実際の投げ先をresourceへ入れればいいのでは？</strong>
+        <strong>違うのは、マルチテナントだから？</strong>
       </div>
       <Source href={SOURCES.connector}>API とコネクタを認証する</Source>
+    </section>
+  )
+}
+
+function IdentifierNotLocationSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide mi-slide mi-identifier-location">
+      <Header kicker="IDENTITY ≠ LOCATION" title={<>URIは「場所」だけでなく、<em>固有名</em>にも使える</>} frame={frame} />
+      <div className="mi-uri-compare">
+        <div style={lift(entrance(frame, fps, 18), 24)}>
+          <Fingerprint />
+          <span>RESOURCE URI</span>
+          <strong>APIの固有名</strong>
+          <code>token: aud = API</code>
+          <small>安定した識別子</small>
+        </div>
+        <div style={lift(entrance(frame, fps, 34), 24)}>
+          <Globe2 />
+          <span>ENDPOINT URL</span>
+          <strong>HTTP通信の入口</strong>
+          <code>GET https://host/path</code>
+          <small>複数・変更可能</small>
+        </div>
+      </div>
+      <div className="mi-separation-reasons" style={lift(entrance(frame, fps, 60), 18)}>
+        <span>名前は安定</span><span>入口は増減・移転できる</span><span>audで別APIへの誤用を防ぐ</span>
+      </div>
+      <div className="mi-multitenant-answer" style={lift(entrance(frame, fps, 78), 14)}><b>マルチテナントだから？</b><strong>主因ではない。</strong><span>単一テナントAPIでも <code>api://&lt;app-id&gt;</code> と通信先は分かれる。</span></div>
+      <Source href={SOURCES.resourceIndicators}>RFC 8707 · Resource parameter</Source>
     </section>
   )
 }

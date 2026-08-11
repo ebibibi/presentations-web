@@ -1,6 +1,6 @@
 slug: managed-identity-resource-url
 title: マネージドIDの「リソースURL」とは何か
-summary: 前回の「なぜApplication IDが必要か」「ユーザー委任かアプリ単独か」を土台に、呼び出す側とは別に「どのAPI向けのトークンか」を決めるResource URLを解説する。Microsoft Learnの https://management.core.windows.net/ とAzure AI Searchを具体例に、audience、endpoint、Azure resource IDを整理する。
+summary: 前回の「なぜApplication IDが必要か」「ユーザー委任かアプリ単独か」を土台に、Resource URLがHTTP送信先ではなくAPIの識別子である理由を解説する。Microsoft Graph、Azure Resource Manager、Azure AI Searchを具体例に、audience、endpoint、Azure resource IDを整理する。
 status: draft
 visibility: public
 createdAt: "2026-08-11"
@@ -18,9 +18,13 @@ slides:
     durationInFrames: 190
     notes: M365アプリ登録入門の補完回です。前回は、なぜアプリにもIDが必要なのか、そしてユーザー委任なのかアプリ単独なのか、つまり「誰が、どのアプリを使って呼ぶのか」に集中しました。今回は、その呼び出す側が決まった後に必要な「どのAPI向けのトークンを取るのか」を説明します。これがResource URLです。
   - id: viewer-question
-    title: 今回いただいた質問
+    title: なぜResource URLと実際の投げ先が違うのか
     durationInFrames: 220
-    notes: 今回は、マネージドIDの設定で一番悩んだのがResource URLだった、という質問をいただきました。Microsoft Learnの「Microsoft Entra IDを使用してAPIとコネクタを認証する」を読むと、Resource URLにhttps://management.core.windows.net/と書かれている。しかし、なぜこの値なのか分からない。サービスごとに決まっているなら、Azure AI Searchでは何を指定するのか、という質問です。この疑問を順番に解きます。
+    notes: 今回は、マネージドIDの設定で一番悩んだのがResource URLだった、という質問をいただきました。Microsoft LearnではResource URLにhttps://management.core.windows.net/と書く一方、実際のAPI要求はhttps://management.azure.com/へ送ります。URLで指定しているのに、なぜ投げ先と違うのか。最初から実際の投げ先をresourceへ入れれば分かりやすいのではないか。これが質問の中心です。
+  - id: identifier-not-location
+    title: URIは「場所」だけでなく「名前」にも使える
+    durationInFrames: 225
+    notes: 結論です。OAuthのresourceはHTTPの送信先ではなく、トークンを受け取るAPIの識別子です。RFC 8707もresourceを絶対URIで表し、そのURIはネットワーク上の場所である場合もあるが、単なる識別子でもよいとしています。URI形式を使うのは、APIの所有者がドメインやApp IDを使って衝突しにくい固有名を作れるからです。APIの身元は安定させたまま、実際のendpointはバージョン、リージョン、ゲートウェイなどで変えられます。これはマルチテナントが主因ではありません。単一テナントの独自APIでもapi://アプリIDのように、APIの識別子と通信先を分けます。マルチテナントでは同じAPIの身元を各テナントで共有できるため、この分離が特に便利になる、という順番です。
   - id: previous-focus
     title: 前回は「呼び出す側」を整理した
     durationInFrames: 205
