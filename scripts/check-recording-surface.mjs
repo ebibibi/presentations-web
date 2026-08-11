@@ -70,6 +70,14 @@ try {
   const browser = await chromium.launch()
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } })
   await page.goto(`${baseUrl}${deckPath}`)
+  await page.getByRole('button', { name: '撮影再生' }).click()
+  await page
+    .locator('.recording-surface [data-studio-bookend="hook"]')
+    .waitFor({ timeout: 5000 })
+  await page.waitForTimeout(800)
+  const hookScreenshot = `tmp/recording-surface-${deckSlug}-hook.png`
+  await page.screenshot({ path: hookScreenshot })
+  await page.reload()
   await page.getByRole('button', { name: '全画面撮影' }).click()
   await page.waitForFunction(() =>
     document.fullscreenElement?.classList.contains('recording-surface')
@@ -126,12 +134,32 @@ try {
     slideScreenshots.push(path)
   }
 
+  await page.keyboard.press('Shift+R')
+  await page
+    .locator('.recording-surface [data-studio-bookend="signoff"]')
+    .waitFor({ timeout: 5000 })
+  await page.waitForTimeout(800)
+  const signoffScreenshot = `tmp/recording-surface-${deckSlug}-signoff.png`
+  await page.screenshot({ path: signoffScreenshot })
+
+  const audiencePage = await browser.newPage({ viewport: { width: 1280, height: 900 } })
+  await audiencePage.goto(`${baseUrl}/decks/${deckSlug}`)
+  const publicBookendCount = await audiencePage.locator('[data-studio-bookend]').count()
+
+  if (publicBookendCount !== 0) {
+    throw new Error(`Audience mode rendered ${publicBookendCount} studio bookend(s)`)
+  }
+
+  await audiencePage.close()
+
   await browser.close()
 
   console.log('Recording surface check passed.')
   console.log(JSON.stringify(boxes, null, 2))
   console.log(`Screenshot: ${outputPath}`)
   console.log(`Slide screenshots: ${slideScreenshots.join(', ')}`)
+  console.log(`Hook screenshot: ${hookScreenshot}`)
+  console.log(`Sign-off screenshot: ${signoffScreenshot}`)
 } finally {
   server.close()
 }
