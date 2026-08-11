@@ -1,6 +1,6 @@
 slug: managed-identity-resource-url
 title: どのAPIをたたくのか？
-summary: 「誰がAPIを使うのか？」を扱ったM365アプリ登録入門の続編。次に意識したい「どのAPI向けのトークンを取り、実際にどこへ要求を送るのか」を、Microsoft GraphとAzure AI Searchの例で整理する。
+summary: 「誰がAPIを使うのか？」を扱ったM365アプリ登録入門の続編。Resource URLがAPIごとに違う理由と、アプリ登録からアクセストークンを使ってAPIを呼ぶまでの流れを整理する。
 status: draft
 visibility: public
 createdAt: "2026-08-11"
@@ -20,36 +20,24 @@ slides:
   - id: viewer-question
     title: Learnで突然出てきたResource URL
     durationInFrames: 210
-    notes: 質問の出発点は、Learnのカスタムコネクタ手順です。セキュリティ設定で突然「リソースURLにはmanagement.core.windows.netを、末尾のスラッシュまで正確に入力」と言われます。しかし普段このURLへAPI要求を送るわけではなく、なぜ必要なのか説明もありません。さらに調べると、Graphならgraph.microsoft.com、Azure AI Searchならsearch.azure.comのようにAPIごとに別の値が出てきます。この値は何を表し、どう選べばよいのか。それが今回の質問です。
+    notes: 質問の出発点は、Learnのカスタムコネクタ手順です。セキュリティ設定で突然「リソースURLにはhttps://management.core.windows.net/を、末尾のスラッシュまで正確に入力」と言われます。しかし普段このURLへAPI要求を送るわけではなく、なぜ必要なのか説明もありません。さらに調べると、Graphならgraph.microsoft.com、Azure AI Searchならsearch.azure.comのようにAPIごとに別の値が出てきます。この値は何を表し、どう選べばよいのか。それが今回の質問です。
   - id: acquisition-interfaces
     title: APIごとに決められたトークンの宛先名
     durationInFrames: 245
-    notes: 最初に答えます。Resource URLは、Bearer tokenを付けてHTTP要求を送る場所ではありません。Entra IDへ「どのAPI向けのアクセストークンが欲しいか」を伝える、APIごとに登録・定義されたresource identifierです。URL形式でも所在地ではなく名前として使われます。そのためARM、Graph、Searchで値が変わります。APIの提供側が定義するため、利用者はendpointから推測せず、対象APIとクラウドに対応する公式ドキュメントの値を使います。v1ではresourceへ指定し、v2ではscopeのresource部分として使います。
-  - id: recommended-path
-    title: 新規開発では何を使うか
-    durationInFrames: 210
-    notes: 新しく作るならSearch SDKなどのサービスクライアントへTokenCredentialを渡すのが基本です。DefaultAzureCredentialはcredential chainで、ローカルではAzure CLIなど、Azure上ではManaged Identityなど、利用可能なcredentialを選びます。つまりDefaultAzureCredential自体がv2 endpointを直接選ぶという意味ではありません。自分でv2 token endpointへHTTP要求を書く場合はscopeを使い、Searchのアプリ単独ならhttps://search.azure.com/.defaultです。自作コードかSDKかではなく、実際にどのトークン取得APIを使うかで入力形式が決まります。
+    notes: 最初に答えます。Resource URLはHTTP送信先を指定する項目ではなく、Entra IDへ「どのAPI向けのアクセストークンが欲しいか」を伝えるresource identifierです。値がendpointと一致する場合も、異なる場合もあります。そのためARM、Graph、Searchで値が変わります。APIの提供側が定義するため、利用者はendpointから推測せず、対象APIとクラウドに対応する公式ドキュメントの値を使います。
   - id: graph-bridge
     title: 前回のMicrosoft Graph例につなぐ
     durationInFrames: 230
-    notes: 前回のメール取得では、サインインしたユーザーの代理でGraphを呼ぶため、ユーザー委任のMail.Readを扱いました。v2ではhttps://graph.microsoft.com/Mail.Readのような名前付きscopeを要求し、/me/messagesを呼べます。一方、アプリ単独はGraphの/.defaultを要求し、/meは使えないため/users/{id}/messagesを呼びます。ここでGraph URLの/v1.0はGraph REST APIのバージョンであり、Entra OAuth v1 endpointとは無関係です。
-  - id: three-versions
-    title: 3種類のバージョンを混ぜない
-    durationInFrames: 220
-    notes: v1やv2という言葉も3種類あります。1つ目はトークンを要求するEntra OAuth endpointのv1/v2。2つ目はアクセストークンのver claim 1.0/2.0。これはAPI側が決めるため、v2 endpointへ要求してもver 1.0のアクセストークンが発行されることがあります。3つ目はGraphの/v1.0やSearchのapi-versionといった呼び出し先REST APIのバージョンです。3つは別物です。
+    notes: 前回のメール取得では、サインインした本人の代理でMicrosoft Graphを呼び、Mail.Readの許可を使いました。scope=https://graph.microsoft.com/Mail.Readのうち、graph.microsoft.comがトークンの対象APIを示す部分です。そのトークンを付けて、実際にはhttps://graph.microsoft.com/v1.0/me/messagesへ要求を送ります。Graphは識別子とendpointのホスト名が同じなので気づきにくいだけで、前回も「どのAPI向けのトークンか」は決まっていました。
   - id: identifier-endpoint
     title: トークンの対象とHTTP送信先は別
     durationInFrames: 230
-    notes: resource、またはv2 scopeのresource部分は、トークンをどのAPI向けに発行するかを示す識別子です。scope全体にはMail.Readなどのpermission名も含まれるため、scope全体がaudienceになるわけではありません。endpointはBearer tokenを付けて実際にHTTP要求を送る入口です。URIは場所だけでなく固有名にも使えます。マルチテナントだから分けたのが主因ではなく、単一テナントの独自APIでも識別子とendpointは分かれます。
+    notes: resource、またはscopeのresource部分は、トークンをどのAPI向けに発行するかを示す識別子です。scope全体にはMail.Readなどのpermission名も含まれるため、scope全体がaudienceになるわけではありません。endpointはBearer tokenを付けて実際にHTTP要求を送る入口です。Resource URLはトークンの相手、endpointは通信先という別の役割なので、一致する場合も違う場合もあります。
   - id: service-map
     title: Graph・ARM・Searchを対応表で見る
     durationInFrames: 245
-    notes: ここはAzure public cloudの具体例です。Microsoft Graphはtoken request値とendpointのホスト名が同じなので直感的です。質問元のPower Platformカスタムコネクタ手順は歴史的なResource URLとしてmanagement.core.windows.netを要求し、実際のARM endpointはmanagement.azure.comです。このlegacy文字列へ機械的に/.defaultを付けてはいけません。Searchのdata planeをアプリ単独で呼ぶscopeはsearch.azure.com/.default、endpointはサービス名.search.windows.netです。Search serviceの作成や設定を行うcontrol planeはARM、つまりmanagement.azure.com側です。
-  - id: managed-identity-flow
-    title: Managed IdentityでSearchを呼ぶ
-    durationInFrames: 230
-    notes: SearchClientへDefaultAzureCredentialを渡すと、credential chainが実行環境に合うcredentialを選びます。Azure上でManaged Identityが選ばれた場合はローカルブローカーからSearch向けアクセストークンを取得し、そのBearer tokenをサービス固有のdata endpointへ送ります。Search側ではRBAC認証を有効にし、検索だけならSearch Index Data Reader、文書更新ならSearch Index Data Contributor、index objectの管理ならSearch Service Contributorなど、操作に合うロールを割り当てます。
-  - id: recap
-    title: 実務での読み分け
-    durationInFrames: 190
-    notes: まとめです。oauth2/tokenとresourceならEntra v1の旧方式。oauth2/v2.0/tokenとscopeならv2です。ユーザー委任では名前付きscopeまたは/.defaultを利用でき、client credentialsではresource identifierに/.defaultを付けたscopeが必要です。Managed IdentityのローカルAPIにあるresourceは、そのブローカーのAPI契約です。DefaultAzureCredentialは複数credentialから選ぶchainです。発行されたアクセストークンのver、呼び出し先APIのバージョン、実際のHTTP endpointを混ぜません。新規開発ではサービスSDKとTokenCredentialを第一選択にします。
+    notes: ここはAzure public cloudの具体例です。Microsoft Graphのresource identifierはgraph.microsoft.com、質問元のPower Platformカスタムコネクタ手順ではARM向けにmanagement.core.windows.net、Azure AI Searchのdata planeではsearch.azure.comです。トークンの対象を示す識別子と実際のHTTP送信先を横に並べます。値はendpointから推測せず、対象APIの公式ドキュメントに書かれたものをそのまま使います。
+  - id: end-to-end-flow
+    title: Entra ID認証からAPIを呼ぶまで
+    durationInFrames: 300
+    notes: 最後に全体を一本につなぎます。まずアプリをEntra IDへ登録します。次に使うAPIと必要な権限を指定します。今回のResource URLは、トークンをどのAPI向けにするかを示す部分です。必要なConsentまたは権限付与を行います。誰が承認するか、いつ同意画面が出るか、RBACを使うかはAPIと権限方式によって異なります。アプリが動き、必要ならユーザーがサインインして、対象APIを指定したトークン要求をEntra IDへ送ります。Entra IDから受け取るアクセストークンの主要な情報には、対象APIを検証するaud、発行元とテナントのiss、ユーザートークンだけに入る委任scopeのscp、client credentialsのアプリケーショントークンで使われる権限のroles、有効期限のexpなどがあります。最後にアプリがAuthorizationヘッダーへトークンを付けて実際のAPI endpointへ送ります。APIは署名、発行元、有効期限、aud、権限を検証し、audが自分と一致しないトークンを拒否します。クライアントはMicrosoft API向けアクセストークンの中身へ依存せず、API側が検証します。

@@ -1,32 +1,41 @@
 reviewedAt: "2026-08-11"
 reviewer: "independent Codex context"
-reviewedContentSha256: e26869bc36ee734e80698e8011edbdc63ca471541caecbc5aade9350ca97c350
+reviewedContentSha256: f5f936a8978813e3b7993ccd0e0ede003f5eccb8a53a0eec56e663c68105d7ed
 files:
-  deck.yaml: 605bc66d5707d2a326e0cf6917addd49222ac2c83da97f9006cc0663d4940ca1
-  slides.tsx: 18750209cb44297ffdbbd0150d7422cc4f1e6ee8579755dbf202771f6cdf7d80
+  deck.yaml: a1a127618056963abc3cc5b6a156b51afbf39bb791080a5db5f7d599e46135a6
+  slides.tsx: 2b86568e311d909fe934db08968f568728cbdc4a191020cbcf88b447bdf36c3b
 factQa:
   result: pass
-  evidence: ARM Resource URL, Graph and Search resource identifiers, v1 resource, v2 scope, and client credentials /.default requirements match the cited Microsoft Learn sources.
+  evidence: The ARM, Graph, and Search target values and endpoint examples match the cited sources. The flow selects a target API without claiming that the Resource URL string must literally equal aud, and correctly assigns token validation to the API.
 semanticQa:
   source_faithfulness:
     result: pass
-    evidence: The displayed ARM, Graph, and Search values and the v1/v2 relationship match the supplied primary-source facts.
+    evidence: Each teaching claim is paired with the connector, Graph, RFC, Search, or token-claims source that supports it.
   japanese_clarity:
     result: pass
-    evidence: Slide 2 asks what the unfamiliar Resource URL means; slide 3 answers what it is, who defines it, and how to select it.
+    evidence: The deck consistently translates Resource URL as the token target name and endpoint as the HTTP entrance.
   taxonomy_challenge:
     result: pass
-    evidence: Resource identifier and scope are separated as v1 resource=identifier and v2 scope=identifier/permission.
+    evidence: Who calls, which API, permission, token, claim, and HTTP destination remain separate without reintroducing the v1/v2 taxonomy.
   first_time_teachback:
     result: pass
-    evidence: A first-time viewer can explain that the target API changes the identifier and that the official API documentation is authoritative.
+    evidence: A first-time viewer can explain that the provider defines the target API value, it may differ from the endpoint, and the official documentation is authoritative.
   presenter_usability:
     result: pass
-    evidence: The concrete Learn instruction creates the question and the next slide resolves it with three service examples and a selection rule.
+    evidence: The seven-slide order is question, short answer, familiar Graph example, distinction, service comparison, and complete flow, with one speaking point per slide.
+  sequence_focus:
+    result: pass
+    evidence: All seven slides directly support the Resource URL question; the SDK, version taxonomy, credential chain, and unrelated recap slides were removed.
+  final_six_step_flow:
+    result: pass
+    evidence: The final slide separates setup and approval from runtime authentication, connects steps 3 and 4, and traces target API selection through token issuance to API aud validation.
 humanReview:
-  result: changes_requested
-  evidence: The author clarified that the real question begins with the abrupt Resource URL field and the fact that other target APIs require different values; those changes are incorporated here.
+  result: pending
+  evidence: The latest requested slide removals and six-step closing flow are incorporated; awaiting the next human viewing pass.
 sources:
   - https://learn.microsoft.com/ja-jp/connectors/custom-connectors/azure-active-directory-authentication
   - https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc
-  - https://learn.microsoft.com/en-us/azure/search/agentic-retrieval-how-to-retrieve
+  - https://learn.microsoft.com/en-us/graph/api/user-list-messages
+  - https://learn.microsoft.com/ja-jp/azure/search/search-get-started-rbac
+  - https://datatracker.ietf.org/doc/html/rfc8707#section-2
+  - https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference

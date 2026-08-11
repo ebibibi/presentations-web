@@ -1,16 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
 import {
   ArrowRight,
-  Bot,
-  CheckCircle2,
-  Cloud,
-  Code2,
   Database,
   Fingerprint,
   Globe2,
   KeyRound,
   MessageCircleQuestion,
-  ShieldCheck,
+  Play,
+  Send,
+  Shield,
   TicketCheck,
   User
 } from 'lucide-react'
@@ -22,26 +20,19 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
   { render: (props) => <ViewerQuestionSlide {...props} /> },
   { render: (props) => <AcquisitionInterfacesSlide {...props} /> },
-  { render: (props) => <RecommendedPathSlide {...props} /> },
   { render: (props) => <GraphBridgeSlide {...props} /> },
-  { render: (props) => <ThreeVersionsSlide {...props} /> },
   { render: (props) => <IdentifierEndpointSlide {...props} /> },
   { render: (props) => <ServiceMapSlide {...props} /> },
-  { render: (props) => <ManagedIdentityFlowSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> }
+  { render: (props) => <EndToEndFlowSlide {...props} /> }
 ]
 
 const SOURCES = {
   connector: 'https://learn.microsoft.com/ja-jp/connectors/custom-connectors/azure-active-directory-authentication',
   scopes: 'https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc',
-  tokens: 'https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens',
-  appServiceMi: 'https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity',
-  search: 'https://learn.microsoft.com/ja-jp/azure/search/search-get-started-rbac',
   graphMessages: 'https://learn.microsoft.com/en-us/graph/api/user-list-messages',
-  graphMe: 'https://learn.microsoft.com/en-us/troubleshoot/entra/entra-id/users-groups-entra-apis/error-call-me-endpoint-microsoft-graph',
-  searchVersions: 'https://learn.microsoft.com/en-us/azure/search/search-api-versions',
-  msalMigration: 'https://learn.microsoft.com/ja-jp/entra/identity-platform/msal-migration',
-  resourceIndicators: 'https://datatracker.ietf.org/doc/html/rfc8707#section-2'
+  searchAuth: 'https://learn.microsoft.com/ja-jp/azure/search/search-get-started-rbac',
+  resourceIndicators: 'https://datatracker.ietf.org/doc/html/rfc8707#section-2',
+  tokenClaims: 'https://learn.microsoft.com/en-us/entra/identity-platform/access-token-claims-reference'
 }
 
 function entrance(frame: number, fps: number, delay = 0) {
@@ -73,11 +64,10 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       </div>
       <div className="mi-opening-ticket mi-opening-versions" style={lift(entrance(frame, fps, 26), 34)}>
         <TicketCheck size={74} />
-        <small>TOKEN REQUEST</small>
-        <code>v1 → resource</code>
-        <code>v2 → scope</code>
+        <small>RESOURCE URL</small>
+        <strong>どのAPI向けの<br />トークンか？</strong>
       </div>
-      <Source href={SOURCES.scopes}>Microsoft identity platform scopes</Source>
+      <Source href={SOURCES.connector}>Microsoft Learn · API とコネクタを認証する</Source>
     </section>
   )
 }
@@ -96,7 +86,7 @@ function ViewerQuestionSlide({ frame }: SlideRenderContext) {
         </blockquote>
       </div>
       <div className="mi-question-followup mi-question-followup-two" style={lift(entrance(frame, fps, 52), 18)}>
-        <strong>呼び出したい対象APIが変わると<br />resource identifierも変わる<br /><code>Graph → https://graph.microsoft.com</code></strong>
+        <strong>呼び出したい対象APIが変わると<br />「トークンの宛先名」も変わる<br /><code>Graph → https://graph.microsoft.com</code></strong>
         <strong>この「URL」は何を表し、<br />誰が決め、どう選ぶのか？</strong>
       </div>
       <Source href={SOURCES.connector}>API とコネクタを認証する</Source>
@@ -107,9 +97,9 @@ function ViewerQuestionSlide({ frame }: SlideRenderContext) {
 function AcquisitionInterfacesSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const resources = [
-    ['ARM · このLearn', 'https://management.core.windows.net/', '歴史的に使われるresource identifier'],
-    ['MICROSOFT GRAPH', 'https://graph.microsoft.com', 'Graph APIを表すresource identifier'],
-    ['AZURE AI SEARCH', 'https://search.azure.com', '公式scopeでは、この後ろに /.default']
+    ['ARM · このLearn', 'https://management.core.windows.net/', 'ARM向けトークンの宛先名'],
+    ['MICROSOFT GRAPH', 'https://graph.microsoft.com', 'Graph向けトークンの宛先名'],
+    ['AZURE AI SEARCH', 'https://search.azure.com', 'Search向けトークンの宛先名']
   ]
   return (
     <section className="remotion-slide mi-slide">
@@ -117,27 +107,8 @@ function AcquisitionInterfacesSlide({ frame }: SlideRenderContext) {
       <div className="mi-resource-identifiers">
         {resources.map(([tag, resource, note], i) => <div key={tag} style={lift(entrance(frame, fps, 18 + i * 13), 24)}><span>{tag}</span><code>{resource}</code><small>{note}</small></div>)}
       </div>
-      <div className="mi-resource-formats" style={lift(entrance(frame, fps, 62), 16)}><code>v1 · resource=〈識別子〉</code><code>v2 · scope=〈識別子〉/permission</code><strong>client credentialsは <code>/.default</code> 必須</strong></div>
       <div className="mi-resource-rule" style={lift(entrance(frame, fps, 68), 16)}><TicketCheck /><strong>API提供側が定義する</strong><span>endpointから推測せず、公式ドキュメントの値を使う</span></div>
-      <Source href={SOURCES.scopes}>Microsoft identity platform · resource identifier</Source>
-    </section>
-  )
-}
-
-function RecommendedPathSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide mi-slide">
-      <Header kicker="FOR NEW DEVELOPMENT" title="今から作るなら、SDK ＋ TokenCredential" frame={frame} />
-      <div className="mi-path-main" style={lift(entrance(frame, fps, 18), 28)}>
-        <Code2 /><div><span>第一選択</span><strong>SearchClientへ <code>DefaultAzureCredential</code> を渡す</strong><p>環境に合うcredentialをchainから選ぶ</p></div>
-      </div>
-      <div className="mi-path-options">
-        <div style={lift(entrance(frame, fps, 42), 22)}><Cloud /><span>v2へ直接HTTP</span><code>scope=https://search.azure.com/.default</code></div>
-        <div style={lift(entrance(frame, fps, 56), 22)}><Fingerprint /><span>生のManaged ID API</span><code>resource=https://search.azure.com</code><small>そのAPIの仕様に従う</small></div>
-      </div>
-      <p className="mi-punch"><code>DefaultAzureCredential</code> 自体は、<strong>「v2を直接選ぶ」の意味ではない。</strong></p>
-      <Source href={SOURCES.msalMigration}>Migrate applications to MSAL</Source>
+      <Source href={SOURCES.connector}>Microsoft Learn · Resource URL</Source>
     </section>
   )
 }
@@ -147,29 +118,16 @@ function GraphBridgeSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide mi-slide">
       <Header kicker="CONNECT TO THE PREVIOUS EPISODE" title="前回のGraphメール取得も、同じ構造" frame={frame} />
-      <div className="mi-graph-v2-grid">
-        <div style={lift(entrance(frame, fps, 18), 22)}><User /><span>ユーザー委任</span><strong>本人のメールを読む</strong><code>scope=https://graph.microsoft.com/Mail.Read</code><code>GET /v1.0/me/messages</code></div>
-        <div style={lift(entrance(frame, fps, 32), 22)}><Bot /><span>アプリ単独</span><strong>指定ユーザーのメールを読む</strong><code>scope=https://graph.microsoft.com/.default</code><code>GET /v1.0/users/{'{id}'}/messages</code></div>
+      <div className="mi-graph-layout">
+        <div className="mi-graph-questions">
+          <div style={lift(entrance(frame, fps, 18), 20)}><span>誰が</span><strong>サインインした本人</strong><User /></div>
+          <div style={lift(entrance(frame, fps, 30), 20)}><span>どのAPI</span><strong>Microsoft Graph</strong><code>https://graph.microsoft.com</code></div>
+          <div style={lift(entrance(frame, fps, 42), 20)}><span>何を許可</span><strong>メールの読み取り</strong><code>Mail.Read</code></div>
+        </div>
+        <div className="mi-graph-request" style={lift(entrance(frame, fps, 48), 20)}><Globe2 /><span>実際のHTTP送信先</span><code>GET https://graph.microsoft.com/<br />v1.0/me/messages</code><small>Graphは識別子とendpointのホスト名が同じ</small></div>
       </div>
-      <div className="mi-version-warning" style={lift(entrance(frame, fps, 62), 14)}><strong><code>/me</code> はアプリ単独では使えない</strong><span>Graphの <code>/v1.0</code> はREST API version。</span></div>
-      <Source href={SOURCES.graphMe}>Microsoft Graph · /me requires delegated access</Source>
-    </section>
-  )
-}
-
-function ThreeVersionsSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const rows = [
-    ['TOKEN REQUEST', 'Entra OAuth endpoint', '/oauth2/token ↔ /oauth2/v2.0/token'],
-    ['ACCESS TOKEN', 'ver claim', '"ver": "1.0" / "2.0"'],
-    ['API REQUEST', '呼び出し先APIのversion', 'Graph /v1.0 · Search api-version=...']
-  ]
-  return (
-    <section className="remotion-slide mi-slide">
-      <Header kicker="THREE DIFFERENT VERSIONS" title="v1 / v2という言葉も、3種類ある" frame={frame} />
-      <div className="mi-version-rows">{rows.map(([tag, title, value], i) => <div key={tag} style={lift(entrance(frame, fps, 18 + i * 14), 20)}><span>{tag}</span><strong>{title}</strong><code>{value}</code></div>)}</div>
-      <div className="mi-token-version-note" style={lift(entrance(frame, fps, 68), 16)}><ShieldCheck /><strong>v2 endpointへ要求しても、<code>ver: 1.0</code> のtokenはあり得る。</strong><span>token形式は受け取るAPI側が決める。</span></div>
-      <Source href={SOURCES.tokens}>Access token versions</Source>
+      <p className="mi-graph-bridge" style={lift(entrance(frame, fps, 68), 14)}>前回も、<strong>Graph向けのトークン</strong>を受け取り、Graphのendpointへ送っていた。</p>
+      <Source href={SOURCES.graphMessages}>Microsoft Graph · List messages</Source>
     </section>
   )
 }
@@ -180,10 +138,10 @@ function IdentifierEndpointSlide({ frame }: SlideRenderContext) {
     <section className="remotion-slide mi-slide">
       <Header kicker="IDENTITY ≠ LOCATION" title="トークンの対象と、HTTP送信先は別" frame={frame} />
       <div className="mi-uri-compare">
-        <div style={lift(entrance(frame, fps, 18), 24)}><Fingerprint /><span>RESOURCE / SCOPEのRESOURCE部分</span><strong>APIの識別子</strong><code>→ token の audience</code><small>scope全体にはpermission名も含まれる</small></div>
+        <div style={lift(entrance(frame, fps, 18), 24)}><Fingerprint /><span>RESOURCE URL</span><strong>トークンの宛先名</strong><code>→ token の対象APIを指定</code><small>API提供側が決めた値を使う</small></div>
         <div style={lift(entrance(frame, fps, 34), 24)}><Globe2 /><span>ENDPOINT URL</span><strong>HTTP通信の入口</strong><code>GET https://host/path</code><small>実際にBearer tokenを送る先</small></div>
       </div>
-      <div className="mi-multitenant-answer" style={lift(entrance(frame, fps, 66), 14)}><b>マルチテナントだから？</b><strong>主因ではない。</strong><span>URIを「場所」ではなく、衝突しにくい「名前」として使っている。</span></div>
+      <div className="mi-multitenant-answer" style={lift(entrance(frame, fps, 66), 14)}><b>大事な点</b><strong>役割が違う</strong><span>Resource URLはトークンの相手、endpointは実際の通信先。</span></div>
       <Source href={SOURCES.resourceIndicators}>RFC 8707 · Resource Indicators</Source>
     </section>
   )
@@ -192,58 +150,54 @@ function IdentifierEndpointSlide({ frame }: SlideRenderContext) {
 function ServiceMapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const rows = [
-    ['Graph · app-only', 'scope=https://graph.microsoft.com/.default', 'https://graph.microsoft.com/v1.0/...'],
-    ['ARM · 質問元connector', 'resource=https://management.core.windows.net/', 'https://management.azure.com/...'],
-    ['Search · data plane', 'scope=https://search.azure.com/.default', 'https://<service>.search.windows.net/...']
+    ['Microsoft Graph', 'https://graph.microsoft.com', 'https://graph.microsoft.com/v1.0/...'],
+    ['ARM · 質問元connector', 'https://management.core.windows.net/', 'https://management.azure.com/...'],
+    ['Azure AI Search', 'https://search.azure.com', 'https://<service>.search.windows.net/...']
   ]
   return (
     <section className="remotion-slide mi-slide">
       <Header kicker="RESOURCE TARGET vs ENDPOINT" title="同じに見える場合も、違う場合もある" frame={frame} />
       <div className="mi-service-table">
-        <div className="mi-service-head"><span>Azure public cloud例</span><span>token request値</span><span>実際のHTTP送信先</span></div>
+        <div className="mi-service-head"><span>Azure public cloud例</span><span>トークンの対象APIを示す値</span><span>実際のHTTP送信先</span></div>
         {rows.map(([service, target, endpoint], i) => <div key={service} style={lift(entrance(frame, fps, 18 + i * 14), 20)}><strong>{service}</strong><code>{target}</code><code>{endpoint}</code></div>)}
       </div>
-      <div className="mi-control-plane-note"><strong>Search control plane</strong><span>サービスの作成・設定はARM：<code>management.azure.com</code></span><b>legacy値へ機械的に <code>/.default</code> を足さない</b></div>
-      <Source href={SOURCES.searchVersions}>Azure AI Search · control and data planes</Source>
+      <div className="mi-control-plane-note"><strong>選び方</strong><span>endpointから推測せず、対象APIの公式ドキュメントに書かれた値をそのまま使う</span></div>
+      <div className="mi-source mi-source-list">Sources · <a href={SOURCES.connector} target="_blank" rel="noreferrer">ARM</a> · <a href={SOURCES.scopes} target="_blank" rel="noreferrer">Graph</a> · <a href={SOURCES.searchAuth} target="_blank" rel="noreferrer">Search</a></div>
     </section>
   )
 }
 
-function ManagedIdentityFlowSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide mi-slide">
-      <Header kicker="AZURE AI SEARCH · DATA PLANE" title="credential chainからSearchへ" frame={frame} />
-      <div className="mi-credential-flow">
-        <div className="mi-credential-primary">
-          <div style={lift(entrance(frame, fps, 14), 20)}><Code2 /><strong>SearchClient</strong><span>TokenCredentialを受け取る</span></div><ArrowRight />
-          <div style={lift(entrance(frame, fps, 28), 20)}><KeyRound /><strong>DefaultAzureCredential</strong><span>利用可能なcredentialを選択</span></div>
-        </div>
-        <div className="mi-credential-secondary">
-          <div className="mi-credential-choice" style={lift(entrance(frame, fps, 40), 18)}><Cloud /><strong>ローカル</strong><span>Azure CLIなど</span><Fingerprint /><strong>Azure上</strong><span>Managed Identity broker</span></div><ArrowRight />
-          <div style={lift(entrance(frame, fps, 52), 20)}><TicketCheck /><strong>Entra ID</strong><span>Search向けtoken</span></div><ArrowRight />
-          <div style={lift(entrance(frame, fps, 64), 20)}><Database /><strong>Search data endpoint</strong><code>&lt;service&gt;.search.windows.net</code></div>
-        </div>
-      </div>
-      <div className="mi-rbac-chips" style={lift(entrance(frame, fps, 78), 14)}><span>検索: <b>Index Data Reader</b></span><span>文書更新: <b>Index Data Contributor</b></span><span>index管理: <b>Search Service Contributor</b></span></div>
-      <Source href={SOURCES.search}>Azure AI Search · RBAC quickstart</Source>
-    </section>
-  )
-}
+type FlowStep = { no: string; icon: React.ReactNode; title: string; body: string; accent?: boolean; token?: boolean }
 
-function RecapSlide({ frame }: SlideRenderContext) {
+function EndToEndFlowSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const points = [
-    ['ENTRA v1', '/oauth2/token', 'resource=...'],
-    ['ENTRA v2', '/oauth2/v2.0/token', '委任: named / .default\nclient credentials: /.default 必須'],
-    ['MANAGED IDENTITY', 'local broker API', 'resource=... が残る'],
-    ['SDK', 'DefaultAzureCredential', 'credential chainから選ぶ']
+  const setupSteps: FlowStep[] = [
+    { no: '1', icon: <Fingerprint />, title: 'アプリを登録', body: 'Entra IDにアプリの身元を作る' },
+    { no: '2', icon: <TicketCheck />, title: '使うAPIを指定', body: '対象API（Resource URL）と必要な権限を決める', accent: true },
+    { no: '3', icon: <Shield />, title: 'Consent / 権限付与', body: 'APIと権限方式に応じて、必要なアクセスを承認する' }
   ]
+  const runtimeSteps: FlowStep[] = [
+    { no: '4', icon: <Play />, title: '認証してtoken要求', body: 'アプリが動き、必要ならサインイン。対象APIを指定してEntra IDへ要求' },
+    { no: '5', icon: <KeyRound />, title: '対象API向けtoken', body: 'Entra IDが対象API向けに発行', token: true },
+    { no: '6', icon: <Send />, title: 'endpointへ送る', body: 'Bearerで送り、APIがaud・期限・署名・権限を検証' }
+  ]
+  const renderStep = (step: FlowStep, i: number) => (
+    <div className={`mi-e2e-step${step.accent ? ' is-accent' : ''}${step.token ? ' has-token' : ''}`} key={step.no} style={lift(entrance(frame, fps, 12 + (Number(step.no) - 1) * 9), 18)}>
+      <span className="mi-e2e-number">{step.no}</span>{step.icon}<strong>{step.title}</strong><p>{step.body}</p>
+      {step.token && <code><b>aud</b> 対象APIを検証 / <b>iss</b> 発行元・テナント<br /><b>scp・roles</b> 許可された操作 / <b>exp</b> 有効期限<small>scp: ユーザー委任 / roles: アプリ単独</small></code>}
+      {i < 2 && <ArrowRight className="mi-e2e-arrow" />}
+    </div>
+  )
   return (
-    <section className="remotion-slide mi-slide mi-recap mi-recap-v2">
-      <div className="mi-recap-head" style={lift(entrance(frame, fps), 34)}><LogoMark className="mi-recap-logo" /><span>TAKEAWAY</span><h1>名前が似ても、<br /><em>層を分ける。</em></h1></div>
-      <div className="mi-recap-points mi-recap-points-four">{points.map(([tag, title, value], i) => <div key={tag} style={lift(entrance(frame, fps, 18 + i * 11), 20)}><span>{tag}</span><strong>{title}</strong><code>{value}</code></div>)}</div>
-      <div className="mi-final-answer" style={lift(entrance(frame, fps, 74), 16)}><CheckCircle2 /><strong>新規開発はサービスSDK＋TokenCredentialを第一選択。</strong><span>token取得窓口、access tokenのver、API version、endpointを混ぜない。</span></div>
+    <section className="remotion-slide mi-slide mi-end-to-end">
+      <Header kicker="THE WHOLE FLOW" title="Entra ID認証から、APIをたたくまで" frame={frame} />
+      <div className="mi-e2e-flow">
+        <div className="mi-e2e-band"><span>設定・承認</span>{setupSteps.map(renderStep)}</div>
+        <ArrowRight className="mi-e2e-phase-arrow" />
+        <div className="mi-e2e-band is-runtime"><span>実行・認証</span>{runtimeSteps.map(renderStep)}</div>
+      </div>
+      <div className="mi-e2e-answer" style={lift(entrance(frame, fps, 78), 14)}><Database /><strong>② 対象APIを指定 → ⑤ 対象API向けtoken → ⑥ APIがaudを検証</strong><span>Resource URLは、この流れで「どのAPI向けか」を指定する値。</span></div>
+      <Source href={SOURCES.tokenClaims}>Microsoft identity platform · access token claims</Source>
     </section>
   )
 }
