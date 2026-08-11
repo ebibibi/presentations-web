@@ -1,6 +1,6 @@
 slug: managed-identity-resource-url
 title: マネージドIDの「リソースURL」とは何か
-summary: Microsoft Learnに出てくる https://management.core.windows.net/ は何を意味するのか。リソースURLをアクセストークンの宛名として理解し、endpoint、audience、Azure resource IDの違いをAzure AI Searchの具体例で整理する。
+summary: 前回の「なぜApplication IDが必要か」「ユーザー委任かアプリ単独か」を土台に、呼び出す側とは別に「どのAPI向けのトークンか」を決めるResource URLを解説する。Microsoft Learnの https://management.core.windows.net/ とAzure AI Searchを具体例に、audience、endpoint、Azure resource IDを整理する。
 status: draft
 visibility: public
 createdAt: "2026-08-11"
@@ -14,21 +14,21 @@ tags:
   - azure-ai-search
 slides:
   - id: opening
-    title: リソースURLは「接続先URL」ではない
+    title: 前回の「誰が？」から今回の「誰向け？」へ
     durationInFrames: 190
-    notes: M365アプリ登録入門の補完回です。Microsoft LearnでマネージドIDを設定したとき、リソースURLに management.core.windows.net と書かれていて混乱した、という質問をいただきました。結論から言うと、これはHTTPの接続先ではなく、アクセストークンを誰向けに発行するかを示す宛名です。
-  - id: the-confusion
-    title: URLが3つ出てくる
-    durationInFrames: 190
-    notes: 混乱の原因は、どれもURLの形をしているのに役割が違うことです。APIへ実際に送るendpoint、トークンの宛名であるaudienceまたはresource、Azure上の個別リソースを示すresource ID。この3つを先に分けると一気に理解しやすくなります。
-  - id: one-sentence
-    title: リソースURLはトークンの宛名
-    durationInFrames: 185
-    notes: マネージドIDは誰が呼ぶか、リソースURLはそのトークンを誰向けに発行するか、RBACは何を許すかを担当します。封筒にたとえるなら、マネージドIDが差出人、resourceが宛名、RBACが許可内容です。
+    notes: M365アプリ登録入門の補完回です。前回は、なぜアプリにもIDが必要なのか、そしてユーザー委任なのかアプリ単独なのか、つまり「誰が、どのアプリを使って呼ぶのか」に集中しました。今回は、その呼び出す側が決まった後に必要な「どのAPI向けのトークンを取るのか」を説明します。これがResource URLです。
+  - id: previous-focus
+    title: 前回は「呼び出す側」を整理した
+    durationInFrames: 205
+    notes: 前回のおさらいです。Application IDは接続するソフトウェアを区別するために必要です。ユーザー委任ではユーザーがアプリを使い、アプリがユーザーの代理でAPIを呼びます。アプリ単独では人がいない状態で、アプリまたはAzureリソース自身のIDでAPIを呼びます。Managed Identityは、この後者でAzureリソース自身を識別・認証する手段です。前回決めたのは呼び出す主体です。
+  - id: missing-question
+    title: 呼び出す側とは別に、受け取るAPIを決める
+    durationInFrames: 205
+    notes: ユーザー委任かアプリ単独かが決まっても、まだトークンの受取人が決まっていません。Microsoft Graph向けなのか、Azure Resource Manager向けなのか、Azure AI Search向けなのかをEntra IDへ伝える必要があります。Resource URLは「誰が使うか」の答えではなく、その次の独立した問い「どのAPI向けか」の答えです。権限はさらに別の問いです。
   - id: token-flow
     title: resourceがaudになるまで
     durationInFrames: 205
-    notes: 呼び出し元がマネージドIDのトークンエンドポイントへresourceを指定します。Entra IDがアクセストークンを発行し、その対象はaudクレームに入ります。APIは受け取ったトークンのaudが自分向けかを検証します。違えば、正しいIDやRBACがあっても受け付けません。
+    notes: 前回整理した呼び出し元が、マネージドIDのトークンエンドポイントへresourceを指定します。Entra IDがアクセストークンを発行し、その対象はaudクレームに入ります。APIは受け取ったトークンのaudが自分向けかを検証します。呼び出し元のIDが正しくても、audが別のAPI向けなら受け付けられません。
   - id: three-identifiers
     title: endpoint・audience・resource ID
     durationInFrames: 215
@@ -58,6 +58,6 @@ slides:
     durationInFrames: 215
     notes: まず管理プレーンかデータプレーンか、次にトークンのaud、次にendpoint、最後にRBACを確認します。401ならトークンの宛名や認証を疑い、403ならロールや対象スコープを疑います。ただし実際のエラー本文を優先し、ステータスコードだけで断定はしません。ロール反映には時間がかかる場合があります。
   - id: recap
-    title: URLではなく役割で読む
+    title: 3つの問いを混ぜない
     durationInFrames: 190
-    notes: まとめです。resourceはトークンの宛名、endpointは通信先、Azure resource IDは管理対象の住所です。Learnの値はそのページがARMを呼ぶから。Azure AI Searchではsearch.azure.comがaudienceです。値を推測せず、対象サービスの公式scopeまたはresourceを正確に使います。
+    notes: まとめです。前回は「誰が、どのアプリで呼ぶか」をユーザー委任とアプリ単独で整理しました。今回は「どのAPI向けのトークンか」をResource URLで指定します。そしてPermissionやRBACが「何を許すか」を決めます。この3つを混ぜません。Learnの値がmanagement.core.windows.netなのは、そのページがARMを呼ぶからです。Azure AI Searchならsearch.azure.comがaudienceです。
