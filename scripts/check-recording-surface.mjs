@@ -74,6 +74,12 @@ try {
     .locator('.recording-surface [data-studio-bookend="hook"]')
     .waitFor({ timeout: 5000 })
   await assertVisibleBookend(page, 'hook')
+  await page.getByRole('button', { name: '撮影再生' }).click()
+  await page.waitForTimeout(400)
+  await page.keyboard.press('Home')
+  await assertVisibleBookend(page, 'hook')
+  await page.waitForTimeout(5200)
+  await assertVisibleBookend(page, 'hook')
   await page.waitForTimeout(800)
   const hookScreenshot = `tmp/recording-surface-${deckSlug}-hook.png`
   await page.screenshot({ path: hookScreenshot })
@@ -148,6 +154,9 @@ try {
   await page
     .locator('.recording-surface [data-studio-bookend="signoff"]')
     .waitFor({ timeout: 5000 })
+  await assertVisibleBookend(page, 'signoff')
+  await page.waitForTimeout(6200)
+  await assertVisibleBookend(page, 'signoff')
   await page.waitForTimeout(800)
   const signoffScreenshot = `tmp/recording-surface-${deckSlug}-signoff.png`
   await page.screenshot({ path: signoffScreenshot })

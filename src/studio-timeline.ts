@@ -2,7 +2,6 @@ import type { DeckBundle } from './types'
 
 export const studioIntroFrames = 150
 export const studioOutroFrames = 180
-export const studioHookPreviewFrame = 30
 
 export function getDeckDuration(deck: DeckBundle) {
   return deck.meta.slides.reduce(

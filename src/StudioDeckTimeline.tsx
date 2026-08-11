@@ -1,9 +1,8 @@
-import { AbsoluteFill, Sequence, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion'
+import { AbsoluteFill, Sequence, useCurrentFrame } from 'remotion'
 import { DeckTimeline } from './DeckTimeline'
 import {
   getDeckDuration,
-  studioIntroFrames,
-  studioOutroFrames
+  studioIntroFrames
 } from './studio-timeline'
 import type { DeckBundle } from './types'
 
@@ -17,8 +16,6 @@ export function StudioDeckTimeline({ deck }: { deck: DeckBundle }) {
       {frame < studioIntroFrames ? (
         <StudioBookend
           kind="hook"
-          frame={frame}
-          durationInFrames={studioIntroFrames}
           deckTitle={deck.meta.title}
         />
       ) : null}
@@ -28,8 +25,6 @@ export function StudioDeckTimeline({ deck }: { deck: DeckBundle }) {
       {frame >= outroStart ? (
         <StudioBookend
           kind="signoff"
-          frame={frame - outroStart}
-          durationInFrames={studioOutroFrames}
           deckTitle={deck.meta.title}
         />
       ) : null}
@@ -39,23 +34,11 @@ export function StudioDeckTimeline({ deck }: { deck: DeckBundle }) {
 
 function StudioBookend({
   kind,
-  frame,
-  durationInFrames,
   deckTitle
 }: {
   kind: 'hook' | 'signoff'
-  frame: number
-  durationInFrames: number
   deckTitle: string
 }) {
-  const { fps } = useVideoConfig()
-  const reveal = spring({ frame, fps, config: { damping: 18, stiffness: 90 } })
-  const fadeOut = interpolate(
-    frame,
-    [durationInFrames - 20, durationInFrames - 1],
-    [1, 0],
-    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
-  )
   const isHook = kind === 'hook'
 
   return (
@@ -70,7 +53,6 @@ function StudioBookend({
         display: 'flex',
         fontFamily: '"Noto Sans JP", "Yu Gothic UI", "Segoe UI", sans-serif',
         justifyContent: 'center',
-        opacity: fadeOut,
         overflow: 'hidden'
       }}
     >
@@ -80,9 +62,7 @@ function StudioBookend({
           display: 'flex',
           flexDirection: 'column',
           maxWidth: 1040,
-          opacity: reveal,
-          textAlign: 'center',
-          transform: `translateY(${(1 - reveal) * 30}px)`
+          textAlign: 'center'
         }}
       >
         <span
