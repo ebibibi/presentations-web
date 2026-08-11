@@ -70,10 +70,10 @@ try {
   const browser = await chromium.launch()
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } })
   await page.goto(`${baseUrl}${deckPath}`)
-  await page.getByRole('button', { name: '撮影再生' }).click()
   await page
     .locator('.recording-surface [data-studio-bookend="hook"]')
     .waitFor({ timeout: 5000 })
+  await assertVisibleBookend(page, 'hook')
   await page.waitForTimeout(800)
   const hookScreenshot = `tmp/recording-surface-${deckSlug}-hook.png`
   await page.screenshot({ path: hookScreenshot })
@@ -82,6 +82,10 @@ try {
   await page.waitForFunction(() =>
     document.fullscreenElement?.classList.contains('recording-surface')
   )
+  await page
+    .locator('.recording-surface [data-studio-bookend="hook"]')
+    .waitFor({ timeout: 5000 })
+  await assertVisibleBookend(page, 'hook')
 
   const boxes = await page.evaluate(() => {
     const surface = document.querySelector('.recording-surface')?.getBoundingClientRect()
@@ -116,6 +120,12 @@ try {
 
   await page.screenshot({ path: outputPath })
   const totalSlides = await getTotalSlides(page)
+  await page.keyboard.press('ArrowRight')
+  await page
+    .locator('.recording-notes-count')
+    .filter({ hasText: `1 / ${totalSlides}` })
+    .waitFor({ timeout: 30000 })
+  await page.waitForTimeout(400)
   const slideScreenshots = [`${slideOutputPrefix}-1.png`]
   await page.screenshot({ path: slideScreenshots[0] })
 
@@ -134,7 +144,7 @@ try {
     slideScreenshots.push(path)
   }
 
-  await page.keyboard.press('Shift+R')
+  await page.keyboard.press('ArrowRight')
   await page
     .locator('.recording-surface [data-studio-bookend="signoff"]')
     .waitFor({ timeout: 5000 })
@@ -181,6 +191,17 @@ function assertBox(actual, expected, label) {
       )
     }
   }
+}
+
+async function assertVisibleBookend(page, kind) {
+  await page.waitForFunction((bookendKind) => {
+    const element = document.querySelector(`[data-studio-bookend="${bookendKind}"]`)
+    if (!element) {
+      return false
+    }
+
+    return Number.parseFloat(window.getComputedStyle(element).opacity) >= 0.9
+  }, kind)
 }
 
 async function getTotalSlides(page) {
