@@ -32,19 +32,22 @@ export function StudioDeckTimeline({ deck }: { deck: DeckBundle }) {
   )
 }
 
-function StudioBookend({
+export function StudioBookend({
   kind,
-  deckTitle
+  deckTitle,
+  overlay = false
 }: {
   kind: 'hook' | 'signoff'
   deckTitle: string
+  overlay?: boolean
 }) {
   const isHook = kind === 'hook'
 
   return (
     <AbsoluteFill
       className={`studio-bookend studio-bookend-${kind}`}
-      data-studio-bookend={kind}
+      data-studio-bookend={overlay ? undefined : kind}
+      data-studio-bookend-overlay={overlay ? kind : undefined}
       style={{
         alignItems: 'center',
         background:

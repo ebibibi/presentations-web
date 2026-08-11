@@ -1,9 +1,9 @@
 reviewedAt: "2026-08-11"
-reviewer: "independent Codex context"
-reviewedContentSha256: f5f936a8978813e3b7993ccd0e0ede003f5eccb8a53a0eec56e663c68105d7ed
+reviewer: "independent Codex context and final human publication approval"
+reviewedContentSha256: 1d5c9e8f7339d423b10e355dea48d089fe3d5243171b828a8166c7d02185d17d
 files:
-  deck.yaml: a1a127618056963abc3cc5b6a156b51afbf39bb791080a5db5f7d599e46135a6
-  slides.tsx: 2b86568e311d909fe934db08968f568728cbdc4a191020cbcf88b447bdf36c3b
+  deck.yaml: d2ca9753e9e2ad02cf4e0b2166845691391f77b77a2eea0c952a63440ba5344a
+  slides.tsx: d50544860b1760233b31360752535b48eac1b6de6bb769d8ea16f34620a7a947
 factQa:
   result: pass
   evidence: The ARM, Graph, and Search target values and endpoint examples match the cited sources. The flow selects a target API without claiming that the Resource URL string must literally equal aud, and correctly assigns token validation to the API.
@@ -22,16 +22,16 @@ semanticQa:
     evidence: A first-time viewer can explain that the provider defines the target API value, it may differ from the endpoint, and the official documentation is authoritative.
   presenter_usability:
     result: pass
-    evidence: The seven-slide order is question, short answer, familiar Graph example, distinction, service comparison, and complete flow, with one speaking point per slide.
+    evidence: The eight-slide order is question, short answer, familiar Graph example, distinction, service comparison, complete flow, and a clearly separated promotion, with one speaking point per slide.
   sequence_focus:
     result: pass
-    evidence: All seven slides directly support the Resource URL question; the SDK, version taxonomy, credential chain, and unrelated recap slides were removed.
+    evidence: Seven teaching slides directly support the Resource URL question; the eighth is an intentionally separated closing promotion. The SDK, version taxonomy, credential chain, and unrelated recap slides remain removed.
   final_six_step_flow:
     result: pass
     evidence: The final slide separates setup and approval from runtime authentication, connects steps 3 and 4, and traces target API selection through token issuance to API aud validation.
 humanReview:
-  result: pending
-  evidence: The latest requested slide removals and six-step closing flow are incorporated; awaiting the next human viewing pass.
+  result: pass
+  evidence: The user approved publication after requesting the final promotion slide and declined further review.
 sources:
   - https://learn.microsoft.com/ja-jp/connectors/custom-connectors/azure-active-directory-authentication
   - https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc
