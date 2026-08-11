@@ -1,0 +1,63 @@
+slug: managed-identity-resource-url
+title: マネージドIDの「リソースURL」とは何か
+summary: Microsoft Learnに出てくる https://management.core.windows.net/ は何を意味するのか。リソースURLをアクセストークンの宛名として理解し、endpoint、audience、Azure resource IDの違いをAzure AI Searchの具体例で整理する。
+status: draft
+visibility: public
+createdAt: "2026-08-11"
+updatedAt: "2026-08-11"
+order: 103
+tags:
+  - azure
+  - managed-identity
+  - entra-id
+  - oauth
+  - azure-ai-search
+slides:
+  - id: opening
+    title: リソースURLは「接続先URL」ではない
+    durationInFrames: 190
+    notes: M365アプリ登録入門の補完回です。Microsoft LearnでマネージドIDを設定したとき、リソースURLに management.core.windows.net と書かれていて混乱した、という質問をいただきました。結論から言うと、これはHTTPの接続先ではなく、アクセストークンを誰向けに発行するかを示す宛名です。
+  - id: the-confusion
+    title: URLが3つ出てくる
+    durationInFrames: 190
+    notes: 混乱の原因は、どれもURLの形をしているのに役割が違うことです。APIへ実際に送るendpoint、トークンの宛名であるaudienceまたはresource、Azure上の個別リソースを示すresource ID。この3つを先に分けると一気に理解しやすくなります。
+  - id: one-sentence
+    title: リソースURLはトークンの宛名
+    durationInFrames: 185
+    notes: マネージドIDは誰が呼ぶか、リソースURLはそのトークンを誰向けに発行するか、RBACは何を許すかを担当します。封筒にたとえるなら、マネージドIDが差出人、resourceが宛名、RBACが許可内容です。
+  - id: token-flow
+    title: resourceがaudになるまで
+    durationInFrames: 205
+    notes: 呼び出し元がマネージドIDのトークンエンドポイントへresourceを指定します。Entra IDがアクセストークンを発行し、その対象はaudクレームに入ります。APIは受け取ったトークンのaudが自分向けかを検証します。違えば、正しいIDやRBACがあっても受け付けません。
+  - id: three-identifiers
+    title: endpoint・audience・resource ID
+    durationInFrames: 215
+    notes: Azure AI Searchを例に3種類を並べます。endpointはサービス固有のsearch.windows.net。audienceは全サービス共通のsearch.azure.com。Azure resource IDはsubscriptionから始まる管理上の住所です。URLらしく見えるかどうかではなく役割で見分けます。
+  - id: why-core
+    title: なぜLearnはmanagement.core.windows.netなのか
+    durationInFrames: 205
+    notes: 質問のLearnページは、任意のAzureサービスを呼ぶ一般例ではありません。Azure Resource Manager APIのList all subscriptionsをカスタムコネクタとして登録するチュートリアルです。そのためResource URLにもARMを表す識別子が入っています。Azure全体の共通値ではありません。
+  - id: arm-two-urls
+    title: ARMでも2つのURLが見える
+    durationInFrames: 210
+    notes: 実際のResource Manager REST endpointはmanagement.azure.comです。一方、質問のコネクタ手順はresourceにmanagement.core.windows.netを指定します。現在のマネージドID公式例ではresourceにmanagement.azure.comを使う例もあります。似たURLを自己判断で置換せず、自分の認証方式と操作に対応する最新公式手順へ従います。
+  - id: two-planes
+    title: 管理プレーンとデータプレーン
+    durationInFrames: 210
+    notes: 同じAzure AI Searchでも、サービスを作成・設定する操作は管理プレーン、インデックスを検索する操作はデータプレーンです。どちらを呼ぶかでendpoint、audience、必要なRBACロールが変わります。まず操作を一文で言えるようにするのが最初の一歩です。
+  - id: search-answer
+    title: Azure AI Searchの正しい対応表
+    durationInFrames: 220
+    notes: 公開AzureでSearchのデータプレーンを呼ぶ場合、audienceまたはresourceはhttps://search.azure.com、v2のscopeはhttps://search.azure.com/.default、実際のendpointはサービス固有のhttps://サービス名.search.windows.netです。この3つが違っていて正常です。
+  - id: search-flow
+    title: Searchを呼ぶ最小フロー
+    durationInFrames: 215
+    notes: マネージドIDでSearch向けトークンを要求し、そのBearerトークンをサービス固有endpointへ送ります。さらにマネージドIDへSearch Index Data Readerなど必要最小限のデータプレーンロールを割り当てます。宛名が正しいことと、権限があることは別問題です。
+  - id: troubleshooting
+    title: 401と403を順番に切り分ける
+    durationInFrames: 215
+    notes: まず管理プレーンかデータプレーンか、次にトークンのaud、次にendpoint、最後にRBACを確認します。401ならトークンの宛名や認証を疑い、403ならロールや対象スコープを疑います。ただし実際のエラー本文を優先し、ステータスコードだけで断定はしません。ロール反映には時間がかかる場合があります。
+  - id: recap
+    title: URLではなく役割で読む
+    durationInFrames: 190
+    notes: まとめです。resourceはトークンの宛名、endpointは通信先、Azure resource IDは管理対象の住所です。Learnの値はそのページがARMを呼ぶから。Azure AI Searchではsearch.azure.comがaudienceです。値を推測せず、対象サービスの公式scopeまたはresourceを正確に使います。
