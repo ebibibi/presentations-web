@@ -17,7 +17,6 @@ import { DeckTimeline } from './DeckTimeline'
 import { StudioDeckTimeline } from './StudioDeckTimeline'
 import {
   getStudioTimelineDuration,
-  studioHookPreviewFrame,
   studioIntroFrames,
   studioOutroFrames
 } from './studio-timeline'
@@ -85,8 +84,14 @@ export function DeckViewer({
     recordingPlayerRef.current?.seekTo(frame + studioIntroFrames)
   }, [isStudio])
 
+  const pausePlayers = useCallback(() => {
+    playerRef.current?.pause()
+    recordingPlayerRef.current?.pause()
+  }, [])
+
   const animatePlayersToFrame = useCallback(
     (fromFrame: number, toFrame: number, onComplete: () => void) => {
+      pausePlayers()
       if (smoothSeekRef.current !== null) {
         window.cancelAnimationFrame(smoothSeekRef.current)
       }
@@ -114,7 +119,7 @@ export function DeckViewer({
 
       smoothSeekRef.current = window.requestAnimationFrame(step)
     },
-    [setPlayersFrame]
+    [pausePlayers, setPlayersFrame]
   )
 
   const goToSlide = useCallback(
@@ -150,17 +155,19 @@ export function DeckViewer({
   )
 
   const showStudioHook = useCallback(() => {
+    pausePlayers()
     setStudioCue('hook')
-    playerRef.current?.seekTo(studioHookPreviewFrame)
-    recordingPlayerRef.current?.seekTo(studioHookPreviewFrame)
-  }, [])
+    playerRef.current?.seekTo(0)
+    recordingPlayerRef.current?.seekTo(0)
+  }, [pausePlayers])
 
   const showStudioSignoff = useCallback(() => {
+    pausePlayers()
     const signoffFrame = studioIntroFrames + totalFrames + Math.min(30, studioOutroFrames - 1)
     setStudioCue('signoff')
     playerRef.current?.seekTo(signoffFrame)
     recordingPlayerRef.current?.seekTo(signoffFrame)
-  }, [totalFrames])
+  }, [pausePlayers, totalFrames])
 
   const goRelative = useCallback(
     (delta: number) => {
@@ -287,7 +294,7 @@ export function DeckViewer({
       ? `終了 / ${deck.meta.slides.length}`
       : `${slideIndex + 1} / ${deck.meta.slides.length}`
   const studioDisplayFrame = studioCue === 'hook'
-    ? studioHookPreviewFrame
+    ? 0
     : studioCue === 'signoff'
       ? studioIntroFrames + totalFrames + Math.min(30, studioOutroFrames - 1)
       : getSlideSettledFrame(slideIndex) + studioIntroFrames
