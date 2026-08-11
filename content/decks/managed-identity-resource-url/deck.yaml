@@ -1,6 +1,6 @@
 slug: managed-identity-resource-url
-title: resource と scope を混ぜない
-summary: Entra IDのv1 endpointで使うresource、v2 endpointで使うscope、Managed IdentityのローカルトークンAPIに残るresourceを明確に分離する。前回のMicrosoft Graphメール取得例からAzure AI Searchへつなぎ、トークンの対象と実際のAPI endpointが違う理由を10枚で整理する。
+title: どのAPIをたたくのか？
+summary: 「誰がAPIを使うのか？」を扱ったM365アプリ登録入門の続編。次に意識したい「どのAPI向けのトークンを取り、実際にどこへ要求を送るのか」を、Microsoft GraphとAzure AI Searchの例で整理する。
 status: draft
 visibility: public
 createdAt: "2026-08-11"
@@ -14,9 +14,9 @@ tags:
   - azure-ai-search
 slides:
   - id: opening
-    title: resource と scope を混ぜない
+    title: どのAPIをたたくのか？
     durationInFrames: 180
-    notes: 前回の「M365アプリ登録入門」の補完回です。前回は、なぜアプリにもIDが必要なのか、ユーザー委任なのかアプリ単独なのか、つまり「誰がAPIを呼ぶか」に集中しました。今回は「どのAPI向けのトークンを取るか」です。ただしresourceとscopeを同じ話として混ぜると分かりにくくなるため、まずEntra IDのv1とv2を明確に分けます。
+    notes: 前回の「M365アプリ登録入門」では、なぜアプリにもIDが必要なのか、ユーザー委任なのかアプリ単独なのか、つまり「誰がAPIを呼ぶか」に集中しました。今回は、その次に意識したい「どのAPIをたたくのか」です。トークンをどのAPI向けに取り、実際にどこへ要求を送るのか。その入り口としてresourceとscopeを整理します。
   - id: viewer-question
     title: 今回いただいた質問
     durationInFrames: 210

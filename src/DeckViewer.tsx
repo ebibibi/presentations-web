@@ -17,6 +17,7 @@ import { DeckTimeline } from './DeckTimeline'
 import { StudioDeckTimeline } from './StudioDeckTimeline'
 import {
   getStudioTimelineDuration,
+  studioHookPreviewFrame,
   studioIntroFrames,
   studioOutroFrames
 } from './studio-timeline'
@@ -27,6 +28,7 @@ const fps = 30
 const settledFrameOffset = 112
 
 type ViewerMode = 'audience' | 'studio'
+type StudioCue = 'hook' | 'signoff' | null
 
 export function DeckViewer({
   deck,
@@ -45,6 +47,9 @@ export function DeckViewer({
 }) {
   const [slideIndex, setSlideIndex] = useState(() => getInitialSlideIndex(deck))
   const [mode, setMode] = useState<ViewerMode>(initialMode)
+  const [studioCue, setStudioCue] = useState<StudioCue>(
+    initialMode === 'studio' ? 'hook' : null
+  )
   const isStudio = mode === 'studio'
   const isStudioRoute = initialMode === 'studio'
   // Tracks the slide we are heading to, updated synchronously on every
@@ -115,10 +120,12 @@ export function DeckViewer({
   const goToSlide = useCallback(
     (index: number) => {
       const nextIndex = Math.max(0, Math.min(deck.meta.slides.length - 1, index))
+      const returningFromCue = studioCue !== null
+      setStudioCue(null)
 
       // Compare against the in-flight target (not the committed slide) so
       // navigation works even while an entrance animation is still playing.
-      if (nextIndex === targetIndexRef.current) {
+      if (nextIndex === targetIndexRef.current && !returningFromCue) {
         return
       }
       targetIndexRef.current = nextIndex
@@ -137,16 +144,71 @@ export function DeckViewer({
       animatePlayersToFrame,
       deck.meta.slides.length,
       getSlideSettledFrame,
-      slideStarts
+      slideStarts,
+      studioCue
     ]
   )
 
+  const showStudioHook = useCallback(() => {
+    setStudioCue('hook')
+    playerRef.current?.seekTo(studioHookPreviewFrame)
+    recordingPlayerRef.current?.seekTo(studioHookPreviewFrame)
+  }, [])
+
+  const showStudioSignoff = useCallback(() => {
+    const signoffFrame = studioIntroFrames + totalFrames + Math.min(30, studioOutroFrames - 1)
+    setStudioCue('signoff')
+    playerRef.current?.seekTo(signoffFrame)
+    recordingPlayerRef.current?.seekTo(signoffFrame)
+  }, [totalFrames])
+
   const goRelative = useCallback(
-    (delta: number) => goToSlide(targetIndexRef.current + delta),
-    [goToSlide]
+    (delta: number) => {
+      if (isStudioRoute && auth.canRecord && isStudio) {
+        if (studioCue === 'hook') {
+          if (delta > 0) {
+            goToSlide(0)
+          }
+          return
+        }
+
+        if (studioCue === 'signoff') {
+          if (delta < 0) {
+            goToSlide(deck.meta.slides.length - 1)
+          }
+          return
+        }
+
+        const nextIndex = targetIndexRef.current + delta
+        if (nextIndex < 0) {
+          showStudioHook()
+          return
+        }
+        if (nextIndex >= deck.meta.slides.length) {
+          showStudioSignoff()
+          return
+        }
+      }
+
+      goToSlide(targetIndexRef.current + delta)
+    },
+    [
+      auth.canRecord,
+      deck.meta.slides.length,
+      goToSlide,
+      isStudio,
+      isStudioRoute,
+      showStudioHook,
+      showStudioSignoff,
+      studioCue
+    ]
   )
 
   useEffect(() => {
+    if (studioCue !== null) {
+      return
+    }
+
     if (studioPlaybackResetRef.current) {
       studioPlaybackResetRef.current = false
       return
@@ -154,7 +216,7 @@ export function DeckViewer({
 
     const settledFrame = getSlideSettledFrame(slideIndex)
     setPlayersFrame(settledFrame)
-  }, [getSlideSettledFrame, setPlayersFrame, slideIndex])
+  }, [getSlideSettledFrame, setPlayersFrame, slideIndex, studioCue])
 
   useEffect(() => {
     return () => {
@@ -178,20 +240,57 @@ export function DeckViewer({
 
       if (event.key === 'Home') {
         event.preventDefault()
-        goToSlide(0)
+        if (isStudioRoute && auth.canRecord && isStudio) {
+          showStudioHook()
+        } else {
+          goToSlide(0)
+        }
       }
 
       if (event.key === 'End') {
         event.preventDefault()
-        goToSlide(deck.meta.slides.length - 1)
+        if (isStudioRoute && auth.canRecord && isStudio) {
+          showStudioSignoff()
+        } else {
+          goToSlide(deck.meta.slides.length - 1)
+        }
       }
     }
 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [deck.meta.slides.length, goRelative, goToSlide])
+  }, [
+    auth.canRecord,
+    deck.meta.slides.length,
+    goRelative,
+    goToSlide,
+    isStudio,
+    isStudioRoute,
+    showStudioHook,
+    showStudioSignoff
+  ])
 
   const currentSlide = deck.meta.slides[slideIndex]
+  const currentStudioTitle = studioCue === 'hook'
+    ? '開始前 · 冒頭フック'
+    : studioCue === 'signoff'
+      ? '終了 · 決め台詞'
+      : currentSlide.title
+  const currentStudioNotes = studioCue === 'hook'
+    ? '最初の一言で「なぜ続きを見るべきか」を伝える。右矢印で本編1枚目へ。'
+    : studioCue === 'signoff'
+      ? 'stay hungry, stay foolish. で締める。左矢印で本編最終スライドへ戻る。'
+      : currentSlide.notes ?? 'このスライドにはまだノートがありません。'
+  const currentStudioCount = studioCue === 'hook'
+    ? `開始前 / ${deck.meta.slides.length}`
+    : studioCue === 'signoff'
+      ? `終了 / ${deck.meta.slides.length}`
+      : `${slideIndex + 1} / ${deck.meta.slides.length}`
+  const studioDisplayFrame = studioCue === 'hook'
+    ? studioHookPreviewFrame
+    : studioCue === 'signoff'
+      ? studioIntroFrames + totalFrames + Math.min(30, studioOutroFrames - 1)
+      : getSlideSettledFrame(slideIndex) + studioIntroFrames
 
   const openRecordingFullscreen = useCallback(async () => {
     await recordingSurfaceRef.current?.requestFullscreen()
@@ -205,6 +304,7 @@ export function DeckViewer({
         setSlideIndex(0)
       }
       window.history.replaceState(null, '', '#1')
+      setStudioCue('hook')
       playerRef.current?.seekTo(0)
       recordingPlayerRef.current?.seekTo(0)
       playerRef.current?.play()
@@ -220,10 +320,8 @@ export function DeckViewer({
       return
     }
 
-    const signoffFrame = studioIntroFrames + totalFrames + Math.min(30, studioOutroFrames - 1)
-    playerRef.current?.seekTo(signoffFrame)
-    recordingPlayerRef.current?.seekTo(signoffFrame)
-  }, [auth.canRecord, isStudio, isStudioRoute, totalFrames])
+    showStudioSignoff()
+  }, [auth.canRecord, isStudio, isStudioRoute, showStudioSignoff])
 
   useEffect(() => {
     if (!isStudioRoute || !auth.canRecord) {
@@ -319,7 +417,7 @@ export function DeckViewer({
               compositionWidth={1280}
               compositionHeight={1080}
               fps={fps}
-              initialFrame={getSlideSettledFrame(slideIndex) + (isStudio ? studioIntroFrames : 0)}
+              initialFrame={isStudio ? studioDisplayFrame : getSlideSettledFrame(slideIndex)}
               controls={false}
               inputProps={{ deck }}
               style={{ width: '100%', height: '100%' }}
@@ -353,8 +451,8 @@ export function DeckViewer({
             </div>
             <div className="studio-panel-section">
               <StickyNote size={22} aria-hidden />
-              <h2>{currentSlide.title}</h2>
-              <p>{currentSlide.notes ?? 'このスライドにはまだノートがありません。'}</p>
+              <h2>{currentStudioTitle}</h2>
+              <p>{currentStudioNotes}</p>
             </div>
             {deck.meta.youtube?.id ? (
               <div className="video-embed">
@@ -395,7 +493,7 @@ export function DeckViewer({
                 compositionWidth={1280}
                 compositionHeight={1080}
                 fps={fps}
-                initialFrame={getSlideSettledFrame(slideIndex) + studioIntroFrames}
+                initialFrame={studioDisplayFrame}
                 controls={false}
                 inputProps={{ deck }}
                 style={{ width: '100%', height: '100%' }}
@@ -416,15 +514,23 @@ export function DeckViewer({
             <aside className="recording-reserved-area">
               <div className="recording-notes">
                 <span className="recording-notes-count">
-                  {slideIndex + 1} / {deck.meta.slides.length}
+                  {currentStudioCount}
                 </span>
-                <h2 className="recording-notes-title">{currentSlide.title}</h2>
+                <h2 className="recording-notes-title">{currentStudioTitle}</h2>
                 <p className="recording-notes-body">
-                  {currentSlide.notes ?? 'このスライドにはまだノートがありません。'}
+                  {currentStudioNotes}
                 </p>
-                {deck.meta.slides[slideIndex + 1] ? (
+                {studioCue === 'hook' ? (
+                  <span className="recording-notes-next">
+                    次 → {deck.meta.slides[0]?.title}
+                  </span>
+                ) : studioCue === null && deck.meta.slides[slideIndex + 1] ? (
                   <span className="recording-notes-next">
                     次 → {deck.meta.slides[slideIndex + 1].title}
+                  </span>
+                ) : studioCue === null ? (
+                  <span className="recording-notes-next">
+                    次 → 終了 · 決め台詞
                   </span>
                 ) : null}
               </div>
@@ -440,7 +546,7 @@ export function DeckViewer({
             前へ
           </button>
           <span>
-            {slideIndex + 1} / {deck.meta.slides.length}
+            {isStudio ? currentStudioCount : `${slideIndex + 1} / ${deck.meta.slides.length}`}
           </span>
           <button type="button" onClick={() => goRelative(1)}>
             次へ

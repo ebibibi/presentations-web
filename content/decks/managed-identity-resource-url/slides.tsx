@@ -68,8 +68,8 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       <div className="mi-grid" /><LogoMark className="mi-logo" />
       <div className="mi-opening-copy" style={lift(entrance(frame, fps), 44)}>
         <span>M365 APP REGISTRATION · FOLLOW-UP</span>
-        <h1><code>resource</code> と<br /><em><code>scope</code></em> を混ぜない</h1>
-        <p>Entra ID v1 / v2 と<br />実際のAPI endpointを整理する</p>
+        <h1>どのAPIを<br /><em>たたくのか？</em></h1>
+        <p>「誰が使うのか？」の次に<br />意識したいこと</p>
       </div>
       <div className="mi-opening-ticket mi-opening-versions" style={lift(entrance(frame, fps, 26), 34)}>
         <TicketCheck size={74} />
