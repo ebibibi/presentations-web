@@ -1,0 +1,72 @@
+slug: ebi-agent-chat-relay-v4
+title: AIエージェントをTeamsへ——Ebi Agent Chat Relay v4
+summary: DiscordとMicrosoft Teamsのどちらからでも、Claude Code CLI、OpenAI Codex CLI、local OpenAI-compatible /v1/responses、AG-UI HTTP/SSEを使うための構造を解説する。Teamsの公開受け口とprivate agent hostを分離する理由、導入ガイドの8セクション、データ境界、v4の既知制約までを扱う。
+status: draft
+visibility: public
+createdAt: "2026-08-11"
+updatedAt: "2026-08-11"
+order: 104
+tags:
+  - ai-agent
+  - microsoft-teams
+  - discord
+  - claude-code
+  - codex
+  - ag-ui
+slides:
+  - id: opening
+    title: AIエージェントをTeamsへ
+    durationInFrames: 190
+    notes: Ebi Agent Chat Relay v4.0.0を公開しました。DiscordとMicrosoft Teamsから、Claude Code CLI、OpenAI Codex CLI、local OpenAI-compatible /v1/responses、AG-UI HTTP/SSEを使えます。Teamsの公開入口とprivate agent hostの分離を中心に説明します。
+  - id: entrance-only
+    title: 入口だけ増やしたのか
+    durationInFrames: 170
+    notes: Teamsのアイコンを増やしただけではありません。人が話すfrontendと、仕事をするbackendを別々の軸にしました。
+  - id: two-axes
+    title: FrontendとBackendを分ける
+    durationInFrames: 220
+    notes: Frontendは人が話す場所、Backendは実際に働くAgentです。2つのFrontendから4つのBackendを選べます。
+  - id: why-teams-hard
+    title: 推奨構成はTeams app packageだけではない
+    durationInFrames: 230
+    notes: 推奨経路はpublic receiverとprivate実行をAzure Storage Queueで分離します。公式ガイドではEntra appから3段階検証までを扱います。
+  - id: no-public-agent-host
+    title: Agent Hostを公開しない
+    durationInFrames: 180
+    notes: repository access、agent credentials、Agent実行能力を持つprivate hostを、Bot Frameworkのpublic endpointにしないことが設計の中心です。
+  - id: outbound-flow
+    title: Public側は検証とenqueueだけ
+    durationInFrames: 260
+    notes: public receiverはinbound identityを検証してenqueueし、private側のActivityPullerがqueueを外向きにpollします。private hostはTeams listenerを公開しません。復路はselected backendからBot Connectorを通ってTeamsへ戻ります。
+  - id: combinations
+    title: 2つの入口と4つのBackend
+    durationInFrames: 210
+    notes: DiscordとTeamsの両方からClaude Code CLI、Codex CLI、local OpenAI-compatible /v1/responses、AG-UI HTTP/SSEを利用できます。通常Teams private queue経路はconfigured/global backendを使います。
+  - id: setup-eight
+    title: Teams導入ガイドの8セクション
+    durationInFrames: 240
+    notes: Entra app、Azure Bot、queue、receiver、private session host、Teams app package、uploadとconsent、3段階検証の順です。詳細は公開setup guideへ誘導します。
+  - id: data-boundary
+    title: Tenant登録とTenant内処理は別
+    durationInFrames: 210
+    notes: 顧客tenantへappを置いただけではdata path全体は顧客内になりません。Bot Frameworkからbackendまでを見る必要があります。
+  - id: agui
+    title: AG-UIも共通streamへ
+    durationInFrames: 220
+    notes: run、text、reasoning、tool eventを共通streamへ変換します。redirect拒否などのsecurity boundaryも明示します。
+  - id: limits
+    title: v4でまだ同じではない部分
+    durationInFrames: 230
+    notes: Teamsのtext commandとfile-consent invoke、AG-UIのadvanced featuresについて、v4の対応範囲を正確に説明します。
+  - id: proof
+    title: Contractだけでなく実物で往復
+    durationInFrames: 210
+    notes: 2,536 local testsとCIに加え、Teamsからreal Codexを通ってTeamsへ戻る往復と、Discord・Teamsの同時稼働を確認しました。
+  - id: next
+    title: 入口とAgentを分けて選ぶ
+    durationInFrames: 210
+    notes: Release NotesとTeams setup guideを紹介します。PyPIは未公開なのでGitHub tagから導入します。
+  - id: cta
+    title: 応援お願いします
+    durationInFrames: 180
+    notes: 高評価、チャンネル登録、メンバーシップ、noteへの導線です。
