@@ -17,6 +17,10 @@ slides:
     title: 前回の「誰が？」から今回の「誰向け？」へ
     durationInFrames: 190
     notes: M365アプリ登録入門の補完回です。前回は、なぜアプリにもIDが必要なのか、そしてユーザー委任なのかアプリ単独なのか、つまり「誰が、どのアプリを使って呼ぶのか」に集中しました。今回は、その呼び出す側が決まった後に必要な「どのAPI向けのトークンを取るのか」を説明します。これがResource URLです。
+  - id: viewer-question
+    title: 今回いただいた質問
+    durationInFrames: 220
+    notes: 今回は、マネージドIDの設定で一番悩んだのがResource URLだった、という質問をいただきました。Microsoft Learnの「Microsoft Entra IDを使用してAPIとコネクタを認証する」を読むと、Resource URLにhttps://management.core.windows.net/と書かれている。しかし、なぜこの値なのか分からない。サービスごとに決まっているなら、Azure AI Searchでは何を指定するのか、という質問です。この疑問を順番に解きます。
   - id: previous-focus
     title: 前回は「呼び出す側」を整理した
     durationInFrames: 205
@@ -25,6 +29,10 @@ slides:
     title: 呼び出す側とは別に、受け取るAPIを決める
     durationInFrames: 205
     notes: ユーザー委任かアプリ単独かが決まっても、まだトークンの受取人が決まっていません。Microsoft Graph向けなのか、Azure Resource Manager向けなのか、Azure AI Search向けなのかをEntra IDへ伝える必要があります。Resource URLは「誰が使うか」の答えではなく、その次の独立した問い「どのAPI向けか」の答えです。権限はさらに別の問いです。
+  - id: graph-example
+    title: 前回のMicrosoft Graphも同じ構造
+    durationInFrames: 220
+    notes: 前回の具体例へ当てはめます。サインインした本人がWebアプリから自分のメールを読むなら、呼び出す主体はユーザーとアプリ、つまりユーザー委任です。トークンの相手はMicrosoft Graphで、要求する権限はMail.Readです。実際の通信先はgraph.microsoft.comのme/messagesです。前回はResource URLという言葉を前面に出しませんでしたが、Graph向けトークンを取るという宛先の指定はすでに存在していました。なおv2のユーザー委任ではMail.Readなどをscopeとして要求し、アプリ単独ではhttps://graph.microsoft.com/.defaultを使います。
   - id: token-flow
     title: resourceがaudになるまで
     durationInFrames: 205
