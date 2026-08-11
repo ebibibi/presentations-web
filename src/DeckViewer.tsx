@@ -14,6 +14,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Player, type PlayerRef } from '@remotion/player'
 import { AuthControls } from './AuthControls'
 import { DeckTimeline } from './DeckTimeline'
+import { StudioDeckTimeline } from './StudioDeckTimeline'
+import {
+  getStudioTimelineDuration,
+  studioIntroFrames,
+  studioOutroFrames
+} from './studio-timeline'
 import type { AuthState } from './auth'
 import type { DeckBundle } from './types'
 
@@ -39,6 +45,8 @@ export function DeckViewer({
 }) {
   const [slideIndex, setSlideIndex] = useState(() => getInitialSlideIndex(deck))
   const [mode, setMode] = useState<ViewerMode>(initialMode)
+  const isStudio = mode === 'studio'
+  const isStudioRoute = initialMode === 'studio'
   // Tracks the slide we are heading to, updated synchronously on every
   // navigation so a key/click mid-animation advances from the in-flight target
   // instead of the last-committed slide.
@@ -47,6 +55,7 @@ export function DeckViewer({
   const recordingPlayerRef = useRef<PlayerRef>(null)
   const recordingSurfaceRef = useRef<HTMLDivElement>(null)
   const smoothSeekRef = useRef<number | null>(null)
+  const studioPlaybackResetRef = useRef(false)
   const slideStarts = useMemo(() => getSlideStarts(deck), [deck])
   const totalFrames = useMemo(
     () =>
@@ -56,6 +65,7 @@ export function DeckViewer({
       ),
     [deck]
   )
+  const studioTotalFrames = useMemo(() => getStudioTimelineDuration(deck), [deck])
 
   const getSlideSettledFrame = useCallback(
     (index: number) => {
@@ -66,9 +76,9 @@ export function DeckViewer({
   )
 
   const setPlayersFrame = useCallback((frame: number) => {
-    playerRef.current?.seekTo(frame)
-    recordingPlayerRef.current?.seekTo(frame)
-  }, [])
+    playerRef.current?.seekTo(frame + (isStudio ? studioIntroFrames : 0))
+    recordingPlayerRef.current?.seekTo(frame + studioIntroFrames)
+  }, [isStudio])
 
   const animatePlayersToFrame = useCallback(
     (fromFrame: number, toFrame: number, onComplete: () => void) => {
@@ -137,10 +147,14 @@ export function DeckViewer({
   )
 
   useEffect(() => {
+    if (studioPlaybackResetRef.current) {
+      studioPlaybackResetRef.current = false
+      return
+    }
+
     const settledFrame = getSlideSettledFrame(slideIndex)
-    playerRef.current?.seekTo(settledFrame)
-    recordingPlayerRef.current?.seekTo(settledFrame)
-  }, [getSlideSettledFrame, slideIndex])
+    setPlayersFrame(settledFrame)
+  }, [getSlideSettledFrame, setPlayersFrame, slideIndex])
 
   useEffect(() => {
     return () => {
@@ -178,12 +192,61 @@ export function DeckViewer({
   }, [deck.meta.slides.length, goRelative, goToSlide])
 
   const currentSlide = deck.meta.slides[slideIndex]
-  const isStudio = mode === 'studio'
-  const isStudioRoute = initialMode === 'studio'
 
   const openRecordingFullscreen = useCallback(async () => {
     await recordingSurfaceRef.current?.requestFullscreen()
   }, [])
+
+  const playTimeline = useCallback(() => {
+    if (isStudioRoute && auth.canRecord && isStudio) {
+      targetIndexRef.current = 0
+      if (slideIndex !== 0) {
+        studioPlaybackResetRef.current = true
+        setSlideIndex(0)
+      }
+      window.history.replaceState(null, '', '#1')
+      playerRef.current?.seekTo(0)
+      recordingPlayerRef.current?.seekTo(0)
+      playerRef.current?.play()
+      recordingPlayerRef.current?.play()
+      return
+    }
+
+    playerRef.current?.play()
+  }, [auth.canRecord, isStudio, isStudioRoute, slideIndex])
+
+  const previewSignoff = useCallback(() => {
+    if (!isStudioRoute || !auth.canRecord || !isStudio) {
+      return
+    }
+
+    const signoffFrame = studioIntroFrames + totalFrames + Math.min(30, studioOutroFrames - 1)
+    playerRef.current?.seekTo(signoffFrame)
+    recordingPlayerRef.current?.seekTo(signoffFrame)
+  }, [auth.canRecord, isStudio, isStudioRoute, totalFrames])
+
+  useEffect(() => {
+    if (!isStudioRoute || !auth.canRecord) {
+      return
+    }
+
+    const handler = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== 'r' || isEditableTarget(event.target)) {
+        return
+      }
+
+      event.preventDefault()
+      if (event.shiftKey) {
+        previewSignoff()
+        return
+      }
+
+      playTimeline()
+    }
+
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [auth.canRecord, isStudioRoute, playTimeline, previewSignoff])
 
   return (
     <main className="viewer-page">
@@ -251,12 +314,12 @@ export function DeckViewer({
           <div className="slide-frame">
             <Player
               ref={playerRef}
-              component={DeckTimeline}
-              durationInFrames={Math.max(totalFrames, 1)}
+              component={isStudio ? StudioDeckTimeline : DeckTimeline}
+              durationInFrames={Math.max(isStudio ? studioTotalFrames : totalFrames, 1)}
               compositionWidth={1280}
               compositionHeight={1080}
               fps={fps}
-              initialFrame={getSlideSettledFrame(slideIndex)}
+              initialFrame={getSlideSettledFrame(slideIndex) + (isStudio ? studioIntroFrames : 0)}
               controls={false}
               inputProps={{ deck }}
               style={{ width: '100%', height: '100%' }}
@@ -316,7 +379,7 @@ export function DeckViewer({
               <h2>1920 x 1080 capture surface</h2>
             </div>
             <span>
-              slide 1280 x 1080 / reserved 640 x 1080
+              slide 1280 x 1080 / reserved 640 x 1080 · R: 撮影再生 / Shift+R: 終了確認
             </span>
           </div>
           <div
@@ -327,12 +390,12 @@ export function DeckViewer({
             <div className="recording-slide-frame">
               <Player
                 ref={recordingPlayerRef}
-                component={DeckTimeline}
-                durationInFrames={Math.max(totalFrames, 1)}
+                component={StudioDeckTimeline}
+                durationInFrames={Math.max(studioTotalFrames, 1)}
                 compositionWidth={1280}
                 compositionHeight={1080}
                 fps={fps}
-                initialFrame={getSlideSettledFrame(slideIndex)}
+                initialFrame={getSlideSettledFrame(slideIndex) + studioIntroFrames}
                 controls={false}
                 inputProps={{ deck }}
                 style={{ width: '100%', height: '100%' }}
@@ -383,9 +446,9 @@ export function DeckViewer({
             次へ
             <ChevronRight size={18} aria-hidden />
           </button>
-          <button type="button" onClick={() => playerRef.current?.play()}>
+          <button type="button" onClick={playTimeline}>
             <Play size={18} aria-hidden />
-            再生
+            {isStudioRoute && auth.canRecord && isStudio ? '撮影再生' : '再生'}
           </button>
         </footer>
       )}
@@ -420,6 +483,15 @@ function getInitialSlideIndex(deck: DeckBundle) {
   }
 
   return 0
+}
+
+function isEditableTarget(target: EventTarget | null) {
+  return target instanceof HTMLElement && (
+    target.isContentEditable ||
+    target.tagName === 'INPUT' ||
+    target.tagName === 'TEXTAREA' ||
+    target.tagName === 'SELECT'
+  )
 }
 
 function getSlideStarts(deck: DeckBundle) {
