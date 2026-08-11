@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import {
   ArrowRight,
+  AppWindow,
+  Bot,
   Building2,
   CheckCircle2,
   CircleAlert,
@@ -12,6 +14,7 @@ import {
   Search,
   ShieldCheck,
   TicketCheck,
+  User,
   Waypoints
 } from 'lucide-react'
 import { spring, useVideoConfig } from 'remotion'
@@ -20,8 +23,8 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 
 export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <ConfusionSlide {...props} /> },
-  { render: (props) => <OneSentenceSlide {...props} /> },
+  { render: (props) => <PreviousFocusSlide {...props} /> },
+  { render: (props) => <MissingQuestionSlide {...props} /> },
   { render: (props) => <TokenFlowSlide {...props} /> },
   { render: (props) => <ThreeIdentifiersSlide {...props} /> },
   { render: (props) => <WhyCoreSlide {...props} /> },
@@ -67,9 +70,9 @@ function OpeningSlide({ frame }: SlideRenderContext) {
     <section className="remotion-slide mi-slide mi-opening">
       <div className="mi-grid" /><LogoMark className="mi-logo" />
       <div className="mi-opening-copy" style={lift(entrance(frame, fps), 44)}>
-        <span>MANAGED IDENTITY · FOLLOW-UP</span>
+        <span>M365 APP REGISTRATION · FOLLOW-UP</span>
         <h1>リソースURLって、<br /><em>何のURL？</em></h1>
-        <p>Microsoft Learnの値が<br />APIの接続先と違う理由</p>
+        <p>前回の「誰が使う？」から<br />今回の「どのAPI向け？」へ</p>
       </div>
       <div className="mi-opening-ticket" style={lift(entrance(frame, fps, 26), 34)}>
         <TicketCheck size={82} />
@@ -82,34 +85,43 @@ function OpeningSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function ConfusionSlide({ frame }: SlideRenderContext) {
+function PreviousFocusSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const rows = [
-    ['通信先？', 'https://management.azure.com/', 'endpoint'],
-    ['トークンの宛名？', 'https://management.core.windows.net/', 'audience'],
-    ['個別リソース？', '/subscriptions/.../providers/...', 'resource ID']
-  ]
   return (
     <section className="remotion-slide mi-slide">
-      <Header kicker="WHY THIS IS CONFUSING" title="URLっぽい文字列が、3種類ある" frame={frame} />
-      <div className="mi-question-list">{rows.map(([label, value, tag], i) => <div key={tag} style={lift(entrance(frame, fps, 18 + i * 12), 22)}><CircleAlert /><span>{label}</span><code>{value}</code><b>{tag}</b></div>)}</div>
-      <p className="mi-punch" style={lift(entrance(frame, fps, 68), 16)}>見た目ではなく、<strong>何を識別しているか</strong>で読む。</p>
+      <Header kicker="PREVIOUS EPISODE" title="前回は「呼び出す側」を整理した" frame={frame} />
+      <div className="mi-previous-paths">
+        <div style={lift(entrance(frame, fps, 18), 24)}>
+          <span>USER DELEGATION</span>
+          <div className="mi-identity-icons"><User /><b>＋</b><AppWindow /></div>
+          <strong>ユーザーがアプリを使う</strong>
+          <p>アプリがユーザーの代理でAPIを呼ぶ</p>
+        </div>
+        <div style={lift(entrance(frame, fps, 36), 24)}>
+          <span>APP-ONLY</span>
+          <div className="mi-identity-icons"><Bot /><b>／</b><Fingerprint /></div>
+          <strong>アプリ／Azureリソース自身</strong>
+          <p>アプリ登録＋資格情報、またはManaged Identity</p>
+        </div>
+      </div>
+      <div className="mi-previous-answer" style={lift(entrance(frame, fps, 68), 16)}><CheckCircle2 /><span>Application IDが必要な理由</span><strong>どのソフトウェアが接続するかを区別するため</strong></div>
+      <a className="mi-source" href="/decks/m365-app-registration-guide">前回資料 · M365アプリ登録入門</a>
     </section>
   )
 }
 
-function OneSentenceSlide({ frame }: SlideRenderContext) {
+function MissingQuestionSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const cards = [
-    [<Fingerprint />, 'Managed Identity', '誰が呼ぶ？', '差出人'],
-    [<TicketCheck />, 'Resource URL', '誰向けのトークン？', '宛名'],
-    [<ShieldCheck />, 'RBAC', '何を許す？', '許可内容']
+    [<Fingerprint />, '呼び出す主体', 'ユーザー＋アプリ／アプリ自身', '前回'],
+    [<TicketCheck />, 'Resource URL', 'どのAPI向けのトークン？', '今回'],
+    [<ShieldCheck />, 'Permission / RBAC', 'その主体に何を許す？', '権限']
   ]
   return (
     <section className="remotion-slide mi-slide mi-concept">
-      <Header kicker="THE ONE-SENTENCE ANSWER" title={<>リソースURLは、<em>トークンの宛名</em></>} frame={frame} />
+      <Header kicker="ONE MORE QUESTION" title={<>呼び出す側とは別に、<em>受け取るAPI</em>を決める</>} frame={frame} />
       <div className="mi-concept-row">{cards.map(([icon, title, body, analogy], i) => <div key={String(title)} style={lift(entrance(frame, fps, 20 + i * 14), 24)}>{icon}<span>{analogy}</span><strong>{title}</strong><p>{body}</p></div>)}</div>
-      <p className="mi-punch">3つがそろって、はじめてAPIを安全に呼べる。</p>
+      <p className="mi-punch">Resource URL ＝ <strong>アクセストークンの受取人（audience）</strong></p>
       <Source href={SOURCES.token}>Access tokens</Source>
     </section>
   )
@@ -250,15 +262,15 @@ function TroubleshootingSlide({ frame }: SlideRenderContext) {
 function RecapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const points = [
-    ['RESOURCE', 'トークンの宛名', 'https://search.azure.com'],
-    ['ENDPOINT', '実際の通信先', 'https://<service>.search.windows.net'],
-    ['RESOURCE ID', 'Azure管理上の住所', '/subscriptions/...']
+    ['WHO', '誰が／どのアプリが？', 'ユーザー委任 or アプリ単独'],
+    ['FOR WHOM', 'どのAPI向け？', 'resource / audience'],
+    ['WHAT', '何を許す？', 'Permission / RBAC']
   ]
   return (
     <section className="remotion-slide mi-slide mi-recap">
-      <div className="mi-recap-head" style={lift(entrance(frame, fps), 34)}><LogoMark className="mi-recap-logo" /><span>TAKEAWAY</span><h1>URLではなく、<br /><em>役割で読む。</em></h1></div>
+      <div className="mi-recap-head" style={lift(entrance(frame, fps), 34)}><LogoMark className="mi-recap-logo" /><span>TAKEAWAY</span><h1>3つの問いを、<br /><em>混ぜない。</em></h1></div>
       <div className="mi-recap-points">{points.map(([tag, title, value], i) => <div key={tag} style={lift(entrance(frame, fps, 22 + i * 13), 22)}><span>{tag}</span><strong>{title}</strong><code>{value}</code></div>)}</div>
-      <div className="mi-final-answer" style={lift(entrance(frame, fps, 72), 18)}><Waypoints /><strong>Learnの値は、そのページがARMを呼ぶから。</strong><span>サービスごとの公式resource / scopeを正確に使おう。</span></div>
+      <div className="mi-final-answer" style={lift(entrance(frame, fps, 72), 18)}><Waypoints /><strong>前回はWHO。今回はFOR WHOM。</strong><span>Learnの値は、そのページがARM向けトークンを要求するから。</span></div>
     </section>
   )
 }
