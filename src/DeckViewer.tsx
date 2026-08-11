@@ -14,7 +14,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Player, type PlayerRef } from '@remotion/player'
 import { AuthControls } from './AuthControls'
 import { DeckTimeline } from './DeckTimeline'
-import { StudioDeckTimeline } from './StudioDeckTimeline'
+import { StudioBookend, StudioDeckTimeline } from './StudioDeckTimeline'
 import {
   getStudioTimelineDuration,
   studioIntroFrames,
@@ -49,6 +49,7 @@ export function DeckViewer({
   const [studioCue, setStudioCue] = useState<StudioCue>(
     initialMode === 'studio' ? 'hook' : null
   )
+  const [isTimelinePlaying, setIsTimelinePlaying] = useState(false)
   const isStudio = mode === 'studio'
   const isStudioRoute = initialMode === 'studio'
   // Tracks the slide we are heading to, updated synchronously on every
@@ -124,6 +125,7 @@ export function DeckViewer({
 
   const goToSlide = useCallback(
     (index: number) => {
+      setIsTimelinePlaying(false)
       const nextIndex = Math.max(0, Math.min(deck.meta.slides.length - 1, index))
       const returningFromCue = studioCue !== null
       setStudioCue(null)
@@ -155,6 +157,7 @@ export function DeckViewer({
   )
 
   const showStudioHook = useCallback(() => {
+    setIsTimelinePlaying(false)
     pausePlayers()
     setStudioCue('hook')
     playerRef.current?.seekTo(0)
@@ -162,6 +165,7 @@ export function DeckViewer({
   }, [pausePlayers])
 
   const showStudioSignoff = useCallback(() => {
+    setIsTimelinePlaying(false)
     pausePlayers()
     const signoffFrame = studioIntroFrames + totalFrames + Math.min(30, studioOutroFrames - 1)
     setStudioCue('signoff')
@@ -312,6 +316,7 @@ export function DeckViewer({
       }
       window.history.replaceState(null, '', '#1')
       setStudioCue('hook')
+      setIsTimelinePlaying(true)
       playerRef.current?.seekTo(0)
       recordingPlayerRef.current?.seekTo(0)
       playerRef.current?.play()
@@ -321,6 +326,29 @@ export function DeckViewer({
 
     playerRef.current?.play()
   }, [auth.canRecord, isStudio, isStudioRoute, slideIndex])
+
+  const enterAudienceMode = useCallback(() => {
+    setIsTimelinePlaying(false)
+    pausePlayers()
+    setStudioCue(null)
+    setMode('audience')
+  }, [pausePlayers])
+
+  const enterStudioMode = useCallback(() => {
+    setMode('studio')
+    showStudioHook()
+  }, [showStudioHook])
+
+  useEffect(() => {
+    const player = recordingPlayerRef.current
+    if (!player || !isStudioRoute || !auth.canRecord) {
+      return
+    }
+
+    const handleEnded = () => showStudioSignoff()
+    player.addEventListener('ended', handleEnded)
+    return () => player.removeEventListener('ended', handleEnded)
+  }, [auth.canRecord, isStudioRoute, showStudioSignoff])
 
   const previewSignoff = useCallback(() => {
     if (!isStudioRoute || !auth.canRecord || !isStudio) {
@@ -370,7 +398,7 @@ export function DeckViewer({
               <button
                 type="button"
                 className={mode === 'audience' ? 'active' : ''}
-                onClick={() => setMode('audience')}
+                onClick={enterAudienceMode}
                 title="閲覧表示"
               >
                 <Fullscreen size={18} aria-hidden />
@@ -379,7 +407,7 @@ export function DeckViewer({
               <button
                 type="button"
                 className={mode === 'studio' ? 'active' : ''}
-                onClick={() => setMode('studio')}
+                onClick={enterStudioMode}
                 title="撮影用レイアウト"
               >
                 <Film size={18} aria-hidden />
@@ -429,6 +457,11 @@ export function DeckViewer({
               inputProps={{ deck }}
               style={{ width: '100%', height: '100%' }}
             />
+            {isStudio && studioCue && !isTimelinePlaying ? (
+              <div className="studio-cue-overlay" aria-hidden="true">
+                <StudioBookend kind={studioCue} deckTitle={deck.meta.title} overlay />
+              </div>
+            ) : null}
             <button
               type="button"
               className="nav-zone nav-zone-left"
@@ -505,6 +538,11 @@ export function DeckViewer({
                 inputProps={{ deck }}
                 style={{ width: '100%', height: '100%' }}
               />
+              {studioCue && !isTimelinePlaying ? (
+                <div className="studio-cue-overlay" aria-hidden="true">
+                  <StudioBookend kind={studioCue} deckTitle={deck.meta.title} overlay />
+                </div>
+              ) : null}
               <button
                 type="button"
                 className="recording-nav-zone recording-nav-zone-left"

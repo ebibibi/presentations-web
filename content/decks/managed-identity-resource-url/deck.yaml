@@ -1,7 +1,7 @@
 slug: managed-identity-resource-url
 title: どのAPIをたたくのか？
 summary: 「誰がAPIを使うのか？」を扱ったM365アプリ登録入門の続編。Resource URLがAPIごとに違う理由と、アプリ登録からアクセストークンを使ってAPIを呼ぶまでの流れを整理する。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-08-11"
 updatedAt: "2026-08-11"
@@ -41,3 +41,7 @@ slides:
     title: Entra ID認証からAPIを呼ぶまで
     durationInFrames: 300
     notes: 最後に全体を一本につなぎます。まずアプリをEntra IDへ登録します。次に使うAPIと必要な権限を指定します。今回のResource URLは、トークンをどのAPI向けにするかを示す部分です。必要なConsentまたは権限付与を行います。誰が承認するか、いつ同意画面が出るか、RBACを使うかはAPIと権限方式によって異なります。アプリが動き、必要ならユーザーがサインインして、対象APIを指定したトークン要求をEntra IDへ送ります。Entra IDから受け取るアクセストークンの主要な情報には、対象APIを検証するaud、発行元とテナントのiss、ユーザートークンだけに入る委任scopeのscp、client credentialsのアプリケーショントークンで使われる権限のroles、有効期限のexpなどがあります。最後にアプリがAuthorizationヘッダーへトークンを付けて実際のAPI endpointへ送ります。APIは署名、発行元、有効期限、aud、権限を検証し、audが自分と一致しないトークンを拒否します。クライアントはMicrosoft API向けアクセストークンの中身へ依存せず、API側が検証します。
+  - id: promotion
+    title: もっと体系的に、順番に学びたい方へ
+    durationInFrames: 210
+    notes: 最後にご案内です。難しいITを体系的に学びたい方向けに、Ebi Studyで動画講座を公開しています。詳しくはstudy.ebisuda.netをご覧ください。YouTubeのチャンネル登録もよろしくお願いします。撮影モードでは、このあと専用の締め画面が続きます。

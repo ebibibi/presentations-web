@@ -1,6 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import {
   ArrowRight,
+  Bell,
+  BookOpen,
+  ChevronRight,
   Database,
   Fingerprint,
   Globe2,
@@ -23,7 +26,8 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <GraphBridgeSlide {...props} /> },
   { render: (props) => <IdentifierEndpointSlide {...props} /> },
   { render: (props) => <ServiceMapSlide {...props} /> },
-  { render: (props) => <EndToEndFlowSlide {...props} /> }
+  { render: (props) => <EndToEndFlowSlide {...props} /> },
+  { render: (props) => <PromoSlide {...props} /> }
 ]
 
 const SOURCES = {
@@ -198,6 +202,28 @@ function EndToEndFlowSlide({ frame }: SlideRenderContext) {
       </div>
       <div className="mi-e2e-answer" style={lift(entrance(frame, fps, 78), 14)}><Database /><strong>② 対象APIを指定 → ⑤ 対象API向けtoken → ⑥ APIがaudを検証</strong><span>Resource URLは、この流れで「どのAPI向けか」を指定する値。</span></div>
       <Source href={SOURCES.tokenClaims}>Microsoft identity platform · access token claims</Source>
+    </section>
+  )
+}
+
+function PromoSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide mi-slide mi-promo-slide">
+      <div className="mi-grid" /><LogoMark className="mi-promo-logo" />
+      <div className="mi-promo-copy" style={lift(entrance(frame, fps, 8), 34)}>
+        <span>KEEP LEARNING</span>
+        <h1>もっと体系的に、<br /><em>順番に学びたい方へ。</em></h1>
+        <p>難しいITを、迷わず進められる動画講座に。</p>
+      </div>
+      <div className="mi-promo-actions">
+        <a href="https://study.ebisuda.net" target="_blank" rel="noreferrer" style={lift(entrance(frame, fps, 30), 24)}>
+          <BookOpen /><span><small>VIDEO COURSES</small><strong>Ebi Study</strong><b>study.ebisuda.net</b></span><ChevronRight />
+        </a>
+        <div style={lift(entrance(frame, fps, 44), 24)}>
+          <Bell /><span><small>YOUTUBE</small><strong>チャンネル登録</strong><b>次の解説もお見逃しなく！</b></span>
+        </div>
+      </div>
     </section>
   )
 }
