@@ -11,6 +11,8 @@ import {
   Fingerprint,
   Globe2,
   KeyRound,
+  Mail,
+  MessageCircleQuestion,
   Search,
   ShieldCheck,
   TicketCheck,
@@ -23,8 +25,10 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 
 export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
+  { render: (props) => <ViewerQuestionSlide {...props} /> },
   { render: (props) => <PreviousFocusSlide {...props} /> },
   { render: (props) => <MissingQuestionSlide {...props} /> },
+  { render: (props) => <GraphExampleSlide {...props} /> },
   { render: (props) => <TokenFlowSlide {...props} /> },
   { render: (props) => <ThreeIdentifiersSlide {...props} /> },
   { render: (props) => <WhyCoreSlide {...props} /> },
@@ -44,7 +48,8 @@ const SOURCES = {
   rest: 'https://learn.microsoft.com/en-us/rest/api/gettingstarted/',
   search: 'https://learn.microsoft.com/en-us/azure/search/search-get-started-rbac',
   searchRest: 'https://learn.microsoft.com/en-us/rest/api/searchservice/documents/search-get',
-  searchRbac: 'https://learn.microsoft.com/en-us/azure/search/keyless-connections'
+  searchRbac: 'https://learn.microsoft.com/en-us/azure/search/keyless-connections',
+  graphMessages: 'https://learn.microsoft.com/en-us/graph/api/user-list-messages'
 }
 
 function entrance(frame: number, fps: number, delay = 0) {
@@ -79,6 +84,29 @@ function OpeningSlide({ frame }: SlideRenderContext) {
         <small>ACCESS TOKEN</small>
         <strong>宛名：誰向け？</strong>
         <code>aud = ...</code>
+      </div>
+      <Source href={SOURCES.connector}>API とコネクタを認証する</Source>
+    </section>
+  )
+}
+
+function ViewerQuestionSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide mi-slide mi-viewer-question">
+      <Header kicker="VIEWER QUESTION" title="今回、こんな質問をいただきました" frame={frame} />
+      <div className="mi-question-quote" style={lift(entrance(frame, fps, 18), 28)}>
+        <MessageCircleQuestion />
+        <blockquote>
+          Microsoft Learnを読んでも、なぜResource URLが<br />
+          <code>https://management.core.windows.net/</code><br />
+          なのか分かりませんでした。
+        </blockquote>
+      </div>
+      <div className="mi-question-followup" style={lift(entrance(frame, fps, 52), 18)}>
+        <span>さらに知りたい</span>
+        <strong>サービスごとに決まっている？</strong>
+        <strong>Azure AI Searchなら何を指定する？</strong>
       </div>
       <Source href={SOURCES.connector}>API とコネクタを認証する</Source>
     </section>
@@ -123,6 +151,31 @@ function MissingQuestionSlide({ frame }: SlideRenderContext) {
       <div className="mi-concept-row">{cards.map(([icon, title, body, analogy], i) => <div key={String(title)} style={lift(entrance(frame, fps, 20 + i * 14), 24)}>{icon}<span>{analogy}</span><strong>{title}</strong><p>{body}</p></div>)}</div>
       <p className="mi-punch">Resource URL ＝ <strong>アクセストークンの受取人（audience）</strong></p>
       <Source href={SOURCES.token}>Access tokens</Source>
+    </section>
+  )
+}
+
+function GraphExampleSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const rows = [
+    ['WHO', 'ユーザー＋Webアプリ', 'ユーザー委任'],
+    ['FOR WHOM', 'Microsoft Graph', 'https://graph.microsoft.com'],
+    ['WHAT', 'メールを読む', 'Mail.Read']
+  ]
+  return (
+    <section className="remotion-slide mi-slide mi-graph-example">
+      <Header kicker="THE PREVIOUS GRAPH EXAMPLE" title={<>前回のメール取得も、<em>同じ3つの問い</em></>} frame={frame} />
+      <div className="mi-graph-layout">
+        <div className="mi-graph-questions">{rows.map(([tag, title, value], i) => <div key={tag} style={lift(entrance(frame, fps, 18 + i * 12), 20)}><span>{tag}</span><strong>{title}</strong><code>{value}</code></div>)}</div>
+        <div className="mi-graph-request" style={lift(entrance(frame, fps, 58), 24)}>
+          <Mail />
+          <span>実際の通信先</span>
+          <code>GET https://graph.microsoft.com<br />/v1.0/me/messages</code>
+          <small>Graph向けトークンを添えて呼ぶ</small>
+        </div>
+      </div>
+      <p className="mi-graph-bridge">前回は「Resource URL」と呼ばなかった。でも、<strong>トークンの相手はGraph</strong>と決まっていた。</p>
+      <Source href={SOURCES.graphMessages}>List messages · Mail.Read</Source>
     </section>
   )
 }

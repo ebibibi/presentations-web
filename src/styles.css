@@ -7159,6 +7159,13 @@ main {
 .mi-opening-ticket small { color: #9fb5ce; font-size: 18px; letter-spacing: .16em; }
 .mi-opening-ticket strong { font-size: 31px; }
 .mi-opening-ticket code { background: rgba(0,0,0,.24); border-radius: 10px; color: var(--mi-green); font-size: 22px; padding: 10px; }
+.mi-question-quote { align-items: center; background: linear-gradient(145deg, rgba(70,167,255,.17), rgba(16,36,61,.92)); border: 1px solid rgba(100,233,255,.3); border-radius: 24px; display: grid; gap: 28px; grid-template-columns: 92px 1fr; min-height: 300px; padding: 38px 46px; }
+.mi-question-quote > svg { color: var(--mi-cyan); height: 76px; width: 76px; }
+.mi-question-quote blockquote { font-size: 31px; font-weight: 800; line-height: 1.55; margin: 0; }
+.mi-question-quote code { background: #06101d; border-radius: 9px; color: var(--mi-green); display: inline-block; font-size: 25px; margin: 10px 0; padding: 7px 13px; }
+.mi-question-followup { align-items: center; display: grid; gap: 18px; grid-template-columns: 160px 1fr 1.25fr; margin-top: 24px; }
+.mi-question-followup span { color: var(--mi-amber); font-size: 18px; font-weight: 900; letter-spacing: .08em; }
+.mi-question-followup strong { background: var(--mi-panel); border-radius: 13px; font-size: 21px; padding: 17px 20px; }
 .mi-question-list { display: grid; gap: 18px; }
 .mi-question-list > div { align-items: center; background: var(--mi-panel); border-left: 5px solid var(--mi-blue); border-radius: 14px; display: grid; gap: 18px; grid-template-columns: 34px 230px 1fr 150px; min-height: 96px; padding: 0 28px; }
 .mi-question-list svg { color: var(--mi-amber); }
@@ -7171,6 +7178,19 @@ main {
 .mi-concept-row span { color: var(--mi-amber); font-size: 18px; font-weight: 900; letter-spacing: .12em; margin-top: 20px; }
 .mi-concept-row strong { font-size: 30px; margin-top: 13px; }
 .mi-concept-row p { color: #b9cbe0; font-size: 22px; }
+.mi-graph-layout { display: grid; gap: 26px; grid-template-columns: 1.1fr .9fr; }
+.mi-graph-questions { display: grid; gap: 14px; }
+.mi-graph-questions > div { align-items: center; background: var(--mi-panel); border-radius: 15px; display: grid; gap: 14px; grid-template-columns: 110px 190px 1fr; min-height: 91px; padding: 0 24px; }
+.mi-graph-questions span { color: var(--mi-blue); font-size: 16px; font-weight: 900; }
+.mi-graph-questions strong { font-size: 22px; }
+.mi-graph-questions code { color: var(--mi-green); font-size: 16px; overflow-wrap: anywhere; }
+.mi-graph-request { align-items: center; background: linear-gradient(145deg, #153759, #0b1e35); border: 1px solid rgba(100,233,255,.28); border-radius: 22px; display: flex; flex-direction: column; justify-content: center; min-height: 301px; padding: 26px; text-align: center; }
+.mi-graph-request svg { color: var(--mi-cyan); height: 54px; width: 54px; }
+.mi-graph-request span { color: #aac0d8; font-size: 17px; margin: 13px 0 8px; }
+.mi-graph-request code { background: #06101d; border-radius: 10px; color: var(--mi-green); font-size: 16px; line-height: 1.55; padding: 12px; }
+.mi-graph-request small { color: var(--mi-amber); font-size: 16px; margin-top: 12px; }
+.mi-slide .mi-graph-bridge { color: #f4f8ff; font-size: 22px; margin-top: 24px; max-width: none; text-align: center; }
+.mi-graph-bridge strong { color: var(--mi-cyan); }
 .mi-flow { align-items: stretch; display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); margin-top: 34px; }
 .mi-flow-unit { align-items: center; background: var(--mi-panel); border-radius: 20px; display: flex; flex-direction: column; gap: 14px; min-height: 250px; padding: 32px 18px; position: relative; text-align: center; }
 .mi-flow-unit > svg:not(.mi-arrow) { color: var(--mi-cyan); height: 58px; width: 58px; }
