@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import {
+  AlertTriangle,
   ArrowRight,
   Ban,
   Boxes,
@@ -9,8 +10,10 @@ import {
   Lock,
   Monitor,
   ShoppingCart,
+  Timer,
   Truck,
   Unplug,
+  UserX,
 } from 'lucide-react'
 import { Fragment, type ReactNode } from 'react'
 import { spring, useVideoConfig } from 'remotion'
@@ -370,9 +373,12 @@ function ApproachSlide({ frame }: SlideRenderContext) {
 function HalfBakedSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const items: Array<[ReactNode, string]> = [
+    [<Timer key="i" />, '開発が、とにかく遅い'],
+    [<AlertTriangle key="i" />, '障害が多く、人が張り付く'],
+    [<Lock key="i" />, '変えたいのに、変えられない'],
     [<Unplug key="i" />, 'APIが無く、外とつながらない'],
-    [<Lock key="i" />, '業務がシステムに縛られ、変更できない'],
     [<Monitor key="i" />, '古いブラウザでしか動かない'],
+    [<UserX key="i" />, '作った人が、もういない'],
   ]
 
   return (
@@ -383,16 +389,16 @@ function HalfBakedSlide({ frame }: SlideRenderContext) {
         <br />
         ありませんか
       </Head>
-      <div className="lvl-list">
+      <div className="lvl-list lvl-list-two">
         {items.map(([icon, label], index) => (
-          <article key={label} style={lift(entrance(frame, fps, 26 + index * 14), 26)}>
+          <article key={label} style={lift(entrance(frame, fps, 24 + index * 10), 24)}>
             {icon}
             <strong>{label}</strong>
           </article>
         ))}
       </div>
       <p className="lvl-note" style={lift(entrance(frame, fps, 78), 18)}>
-        最低でも<b>APIさえあれば</b>、AIで自動化する余地は残る。
+        3つ以上あるなら、それは直す対象ではなく<b>落とす対象</b>。
       </p>
     </section>
   )
