@@ -1,0 +1,237 @@
+/* Deck: system-levels-and-ai
+   Executive-facing deck. One big statement per slide, minimal text.
+   Canvas is 1280 x 1080, so headlines are sized for hard-wrapped Japanese
+   lines rather than long paragraphs. */
+
+.remotion-slide.lvl-slide {
+  background:
+    radial-gradient(circle at 82% 8%, rgba(45, 212, 191, 0.13), transparent 38%),
+    linear-gradient(160deg, #0a1018, #0d1a24 55%, #0a1620);
+  color: #f4f8f8;
+  font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+  justify-content: center;
+  overflow: hidden;
+  padding: 82px 78px;
+  position: relative;
+}
+
+.lvl-grid {
+  background-image:
+    linear-gradient(rgba(148, 197, 190, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 197, 190, 0.16) 1px, transparent 1px);
+  background-size: 72px 72px;
+  inset: 0;
+  opacity: 0.35;
+  position: absolute;
+}
+
+.lvl-logo {
+  height: 104px;
+  object-fit: contain;
+  position: absolute;
+  right: 62px;
+  top: 56px;
+  width: 104px;
+  z-index: 2;
+}
+
+.lvl-slide .lvl-kicker {
+  color: #5eead4;
+  display: block;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  position: relative;
+  z-index: 2;
+}
+
+.remotion-slide.lvl-slide h1 {
+  font-size: 92px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.14;
+  margin: 26px 0 0;
+  max-width: 1080px;
+  position: relative;
+  z-index: 2;
+}
+
+.lvl-slide .lvl-lead {
+  color: #a8bcc2;
+  font-size: 32px;
+  line-height: 1.6;
+  margin: 34px 0 0;
+  max-width: 1000px;
+  position: relative;
+  z-index: 2;
+}
+
+.lvl-accent { color: #2dd4bf; font-style: normal; }
+.lvl-alarm { color: #fb7185; font-style: normal; }
+.lvl-warm { color: #fbbf24; font-style: normal; }
+
+/* Centered statement slides ─ the "ばん" moments. */
+.remotion-slide.lvl-statement { align-items: center; text-align: center; }
+.remotion-slide.lvl-statement h1 { font-size: 112px; margin-top: 30px; }
+.remotion-slide.lvl-statement .lvl-lead { margin-top: 46px; }
+.remotion-slide.lvl-huge h1 { font-size: 140px; line-height: 1.08; }
+
+/* Opening */
+.remotion-slide.lvl-opening h1 { font-size: 104px; margin-top: 34px; }
+.remotion-slide.lvl-opening .lvl-lead { border-left: 6px solid #2dd4bf; margin-top: 54px; padding-left: 28px; }
+
+/* Horizontal chip flow (Amazon) */
+.lvl-flow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 62px;
+  position: relative;
+  z-index: 2;
+}
+
+.lvl-flow article {
+  align-items: center;
+  background: rgba(13, 30, 38, 0.9);
+  border: 1px solid #1f3b44;
+  border-radius: 22px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 210px;
+  justify-content: center;
+  padding: 26px 12px;
+  text-align: center;
+}
+
+.lvl-flow article svg { color: #2dd4bf; height: 46px; width: 46px; }
+.lvl-flow article strong { font-size: 25px; }
+.lvl-flow-arrow { color: #3f5a63; flex: none; height: 26px; width: 26px; }
+
+.lvl-badge {
+  background: rgba(13, 148, 136, 0.2);
+  border-radius: 18px;
+  color: #5eead4;
+  font-size: 34px;
+  font-weight: 900;
+  margin-top: 52px;
+  padding: 24px;
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+
+.lvl-badge.lvl-badge-alarm { background: rgba(190, 18, 60, 0.22); color: #fda4af; }
+
+/* Three big words in a row */
+.lvl-triple {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 70px;
+  position: relative;
+  z-index: 2;
+}
+
+.lvl-triple article {
+  background: rgba(13, 30, 38, 0.9);
+  border: 1px solid #1f3b44;
+  border-radius: 26px;
+  min-height: 300px;
+  padding: 34px 30px;
+}
+
+.lvl-triple article > span {
+  color: #5eead4;
+  display: block;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.lvl-triple article strong { display: block; font-size: 40px; line-height: 1.25; margin-top: 26px; }
+.lvl-slide .lvl-triple article p { color: #93aab1; font-size: 24px; line-height: 1.55; margin-top: 22px; }
+
+.lvl-triple-alarm article { border-color: #59303c; }
+.lvl-triple-alarm article > span { color: #fb7185; }
+
+/* Two stacked steps */
+.lvl-steps { display: grid; gap: 30px; margin-top: 64px; position: relative; z-index: 2; }
+
+.lvl-steps article {
+  align-items: center;
+  background: rgba(13, 30, 38, 0.9);
+  border: 1px solid #1f3b44;
+  border-radius: 26px;
+  display: grid;
+  gap: 34px;
+  grid-template-columns: 106px 1fr;
+  min-height: 190px;
+  padding: 34px 40px;
+}
+
+.lvl-steps article > b {
+  color: #2dd4bf;
+  font-size: 76px;
+  line-height: 1;
+  text-align: center;
+}
+
+.lvl-steps strong { display: block; font-size: 42px; }
+.lvl-slide .lvl-steps p { color: #93aab1; font-size: 25px; line-height: 1.5; margin-top: 14px; }
+
+/* Level ladder */
+.lvl-ladder { display: grid; gap: 14px; margin-top: 56px; position: relative; z-index: 2; }
+
+.lvl-ladder article {
+  align-items: center;
+  background: rgba(13, 30, 38, 0.86);
+  border: 1px solid #1f3b44;
+  border-left: 8px solid #1f3b44;
+  border-radius: 18px;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: 132px 1fr;
+  min-height: 108px;
+  padding: 20px 32px;
+}
+
+.lvl-ladder article > b { color: #7f9aa2; font-size: 23px; font-weight: 900; letter-spacing: 0.1em; }
+.lvl-ladder article > span { font-size: 34px; font-weight: 800; }
+.lvl-ladder .lvl-lv0 { border-left-color: #fb7185; }
+.lvl-ladder .lvl-lv1 { border-left-color: #fb923c; }
+.lvl-ladder .lvl-lv2 { border-left-color: #fbbf24; }
+.lvl-ladder .lvl-lv3 { border-left-color: #a3e635; }
+.lvl-ladder .lvl-lv4 { border-left-color: #2dd4bf; }
+.lvl-ladder .lvl-lv4 > span { color: #5eead4; }
+.lvl-ladder .lvl-lv0 > span { color: #fda4af; }
+
+/* Symptom / do-not list */
+.lvl-list { display: grid; gap: 22px; margin-top: 62px; position: relative; z-index: 2; }
+
+.lvl-list article {
+  align-items: center;
+  background: rgba(30, 12, 20, 0.72);
+  border: 1px solid #59303c;
+  border-radius: 22px;
+  display: flex;
+  gap: 28px;
+  min-height: 132px;
+  padding: 28px 36px;
+}
+
+.lvl-list article svg { color: #fb7185; flex: none; height: 46px; width: 46px; }
+.lvl-list article strong { font-size: 38px; line-height: 1.3; }
+
+.lvl-slide .lvl-note {
+  color: #93aab1;
+  font-size: 27px;
+  line-height: 1.55;
+  margin-top: 46px;
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+
+.lvl-slide .lvl-note b { color: #fbbf24; }
