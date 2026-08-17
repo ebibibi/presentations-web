@@ -12,6 +12,11 @@ tags:
   - entra-id
   - oauth
   - azure-ai-search
+youtube:
+  id: SkqRmdStxnQ
+  url: https://www.youtube.com/watch?v=SkqRmdStxnQ
+  title: "entraid_token_audience"
+  publishedAt: "2026-08-11"
 slides:
   - id: opening
     title: どのAPIをたたくのか？
