@@ -1,0 +1,635 @@
+/* Deck: video-event-automation
+   Business-facing deck. Starts from one concrete pipeline and generalizes it
+   into a file-event workflow architecture. Canvas is 1280 x 1080, so headlines
+   are hard-wrapped Japanese lines rather than paragraphs, and every list block
+   is sized to survive the mobile downscale. */
+
+.remotion-slide.vea-slide {
+  background:
+    radial-gradient(circle at 84% 6%, rgba(251, 191, 36, 0.12), transparent 40%),
+    linear-gradient(160deg, #0b1017, #131c26 55%, #0d141c);
+  color: #f5f7fa;
+  font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+  justify-content: center;
+  overflow: hidden;
+  padding: 74px 70px;
+  position: relative;
+}
+
+.vea-grid {
+  background-image:
+    linear-gradient(rgba(148, 173, 197, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 173, 197, 0.14) 1px, transparent 1px);
+  background-size: 72px 72px;
+  inset: 0;
+  opacity: 0.32;
+  position: absolute;
+}
+
+.vea-logo {
+  height: 96px;
+  object-fit: contain;
+  position: absolute;
+  right: 58px;
+  top: 52px;
+  width: 96px;
+  z-index: 2;
+}
+
+.vea-slide .vea-kicker {
+  color: #fbbf24;
+  display: block;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  position: relative;
+  z-index: 2;
+}
+
+.remotion-slide.vea-slide h1 {
+  font-size: 78px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1.16;
+  margin: 22px 0 0;
+  max-width: 1090px;
+  position: relative;
+  z-index: 2;
+}
+
+.remotion-slide.vea-statement h1 {
+  font-size: 92px;
+}
+
+.vea-slide .vea-accent {
+  color: #fbbf24;
+  font-style: normal;
+}
+
+.vea-slide .vea-lead {
+  color: #a9b7c6;
+  font-size: 33px;
+  line-height: 1.5;
+  margin: 38px 0 0;
+  max-width: 1060px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-slide .vea-note {
+  color: #9db0c2;
+  font-size: 27px;
+  line-height: 1.55;
+  margin: 34px 0 0;
+  max-width: 1090px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-slide .vea-note b,
+.vea-slide .vea-lead b {
+  color: #f5f7fa;
+}
+
+/* ── opening ───────────────────────────────────────────────────────── */
+
+.vea-opening {
+  justify-content: center;
+}
+
+.vea-steps-3 {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-steps-3 article {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  border-radius: 20px;
+  padding: 26px 24px;
+}
+
+.vea-steps-3 b {
+  color: #fbbf24;
+  display: block;
+  font-size: 24px;
+  letter-spacing: 0.12em;
+}
+
+.vea-steps-3 strong {
+  display: block;
+  font-size: 38px;
+  font-weight: 900;
+  margin-top: 8px;
+}
+
+.vea-steps-3 p {
+  color: #a9b7c6;
+  font-size: 22px;
+  line-height: 1.5;
+  margin: 12px 0 0;
+}
+
+/* ── numbered steps ────────────────────────────────────────────────── */
+
+.vea-steps {
+  display: grid;
+  gap: 22px;
+  margin-top: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-steps article {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 6px solid #fbbf24;
+  border-radius: 18px;
+  display: flex;
+  gap: 26px;
+  padding: 24px 30px;
+}
+
+.vea-steps > article > b {
+  color: #0b1017;
+  background: #fbbf24;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  font-size: 34px;
+  font-weight: 900;
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  width: 64px;
+}
+
+.vea-steps strong {
+  display: block;
+  font-size: 40px;
+  font-weight: 900;
+}
+
+.vea-steps p {
+  color: #a9b7c6;
+  font-size: 25px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+
+/* ── chips ─────────────────────────────────────────────────────────── */
+
+.vea-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 50px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-chips span {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(169, 183, 198, 0.35);
+  border-radius: 999px;
+  font-size: 31px;
+  font-weight: 700;
+  padding: 14px 28px;
+}
+
+.vea-chips-tight {
+  margin-top: 34px;
+}
+
+.vea-chips-tight span {
+  font-size: 27px;
+  padding: 11px 22px;
+}
+
+/* ── pipeline flow ─────────────────────────────────────────────────── */
+
+.vea-flow {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 46px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-flow article {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(169, 183, 198, 0.28);
+  border-radius: 20px;
+  padding: 24px 22px;
+  position: relative;
+}
+
+.vea-flow article.vea-human {
+  background: rgba(251, 191, 36, 0.14);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+.vea-flow-icon {
+  color: #fbbf24;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.vea-flow strong {
+  display: block;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.vea-flow p {
+  color: #a9b7c6;
+  font-size: 21px;
+  line-height: 1.45;
+  margin: 10px 0 0;
+}
+
+.vea-tag {
+  background: #fbbf24;
+  border-radius: 999px;
+  color: #0b1017;
+  font-size: 20px;
+  font-weight: 900;
+  padding: 4px 16px;
+  position: absolute;
+  right: 18px;
+  top: 18px;
+}
+
+/* ── two-column compare ────────────────────────────────────────────── */
+
+.vea-two {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-two article {
+  border-radius: 22px;
+  padding: 28px 30px;
+}
+
+.vea-two header {
+  align-items: center;
+  display: flex;
+  font-size: 36px;
+  font-weight: 900;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.vea-two ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vea-two li {
+  border-top: 1px solid rgba(169, 183, 198, 0.24);
+  font-size: 26px;
+  line-height: 1.4;
+  padding: 16px 0;
+}
+
+.vea-two .vea-yes,
+.vea-two .vea-keep {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.5);
+}
+
+.vea-two .vea-yes header,
+.vea-two .vea-keep header {
+  color: #fbbf24;
+}
+
+.vea-two .vea-no {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(169, 183, 198, 0.3);
+}
+
+.vea-two .vea-no header {
+  color: #a9b7c6;
+}
+
+/* ── understand: the shift ─────────────────────────────────────────── */
+
+.vea-shift {
+  align-items: center;
+  display: flex;
+  gap: 22px;
+  margin-top: 52px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-shift span {
+  align-items: center;
+  border-radius: 18px;
+  display: flex;
+  flex: 1;
+  font-size: 27px;
+  font-weight: 700;
+  gap: 14px;
+  line-height: 1.35;
+  padding: 24px 26px;
+}
+
+.vea-shift .vea-old {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(169, 183, 198, 0.3);
+  color: #a9b7c6;
+}
+
+.vea-shift .vea-new {
+  background: rgba(251, 191, 36, 0.14);
+  border: 1px solid rgba(251, 191, 36, 0.55);
+  color: #f5f7fa;
+}
+
+.vea-shift-arrow {
+  color: #fbbf24;
+  flex: 0 0 auto;
+}
+
+/* ── artifacts fan-out ─────────────────────────────────────────────── */
+
+.vea-fan {
+  align-items: center;
+  display: flex;
+  gap: 30px;
+  margin-top: 46px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-fan-source {
+  background: rgba(251, 191, 36, 0.14);
+  border: 1px solid rgba(251, 191, 36, 0.55);
+  border-radius: 22px;
+  color: #fbbf24;
+  flex: 0 0 300px;
+  padding: 30px 26px;
+  text-align: center;
+}
+
+.vea-fan-source strong {
+  color: #f5f7fa;
+  display: block;
+  font-size: 36px;
+  font-weight: 900;
+  margin-top: 12px;
+}
+
+.vea-fan-source p {
+  color: #a9b7c6;
+  font-size: 22px;
+  margin: 10px 0 0;
+}
+
+.vea-fan-out {
+  display: grid;
+  flex: 1;
+  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.vea-fan-out span {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(169, 183, 198, 0.28);
+  border-radius: 16px;
+  color: #f5f7fa;
+  display: flex;
+  font-size: 24px;
+  font-weight: 700;
+  gap: 12px;
+  line-height: 1.3;
+  padding: 18px 20px;
+}
+
+.vea-fan-out svg {
+  color: #fbbf24;
+  flex: 0 0 auto;
+}
+
+/* ── cards ─────────────────────────────────────────────────────────── */
+
+.vea-cards {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-cards article {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: 22px;
+  padding: 30px 28px;
+}
+
+.vea-card-icon {
+  color: #fbbf24;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.vea-cards strong {
+  display: block;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.vea-cards p {
+  color: #a9b7c6;
+  font-size: 24px;
+  line-height: 1.5;
+  margin: 14px 0 0;
+}
+
+/* ── trigger event ─────────────────────────────────────────────────── */
+
+.vea-event {
+  align-items: center;
+  background: rgba(251, 191, 36, 0.14);
+  border: 1px solid rgba(251, 191, 36, 0.6);
+  border-radius: 22px;
+  color: #fbbf24;
+  display: flex;
+  font-size: 42px;
+  font-weight: 900;
+  gap: 20px;
+  margin-top: 46px;
+  padding: 28px 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── five layers ───────────────────────────────────────────────────── */
+
+.vea-layers {
+  display: grid;
+  gap: 12px;
+  margin-top: 42px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-layers article {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 6px solid #fbbf24;
+  border-radius: 16px;
+  display: flex;
+  gap: 20px;
+  padding: 18px 24px;
+}
+
+.vea-layers b {
+  background: #fbbf24;
+  border-radius: 50%;
+  color: #0b1017;
+  flex: 0 0 auto;
+  font-size: 26px;
+  font-weight: 900;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  width: 48px;
+}
+
+.vea-layers strong {
+  flex: 0 0 300px;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.vea-layers p {
+  color: #a9b7c6;
+  font-size: 24px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.vea-cross {
+  align-items: center;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px dashed rgba(251, 191, 36, 0.6);
+  border-radius: 16px;
+  color: #d8c69a;
+  display: flex;
+  font-size: 24px;
+  gap: 16px;
+  margin-top: 26px;
+  padding: 20px 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-cross b {
+  color: #fbbf24;
+}
+
+.vea-cross svg {
+  color: #fbbf24;
+  flex: 0 0 auto;
+}
+
+/* ── mapping rows ──────────────────────────────────────────────────── */
+
+.vea-map {
+  display: grid;
+  gap: 16px;
+  margin-top: 46px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-map article {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(169, 183, 198, 0.26);
+  border-radius: 18px;
+  display: flex;
+  gap: 18px;
+  padding: 22px 26px;
+}
+
+.vea-map strong {
+  color: #fbbf24;
+  flex: 0 0 260px;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.vea-map-arrow {
+  color: #6f8398;
+  flex: 0 0 auto;
+}
+
+.vea-map p {
+  color: #dbe3ec;
+  font-size: 25px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ── copy chain ────────────────────────────────────────────────────── */
+
+.vea-chain {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 44px;
+  position: relative;
+  z-index: 2;
+}
+
+.vea-chain article {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(169, 183, 198, 0.28);
+  border-radius: 16px;
+  display: flex;
+  font-size: 25px;
+  font-weight: 700;
+  gap: 14px;
+  line-height: 1.35;
+  padding: 20px 22px;
+}
+
+.vea-chain-icon {
+  color: #fbbf24;
+  flex: 0 0 auto;
+}
+
+/* ── closing badge ─────────────────────────────────────────────────── */
+
+.vea-badge {
+  background: rgba(251, 191, 36, 0.16);
+  border: 1px solid rgba(251, 191, 36, 0.6);
+  border-radius: 18px;
+  color: #fbbf24;
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 900;
+  margin-top: 44px;
+  padding: 22px 30px;
+  position: relative;
+  width: fit-content;
+  z-index: 2;
+}
