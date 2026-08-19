@@ -1,0 +1,41 @@
+reviewedAt: "2026-08-19"
+reviewer: "Codex review against current Microsoft Learn documentation"
+files:
+  deck.yaml: f17a286c1db354ba8e2edb2640351406c8cb0cc7975113b108db5342e75621d3
+  slides.tsx: e0fbc5fa909e12fdb3764064edc9dba62fcfe5afcc41cb5d388ec01fbaa2c58e
+  styles.css: 5a31403d790e9364a84d642dc367b2699f211ccc71b9cc5f953dc6c58fd88033
+factQa:
+  result: pass
+  evidence: The terminology, DC discovery flow, logical and physical structures, GPO processing baseline, authentication distinctions, replication model, recovery warning, and 2026 update points match the cited Microsoft Learn sources.
+semanticQa:
+  source_faithfulness:
+    result: pass
+    evidence: Claims are limited to introductory descriptions supported by official AD DS, Kerberos, LDAP, replication, recovery, and Windows Server 2025 documentation.
+  japanese_clarity:
+    result: pass
+    evidence: Each slide introduces one concept group with a plain-language purpose before showing the English term.
+  taxonomy_challenge:
+    result: pass
+    evidence: Logical structure, physical structure, and provided services are presented as overlapping viewpoints rather than falsely exclusive categories.
+  first_time_teachback:
+    result: pass
+    evidence: A first-time viewer can explain the DNS-to-DC-to-service flow and place the main terms on the overview map without learning operational procedures yet.
+  presenter_usability:
+    result: pass
+    evidence: The 17-slide sequence starts with the complete map, expands one region at a time, and leaves GUI, PowerShell, SRV record inspection, GPO results, and replication diagnostics for later parts.
+  visual_readability:
+    result: pass
+    evidence: All 17 slides were rendered at 1280x1080 without overflow; dark-theme paragraph contrast was explicitly verified after correcting the shared-site CSS override, and the 390px audience view has no horizontal overflow.
+sources:
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview
+  - https://learn.microsoft.com/en-us/entra/fundamentals/compare
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-the-active-directory-logical-model
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-active-directory-site-topology
+  - https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-hierarchy
+  - https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/ldap-signing
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/replication/active-directory-replication-concepts
+  - https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/fsmo-roles
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/ad-forest-recovery-guide
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/active-directory-functional-levels
+  - https://learn.microsoft.com/en-us/windows-server/security/kerberos/detect-remediate-rc4-kerberos
