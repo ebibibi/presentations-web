@@ -2,7 +2,7 @@ reviewedAt: "2026-08-19"
 reviewer: "Antigravity independent context against original transcript chapters and Microsoft Learn source facts"
 reviewerNote: "Claude CLI was unavailable because its weekly limit was reached, so the documented agy fallback was used."
 files:
-  deck.yaml: 5c6a367f98df7ec88c3674044367299a4c020ef68df837565e73f7895f569367
+  deck.yaml: b1deb914a92bc5841be57deccc0937c7a8ae61333ac10be6c9313b3c000afd67
   slides.tsx: da47ff4dd7855e6d38c1dd3fc8884c722cd78681a4dad625de828b81e1e72abd
   styles.css: 2f82c58ae6de2b75fb8ae92a0ff47ad08077b0209ddb650ce92ac13f55564d66
 factQa:
