@@ -105,7 +105,7 @@ function CardGrid({ cards, columns = 3 }: { cards: Card[]; columns?: 2 | 3 | 4 }
   return (
     <div className={`ad26-card-grid cols-${columns}`}>
       {cards.map((card, index) => (
-        <article className={`ad26-card is-${card.tone ?? 'blue'}`} key={card.label ?? index}>
+        <article className={`ad26-card is-${card.tone ?? 'blue'}`} key={`${card.label ?? 'card'}-${index}`}>
           <div className="ad26-card-icon">{card.icon}</div>
           {card.label && <span className="ad26-card-label">{card.label}</span>}
           <h2>{card.title}</h2><div className="ad26-card-body">{card.body}</div>
