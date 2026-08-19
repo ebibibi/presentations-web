@@ -1,0 +1,93 @@
+slug: active-directory-2026-overview
+title: Active Directory入門 2026 — 概念と用語を浅く広く
+summary: AD DSを理解するために最初に押さえたい論理構造、物理構造、DNS、認証、LDAP、GPO、複製、復旧、2026年の更新点を、操作へ入る前の全体地図として整理する。
+status: public
+visibility: public
+createdAt: "2026-08-19"
+updatedAt: "2026-08-19"
+order: 106
+tags:
+  - active-directory
+  - windows-server
+  - identity
+  - microsoft
+youtube:
+  id: lZ8Ps6U_kvY
+  url: https://www.youtube.com/watch?v=lZ8Ps6U_kvY
+  title: Active Directory入門 まずは把握すべき要素・概念・単語をざっと理解！
+slides:
+  - id: opening
+    title: Active Directory入門 2026
+    durationInFrames: 180
+    notes: |
+      Part 1では、操作手順ではなく全体像を扱います。
+      聞いたことのない用語を、論理構造・物理構造・提供機能のどこへ置けばよいか分かる状態を目指します。
+      収録時はBGMを使用しません。
+  - id: concept-map
+    title: Active Directoryの概念と用語を1枚で
+    durationInFrames: 300
+    notes: |
+      この1枚は、AD DSの用語を暗記するためではなく、互いの関係を地図として把握するためのものです。
+      上段の流れは、ユーザーやPCがDNSとDC Locatorで利用可能なDCを見つけ、DCから認証やLDAPなどの機能を受ける関係です。
+      下段は論理構造、物理構造、設定配布、データと複製、フォレスト横断機能の5つの観点です。
+      最後に、2026年時点で追加して覚えるWindows Server 2025、DFSR、RC4からAES、LDAP保護を確認します。
+  - id: ad-ds-and-entra
+    title: AD DSとMicrosoft Entra IDは別物
+    durationInFrames: 220
+    notes: AD DSはWindows Serverを中心とするオンプレミスのディレクトリサービス。Entra IDはクラウドのIDaaS。どちらかが上位互換ではなく併用できる。
+  - id: three-lenses
+    title: 用語を3つの視点で見る
+    durationInFrames: 200
+    notes: 論理構造、物理構造、提供機能は排他的な分類ではない。DCや複製など、複数の視点にまたがる用語もある。
+  - id: objects-and-dn
+    title: オブジェクト、属性、DN
+    durationInFrames: 220
+    notes: AD DSはユーザー、PC、グループなどをオブジェクトとして保存し、属性を持たせる。DNはディレクトリ内の現在位置を含む住所。
+  - id: logical-structure
+    title: フォレスト、ドメイン、OU、グループ
+    durationInFrames: 240
+    notes: フォレストは最上位構造、ドメインはDNS名を持つデータ区画、OUは委任とGPOの管理単位。グループは権限付与に使う。
+  - id: dns-and-dc
+    title: DNS、DC Locator、ドメインコントローラー
+    durationInFrames: 230
+    notes: クライアントはDNSとDC Locatorで利用可能なDCを発見する。DCはAD DSデータを保持し、認証やLDAP要求へ応答する。
+  - id: physical-structure
+    title: サブネット、サイト、サイトリンク
+    durationInFrames: 220
+    notes: サイトは高速で信頼できる接続を持つサブネットの集合。近いDCの発見とサイト間複製の制御に使う。
+  - id: gpo-and-domain-join
+    title: グループポリシーとドメイン参加
+    durationInFrames: 230
+    notes: GPOはLocal、Site、Domain、OUの順序を基礎に処理される。ドメイン参加はPCアカウントを作り、端末とドメインの安全な関係を作る。
+  - id: authentication
+    title: Kerberos、NTLM、CredSSP
+    durationInFrames: 230
+    notes: KerberosとNTLMは認証方式。CredSSPは資格情報をリモート先へ委任する仕組みで、同じ分類ではない。
+  - id: ldap
+    title: LDAPはディレクトリへアクセスするプロトコル
+    durationInFrames: 210
+    notes: LDAPは検索と更新に使う。2026年時点では署名、TLS、Channel Bindingなどの保護を互換性確認とともに段階的に強化する。
+  - id: data-and-replication
+    title: NTDS.dit、SYSVOL、複製
+    durationInFrames: 240
+    notes: ディレクトリデータとSYSVOLは別の複製系統。同じドメインのDC間で変更を複製し、SYSVOLはDFSRで同期する。
+  - id: deletion-schema-fsmo
+    title: 削除、スキーマ、FSMO
+    durationInFrames: 240
+    notes: 削除状態も複製される。スキーマはフォレスト共通の型定義。FSMOは競合を避ける5つの単一担当処理。
+  - id: trust-and-gc
+    title: 信頼関係とグローバルカタログ
+    durationInFrames: 220
+    notes: 信頼は別ドメインの認証結果を受け入れる経路で、権限の自動付与ではない。GCはフォレスト横断検索を助けるDCの役割。
+  - id: recovery-and-health
+    title: 複製はバックアップではない
+    durationInFrames: 230
+    notes: 複数DCは可用性を高めるが、誤削除や侵害も複製する。DNS、複製、DC探索、時刻、復旧性を別々に確認する。
+  - id: changes-in-2026
+    title: 2026年版で追加して覚えること
+    durationInFrames: 230
+    notes: Windows Server 2025機能レベル、SYSVOLのDFSR、Kerberos RC4依存の監査とAES対応、LDAP保護を追加で押さえる。
+  - id: next-step
+    title: Part 2から実物を見る
+    durationInFrames: 190
+    notes: Part 1では用語を地図へ置いた。Part 2以降でGUI、PowerShell、SRVレコード、GPO適用結果、複製状態を実際に確認する。
