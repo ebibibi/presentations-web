@@ -1,25 +1,21 @@
 /* eslint-disable react-refresh/only-export-components */
 import type { ReactNode } from 'react'
 import {
-  ArrowDown,
   ArrowRight,
-  BadgeCheck,
   Boxes,
-  Building2,
   Cable,
   CheckCircle2,
   CircleAlert,
-  Cloud,
+  Clock3,
   Database,
   FileKey2,
+  FolderInput,
   FolderTree,
   Globe2,
   HardDrive,
   KeyRound,
   Laptop,
   Link2,
-  LockKeyhole,
-  MapPinned,
   Network,
   RefreshCw,
   Search,
@@ -30,6 +26,7 @@ import {
   Trash2,
   UserRoundCog,
   Users,
+  Wrench,
 } from 'lucide-react'
 import { LogoMark } from '../../../src/deck-shared'
 import type { SlideModule } from '../../../src/types'
@@ -37,49 +34,52 @@ import './styles.css'
 
 export const slides: SlideModule['slides'] = [
   { render: () => <OpeningSlide /> },
-  { render: () => <ActiveDirectoryMap /> },
-  { render: () => <AdDsAndEntraSlide /> },
-  { render: () => <ThreeLensesSlide /> },
-  { render: () => <ObjectsSlide /> },
-  { render: () => <LogicalStructureSlide /> },
-  { render: () => <DnsAndDcSlide /> },
-  { render: () => <PhysicalStructureSlide /> },
-  { render: () => <GpoAndJoinSlide /> },
-  { render: () => <AuthenticationSlide /> },
+  { render: () => <GoalSlide /> },
+  { render: () => <OriginalMapSlide /> },
+  { render: () => <StructureSlide /> },
+  { render: () => <AdAndDnsHistorySlide /> },
+  { render: () => <ForestDomainSlide /> },
+  { render: () => <ForestPatternsSlide /> },
+  { render: () => <SiteSlide /> },
+  { render: () => <SiteLinkSlide /> },
+  { render: () => <ContainerOuSlide /> },
+  { render: () => <AdIntegratedDnsSlide /> },
+  { render: () => <SrvSlide /> },
+  { render: () => <DirectoryServiceSlide /> },
   { render: () => <LdapSlide /> },
-  { render: () => <DataAndReplicationSlide /> },
-  { render: () => <DeletionSchemaFsmoSlide /> },
-  { render: () => <TrustAndGcSlide /> },
+  { render: () => <AuthenticationSlide /> },
+  { render: () => <GpoSlide /> },
+  { render: () => <DomainJoinSlide /> },
+  { render: () => <UserProfileSlide /> },
+  { render: () => <DatabasePartitionsSlide /> },
+  { render: () => <GlobalCatalogSlide /> },
+  { render: () => <ReplicationSlide /> },
+  { render: () => <TombstoneSlide /> },
+  { render: () => <SchemaSlide /> },
+  { render: () => <FsmoSlide /> },
+  { render: () => <SysvolSlide /> },
+  { render: () => <TrustSlide /> },
   { render: () => <RecoverySlide /> },
+  { render: () => <DiagnosticsSlide /> },
   { render: () => <Changes2026Slide /> },
-  { render: () => <NextStepSlide /> },
+  { render: () => <RecapSlide /> },
 ]
 
 const SOURCES = {
   original: 'https://www.youtube.com/watch?v=lZ8Ps6U_kvY',
-  overview:
-    'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview',
-  entra:
-    'https://learn.microsoft.com/en-us/entra/fundamentals/compare',
-  logical:
-    'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-the-active-directory-logical-model',
-  sites:
-    'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-active-directory-site-topology',
-  gpo:
-    'https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-hierarchy',
-  kerberos:
-    'https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview',
-  ldap:
-    'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/ldap-signing',
-  replication:
-    'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/replication/active-directory-replication-concepts',
-  fsmo:
-    'https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/fsmo-roles',
-  recovery:
-    'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/ad-forest-recovery-guide',
-  server2025:
-    'https://learn.microsoft.com/en-us/windows-server/get-started/whats-new-windows-server-2025',
+  overview: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview',
+  logical: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-the-active-directory-logical-model',
+  sites: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-active-directory-site-topology',
+  dns: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/reviewing-dns-concepts',
+  ldap: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/ldap-signing',
+  replication: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/replication/active-directory-replication-concepts',
+  fsmo: 'https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/fsmo-roles',
+  recovery: 'https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/ad-forest-recovery-guide',
+  server2025: 'https://learn.microsoft.com/en-us/windows-server/get-started/whats-new-windows-server-2025',
+  rc4: 'https://learn.microsoft.com/en-us/windows-server/security/kerberos/detect-remediate-rc4-kerberos',
 }
+
+const originalAt = (seconds: number) => `${SOURCES.original}&t=${seconds}s`
 
 type Card = {
   body: ReactNode
@@ -89,30 +89,14 @@ type Card = {
   tone?: 'blue' | 'cyan' | 'green' | 'orange' | 'violet' | 'yellow'
 }
 
-function Shell({
-  children,
-  eyebrow,
-  footer,
-  title,
-}: {
-  children: ReactNode
-  eyebrow: string
-  footer?: ReactNode
-  title: ReactNode
-}) {
+function Shell({ children, eyebrow, footer, title }: { children: ReactNode; eyebrow: string; footer?: ReactNode; title: ReactNode }) {
   return (
     <section className="remotion-slide ad26-slide ad26-standard">
       <div className="ad26-grid" />
       <LogoMark className="ad26-logo" />
-      <header className="ad26-page-head">
-        <span>{eyebrow}</span>
-        <h1>{title}</h1>
-      </header>
+      <header className="ad26-page-head"><span>{eyebrow}</span><h1>{title}</h1></header>
       <main className="ad26-page-body">{children}</main>
-      <footer className="ad26-page-footer">
-        <span>Active Directory入門 2026 · Part 1</span>
-        <div>{footer}</div>
-      </footer>
+      <footer className="ad26-page-footer"><span>Active Directory入門 2026 · Part 1</span><div>{footer}</div></footer>
     </section>
   )
 }
@@ -124,8 +108,7 @@ function CardGrid({ cards, columns = 3 }: { cards: Card[]; columns?: 2 | 3 | 4 }
         <article className={`ad26-card is-${card.tone ?? 'blue'}`} key={card.label ?? index}>
           <div className="ad26-card-icon">{card.icon}</div>
           {card.label && <span className="ad26-card-label">{card.label}</span>}
-          <h2>{card.title}</h2>
-          <div className="ad26-card-body">{card.body}</div>
+          <h2>{card.title}</h2><div className="ad26-card-body">{card.body}</div>
         </article>
       ))}
     </div>
@@ -136,357 +119,404 @@ function SourceLink({ href, children }: { href: string; children: ReactNode }) {
   return <a href={href} target="_blank" rel="noreferrer">{children}</a>
 }
 
+function OriginalLink({ seconds, time }: { seconds: number; time: string }) {
+  return <SourceLink href={originalAt(seconds)}>元動画 {time}</SourceLink>
+}
+
+function Callout({ children, icon = <CheckCircle2 /> }: { children: ReactNode; icon?: ReactNode }) {
+  return <div className="ad26-callout">{icon}<strong>{children}</strong></div>
+}
+
 function OpeningSlide() {
   return (
     <section className="remotion-slide ad26-slide ad26-opening">
-      <div className="ad26-grid" />
-      <LogoMark className="ad26-logo" />
+      <div className="ad26-grid" /><LogoMark className="ad26-logo" />
       <div className="ad26-opening-copy">
         <span>ACTIVE DIRECTORY DOMAIN SERVICES · 2026</span>
         <h1>Active Directory<span>入門</span></h1>
-        <p>まずは把握すべき要素・概念・単語を<br /><strong>浅く、広く、つながりで理解する。</strong></p>
-        <div className="ad26-chip-row">
-          <b>用語の地図</b><b>全17枚</b><b>操作はPart 2以降</b>
-        </div>
+        <p>まず把握すべき要素・概念・単語を<br /><strong>元動画の流れのまま、もう一度。</strong></p>
+        <div className="ad26-chip-row"><b>元動画49分39秒</b><b>内容・話順を踏襲</b><b>BGMなし</b></div>
       </div>
       <div className="ad26-opening-visual" aria-hidden="true">
-        <div className="ad26-orbit orbit-a"><Users /></div>
-        <div className="ad26-orbit orbit-b"><KeyRound /></div>
-        <div className="ad26-orbit orbit-c"><FolderTree /></div>
-        <div className="ad26-core"><ServerCog /><strong>AD DS</strong><span>名簿・本人確認・設定配布</span></div>
+        <div className="ad26-orbit orbit-a"><Users /></div><div className="ad26-orbit orbit-b"><KeyRound /></div><div className="ad26-orbit orbit-c"><FolderTree /></div>
+        <div className="ad26-core"><ServerCog /><strong>AD DS</strong><span>企業のユーザーとPCを管理</span></div>
       </div>
-      <div className="ad26-opening-foot">
-        <SourceLink href={SOURCES.original}>2019年版の元動画</SourceLink>
-        <span>BGMなし · 高コントラスト · 図解中心</span>
-      </div>
+      <div className="ad26-opening-foot"><SourceLink href={SOURCES.original}>元動画</SourceLink><span>2026年版 · 視認性と現行差分のみ更新</span></div>
     </section>
   )
 }
 
-function ActiveDirectoryMap() {
-  const lenses = [
-    {
-      icon: <FolderTree />,
-      label: '論理構造',
-      lead: 'Forest → Domain → OU',
-      body: 'データ区画と管理単位。OUは委任とGPOリンクに使う。',
-      tone: 'violet',
-    },
-    {
-      icon: <MapPinned />,
-      label: '物理構造',
-      lead: 'Subnet → Site ／ Site Link＝Site間',
-      body: 'サイトは高速・安定接続のサブネット集合。リンクは接続条件。',
-      tone: 'blue',
-    },
-    {
-      icon: <Settings2 />,
-      label: '設定配布',
-      lead: 'Local → Site → Domain → OU',
-      body: '基礎となる処理順。強制・継承ブロック等で結果は変わる。',
-      tone: 'orange',
-    },
-    {
-      icon: <Database />,
-      label: 'データと複製',
-      lead: 'NTDS.dit ＋ SYSVOL',
-      body: '同じドメインのDC間で複製。SYSVOLはDFSRで同期する。',
-      tone: 'green',
-    },
-    {
-      icon: <Network />,
-      label: '横断・単一担当',
-      lead: 'Trust・GC・FSMO',
-      body: '認証経路、横断検索、5つの単一担当処理。',
-      tone: 'cyan',
-    },
+function GoalSlide() {
+  return (
+    <Shell eyebrow="02 · この動画の目的" title={<>まずは、<em>単語と概念をざっと知る</em></>} footer={<OriginalLink seconds={51} time="00:51" />}>
+      <div className="ad26-goal">
+        <div><b>Part 1</b><h2>全体を浅く広く</h2><p>理解しておくべき項目に、どんなものがあるか把握する。</p></div>
+        <ArrowRight />
+        <div><b>Part 2以降</b><h2>実際の画面で深掘り</h2><p>管理ツール、操作、コマンド、トラブル対応を一つずつ試す。</p></div>
+      </div>
+      <Callout>この動画だけで「言葉を聞いたことがある」「大まかな位置が分かる」状態へ。</Callout>
+    </Shell>
+  )
+}
+
+function OriginalMapSlide() {
+  const groups = [
+    ['構造', 'Forest · Domain · Site · Subnet · Site Link · Container · OU'],
+    ['サービス', 'DNS · SRV · LDAP · 認証 · GPO · Domain Join'],
+    ['データ', 'Profile · Partition · GC · Replication · Tombstone'],
+    ['運用', 'Schema · FSMO · SYSVOL · Trust · Recovery · Diagnostics'],
   ]
-
   return (
-    <section className="remotion-slide ad26-slide">
-      <div className="ad26-grid" />
-      <LogoMark className="ad26-logo" />
-
-      <header className="ad26-header">
-        <div>
-          <span className="ad26-kicker">02 · THE BIG PICTURE</span>
-          <h1>用語を、<br /><em>1枚の地図</em>に置く</h1>
-        </div>
-        <p>AD DSは「名簿・本人確認・設定配布」を<br />DNSとDCで支える仕組み</p>
-      </header>
-
-      <div className="ad26-main-flow">
-        <article className="ad26-actor">
-          <div><Users /><Building2 /></div>
-          <span>利用者・端末</span>
-          <strong>User / PC</strong>
-        </article>
-        <ArrowRight className="ad26-arrow" />
-        <article className="ad26-discovery">
-          <Search />
-          <span>① DCを発見</span>
-          <strong>DNS ＋ DC Locator</strong>
-          <small>SRVレコードでサービスの場所を知る</small>
-        </article>
-        <ArrowRight className="ad26-arrow" />
-        <article className="ad26-dc">
-          <ServerCog />
-          <span>② 利用可能なDCへ接続</span>
-          <strong>Domain Controller</strong>
-          <small>AD DSのデータを保持し、要求へ応答</small>
-        </article>
-        <ArrowRight className="ad26-arrow" />
-        <article className="ad26-services">
-          <div><KeyRound /><ShieldCheck /><Boxes /></div>
-          <span>③ 機能を利用</span>
-          <strong>認証・LDAP・GPO</strong>
-          <small>Kerberos / NTLM · 検索 / 更新 · 設定配布</small>
-        </article>
+    <Shell eyebrow="03 · 元動画の全体図" title={<>これから出てくる<em>用語の地図</em></>} footer={<OriginalLink seconds={74} time="01:14" />}>
+      <div className="ad26-original-map">
+        <div className="ad26-map-core"><ServerCog /><strong>Active Directory<br />Domain Services</strong><span>Domain Controllerが提供</span></div>
+        <div className="ad26-map-groups">{groups.map(([title, body], i) => <article className={`map-${i + 1}`} key={title}><b>{title}</b><p>{body}</p></article>)}</div>
       </div>
-
-      <div className="ad26-down"><ArrowDown /><span>同じ用語を、5つの観点で整理</span><ArrowDown /></div>
-
-      <div className="ad26-lenses">
-        {lenses.map((lens) => (
-          <article className={`ad26-lens is-${lens.tone}`} key={lens.label}>
-            <div className="ad26-lens-head">{lens.icon}<span>{lens.label}</span></div>
-            <strong>{lens.lead}</strong>
-            <p>{lens.body}</p>
-          </article>
-        ))}
-      </div>
-
-      <footer className="ad26-footer">
-        <div className="ad26-now">
-          <b>2026</b>
-          <span><strong>Server 2025</strong> 機能レベル</span>
-          <span><strong>SYSVOL</strong> はDFSR</span>
-          <span><strong>Kerberos</strong> RC4を監査 → AES</span>
-          <span><strong>LDAP</strong> 署名・TLS・Channel Binding</span>
-        </div>
-        <div className="ad26-sources">
-          <SourceLink href={SOURCES.overview}>AD DS overview</SourceLink>
-          <SourceLink href={SOURCES.server2025}>Windows Server 2025</SourceLink>
-          <span>まず地図。詳細はこのあと。</span>
-        </div>
-      </footer>
-    </section>
-  )
-}
-
-function AdDsAndEntraSlide() {
-  return (
-    <Shell eyebrow="03 · START HERE" title={<>AD DSとEntra IDは、<em>別の仕組み</em></>} footer={<SourceLink href={SOURCES.entra}>Microsoft Learn</SourceLink>}>
-      <div className="ad26-compare">
-        <article className="is-blue">
-          <ServerCog /><span>オンプレミス中心</span><h2>Active Directory<br />Domain Services</h2>
-          <ul><li>Windows Server上で動く</li><li>Kerberos / NTLM / LDAP</li><li>ドメイン参加・GPO</li></ul>
-        </article>
-        <div className="ad26-not-equal">≠<small>併用できる</small></div>
-        <article className="is-cyan">
-          <Cloud /><span>クラウドのIDaaS</span><h2>Microsoft<br />Entra ID</h2>
-          <ul><li>Microsoftのクラウドサービス</li><li>OAuth / OIDC / SAML</li><li>条件付きアクセス・MFA</li></ul>
-        </article>
-      </div>
-      <div className="ad26-callout"><CircleAlert /><strong>「AD」とだけ言われたら、どちらを指すか確認する。</strong><span>旧称Azure ADはMicrosoft Entra IDへ。</span></div>
+      <Callout icon={<CircleAlert />}>ここでは暗記しない。順番に「何のための言葉か」だけ置いていく。</Callout>
     </Shell>
   )
 }
 
-function ThreeLensesSlide() {
+function StructureSlide() {
   return (
-    <Shell eyebrow="04 · HOW TO READ THE MAP" title={<>用語は<em>3つの視点</em>で置いてみる</>}>
-      <CardGrid cards={[
-        { icon: <FolderTree />, label: 'LOGICAL', title: '論理構造', body: <><p>組織とデータをどう区切るか</p><b>Forest · Domain · OU · Object</b></>, tone: 'violet' },
-        { icon: <MapPinned />, label: 'PHYSICAL', title: '物理構造', body: <><p>ネットワーク上でどう配置するか</p><b>Subnet · Site · Site Link · DC</b></>, tone: 'blue' },
-        { icon: <ShieldCheck />, label: 'SERVICES', title: '提供する機能', body: <><p>利用者と端末へ何を提供するか</p><b>認証 · LDAP · GPO · 複製</b></>, tone: 'green' },
-      ]} />
-      <div className="ad26-callout"><Link2 /><strong>分類は“箱”ではなく“視点”。</strong><span>DCや複製のように、複数へまたがる用語もある。</span></div>
-    </Shell>
-  )
-}
-
-function ObjectsSlide() {
-  return (
-    <Shell eyebrow="05 · DIRECTORY DATA" title={<>AD DSは<em>オブジェクトの名簿</em></>} footer={<SourceLink href={SOURCES.overview}>AD DS overview</SourceLink>}>
-      <div className="ad26-object-layout">
-        <CardGrid columns={4} cards={[
-          { icon: <Users />, title: 'ユーザー', body: '名前、部署、UPN…', tone: 'cyan' },
-          { icon: <Laptop />, title: 'コンピューター', body: 'OS、DNS名…', tone: 'blue' },
-          { icon: <Boxes />, title: 'グループ', body: '種類、メンバー…', tone: 'violet' },
-          { icon: <ServerCog />, title: 'その他', body: 'プリンター、サービス…', tone: 'green' },
-        ]} />
-        <div className="ad26-definition">
-          <div><Tags /><span><b>Object</b>＝1件の情報</span><span><b>Attribute</b>＝その項目</span></div>
-          <code>CN=Aoi,OU=Sales,DC=example,DC=com</code>
-          <p><b>DN</b>（Distinguished Name）は、ディレクトリ内の現在位置を含む“住所”。</p>
-        </div>
+    <Shell eyebrow="04 · 構造" title={<>最初に、<em>入れ物の関係</em>をつかむ</>} footer={<OriginalLink seconds={74} time="01:14" />}>
+      <div className="ad26-structure-tree">
+        <div className="forest"><b>Forest</b><span>AD DS全体の大きな単位</span><div className="domain"><b>Domain</b><span>ユーザーやPCを管理する範囲</span><div><i>Container</i><i>OU</i></div></div></div>
+        <div className="site"><b>Site</b><span>ネットワーク上の場所</span><div><i>Subnet</i><i>Site Link</i></div></div>
       </div>
+      <Callout>Forest／Domainの論理構造と、Siteのネットワーク構造は同じ階層ではない。</Callout>
     </Shell>
   )
 }
 
-function LogicalStructureSlide() {
+function AdAndDnsHistorySlide() {
   return (
-    <Shell eyebrow="06 · LOGICAL STRUCTURE" title={<>大きい順に、<em>Forest → Domain → OU</em></>} footer={<SourceLink href={SOURCES.logical}>Logical model</SourceLink>}>
+    <Shell eyebrow="05 · ADとDNSの関係" title={<>ADの「ドメイン」は、<em>DNSより先にあった</em></>} footer={<OriginalLink seconds={172} time="02:52" />}>
+      <div className="ad26-history">
+        <article><span>1990年代</span><h2>Windows NT Domain</h2><p>PCとユーザーをまとめて管理する範囲。まだDNS名は使わない。</p></article>
+        <ArrowRight />
+        <article><span>Windows 2000〜</span><h2>Active Directory</h2><p>ドメインという管理単位を引き継ぎ、DNSの名前と仕組みを利用。</p></article>
+      </div>
+      <Callout icon={<CircleAlert />}>ADドメインとDNSドメインは名前が重なる。でも役割は同じではない。</Callout>
+    </Shell>
+  )
+}
+
+function ForestDomainSlide() {
+  return (
+    <Shell eyebrow="06 · フォレストとドメイン" title={<>Forestの中に、<em>1個以上のDomain</em></>} footer={<><OriginalLink seconds={289} time="04:49" /><SourceLink href={SOURCES.logical}>公式</SourceLink></>}>
       <div className="ad26-nesting">
-        <div className="forest"><span>FOREST · 最上位構造／スキーマ共有</span>
-          <div className="domain"><span>DOMAIN · DNS名を持つデータ区画</span>
-            <div className="ou"><span>OU · 委任とGPOリンクの管理単位</span>
-              <div className="objects"><Users /><Laptop /><span>Objects</span></div>
-            </div>
-          </div>
-        </div>
-        <article><Boxes /><h2>Group</h2><p>複数のユーザーやPCをまとめ、<strong>権限を付与</strong>する。</p><b>OUとグループは用途が違う</b></article>
+        <div className="forest"><span>FOREST · 最上位の境界</span><div className="domain-row"><div className="domain"><span>example.com</span><small>ルートドメイン</small><div className="objects"><Users /><Laptop /><span>Objects</span></div></div><div className="domain"><span>child.example.com</span><small>子ドメイン</small><div className="objects"><Users /><Laptop /><span>別のデータ区画</span></div></div></div></div>
+        <article><FolderTree /><h2>Single Forest</h2><p>ドメインは1個でも複数でも構成できる。</p><b>DNS名だけではForestの境界は分からない</b></article>
       </div>
     </Shell>
   )
 }
 
-function DnsAndDcSlide() {
+function ForestPatternsSlide() {
   return (
-    <Shell eyebrow="07 · DISCOVERY" title={<>ログオンの前に、まず<em>DCを見つける</em></>} footer={<SourceLink href={SOURCES.overview}>AD DS overview</SourceLink>}>
-      <div className="ad26-step-flow">
-        {[
-          { icon: <Laptop />, step: '01', title: 'クライアント', body: 'ドメインのサービスを探す' },
-          { icon: <Search />, step: '02', title: 'DNS', body: 'SRVレコードを問い合わせる' },
-          { icon: <MapPinned />, step: '03', title: 'DC Locator', body: 'サイト等を考慮して選ぶ' },
-          { icon: <ServerCog />, step: '04', title: '利用可能なDC', body: '認証・LDAP要求へ応答' },
-        ].map((item, index) => <div className="ad26-step-wrap" key={item.step}><article><span>{item.step}</span>{item.icon}<h2>{item.title}</h2><p>{item.body}</p></article>{index < 3 && <ArrowRight />}</div>)}
-      </div>
-      <div className="ad26-callout"><CircleAlert /><strong>DNSは“おまけ”ではない。</strong><span>AD DSの正常動作を支える中心要素。</span></div>
-    </Shell>
-  )
-}
-
-function PhysicalStructureSlide() {
-  return (
-    <Shell eyebrow="08 · PHYSICAL STRUCTURE" title={<>ネットワークの現実を<em>Site</em>で表す</>} footer={<SourceLink href={SOURCES.sites}>Site topology</SourceLink>}>
-      <div className="ad26-site-map">
-        <article><span>TOKYO SITE</span><div><b>10.10.0.0/16</b><ServerCog /><small>DC-01</small></div></article>
-        <div className="ad26-site-link"><Cable /><strong>Site Link</strong><span>コスト・間隔・スケジュール</span></div>
-        <article><span>OSAKA SITE</span><div><b>10.20.0.0/16</b><ServerCog /><small>DC-02</small></div></article>
-      </div>
-      <div className="ad26-three-defs"><span><b>Subnet</b>IPネットワーク</span><span><b>Site</b>高速・安定接続のSubnet集合</span><span><b>Site Link</b>Site間の接続条件</span></div>
-    </Shell>
-  )
-}
-
-function GpoAndJoinSlide() {
-  return (
-    <Shell eyebrow="09 · DEVICE MANAGEMENT" title={<>端末を仲間にし、<em>設定を配る</em></>} footer={<SourceLink href={SOURCES.gpo}>Group Policy hierarchy</SourceLink>}>
-      <div className="ad26-split">
-        <article className="ad26-join"><Laptop /><ArrowRight /><ShieldCheck /><h2>ドメイン参加</h2><p>PCアカウントを作り、端末とドメインの安全な関係を作る。</p></article>
-        <article className="ad26-gpo"><Settings2 /><h2>Group Policy</h2><div><b>Local</b><ArrowRight /><b>Site</b><ArrowRight /><b>Domain</b><ArrowRight /><b>OU</b></div><p>基本の処理順。強制、継承ブロック、セキュリティフィルター等で最終結果は変わる。</p></article>
-      </div>
-      <div className="ad26-callout"><BadgeCheck /><strong>ログオン制御、セキュリティ設定、端末構成を集中管理。</strong></div>
-    </Shell>
-  )
-}
-
-function AuthenticationSlide() {
-  return (
-    <Shell eyebrow="10 · AUTHENTICATION" title={<>“ログイン”の中にも<em>別の役割</em>がある</>} footer={<SourceLink href={SOURCES.kerberos}>Kerberos overview</SourceLink>}>
+    <Shell eyebrow="07 · 構成パターン" title={<>同じDNS階層でも、<em>Forestは別かもしれない</em></>} footer={<OriginalLink seconds={390} time="06:30" />}>
       <CardGrid cards={[
-        { icon: <KeyRound />, label: 'PRIMARY', title: 'Kerberos', body: <><p>チケットを使う、ドメインの標準的な認証方式。</p><b>時刻と名前解決が重要</b></>, tone: 'green' },
-        { icon: <LockKeyhole />, label: 'COMPATIBILITY', title: 'NTLM', body: <><p>古い環境やKerberosを使えない場面で残る方式。</p><b>依存を把握して縮小</b></>, tone: 'orange' },
-        { icon: <FileKey2 />, label: 'DELEGATION', title: 'CredSSP', body: <><p>資格情報をリモート先へ委任する仕組み。</p><b>認証方式と同じ分類ではない</b></>, tone: 'violet' },
+        { icon: <FolderTree />, label: 'PATTERN A', title: '1 Forest / 1 Domain', body: <><p>example.comだけを持つ、もっとも単純な形。</p><b>Single Forest · Single Domain</b></>, tone: 'green' },
+        { icon: <Network />, label: 'PATTERN B', title: '1 Forest / 複数Domain', body: <><p>example.comとchild.example.comが同じForest。</p><b>Forest内でつながる</b></>, tone: 'blue' },
+        { icon: <Globe2 />, label: 'PATTERN C', title: '複数Forest', body: <><p>DNS名が連続して見えても、AD DSは独立できる。</p><b>Forest関係を確認</b></>, tone: 'violet' },
       ]} />
+    </Shell>
+  )
+}
+
+function SiteSlide() {
+  return (
+    <Shell eyebrow="08 · Site / DC / Subnet" title={<>Siteは、<em>ネットワーク的に近い場所</em></>} footer={<><OriginalLink seconds={509} time="08:29" /><SourceLink href={SOURCES.sites}>公式</SourceLink></>}>
+      <div className="ad26-site-map">
+        <article><span>TOKYO SITE</span><div><b>10.10.0.0/16</b><ServerCog /><small>DC-TYO</small></div></article>
+        <div className="ad26-site-link"><Cable /><strong>WAN / VPN</strong><span>拠点間ネットワーク</span></div>
+        <article><span>OSAKA SITE</span><div><b>10.20.0.0/16</b><ServerCog /><small>DC-OSA</small></div></article>
+      </div>
+      <Callout>SubnetをSiteへ対応付け、クライアントが近いDCを優先して使えるようにする。</Callout>
+    </Shell>
+  )
+}
+
+function SiteLinkSlide() {
+  return (
+    <Shell eyebrow="09 · Site Link" title={<>Site間の<em>複製条件</em>を表す</>} footer={<OriginalLink seconds={690} time="11:30" />}>
+      <CardGrid cards={[
+        { icon: <Link2 />, label: 'PATH', title: '接続', body: <><p>どのSite同士を接続するか。</p><b>Site間の経路</b></>, tone: 'cyan' },
+        { icon: <Network />, label: 'COST', title: 'コスト', body: <><p>どの複製経路を優先するかに影響。</p><b>小さい値を優先</b></>, tone: 'orange' },
+        { icon: <Clock3 />, label: 'SCHEDULE', title: '間隔と時間帯', body: <><p>いつ、どの間隔で複製を行うか。</p><b>回線条件を反映</b></>, tone: 'violet' },
+      ]} />
+    </Shell>
+  )
+}
+
+function ContainerOuSlide() {
+  return (
+    <Shell eyebrow="10 · Container / OU" title={<>Domainの中を、<em>管理しやすく分ける</em></>} footer={<OriginalLink seconds={753} time="12:33" />}>
+      <div className="ad26-folder-compare">
+        <article><FolderInput /><span>Container</span><h2>最初からある入れ物</h2><p>Users、Computersなど、組み込みの汎用コンテナ。</p></article>
+        <article><FolderTree /><span>Organizational Unit</span><h2>管理者が作る組織単位</h2><p>オブジェクトを整理し、管理委任やGPOリンクに使う。</p></article>
+      </div>
+      <Callout>大きなDomainの中を、組織・拠点・役割などの単位で管理しやすくする。</Callout>
+    </Shell>
+  )
+}
+
+function AdIntegratedDnsSlide() {
+  return (
+    <Shell eyebrow="11 · DNS / AD統合ゾーン" title={<>DNSの情報も、<em>AD DSで複製できる</em></>} footer={<><OriginalLink seconds={943} time="15:43" /><SourceLink href={SOURCES.dns}>公式</SourceLink></>}>
+      <div className="ad26-integrated-dns">
+        <article><ServerCog /><strong>DC + DNS</strong><span>AD統合DNSゾーン</span></article>
+        <div><RefreshCw /><b>AD DS Replication</b><small>複製範囲を選べる</small></div>
+        <article><ServerCog /><strong>DC + DNS</strong><span>AD統合DNSゾーン</span></article>
+      </div>
+      <Callout>DNS Server役割はDCへ併設されることが多い。AD統合ゾーンはAD DS内へ保存される。</Callout>
+    </Shell>
+  )
+}
+
+function SrvSlide() {
+  return (
+    <Shell eyebrow="12 · SRVレコード" title={<>DNSで、<em>サービスの場所</em>を探す</>} footer={<OriginalLink seconds={1124} time="18:44" />}>
+      <div className="ad26-srv-flow">
+        <article><Laptop /><h2>クライアント</h2><p>このDomain／Siteで使えるDCは？</p></article><ArrowRight />
+        <div><Search /><code>_ldap._tcp.dc._msdcs.example.com</code><span>SRVレコード</span></div><ArrowRight />
+        <article><ServerCog /><h2>Domain Controller</h2><p>ホスト名・ポート・優先度を回答。</p></article>
+      </div>
+      <Callout>Aレコードは「ホストの場所」。SRVレコードは「サービスの場所」。</Callout>
+    </Shell>
+  )
+}
+
+function DirectoryServiceSlide() {
+  return (
+    <Shell eyebrow="13 · Directory Service" title={<>ユーザー・グループ・PCを<em>一元管理</em></>} footer={<OriginalLink seconds={1221} time="20:21" />}>
+      <CardGrid columns={4} cards={[
+        { icon: <Users />, title: 'User', body: '人を表すアカウント', tone: 'cyan' },
+        { icon: <Boxes />, title: 'Group', body: '複数の対象をまとめる', tone: 'violet' },
+        { icon: <Laptop />, title: 'Computer', body: '参加した端末のアカウント', tone: 'blue' },
+        { icon: <Tags />, title: 'Attribute', body: '名前・所属などの項目', tone: 'green' },
+      ]} />
+      <Callout>Directory Serviceは、階層を持つデータとして管理対象を保存・検索する。</Callout>
     </Shell>
   )
 }
 
 function LdapSlide() {
   return (
-    <Shell eyebrow="11 · DIRECTORY ACCESS" title={<>LDAPは<em>ディレクトリへの入口</em></>} footer={<SourceLink href={SOURCES.ldap}>LDAP signing guidance</SourceLink>}>
+    <Shell eyebrow="14 · LDAP" title={<>LDAPは、<em>Directoryへアクセスする約束</em></>} footer={<><OriginalLink seconds={1228} time="20:28" /><SourceLink href={SOURCES.ldap}>公式</SourceLink></>}>
       <div className="ad26-ldap">
-        <article><Search /><h2>検索</h2><p>ユーザーやグループを条件で探す。</p></article>
-        <ArrowRight />
-        <div className="ad26-ldap-core"><Database /><strong>AD DS</strong><span>bind · search · modify</span></div>
-        <ArrowRight />
-        <article><UserRoundCog /><h2>更新</h2><p>権限を持つ主体が属性を変更する。</p></article>
+        <article><Search /><h2>検索</h2><p>ユーザーやグループを探す。</p></article><ArrowRight />
+        <div className="ad26-ldap-core"><Database /><strong>AD DS</strong><span>Directory Database</span></div><ArrowRight />
+        <article><UserRoundCog /><h2>更新</h2><p>権限の範囲で属性を変更。</p></article>
       </div>
-      <div className="ad26-protection"><ShieldCheck /><span><b>保護する</b>LDAP署名 · TLS · Channel Binding</span><small>互換性を確認しながら段階的に強化</small></div>
+      <div className="ad26-protection"><ShieldCheck /><span><b>2026</b>署名 · TLS · Channel Bindingで保護</span><small>互換性を監査して段階的に強化</small></div>
     </Shell>
   )
 }
 
-function DataAndReplicationSlide() {
+function AuthenticationSlide() {
   return (
-    <Shell eyebrow="12 · DATA & REPLICATION" title={<>2種類のデータを、<em>DC間でそろえる</em></>} footer={<SourceLink href={SOURCES.replication}>Replication concepts</SourceLink>}>
-      <div className="ad26-replication">
-        <article><ServerCog /><strong>DC-01</strong><div><span><Database />NTDS.dit</span><span><HardDrive />SYSVOL</span></div></article>
-        <div><RefreshCw /><b>複製</b><span>変更を相互に反映</span></div>
-        <article><ServerCog /><strong>DC-02</strong><div><span><Database />NTDS.dit</span><span><HardDrive />SYSVOL</span></div></article>
-      </div>
-      <div className="ad26-two-notes"><span><b>ディレクトリデータ</b>AD DSの複製エンジン</span><span><b>SYSVOL</b>GPO等をDFSRで同期</span></div>
-    </Shell>
-  )
-}
-
-function DeletionSchemaFsmoSlide() {
-  return (
-    <Shell eyebrow="13 · DEEPER TERMS, LIGHTLY" title={<>3つの“少し難しい用語”も<em>置き場所だけ</em></>} footer={<SourceLink href={SOURCES.fsmo}>FSMO roles</SourceLink>}>
+    <Shell eyebrow="15 · 認証" title={<>AD認証にも、<em>いくつか種類がある</em></>} footer={<OriginalLink seconds={1280} time="21:20" />}>
       <CardGrid cards={[
-        { icon: <Trash2 />, label: 'STATE', title: '削除も複製される', body: <><p>削除は即座に全痕跡が消える操作ではなく、削除状態がDC間へ伝わる。</p><b>復元可能期間を設計</b></>, tone: 'orange' },
-        { icon: <Tags />, label: 'DEFINITION', title: 'Schema', body: <><p>どんなオブジェクトと属性を持てるかを決める、フォレスト共通の型定義。</p><b>変更は慎重に</b></>, tone: 'violet' },
-        { icon: <ServerCog />, label: 'OWNER', title: 'FSMO', body: <><p>競合を避けるため、特定DCが単独で担当する5つの処理。</p><b>Forest 2 · Domain 3</b></>, tone: 'blue' },
+        { icon: <KeyRound />, label: 'MAIN', title: 'Kerberos', body: <><p>チケットを使う、AD DSの中心的な認証方式。</p><b>時刻・DNSが重要</b></>, tone: 'green' },
+        { icon: <ShieldCheck />, label: 'LEGACY', title: 'NTLM', body: <><p>互換性のため残る古い認証方式。</p><b>利用を把握して縮小</b></>, tone: 'orange' },
+        { icon: <FileKey2 />, label: 'DELEGATION', title: 'CredSSP', body: <><p>資格情報をリモート先へ委任する仕組み。</p><b>認証方式とは役割が違う</b></>, tone: 'violet' },
       ]} />
     </Shell>
   )
 }
 
-function TrustAndGcSlide() {
+function GpoSlide() {
   return (
-    <Shell eyebrow="14 · ACROSS DOMAINS" title={<>別ドメインを越える<em>2つの仕組み</em></>}>
+    <Shell eyebrow="16 · Group Policy" title={<>多数のPCへ、<em>組織の設定を配る</em></>} footer={<OriginalLink seconds={1364} time="22:44" />}>
+      <div className="ad26-policy-examples">
+        <span><KeyRound />パスワード・セキュリティ</span><span><Clock3 />ロック・スクリーンセーバー</span><span><Wrench />Windowsの構成</span><span><FolderInput />スクリプト・ドライブ割当</span>
+      </div>
+      <div className="ad26-gpo-order"><b>Site</b><ArrowRight /><b>Domain</b><ArrowRight /><b>OU</b><span>対象へGPOをリンク</span></div>
+      <Callout>Domain参加したユーザーとPCへ、中央から同じルールを適用できる。</Callout>
+    </Shell>
+  )
+}
+
+function DomainJoinSlide() {
+  return (
+    <Shell eyebrow="17 · Domain Join" title={<>PCを、<em>AD DSの管理下へ</em></>} footer={<OriginalLink seconds={1440} time="24:00" />}>
+      <div className="ad26-step-flow">
+        {[
+          { icon: <Laptop />, step: '01', title: 'PC', body: 'まだネットワーク上にいるだけ' },
+          { icon: <FolderInput />, step: '02', title: 'Domain参加', body: 'PCアカウントを作成' },
+          { icon: <ShieldCheck />, step: '03', title: '安全な関係', body: '端末とDomainを結ぶ' },
+          { icon: <Settings2 />, step: '04', title: '管理開始', body: 'Domain認証・GPOを利用' },
+        ].map((item, index) => <div className="ad26-step-wrap" key={item.step}><article><span>{item.step}</span>{item.icon}<h2>{item.title}</h2><p>{item.body}</p></article>{index < 3 && <ArrowRight />}</div>)}
+      </div>
+    </Shell>
+  )
+}
+
+function UserProfileSlide() {
+  return (
+    <Shell eyebrow="18 · User Profile" title={<>同じ名前でも、<em>別ユーザーなら別Profile</em></>} footer={<OriginalLink seconds={1493} time="24:53" />}>
+      <div className="ad26-profile-compare">
+        <article><Laptop /><span>PC-A</span><h2>PC-A\aoi</h2><p>ローカルユーザーのデスクトップ、Documents、設定。</p></article>
+        <b>≠</b>
+        <article><Globe2 /><span>example.com</span><h2>EXAMPLE\aoi</h2><p>Domainユーザーとして初回サインイン時に作られる別Profile。</p></article>
+      </div>
+      <Callout icon={<CircleAlert />}>Domain参加やDomain移行で、既存Profileをそのまま自動継承するわけではない。</Callout>
+    </Shell>
+  )
+}
+
+function DatabasePartitionsSlide() {
+  return (
+    <Shell eyebrow="19 · ADのDatabase" title={<>複製する範囲ごとに、<em>Partitionがある</em></>} footer={<OriginalLink seconds={1635} time="27:15" />}>
+      <CardGrid columns={4} cards={[
+        { icon: <Settings2 />, label: 'FOREST', title: 'Configuration', body: <><p>SiteやServiceなど、Forest全体の構成。</p><b>全DomainのDC</b></>, tone: 'blue' },
+        { icon: <Tags />, label: 'FOREST', title: 'Schema', body: <><p>ObjectとAttributeの定義。</p><b>全DomainのDC</b></>, tone: 'violet' },
+        { icon: <Database />, label: 'DOMAIN', title: 'Domain', body: <><p>User、Computer、Groupなど。</p><b>同じDomainのDC</b></>, tone: 'green' },
+        { icon: <Globe2 />, label: 'OPTIONAL', title: 'Application', body: <><p>DNSなど用途別データ。</p><b>複製範囲を設定</b></>, tone: 'cyan' },
+      ]} />
+    </Shell>
+  )
+}
+
+function GlobalCatalogSlide() {
+  return (
+    <Shell eyebrow="20 · Global Catalog" title={<>Forest全体を探すための、<em>部分的な索引</em></>} footer={<OriginalLink seconds={1770} time="29:30" />}>
+      <div className="ad26-gc-search">
+        <div><Search /><strong>Forest全体から<br />aoiを探す</strong></div><ArrowRight />
+        <article><Globe2 /><h2>Global Catalog</h2><p>各DomainのObjectについて、よく使うAttributeの一部を保持。</p></article><ArrowRight />
+        <div><Users /><strong>候補を<br />横断検索</strong></div>
+      </div>
+      <Callout>完全なAttributeが必要なら、そのObjectを持つDomainのDCへ問い合わせる。</Callout>
+    </Shell>
+  )
+}
+
+function ReplicationSlide() {
+  return (
+    <Shell eyebrow="21 · 複製ロジック" title={<>書き込み可能DCは、基本<em>Multi-Master</em></>} footer={<><OriginalLink seconds={1849} time="30:49" /><SourceLink href={SOURCES.replication}>公式</SourceLink></>}>
+      <div className="ad26-replication">
+        <article><ServerCog /><strong>DC-01</strong><div><span><Users />Userを変更</span><span><Database />Domain Partition</span></div></article>
+        <div><RefreshCw /><b>Replication</b><span>変更を相互に反映</span></div>
+        <article><ServerCog /><strong>DC-02</strong><div><span><Users />Userを変更</span><span><Database />Domain Partition</span></div></article>
+      </div>
+      <Callout>一方だけが常にPrimaryではない。Site構成や競合解決を含む複製ルールがある。</Callout>
+    </Shell>
+  )
+}
+
+function TombstoneSlide() {
+  return (
+    <Shell eyebrow="22 · Tombstone" title={<>「削除した」という情報にも、<em>保存期間がある</em></>} footer={<OriginalLink seconds={1923} time="32:03" />}>
+      <div className="ad26-tombstone-flow">
+        <div><Users /><span>User A</span></div><ArrowRight /><div><Trash2 /><span>削除状態</span><small>他のDCへ複製</small></div><ArrowRight /><div><Clock3 /><span>保持期間</span><small>Tombstone lifetime</small></div><ArrowRight /><div><HardDrive /><span>最終的に破棄</span></div>
+      </div>
+      <Callout icon={<CircleAlert />}>長期間オフラインだったDCを、そのまま復帰・複製させてはいけない場合がある。</Callout>
+    </Shell>
+  )
+}
+
+function SchemaSlide() {
+  return (
+    <Shell eyebrow="23 · Schema" title={<>Schemaは、<em>Directoryの設計図</em></>} footer={<OriginalLink seconds={2178} time="36:18" />}>
+      <div className="ad26-schema">
+        <article><Tags /><h2>Object class</h2><p>User、Computer、Groupなど「何を保存できるか」。</p></article>
+        <span>＋</span>
+        <article><Boxes /><h2>Attribute</h2><p>名前、メールアドレスなど「どんな項目を持つか」。</p></article>
+        <ArrowRight />
+        <article><Database /><h2>Forest共通</h2><p>Schema拡張はForest全体へ影響する。</p></article>
+      </div>
+      <Callout>Exchange Serverなど、製品導入時にAttributeが追加されることがある。</Callout>
+    </Shell>
+  )
+}
+
+function FsmoSlide() {
+  return (
+    <Shell eyebrow="24 · FSMO / 操作マスター" title={<>競合させたくない<em>5つの処理だけ単一担当</em></>} footer={<><OriginalLink seconds={2243} time="37:23" /><SourceLink href={SOURCES.fsmo}>公式</SourceLink></>}>
+      <div className="ad26-fsmo">
+        <section><span>FORESTに1つずつ</span><b>Schema Master</b><b>Domain Naming Master</b></section>
+        <section><span>DOMAINごとに1つずつ</span><b>RID Master</b><b>PDC Emulator</b><b>Infrastructure Master</b></section>
+      </div>
+      <Callout>普段はMulti-Master。それでも単一の調整役が必要な操作をFSMOが担当する。</Callout>
+    </Shell>
+  )
+}
+
+function SysvolSlide() {
+  return (
+    <Shell eyebrow="25 · SYSVOL / FRS / DFSR" title={<>SYSVOLは、<em>Fileとして別に複製</em></>} footer={<OriginalLink seconds={2362} time="39:22" />}>
+      <div className="ad26-two-repl">
+        <article><Database /><h2>AD DS Database</h2><p>User、Computer、Group、Attribute。</p><b>AD DS Replication</b></article>
+        <article><HardDrive /><h2>SYSVOL</h2><p>GPO Template、サインインスクリプト。</p><b>DFSRで複製</b></article>
+      </div>
+      <Callout icon={<CircleAlert />}>FRSは旧方式。2026年の新しい構成ではDFSRを前提にする。</Callout>
+    </Shell>
+  )
+}
+
+function TrustSlide() {
+  return (
+    <Shell eyebrow="26 · 信頼関係" title={<>別DomainのUserを、<em>認証対象として受け入れる</em></>} footer={<OriginalLink seconds={2476} time="41:16" />}>
       <div className="ad26-cross-domain">
         <article><Globe2 /><span>DOMAIN A</span></article>
-        <div><Link2 /><strong>Trust</strong><p>別ドメインの認証結果を受け入れる“経路”</p><b>権限の自動付与ではない</b></div>
+        <div><Link2 /><strong>Trust</strong><p>方向は一方向／双方向</p><b>認証経路を作る</b></div>
         <article><Globe2 /><span>DOMAIN B</span></article>
       </div>
-      <div className="ad26-gc"><Search /><div><h2>Global Catalog（GC）</h2><p>フォレスト内の各オブジェクトについて、一部の属性を保持して横断検索を助けるDCの役割。</p></div></div>
+      <div className="ad26-gc"><FolderInput /><div><h2>例：Domain AのFile Server</h2><p>信頼するDomain BのUser／Groupを、アクセス権の対象として指定できる。</p></div></div>
     </Shell>
   )
 }
 
 function RecoverySlide() {
   return (
-    <Shell eyebrow="15 · OPERATIONS MINDSET" title={<>複製は<em>バックアップではない</em></>} footer={<SourceLink href={SOURCES.recovery}>Forest recovery guide</SourceLink>}>
-      <div className="ad26-not-backup">
-        <div><RefreshCw /><h2>Replication</h2><p>可用性を高め、変更をそろえる。</p><span>誤削除や侵害も複製する</span></div>
-        <b>≠</b>
-        <div><HardDrive /><h2>Backup / Recovery</h2><p>過去の正常な状態へ戻す。</p><span>復旧手順まで検証する</span></div>
+    <Shell eyebrow="27 · 災害対策" title={<>DC 1台の故障と、<em>Forest全損は別</em></>} footer={<><OriginalLink seconds={2628} time="43:48" /><SourceLink href={SOURCES.recovery}>公式</SourceLink></>}>
+      <div className="ad26-recovery-cases">
+        <article><ServerCog /><span>DC 1台が故障</span><h2>残るDCから再構築</h2><p>新しいServerをDCへ昇格し、データを複製する。</p></article>
+        <article><HardDrive /><span>全DC／Forestを喪失</span><h2>BackupからForest Recovery</h2><p>Directory Services Restore Modeや権威復元を理解して復旧。</p></article>
       </div>
-      <div className="ad26-health-row">{['DNS', 'DC探索', '複製', '時刻', 'バックアップ', '復旧性'].map((item) => <span key={item}><CheckCircle2 />{item}</span>)}</div>
+      <Callout icon={<CircleAlert />}>複数DCは可用性。Backupと復旧手順の検証は別に必要。</Callout>
+    </Shell>
+  )
+}
+
+function DiagnosticsSlide() {
+  return (
+    <Shell eyebrow="28 · 診断コマンド" title={<>管理者が知っておく<em>代表コマンド</em></>} footer={<OriginalLink seconds={2746} time="45:46" />}>
+      <CardGrid columns={4} cards={[
+        { icon: <ServerCog />, title: <code>dcdiag</code>, body: <><p>DCの状態を診断。</p><b>DNS等のTestも実行</b></>, tone: 'green' },
+        { icon: <RefreshCw />, title: <code>repadmin</code>, body: <><p>複製状態や失敗を確認。</p><b>Replication診断</b></>, tone: 'cyan' },
+        { icon: <Network />, title: <code>netdiag</code>, body: <><p>元動画で紹介された旧Support Tools。</p><b>現在はlegacy</b></>, tone: 'orange' },
+        { icon: <FolderInput />, title: <code>csvde</code>, body: <><p>Directory ObjectをCSVへ出力／入力。</p><b>診断ではなく入出力</b></>, tone: 'violet' },
+      ]} />
     </Shell>
   )
 }
 
 function Changes2026Slide() {
   return (
-    <Shell eyebrow="16 · WHAT CHANGED" title={<>2026年版で<em>追加して覚える4点</em></>} footer={<SourceLink href={SOURCES.server2025}>Windows Server 2025</SourceLink>}>
+    <Shell eyebrow="29 · 2026年版の補足" title={<>元動画に足すのは、<em>現行差分だけ</em></>} footer={<><SourceLink href={SOURCES.server2025}>Server 2025</SourceLink><SourceLink href={SOURCES.rc4}>RC4対応</SourceLink></>}>
       <CardGrid columns={4} cards={[
-        { icon: <ServerCog />, label: 'PLATFORM', title: 'Server 2025', body: <><p>新しいドメイン／フォレスト機能レベル。</p><b>更新機能を確認</b></>, tone: 'blue' },
-        { icon: <RefreshCw />, label: 'SYSVOL', title: 'DFSR', body: <><p>新しい構成ではSYSVOLの標準複製方式。</p><b>FRS前提を捨てる</b></>, tone: 'green' },
-        { icon: <KeyRound />, label: 'KERBEROS', title: 'RC4 → AES', body: <><p>RC4依存を監査し、AES対応へ移行。</p><b>互換性を先に把握</b></>, tone: 'orange' },
-        { icon: <ShieldCheck />, label: 'LDAP', title: '保護を強化', body: <><p>署名、TLS、Channel Bindingを検討。</p><b>段階的に強制</b></>, tone: 'cyan' },
+        { icon: <ServerCog />, label: 'AD DS', title: 'Server 2025', body: <><p>新しいForest／Domain機能レベル。</p><b>32K page機能</b></>, tone: 'blue' },
+        { icon: <RefreshCw />, label: 'SYSVOL', title: 'DFSR', body: <><p>FRSではなくDFSRを前提にする。</p><b>旧構成は移行確認</b></>, tone: 'green' },
+        { icon: <KeyRound />, label: 'KERBEROS', title: 'RC4 → AES', body: <><p>RC4依存を監査し、AES対応へ。</p><b>互換性を先に確認</b></>, tone: 'orange' },
+        { icon: <ShieldCheck />, label: 'LDAP', title: '通信を保護', body: <><p>署名、TLS、Channel Binding。</p><b>段階的に強化</b></>, tone: 'cyan' },
       ]} />
     </Shell>
   )
 }
 
-function NextStepSlide() {
+function RecapSlide() {
   return (
-    <Shell eyebrow="17 · RECAP" title={<>Part 1は、<em>地図が読めれば成功</em></>}>
-      <div className="ad26-recap">
-        <div className="ad26-recap-map">
-          <span><FolderTree />論理構造</span><span><MapPinned />物理構造</span><span><ShieldCheck />提供機能</span>
-          <strong>DNS → DC → 認証・LDAP・GPO</strong>
-          <small>NTDS.dit · SYSVOL · 複製 · Trust · GC · FSMO</small>
-        </div>
-        <div className="ad26-part2"><span>NEXT · PART 2以降</span><h2>実物を見て、確かめる</h2><ul><li>管理GUIとPowerShell</li><li>DNSのSRVレコード</li><li>GPOの適用結果</li><li>複製状態と健全性</li></ul></div>
+    <Shell eyebrow="30 · まとめ" title={<>まずは、<em>これらの言葉を知っておく</em></>} footer={<SourceLink href={SOURCES.original}>元動画を見る</SourceLink>}>
+      <div className="ad26-recap-list">
+        <section><b>構造</b><p>Forest · Domain · Site · Subnet · Site Link · Container · OU</p></section>
+        <section><b>利用</b><p>DNS · SRV · LDAP · Kerberos · NTLM · GPO · Domain Join · Profile</p></section>
+        <section><b>内部</b><p>Partition · GC · Replication · Tombstone · Schema · FSMO · SYSVOL</p></section>
+        <section><b>運用</b><p>Trust · Recovery · dcdiag · repadmin · csvde</p></section>
       </div>
-      <div className="ad26-ending"><strong>用語を暗記する前に、地図へ置く。</strong><SourceLink href={SOURCES.original}>元動画を見る</SourceLink></div>
+      <div className="ad26-ending"><strong>細かい画面と実際の操作は、Part 2以降で。</strong><span>BGMなしで収録</span></div>
     </Shell>
   )
 }

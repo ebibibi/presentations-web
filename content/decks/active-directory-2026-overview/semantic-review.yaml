@@ -1,41 +1,47 @@
 reviewedAt: "2026-08-19"
-reviewer: "Codex review against current Microsoft Learn documentation"
+reviewer: "Antigravity independent context against original transcript chapters and Microsoft Learn source facts"
+reviewerNote: "Claude CLI was unavailable because its weekly limit was reached, so the documented agy fallback was used."
 files:
-  deck.yaml: f17a286c1db354ba8e2edb2640351406c8cb0cc7975113b108db5342e75621d3
-  slides.tsx: e0fbc5fa909e12fdb3764064edc9dba62fcfe5afcc41cb5d388ec01fbaa2c58e
-  styles.css: 5a31403d790e9364a84d642dc367b2699f211ccc71b9cc5f953dc6c58fd88033
+  deck.yaml: 5c6a367f98df7ec88c3674044367299a4c020ef68df837565e73f7895f569367
+  slides.tsx: 9d073f7286bb5c7900d0742041fdcaebef031dda89249d1cbc500ad1fda4bd47
+  styles.css: 2f82c58ae6de2b75fb8ae92a0ff47ad08077b0209ddb650ce92ac13f55564d66
 factQa:
   result: pass
-  evidence: The terminology, DC discovery flow, logical and physical structures, GPO processing baseline, authentication distinctions, replication model, recovery warning, and 2026 update points match the cited Microsoft Learn sources.
+  evidence: The independent recheck reported no factual errors. It specifically confirmed the side-by-side root and child domain data partitions, Kerberos/NTLM versus CredSSP distinction, partition and GC descriptions, multi-master versus FSMO roles, AD DS versus SYSVOL replication, and 2026 update points.
 semanticQa:
   source_faithfulness:
     result: pass
-    evidence: Claims are limited to introductory descriptions supported by official AD DS, Kerberos, LDAP, replication, recovery, and Windows Server 2025 documentation.
+    evidence: All original Part 1 topics are retained, including user profiles, database partitions, legacy netdiag context, csvde, disaster recovery, and diagnostics; modern corrections remain source-backed.
   japanese_clarity:
     result: pass
-    evidence: Each slide introduces one concept group with a plain-language purpose before showing the English term.
+    evidence: Each headline states the takeaway in plain Japanese, while paired cards make distinctions such as Container versus OU, A versus SRV record, and local versus domain profile readable without narration.
   taxonomy_challenge:
     result: pass
-    evidence: Logical structure, physical structure, and provided services are presented as overlapping viewpoints rather than falsely exclusive categories.
+    evidence: The overview map is only a navigation aid. It does not replace the original chapter order or incorrectly merge logical Forest/Domain structure with network Site structure.
   first_time_teachback:
     result: pass
-    evidence: A first-time viewer can explain the DNS-to-DC-to-service flow and place the main terms on the overview map without learning operational procedures yet.
+    evidence: The comparison and flow diagrams let a beginner restate why profiles differ, how clients locate a DC, why most writes are multi-master, and why five FSMO operations have one owner.
   presenter_usability:
     result: pass
-    evidence: The 17-slide sequence starts with the complete map, expands one region at a time, and leaves GUI, PowerShell, SRV record inspection, GPO results, and replication diagnostics for later parts.
+    evidence: The repeated headline, diagram, and callout structure gives the presenter a predictable speaking path, with original-video timestamps available in the footer.
+  original_flow_fidelity:
+    result: pass
+    evidence: The deck follows the original 49:39 sequence from structure through diagnostics. The 2026-only additions are isolated near the end instead of reorganizing the original teaching flow.
   visual_readability:
     result: pass
-    evidence: All 17 slides were rendered at 1280x1080 without overflow; dark-theme paragraph contrast was explicitly verified after correcting the shared-site CSS override, and the 390px audience view has no horizontal overflow.
+    evidence: All 30 slides were rendered at 1280x1080 with no slide overflow, and the 390px audience view had no horizontal overflow. The corrected Forest diagram was separately rendered and inspected.
+humanReview:
+  result: pending
+  evidence: The user requested fidelity to the existing Part 1; final human review of this corrected version remains pending.
 sources:
+  - https://www.youtube.com/watch?v=lZ8Ps6U_kvY
   - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview
-  - https://learn.microsoft.com/en-us/entra/fundamentals/compare
   - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-the-active-directory-logical-model
   - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/understanding-active-directory-site-topology
-  - https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-hierarchy
-  - https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview
+  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/reviewing-dns-concepts
   - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/ldap-signing
   - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/replication/active-directory-replication-concepts
   - https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/fsmo-roles
   - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/ad-forest-recovery-guide
-  - https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/active-directory-functional-levels
+  - https://learn.microsoft.com/en-us/windows-server/get-started/whats-new-windows-server-2025
   - https://learn.microsoft.com/en-us/windows-server/security/kerberos/detect-remediate-rc4-kerberos
