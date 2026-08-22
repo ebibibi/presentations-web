@@ -3010,6 +3010,15 @@ main {
   margin: 0;
 }
 
+.e15-choose-link {
+  align-self: flex-start;
+  border-bottom: 2px solid var(--teal);
+  color: var(--teal);
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 /* goodnight (confession archetype) */
 .e15-confession {
   justify-content: center;

@@ -3,6 +3,9 @@ import { spring, useVideoConfig } from 'remotion'
 import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
+// Ebi Workspace is a one-time-purchase plugin; the note page is the only place to get it.
+const EBI_WORKSPACE_URL = 'https://note.com/ebibibi/n/n300772aeac93'
+
 export const slides: SlideModule['slides'] = [
   { render: (props) => <OpeningSlide {...props} /> },
   { render: (props) => <CtaSlide {...props} /> },
@@ -279,6 +282,9 @@ function ChooseBrainSlide({ frame }: SlideRenderContext) {
             プラグインを入れるだけ。ノートの置き場が用意され、
             おはよう／思い出して／おやすみ／週次レビューが最初から動く。
           </p>
+          <a className="e15-choose-link" href={EBI_WORKSPACE_URL} rel="noreferrer" target="_blank">
+            買い切りで配布中 ─ note.com/ebibibi ↗
+          </a>
         </div>
         <div className="e15-choose-card" style={lift(right, 30)}>
           <span className="e15-tag e15-tag-muted">自分で組む</span>
