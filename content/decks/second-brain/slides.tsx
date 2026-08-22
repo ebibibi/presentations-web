@@ -9,7 +9,9 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <MemoryLimitSlide {...props} /> },
   { render: (props) => <SecondBrainSlide {...props} /> },
   { render: (props) => <AutoMemorySlide {...props} /> },
+  { render: (props) => <AutoMemoryStorageSlide {...props} /> },
   { render: (props) => <NotebookSlide {...props} /> },
+  { render: (props) => <ChooseBrainSlide {...props} /> },
   { render: (props) => <MyVaultSlide {...props} /> },
   { render: (props) => <GoodmorningSlide {...props} /> },
   { render: (props) => <RecallSlide {...props} /> },
@@ -138,19 +140,53 @@ function SecondBrainSlide({ frame }: SlideRenderContext) {
 function AutoMemorySlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
-  const terminal = entrance(frame, fps, 22)
 
+  // The four memory types Claude Code records in each memory file's frontmatter.
   const kinds = [
-    ['好み', '「次からはこうして」を覚える'],
-    ['フィードバック', '同じ失敗を繰り返さない'],
-    ['プロジェクト情報', '進行中の状況を保持']
+    ['user', 'あなた自身 ─ 役割・得意分野・進め方の好み'],
+    ['feedback', '「次からはこうして」という指摘と、承認した進め方'],
+    ['project', '進行中の仕事・期限・コードからは分からない決定'],
+    ['reference', '外にある情報の在りか ─ 課題管理・ダッシュボード']
   ]
 
   return (
     <section className="remotion-slide e15-slide">
       <div style={lift(heading, 24)}>
         <span className="slide-kicker">まず標準機能</span>
-        <h1>Auto Memory ─ 自動でたまる</h1>
+        <h1>Auto Memory ─ Claudeが書く</h1>
+      </div>
+      <div className="e15-pieces">
+        {kinds.map(([name, body], index) => (
+          <div key={name} style={lift(entrance(frame, fps, 22 + index * 10), 24)}>
+            <strong>{name}</strong>
+            <span>{body}</span>
+          </div>
+        ))}
+      </div>
+      <p className="e15-judge" style={lift(entrance(frame, fps, 74), 18)}>
+        <b>CLAUDE.mdはあなたが書く／Auto MemoryはClaudeが書く。</b>
+        既定でオン。コードや履歴から分かることは、あえて書かない。
+      </p>
+    </section>
+  )
+}
+
+function AutoMemoryStorageSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const terminal = entrance(frame, fps, 22)
+
+  const facts = [
+    ['毎回読むのは索引だけ', 'MEMORY.md の先頭200行 / 25KBまで'],
+    ['本文は必要な時だけ', 'トピックファイルは読みに行って初めて開く'],
+    ['リポジトリ単位・そのPCだけ', 'worktree間は共有。別マシンには同期されない']
+  ]
+
+  return (
+    <section className="remotion-slide e15-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">標準機能のしくみ</span>
+        <h1>MEMORY.md ─ 索引と本文</h1>
       </div>
       <div className="e15-how-stage">
         <div className="e15-terminal" style={lift(terminal, 28)}>
@@ -160,13 +196,21 @@ function AutoMemorySlide({ frame }: SlideRenderContext) {
             <span />
             <strong>claude</strong>
           </div>
-          <div className="e15-terminal-body">
-            <code className="e15-prompt">~/.claude/MEMORY.md</code>
-            <code className="e15-output">✓ あなたの好みとフィードバックを自動で記録</code>
+          {/* Narrower type than the shared terminal default: the memory path is long. */}
+          <div className="e15-terminal-body" style={{ fontSize: 23 }}>
+            <code className="e15-prompt" style={{ fontSize: 'inherit' }}>
+              ~/.claude/projects/&lt;repo&gt;/memory/
+            </code>
+            <code className="e15-output" style={{ fontSize: 'inherit' }}>
+              ├─ MEMORY.md ─ 毎回読む索引
+            </code>
+            <code className="e15-output" style={{ fontSize: 'inherit' }}>
+              └─ feedback_*.md ─ 必要な時だけ
+            </code>
           </div>
         </div>
         <div className="e15-examples">
-          {kinds.map(([name, body], index) => (
+          {facts.map(([name, body], index) => (
             <div key={name} style={lift(entrance(frame, fps, 40 + index * 10), 24)}>
               <strong>{name}</strong>
               <span>{body}</span>
@@ -175,7 +219,8 @@ function AutoMemorySlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <p className="e15-note" style={lift(entrance(frame, fps, 90), 18)}>
-        頼まなくても勝手に育つ。ただし<b>断片的なメモ</b>なので、これだけだと全体像は持てない。
+        中身はただのMarkdown。<b>/memory</b> で一覧・編集・オンオフができる。
+        勝手にたまるが、隠されてはいない。
       </p>
     </section>
   )
@@ -213,6 +258,45 @@ function NotebookSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function ChooseBrainSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const left = entrance(frame, fps, 22)
+  const right = entrance(frame, fps, 36)
+  const note = entrance(frame, fps, 54)
+
+  return (
+    <section className="remotion-slide e15-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">作り方は2つある</span>
+        <h1>手帳の作り方は、選べる</h1>
+      </div>
+      <div className="e15-choose">
+        <div className="e15-choose-card e15-choose-accent" style={lift(left, 30)}>
+          <span className="e15-tag">すぐ始める</span>
+          <strong>Ebi Workspace</strong>
+          <p>
+            プラグインを入れるだけ。ノートの置き場が用意され、
+            おはよう／思い出して／おやすみ／週次レビューが最初から動く。
+          </p>
+        </div>
+        <div className="e15-choose-card" style={lift(right, 30)}>
+          <span className="e15-tag e15-tag-muted">自分で組む</span>
+          <strong>手持ちのノートを使う</strong>
+          <p>
+            Obsidianなど普段のノートをそのまま第2の脳にする。
+            構造もルールも自由。そのぶん設計と手入れは自分の仕事。
+          </p>
+        </div>
+      </div>
+      <p className="e15-judge" style={lift(note, 18)}>
+        どちらでもいい。大事なのは<b>置き場所を1つに決めること</b>。
+        迷ったら出来合いから始めて、育ってきたら自分の形に寄せる。
+      </p>
+    </section>
+  )
+}
+
 function MyVaultSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
@@ -245,7 +329,8 @@ function MyVaultSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <p className="e15-note" style={lift(entrance(frame, fps, 60), 18)}>
-        知識ツールはObsidianでなくても良い。大事なのは<b>双方向に読み書きできる共有の場</b>。
+        私はObsidianを選んだだけで、<b>出来合いでも自作でも同じことができる</b>。
+        大事なのは双方向に読み書きできる共有の場を1つ持つこと。
       </p>
     </section>
   )
@@ -435,8 +520,9 @@ function RecapSlide({ frame }: SlideRenderContext) {
 
   const points = [
     'Claudeはセッションを閉じると忘れる（人間も寝ると忘れる）',
-    'だから外に第2の脳を持つ ─ 人間もAIも同じノートを読み書き',
-    'Auto Memoryで好み・フィードバックが自動でたまる',
+    '記憶は2本柱 ─ CLAUDE.mdは自分で、Auto MemoryはClaudeが書く',
+    'Auto Memoryはリポジトリ単位でたまり、/memory で見て直せる',
+    'その上に構造化した第2の脳を置く ─ 出来合いでも自作でもいい',
     'これまで学んだ機能は、全部この第2の脳の上に乗る'
   ]
 
