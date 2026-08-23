@@ -3403,6 +3403,52 @@ main {
   color: #e8927f;
 }
 
+.e16-terminal-script {
+  flex: none;
+}
+
+.e16-terminal-script .e16-terminal-body {
+  gap: 4px;
+  padding: 20px 26px;
+}
+
+.e16-terminal-script .e16-terminal-body code {
+  font-size: 20px;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.e16-dim {
+  color: #8b9a92;
+}
+
+.e16-examples-row {
+  display: grid !important;
+  gap: 18px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.e16-examples-row > div {
+  gap: 8px;
+}
+
+.e16-examples-row strong {
+  font-size: 25px !important;
+}
+
+.e16-examples-row span {
+  font-size: 22px !important;
+  line-height: 1.4;
+}
+
+.e16-note code {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.9em;
+  padding: 2px 8px;
+}
+
 .e16-examples,
 .e16-steps {
   display: flex;
@@ -3738,6 +3784,7 @@ main {
   .e16-goal-row,
   .e16-compare,
   .e16-hooks,
+  .e16-examples-row,
   .e16-testcase,
   .e16-fit {
     grid-template-columns: 1fr;
