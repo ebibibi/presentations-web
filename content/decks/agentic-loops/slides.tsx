@@ -54,7 +54,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       <div className="motion-grid" />
       <div className="e19-opening-copy" style={lift(title, 48)}>
         <span className="slide-kicker">Claude Codeの使い方コース ─ 第19回</span>
-        <span className="e19-bonus">＋ 追加回 / 本編は第18回で完結しました</span>
+        <span className="e19-bonus">＋ 第18回「どこからでもClaude Code」の続き</span>
         <h1>
           ループ設計
           <br />

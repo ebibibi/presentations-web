@@ -1,6 +1,6 @@
 slug: agentic-loops
 title: 第19回 ループ設計 ─ Claude Codeに仕事を回させる
-summary: Anthropic公式記事「Getting started with loops」「Building verification loops in Claude Code with skills」とgihyo.jpの解説をもとに、Claude CodeでAIエージェントを活用する4種類のループを整理する。ターンベース、ゴールベース、時間ベース、プロアクティブの使い分け、検証ループ、品質維持、トークン管理、最初の導入方法までを扱うClaude Codeの使い方コース追加回。本編は第18回で完結済み。
+summary: Anthropic公式記事「Getting started with loops」「Building verification loops in Claude Code with skills」とgihyo.jpの解説をもとに、Claude CodeでAIエージェントを活用する4種類のループを整理する。ターンベース、ゴールベース、時間ベース、プロアクティブの使い分け、検証ループ、品質維持、トークン管理、最初の導入方法までを扱うClaude Codeの使い方コース第19回。
 status: public
 visibility: members
 createdAt: "2026-07-09"
@@ -15,7 +15,7 @@ slides:
   - id: opening
     title: ループ設計
     durationInFrames: 175
-    notes: 第19回、追加回。冒頭で「本編は第18回で完結、これは追加回」とはっきり言う（第18回の最終回を見た人が混乱しないように）。元記事はAnthropic公式「Getting started with loops」（2026-06-30）と「Building verification loops in Claude Code with skills」（2026-07-22）、日本語整理はgihyo.jp（2026-07-09）。今日のゴールは、ユーザーが各ターンを進める使い方から、止まる条件まで含めてClaude Codeに仕事を回させる設計へ進むこと。
+    notes: 第19回。元記事はAnthropic公式「Getting started with loops」（2026-06-30）と「Building verification loops in Claude Code with skills」（2026-07-22）、日本語整理はgihyo.jp（2026-07-09）。今日のゴールは、ユーザーが各ターンを進める使い方から、止まる条件まで含めてClaude Codeに仕事を回させる設計へ進むこと。
   - id: cta-intro
     title: 応援お願いします！
     durationInFrames: 150
