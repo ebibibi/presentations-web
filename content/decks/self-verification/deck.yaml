@@ -48,8 +48,8 @@ slides:
     notes: 高度なHook①。ファイルを編集するたびに自動でtsc --noEmit（型チェック）を走らせる。型エラーが出たらその内容をClaudeに返し、Claudeが自動で修正する。人が見張らなくても、編集と検証がワンセットで回る。ターミナル演出で実演。
   - id: claude-reviews-claude
     title: Claude→Claudeの審査
-    durationInFrames: 178
-    notes: 高度なHook②。Hookからclaude -pで別のClaudeインスタンスを起動し、新しく書いた関数が既存の関数と重複していないかを審査させる。Claudeの仕事をもう一人のClaudeがレビューする二重チェックの仕組み。
+    durationInFrames: 210
+    notes: 高度なHook②。Hookからclaude -pで別のClaudeインスタンスを起動し、新しく書いた関数が既存と重複していないか審査させる。ここで強調したいのは「claude -p に一言投げれば動く」わけではないこと ─ 別のClaudeはこちらの会話を一切引き継がないので、必要な文脈は全部プロンプトに書く必要がある。画面のスクリプトの3点を指差しながら説明する。①何を見ればいい＝Hookのstdinに届くJSONからjqでfile_pathを取り出してプロンプトに埋める ②どう調べればいい＝探す場所(src/以下)と、Read/Grepを使ってよいことを --allowedTools で明示 ③どう答えればいい＝出力の形をDUP:またはOKに固定する。だからシェル側で合否を判定できる。判定結果は exit 2 の標準エラー出力で本体のClaudeに返り、Claudeがそれを読んで直しにいく。--model haiku にしているのは、この程度の審査なら安く速く回るから。
   - id: common-hooks
     title: Hookの定番3パターン
     durationInFrames: 178

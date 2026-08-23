@@ -346,7 +346,24 @@ function ClaudeReviewsClaudeSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
   const terminal = entrance(frame, fps, 22)
-  const note = entrance(frame, fps, 56)
+  const note = entrance(frame, fps, 70)
+
+  const script: ReadonlyArray<readonly [string, string]> = [
+    ['dim', '# PostToolUse（Write / Edit のあと）に走らせる'],
+    ['plain', 'FILE=$(jq -r \'.tool_input.file_path\')'],
+    ['plain', 'VERDICT=$(claude -p "'],
+    ['plain', '  $FILE に今書いた関数が、既存の関数と重複していないか調べて。'],
+    ['plain', '  src/ 以下を Grep と Read で探すこと。名前が違っても中身が同じなら重複。'],
+    ['plain', '  重複があれば DUP:<関数名> <パス:行> を、なければ OK だけを1行で返して。" \\'],
+    ['plain', '  --allowedTools "Read,Grep,Glob" --model haiku)'],
+    ['plain', '[ "$VERDICT" = OK ] || { echo "$VERDICT" >&2; exit 2; }']
+  ]
+
+  const points: ReadonlyArray<readonly [string, string]> = [
+    ['何を見ればいい?', 'stdinのJSONから編集されたファイルのパスを取り、プロンプトに埋める'],
+    ['どう調べればいい?', '探す場所と、Read / Grep を使えることを明示する'],
+    ['どう答えればいい?', '出力の形を固定する。だからシェルで合否を判定できる']
+  ]
 
   return (
     <section className="remotion-slide e16-slide">
@@ -354,32 +371,36 @@ function ClaudeReviewsClaudeSlide({ frame }: SlideRenderContext) {
         <span className="slide-kicker">高度なHook ②</span>
         <h1>Claude→Claudeの審査</h1>
       </div>
-      <div className="e16-how-stage">
-        <div className="e16-terminal" style={lift(terminal, 28)}>
-          <div className="e16-terminal-bar">
-            <span />
-            <span />
-            <span />
-            <strong>review hook</strong>
-          </div>
-          <div className="e16-terminal-body">
-            <code className="e16-prompt">$ claude -p &quot;既存と重複してない?&quot;</code>
-            <code className="e16-output">✓ 別Claudeが審査して回答</code>
-          </div>
+      <div className="e16-terminal e16-terminal-script" style={lift(terminal, 28)}>
+        <div className="e16-terminal-bar">
+          <span />
+          <span />
+          <span />
+          <strong>.claude/hooks/dup-check.sh</strong>
         </div>
-        <div className="e16-examples">
-          <div style={lift(entrance(frame, fps, 40), 24)}>
-            <strong>別インスタンスを起動</strong>
-            <span>Hookからclaude -pで第二のClaudeを呼ぶ</span>
-          </div>
-          <div style={lift(entrance(frame, fps, 52), 24)}>
-            <strong>重複をチェック</strong>
-            <span>新しい関数が既存と被っていないか審査</span>
-          </div>
+        <div className="e16-terminal-body">
+          {script.map(([kind, line], index) => (
+            <code
+              key={index}
+              className={kind === 'dim' ? 'e16-dim' : 'e16-prompt'}
+              style={lift(entrance(frame, fps, 26 + index * 3), 12)}
+            >
+              {line || '\u00a0'}
+            </code>
+          ))}
         </div>
       </div>
+      <div className="e16-examples e16-examples-row">
+        {points.map(([q, a], index) => (
+          <div key={q} style={lift(entrance(frame, fps, 56 + index * 10), 24)}>
+            <strong>{q}</strong>
+            <span>{a}</span>
+          </div>
+        ))}
+      </div>
       <p className="e16-note" style={lift(note, 18)}>
-        Claudeの仕事を、もう一人のClaudeが<b>二重チェック</b>する仕組み。
+        <b>丸投げでは動かない。</b>別のClaudeは会話を引き継がない。判定は <code>exit 2</code>
+        の標準エラー出力で本体のClaudeに返る。
       </p>
     </section>
   )
