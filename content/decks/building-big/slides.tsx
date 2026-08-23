@@ -492,7 +492,8 @@ function DemoInterviewSlide({ frame }: SlideRenderContext) {
         ['集めるもの', 'はてブ（テクノロジー）／Publickey／ITmedia NEWS の前日分'],
         ['出力', '日付ごとのMarkdown 1枚（タイトル・リンク・3行要約）'],
         ['要約のさせ方', 'claude -p に投げる'],
-        ['動かし方', '自分のPCで毎朝6時。失敗したら気づけるように']
+        ['動かし方', 'GitHub Actionsで毎朝6時に自動実行'],
+        ['結果の受け取り', 'できたMarkdownをメールに添付して送る']
       ]}
       watch={[]}
       foot={
@@ -511,13 +512,14 @@ function DemoBuildSlide({ frame }: SlideRenderContext) {
       step="その2"
       title="運用込みの計画を書かせる"
       prompts={[
-        'SPEC.md をもとに、毎朝6時の自動実行と失敗時の通知まで含めて',
-        'PLAN.md に実装計画を書いて。まだ実装はしないで。'
+        'SPEC.md をもとに実装計画を PLAN.md に書いて。',
+        'GitHub Actionsで毎朝6時に実行、結果はメール添付で送る。',
+        'そこまで含めて。まだ実装はしないで。'
       ]}
       watch={[
         '「まだ実装しないで」で、いきなり手が動くのを止める',
-        '実行基盤の候補（cron・タスクスケジューラなど）を出してくる',
-        '失敗したときの扱いも、動かす前に決まる'
+        'ワークフロー・スケジュール・メール送信の手順が1枚に並ぶ',
+        '認証情報の置き場所も、動かす前に決まる'
       ]}
       foot={
         <>
@@ -534,7 +536,7 @@ function DemoPipelineSlide({ frame }: SlideRenderContext) {
       frame={frame}
       step="その3"
       title="計画にOKを出して、投げる"
-      prompts={['PLAN.md のとおり実装して。毎朝6時の自動実行の設定まで含めて。']}
+      prompts={['PLAN.md のとおり実装して。ワークフローとメール送信の設定まで含めて。']}
       watch={[
         '計画を画面で一緒に読んで、選択肢に答えるだけでOKになる',
         '走り出したら、ここで終わり。完走は待たない',
