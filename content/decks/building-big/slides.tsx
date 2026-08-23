@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import type { ReactNode } from 'react'
 import { spring, useVideoConfig } from 'remotion'
 import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
@@ -15,7 +16,9 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <ClaudePSlide {...props} /> },
   { render: (props) => <SdkSlide {...props} /> },
   { render: (props) => <PipelineSlide {...props} /> },
-  { render: (props) => <DemoSlide {...props} /> },
+  { render: (props) => <DemoInterviewSlide {...props} /> },
+  { render: (props) => <DemoBuildSlide {...props} /> },
+  { render: (props) => <DemoPipelineSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
   { render: (props) => <NextSlide {...props} /> },
   { render: (props) => <CtaSlide {...props} /> }
@@ -280,6 +283,8 @@ function GithubSlide({ frame }: SlideRenderContext) {
       </div>
       <p className="e17-note" style={lift(entrance(frame, fps, 90), 18)}>
         一発でセットアップ。<b>チームの開発フローにClaudeが住み着く。</b>
+        <br />
+        ここは奥が深いので、<b>GitHubの使い方は別コースでまとめて扱う。</b>
       </p>
     </section>
   )
@@ -396,37 +401,128 @@ function PipelineSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function DemoSlide({ frame }: SlideRenderContext) {
+function DemoScaffold({
+  frame,
+  step,
+  title,
+  prompts,
+  watch,
+  foot
+}: {
+  frame: number
+  step: string
+  title: string
+  prompts: ReadonlyArray<string>
+  watch: ReadonlyArray<string>
+  foot: ReactNode
+}) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
-
-  const items: ReadonlyArray<readonly [string, string]> = [
-    ['SPEC.md を作る', 'Claudeにインタビューさせて仕様書を先に生成する'],
-    ['Writer / Reviewer', '別セッションのClaudeに書かせ、別のClaudeにレビューさせる'],
-    ['GitHub統合 / claude -p', '@claudeでPRレビュー、パイプラインから非対話実行']
-  ]
+  const terminal = entrance(frame, fps, 24)
 
   return (
     <section className="remotion-slide e17-slide demo-slide">
       <div style={lift(heading, 24)}>
-        <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
-        <h1>ここで手を動かす</h1>
+        <span className="demo-badge">▶ 実演 / LIVE DEMO ─ {step}</span>
+        <h1>{title}</h1>
       </div>
-      <div className="demo-list">
-        {items.map(([title, body], index) => (
-          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
-            <span className="demo-num">{index + 1}</span>
-            <div>
-              <strong>{title}</strong>
-              <p>{body}</p>
-            </div>
+      <div className="e17-terminal" style={lift(terminal, 28)}>
+        <div className="e17-terminal-bar">
+          <span />
+          <span />
+          <span />
+          <strong>claude</strong>
+        </div>
+        <div className="e17-terminal-body">
+          {prompts.map((line) => (
+            <code key={line} className="e17-prompt">
+              &gt; {line}
+            </code>
+          ))}
+        </div>
+      </div>
+      <div className="e17-recap">
+        {watch.map((line, index) => (
+          <div key={line} style={lift(entrance(frame, fps, 52 + index * 10), 22)}>
+            <span className="e17-check">{index + 1}</span>
+            <p>{line}</p>
           </div>
         ))}
       </div>
-      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
-        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
+      <p className="demo-foot" style={lift(entrance(frame, fps, 92), 18)}>
+        {foot}
       </p>
     </section>
+  )
+}
+
+function DemoInterviewSlide({ frame }: SlideRenderContext) {
+  return (
+    <DemoScaffold
+      frame={frame}
+      step="その1"
+      title="インタビューさせて SPEC.md"
+      prompts={[
+        '小さなツールを作りたい。実装はまだしないで。',
+        '1問ずつ質問して要件を引き出して、決まったら SPEC.md にまとめて。'
+      ]}
+      watch={[
+        'Claudeが1問ずつ聞いてくる。答えるだけで要件が言葉になる',
+        'こちらが答えるのは「何を作るか」だけ。作り方は聞かれない',
+        '最後に SPEC.md が出来上がる ─ これがこの先の地図'
+      ]}
+      foot={
+        <>
+          真っ白から書かせない。<b>まず取材させる。</b>
+        </>
+      }
+    />
+  )
+}
+
+function DemoBuildSlide({ frame }: SlideRenderContext) {
+  return (
+    <DemoScaffold
+      frame={frame}
+      step="その2"
+      title="仕様書を渡して作らせる"
+      prompts={['SPEC.md のとおりに実装して。実際に動かして、動くところまで確認して。']}
+      watch={[
+        '仕様が共有済みなので、途中で「これでいい？」が起きない',
+        'Claudeが自分で実行して、出力を見て直す（第16回の自己検証）',
+        'ここまでで小さなアプリが1個できあがる'
+      ]}
+      foot={
+        <>
+          指示は1行。<b>効いているのは、前のステップで作った SPEC.md。</b>
+        </>
+      }
+    />
+  )
+}
+
+function DemoPipelineSlide({ frame }: SlideRenderContext) {
+  return (
+    <DemoScaffold
+      frame={frame}
+      step="その3"
+      title="運用の計画まで立てさせて、投げる"
+      prompts={[
+        'これを毎朝6時に自動で動かしたい。失敗したときの通知まで含めて、',
+        'PIPELINE.md に計画だけ書いて。まだ実装はしないで。',
+        '（計画を読んでOKなら）そのとおり実装して。'
+      ]}
+      watch={[
+        '「まだ実装しないで」で、いきなり手を動かすのを止める',
+        '実行基盤・通知・失敗時の扱いをClaudeが選択肢で出してくる',
+        '人間は選ぶだけ。OKを出したら、あとは投げて席を立つ'
+      ]}
+      foot={
+        <>
+          今日やったのは<b>質問に答えることと、計画にOKを出すことだけ。</b>
+        </>
+      }
+    />
   )
 }
 
@@ -438,7 +534,8 @@ function RecapSlide({ frame }: SlideRenderContext) {
     '大きい仕事は丸投げせず、SPEC.mdを先に書く',
     '人間=要件／Claude=実装。役割を分ける',
     'Writer/Reviewerで別視点、並列セッションで広げる',
-    'GitHub連携・claude -p・SDKでCI/CDに組み込む（権限最小・レビュー必須）'
+    '取材→実装→運用の計画まで、ひと続きで渡せる',
+    'claude -p・SDK・GitHub連携で組み込む（権限最小・レビュー必須）'
   ]
 
   return (

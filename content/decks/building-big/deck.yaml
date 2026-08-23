@@ -4,7 +4,7 @@ summary: 大きい仕事をどう渡すか、そしてClaude Codeをパイプラ
 status: public
 visibility: members
 createdAt: "2026-06-26"
-updatedAt: "2026-06-26"
+updatedAt: "2026-08-23"
 order: 17
 tags:
   - claude-code
@@ -41,7 +41,7 @@ slides:
   - id: github
     title: GitHub統合
     durationInFrames: 180
-    notes: ここから後半、パイプライン編。/install-github-app 一発でGitHub Appをセットアップ。Mention Action＝Issue/PRに @claude と書くとClaudeが応答・作業。PR Action＝PRを自動でコードレビューし影響範囲を分析。ツール権限は設定で管理。チームの開発フローにClaudeが住み着く。
+    notes: ここから後半、パイプライン編。/install-github-app 一発でGitHub Appをセットアップ。ここは紹介にとどめ、実演はしない ─ GitHubそのものの使い方は難易度が高いので、別コースでまとめて扱うと明言する。Mention Action＝Issue/PRに @claude と書くとClaudeが応答・作業。PR Action＝PRを自動でコードレビューし影響範囲を分析。ツール権限は設定で管理。チームの開発フローにClaudeが住み着く。
   - id: claude-p
     title: claude -p ─ 非対話モード
     durationInFrames: 175
@@ -54,14 +54,22 @@ slides:
     title: パイプラインに組み込む
     durationInFrames: 180
     notes: 全体像。CI/CDの流れの中でClaudeが動く＝コミット→レビュー→解析→デプロイのどこにでも差し込める。ただし鉄則は2つ。権限は最小限（既定読み取り・書き込みは明示）／人間のレビューは必須。自動化しても最終確認は人が握る。
-  - id: demo
-    title: ここで手を動かす
-    durationInFrames: 180
-    notes: 説明だけで終わらせず、画面に映して実際にやってみせる。(1) SPEC.md を作る ─ Claudeにインタビューさせて仕様書を先に生成する。(2) Writer / Reviewer ─ 別セッションのClaudeに書かせ、別のClaudeにレビューさせる。(3) GitHub統合 / claude -p ─ @claudeでPRレビュー、パイプラインから非対話実行。
+  - id: demo-interview
+    title: 実演① インタビューさせて SPEC.md
+    durationInFrames: 200
+    notes: 実演はここから3枚ひと続き。題材は「毎朝、決まったページの新着を要約して1枚のMarkdownにまとめる小さなツール」くらいの、その場で作れる規模にする。画面のプロンプトをそのまま打つ ─「小さなツールを作りたい。実装はまだしないで。」「1問ずつ質問して要件を引き出して、決まったら SPEC.md にまとめて。」。あとは聞かれたことに答えるだけ。実況ポイント＝①Claudeが1問ずつ聞いてくるので、こちらは考えを言葉にするだけでいい ②聞かれるのは「何を作るか」であって「どう作るか」ではない（第17回の役割分担がそのまま出る） ③最後に SPEC.md が残る。「実装はまだしないで」の一言が効いている、と口で強調する。
+  - id: demo-build
+    title: 実演② 仕様書を渡して作らせる
+    durationInFrames: 190
+    notes: 続けて実装させる。プロンプトは1行 ─「SPEC.md のとおりに実装して。実際に動かして、動くところまで確認して。」。ここは口を出さずに待つ。実況ポイント＝①仕様が共有済みなので途中で確認が飛んでこない ②Claudeが自分で実行して出力を読んで直す（第16回の自己検証がそのまま乗っている） ③この時点で小さなアプリが1本できる。締めの一言＝「指示は1行。効いているのは前のステップで作った SPEC.md」。時間が押していたら、事前に作っておいた SPEC.md から始めてもいい。
+  - id: demo-pipeline
+    title: 実演③ 運用の計画まで立てさせて投げる
+    durationInFrames: 210
+    notes: 今日の本題。作ったツールを「毎朝6時に自動で動かす」ところまで計画させる。プロンプト ─「これを毎朝6時に自動で動かしたい。実行基盤の候補と、失敗したときの通知まで含めて PIPELINE.md に計画を書いて。まだ実装はしないで。判断が要るところは僕に聞いて。」。出てきた計画を画面で一緒に読み、選択肢に答えて、最後に「OK。PIPELINE.md のとおり実装して」と投げて終わる（実装の完走は待たない）。実況ポイント＝①「まだ実装しないで」でいきなり手が動くのを止める ②実行基盤・通知・失敗時の扱いを向こうが選択肢で出してくる ③人間は選ぶだけ。締めの一言＝「今日やったのは、質問に答えることと、計画にOKを出すことだけ」。GitHubの操作はここでは見せない（別コース送り）。
   - id: recap
     title: 今日のまとめ
     durationInFrames: 165
-    notes: 大きい仕事は丸投げせず、仕様書を先に書く（人間=要件／Claude=実装）。Writer/Reviewerで別視点を作り、並列セッションで広げる。パイプラインには /install-github-app・claude -p・SDKで組み込む。権限は最小限・レビューは必須。
+    notes: 大きい仕事は丸投げせず、仕様書を先に書く（人間=要件／Claude=実装）。Writer/Reviewerで別視点を作り、並列セッションで広げる。取材→実装→運用の計画まで、ひと続きで渡せる。パイプラインには claude -p・SDK・GitHub連携で組み込む。権限は最小限・レビューは必須。
   - id: next
     title: 次回予告
     durationInFrames: 165
