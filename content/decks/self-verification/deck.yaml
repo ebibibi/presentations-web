@@ -1,10 +1,10 @@
 slug: self-verification
 title: 第16回 自己検証 ─ テスト駆動 & 高度なHook
-summary: Claudeに「自分の仕事を自分で検証する手段」を渡す。テストを渡せばClaudeは失敗を見つけて自分で直す自己修正ループになる。さらに第8回のHookを発展させ、型チェック・Claude同士のレビュー・私の実例まで踏み込む。Claude Codeの使い方コース 第16回（難易度🔴 エンジニア向け）。
+summary: Claudeに「自分の仕事を自分で検証する手段」を渡す。テストを渡せばClaudeは失敗を見つけて自分で直す自己修正ループになる。ブラウザを開いて見た目を確かめさせることもできる。さらに第8回のHookを発展させ、型チェック・Claude同士のレビューまで踏み込む。Claude Codeの使い方コース 第16回（難易度🔴 エンジニア向け）。
 status: public
 visibility: members
 createdAt: "2026-06-26"
-updatedAt: "2026-06-26"
+updatedAt: "2026-08-23"
 order: 16
 tags:
   - claude-code
@@ -25,15 +25,19 @@ slides:
   - id: instruct-vs-verify
     title: 指示するだけ vs 検証を渡す
     durationInFrames: 180
-    notes: 公式が言う最もレバレッジが高いこと＝Claudeに自分の仕事を検証する手段を渡すこと。たとえ＝「美味しい料理を作って」と頼むより「この味見テストに合格する料理を作って」と頼むほうが確実。ゴールの基準を渡せば自分で答え合わせできる。
+    notes: 公式が言う最もレバレッジが高いこと＝Claudeに「自分で走らせて合否が読めるもの」を渡すこと。公式ドキュメントの例をそのまま使う。ダメな指示＝「メールアドレスを検証する関数を作って」。良い指示＝「validateEmailを書いて。user@example.comはtrue、invalidはfalse、user@.comはfalse。書いたらテストを実行して」。Claudeは「できたっぽい」と思った時点で止まる生き物なので、止まる基準を機械が判定できる形で渡すのが肝。
+  - id: what-is-a-test
+    title: テストって何？
+    durationInFrames: 190
+    notes: テストという言葉を知らない方向けに、ここで一段落。テスト＝「この入力ならこの答えになるはず」を書き並べた対応表。さっきのメールアドレスの例で言えば、user@example.comならtrue、invalidならfalse、user@.comならfalse、の3行。これをコードで書いておくと、実行するだけで機械が○×を付けてくれる。ここでは「テストは動作を保証する仕組みじゃなくて、機械が自動採点してくれる答案だ」という感覚だけ持ち帰ってもらえばいい。画面のnpm testで、1つ失敗している様子を見せる。
   - id: tdd-loop
     title: テスト駆動の自己修正ループ
     durationInFrames: 182
     notes: テストを渡す→Claudeが実行→失敗→原因を直す→再実行→成功。この自己修正ループが回る。人間が逐一チェックしなくても、テストが合格するまでClaude自身が直し続ける。テスト駆動開発(TDD)と非常に相性が良い。ターミナル演出で実演。
   - id: screenshot-check
-    title: スクリーンショットで見た目を検証
-    durationInFrames: 170
-    notes: 検証はコードのテストだけじゃない。UI変更ならスクリーンショットを撮ってClaudeに見せ「この画面、デザイン通り?」と聞ける。テキストの合否だけでなく、見た目という主観的なゴールも検証の対象にできる。
+    title: 見た目もClaudeが自分で確かめる
+    durationInFrames: 195
+    notes: 検証はコードのテストだけじゃない。公式のプロンプト例＝「［デザイン画像を貼る］このデザイン通りに実装して。できたらスクリーンショットを撮って元画像と見比べて、違うところを列挙して直して」。ポイントは「よくして」ではなく比べる対象を渡すこと。そしてここを強調＝Claude Code自身がブラウザを開いて見ることができる。claude --chrome でChrome拡張（Claude in Chrome）とつなぐと、Claudeが自分でlocalhost:3000を開き、フォームに値を入れ、スクショを撮り、コンソールのエラーまで読む。人がスクショを撮って貼り付ける必要すらない。実際の指示例は「ログイン画面を開いて、わざと不正な値を入れて、エラーメッセージが正しく出るか確かめて」。
   - id: bridge-to-hooks
     title: Hookの応用へ
     durationInFrames: 165
@@ -46,22 +50,22 @@ slides:
     title: Claude→Claudeの審査
     durationInFrames: 178
     notes: 高度なHook②。Hookからclaude -pで別のClaudeインスタンスを起動し、新しく書いた関数が既存の関数と重複していないかを審査させる。Claudeの仕事をもう一人のClaudeがレビューする二重チェックの仕組み。
-  - id: my-real-hooks
-    title: 私の実際のHook
+  - id: common-hooks
+    title: Hookの定番3パターン
     durationInFrames: 178
-    notes: 私が実際に使っているHookの実例を3つ。SessionStart＝起動時にプロジェクトの文脈を自動ロード。Stop＝作業ログをObsidianに自動保存。UserPromptSubmit＝送信前にメッセージを前処理（言語設定など）。検証以外にも応用が効く。
+    notes: Hookのよくある使い方を3つ。①ファイル編集のあと（PostToolUse）＝eslintやprettierを自動で走らせ、整形と指摘をその場で返す。②ファイル編集のまえ（PreToolUse）＝DBのmigrationsフォルダなど触ってほしくない場所への書き込みをブロック。③作業を終えるとき（Stop）＝テストを走らせ、失敗している間はターンを終わらせない。最後に一番言いたいこと＝Hookは自分で書かなくていい。「ファイル編集のたびにeslintを走らせるHookを書いて」とClaudeに頼めば作ってくれる。
   - id: philosophy
     title: 検証は仕組みに組み込む
     durationInFrames: 170
     notes: 今日の核心。検証を「人に毎回やらせる」のではなく「仕組みに組み込む」。テストもHookも、一度作れば自動で回り続ける。人間は基準を決める側に回り、答え合わせはClaudeと仕組みに任せる。これが品質を底上げする一番の近道。
   - id: demo
-    title: ここで手を動かす
-    durationInFrames: 180
-    notes: ここで実演。①テスト駆動ループ＝テストを渡し、失敗→修正→成功までClaudeに自走させる。②スクショ検証＝UIのスクリーンショットを見せて「デザイン通り?」と確認する。③型チェックHook＝ファイル編集後にtscが自動で走り、型エラーを自動修正。説明だけで終わらせず、画面に映して実際にやってみせる。
+    title: テスト駆動ループを回す
+    durationInFrames: 190
+    notes: 実演はこれ1本に絞る。画面のプロンプトをそのまま打つ ─「メールアドレスを検証する validateEmail を作って。TDDで進めて。」「テストが全部通るまで、自分で直し続けて。」。あとは口を出さず、Claudeがテストを書いて失敗させ、実装し、実行し、直して、通るまでを黙って見せる。見どころを口頭で実況する＝①先にテストを書くので最初は必ず失敗する ②失敗した出力をClaude自身が読んでいる ③こちらは一度も「直して」と言っていない。締めの一言＝極端な話「TDDで進めて」と書くだけでもループは回りはじめる。
   - id: recap
     title: 今日のまとめ
     durationInFrames: 162
-    notes: 自己検証はレバレッジ最大。テストを渡せば失敗→修正→成功の自己修正ループが回る。UIはスクショで検証。Hookは型チェック・Claude同士の審査まで発展できる。検証は人ではなく仕組みに組み込む。
+    notes: 自己検証はレバレッジ最大。テストを渡せば失敗→修正→成功の自己修正ループが回る。見た目はClaude自身がブラウザを開いて確認。Hookは型チェック・Claude同士の審査まで発展できる。検証は人ではなく仕組みに組み込む。
   - id: next
     title: 次回予告
     durationInFrames: 160

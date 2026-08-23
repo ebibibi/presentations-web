@@ -8,12 +8,13 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <CtaSlide {...props} /> },
   { render: (props) => <ForEngineersSlide {...props} /> },
   { render: (props) => <InstructVsVerifySlide {...props} /> },
+  { render: (props) => <WhatIsATestSlide {...props} /> },
   { render: (props) => <TddLoopSlide {...props} /> },
   { render: (props) => <ScreenshotCheckSlide {...props} /> },
   { render: (props) => <BridgeToHooksSlide {...props} /> },
   { render: (props) => <TypecheckHookSlide {...props} /> },
   { render: (props) => <ClaudeReviewsClaudeSlide {...props} /> },
-  { render: (props) => <MyRealHooksSlide {...props} /> },
+  { render: (props) => <CommonHooksSlide {...props} /> },
   { render: (props) => <PhilosophySlide {...props} /> },
   { render: (props) => <DemoSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
@@ -103,6 +104,7 @@ function InstructVsVerifySlide({ frame }: SlideRenderContext) {
   const heading = entrance(frame, fps)
   const left = entrance(frame, fps, 22)
   const right = entrance(frame, fps, 36)
+  const note = entrance(frame, fps, 56)
 
   return (
     <section className="remotion-slide e16-slide">
@@ -113,15 +115,79 @@ function InstructVsVerifySlide({ frame }: SlideRenderContext) {
       <div className="e16-compare">
         <div className="e16-compare-card" style={lift(left, 30)}>
           <span className="e16-tag e16-tag-muted">指示するだけ</span>
-          <strong>「美味しい料理を作って」</strong>
-          <p>ゴールが曖昧。合っているか、Claude自身には確かめようがない。</p>
+          <strong>「メールアドレスを検証する関数を作って」</strong>
+          <p>できたかどうかは人間が見るまで分からない。Claudeは「できたっぽい」で止まる。</p>
         </div>
         <div className="e16-compare-card e16-compare-accent" style={lift(right, 30)}>
           <span className="e16-tag">検証を渡す</span>
-          <strong>「この味見テストに合格する料理を作って」</strong>
-          <p>合否の基準ごと渡す。Claudeが自分で答え合わせできるようになる。</p>
+          <strong>
+            「validateEmail を書いて。
+            <br />
+            書いたらテストを実行して」
+          </strong>
+          <p className="e16-cases">
+            user@example.com → true ／ invalid → false ／ user@.com → false
+          </p>
+          <p>合否が自動で出る。Claudeは通るまで自分で直し続けられる。</p>
         </div>
       </div>
+      <p className="e16-note" style={lift(note, 18)}>
+        渡すのは「テスト・ビルド・スクリーンショット」など<b>Claude自身が走らせて合否を読めるもの</b>。
+      </p>
+    </section>
+  )
+}
+
+function WhatIsATestSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+  const table = entrance(frame, fps, 22)
+  const terminal = entrance(frame, fps, 44)
+  const note = entrance(frame, fps, 66)
+
+  const cases: ReadonlyArray<readonly [string, string]> = [
+    ['user@example.com', 'true（正しい）'],
+    ['invalid', 'false（間違い）'],
+    ['user@.com', 'false（間違い）']
+  ]
+
+  return (
+    <section className="remotion-slide e16-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">テストを知らない方へ</span>
+        <h1>「テスト」＝入力と正解の対応表</h1>
+      </div>
+      <div className="e16-testcases" style={lift(table, 28)}>
+        <div className="e16-testcase e16-testcase-head">
+          <span>入力</span>
+          <span>期待する答え</span>
+        </div>
+        {cases.map(([input, expected], index) => (
+          <div
+            key={input}
+            className="e16-testcase"
+            style={lift(entrance(frame, fps, 30 + index * 10), 20)}
+          >
+            <code>{input}</code>
+            <span>{expected}</span>
+          </div>
+        ))}
+      </div>
+      <div className="e16-terminal" style={lift(terminal, 26)}>
+        <div className="e16-terminal-bar">
+          <span />
+          <span />
+          <span />
+          <strong>npm test</strong>
+        </div>
+        <div className="e16-terminal-body">
+          <code className="e16-output">✓ user@example.com → true</code>
+          <code className="e16-fail">✗ user@.com → true になっている（期待は false）</code>
+        </div>
+      </div>
+      <p className="e16-note" style={lift(note, 18)}>
+        これをコードで書いておくと、<b>機械が自動で採点</b>してくれる。人の目視が要らなくなる。
+      </p>
     </section>
   )
 }
@@ -173,26 +239,35 @@ function TddLoopSlide({ frame }: SlideRenderContext) {
 function ScreenshotCheckSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
-  const card = entrance(frame, fps, 24)
-  const note = entrance(frame, fps, 48)
+  const card = entrance(frame, fps, 22)
+  const browser = entrance(frame, fps, 46)
 
   return (
     <section className="remotion-slide e16-slide">
       <div style={lift(heading, 24)}>
         <span className="slide-kicker">検証はコードだけじゃない</span>
-        <h1>スクリーンショットで見た目を検証</h1>
+        <h1>見た目もClaudeが自分で確かめる</h1>
       </div>
       <div className="e16-port" style={lift(card, 30)}>
-        <span className="e16-tag">UI変更</span>
-        <strong>「この画面、デザイン通り?」</strong>
+        <span className="e16-tag">プロンプト例</span>
+        <strong>
+          {'「［デザイン画像］この通りに実装して。できたらスクリーンショットを撮って元画像と見比べて、違うところを列挙して直して」'}
+        </strong>
+        <p>「よくして」ではなく<b>比べる対象</b>を渡す。ズレを自分で見つけて直すまで回る。</p>
+      </div>
+      <div className="e16-browser" style={lift(browser, 28)}>
+        <span className="e16-tag e16-tag-warn">重要</span>
+        <strong>Claude Code自身がブラウザを開いて「見る」ことができる</strong>
         <p>
-          画面のスクリーンショットを撮ってClaudeに見せれば、
-          <b>見た目という主観的なゴール</b>も検証の対象にできる。
+          <code>claude --chrome</code> でChrome拡張とつなぐと、Claudeが自分で
+          <code>localhost:3000</code>
+          {'を開き、フォームに入力し、スクショを撮り、コンソールのエラーまで読む。'}
+          <b>人がスクショを撮って貼る必要すらない。</b>
+        </p>
+        <p className="e16-browser-example">
+          例：「ログイン画面を開いて、わざと不正な値を入れて、エラーが正しく出るか確かめて」
         </p>
       </div>
-      <p className="e16-note" style={lift(note, 18)}>
-        テキストの合否だけでなく、目で見て確かめる検証も任せられる。
-      </p>
     </section>
   )
 }
@@ -310,32 +385,33 @@ function ClaudeReviewsClaudeSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function MyRealHooksSlide({ frame }: SlideRenderContext) {
+function CommonHooksSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
 
-  const hooks = [
-    ['SessionStart', '起動時にプロジェクトの文脈を自動ロード'],
-    ['Stop', '作業ログをObsidianに自動保存'],
-    ['UserPromptSubmit', '送信前にメッセージを前処理（言語設定など）']
+  const hooks: ReadonlyArray<readonly [string, string, string]> = [
+    ['ファイル編集のあと', 'PostToolUse', 'eslint / prettier を自動で走らせて、整形と指摘をその場で返す'],
+    ['ファイル編集のまえ', 'PreToolUse', 'DBのmigrationsフォルダなど、触ってほしくない場所への書き込みをブロック'],
+    ['作業を終えるとき', 'Stop', 'テストを走らせ、失敗している間はターンを終わらせない']
   ]
 
   return (
     <section className="remotion-slide e16-slide">
       <div style={lift(heading, 24)}>
-        <span className="slide-kicker">実例</span>
-        <h1>私の実際のHook</h1>
+        <span className="slide-kicker">よくある使い方</span>
+        <h1>Hookの定番3パターン</h1>
       </div>
       <div className="e16-hooks">
-        {hooks.map(([name, body], index) => (
+        {hooks.map(([when, name, body], index) => (
           <div key={name} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
+            <span className="e16-hook-when">{when}</span>
             <strong>{name}</strong>
             <span>{body}</span>
           </div>
         ))}
       </div>
       <p className="e16-note" style={lift(entrance(frame, fps, 70), 18)}>
-        検証だけでなく、<b>記録や前処理</b>まで仕組みに任せられる。
+        Hookは自分で書かなくていい。<b>「ファイル編集のたびにeslintを走らせるHookを書いて」</b>とClaudeに頼めば作ってくれる。
       </p>
     </section>
   )
@@ -377,32 +453,43 @@ function PhilosophySlide({ frame }: SlideRenderContext) {
 function DemoSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
+  const prompt = entrance(frame, fps, 24)
+  const steps = entrance(frame, fps, 48)
 
-  const items: ReadonlyArray<readonly [string, string]> = [
-    ['テスト駆動ループ', 'テストを渡し、失敗→修正→成功まで自走させる'],
-    ['スクショ検証', 'UIのスクリーンショットを見せて「デザイン通り?」と確認する'],
-    ['型チェックHook', 'ファイル編集後に tsc が自動で走り、型エラーを自動修正']
+  const watch = [
+    'Claudeが先にテストを書く（この時点では当然、失敗する）',
+    '実装する → テストを自分で実行する → 失敗を読む',
+    '直して再実行。全部通るまで、こちらは何も言わない'
   ]
 
   return (
     <section className="remotion-slide e16-slide demo-slide">
       <div style={lift(heading, 24)}>
         <span className="demo-badge">▶ 実演 / LIVE DEMO</span>
-        <h1>ここで手を動かす</h1>
+        <h1>テスト駆動ループを回す</h1>
       </div>
-      <div className="demo-list">
-        {items.map(([title, body], index) => (
-          <div key={title} style={lift(entrance(frame, fps, 24 + index * 12), 26)}>
-            <span className="demo-num">{index + 1}</span>
-            <div>
-              <strong>{title}</strong>
-              <p>{body}</p>
-            </div>
+      <div className="e16-terminal" style={lift(prompt, 28)}>
+        <div className="e16-terminal-bar">
+          <span />
+          <span />
+          <span />
+          <strong>claude</strong>
+        </div>
+        <div className="e16-terminal-body">
+          <code className="e16-prompt">&gt; メールアドレスを検証する validateEmail を作って。TDDで進めて。</code>
+          <code className="e16-prompt">&gt; テストが全部通るまで、自分で直し続けて。</code>
+        </div>
+      </div>
+      <div className="e16-recap" style={lift(steps, 22)}>
+        {watch.map((line, index) => (
+          <div key={line} style={lift(entrance(frame, fps, 56 + index * 10), 20)}>
+            <span className="e16-check">{index + 1}</span>
+            <p>{line}</p>
           </div>
         ))}
       </div>
-      <p className="demo-foot" style={lift(entrance(frame, fps, 72), 18)}>
-        説明だけで終わらせない。画面に映しながら、実際にやってみせる。
+      <p className="demo-foot" style={lift(entrance(frame, fps, 92), 18)}>
+        極端な話、<b>「TDDで進めて」</b>と書くだけでもループは回りはじめる。
       </p>
     </section>
   )
@@ -415,7 +502,7 @@ function RecapSlide({ frame }: SlideRenderContext) {
   const points = [
     '自己検証はレバレッジ最大 ─ 合格基準ごと渡す',
     'テスト → 失敗 → 修正 → 成功の自己修正ループが回る',
-    'UIはスクショで「デザイン通り?」と検証できる',
+    '見た目はClaude自身がブラウザを開いてスクショで確認できる',
     'Hookは型チェック・Claude同士の審査まで発展',
     '検証は人ではなく「仕組み」に組み込む'
   ]
