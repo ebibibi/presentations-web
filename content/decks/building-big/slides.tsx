@@ -489,7 +489,7 @@ function DemoInterviewSlide({ frame }: SlideRenderContext) {
         '1問ずつ質問して要件を引き出して、SPEC.md にまとめて。'
       ]}
       answers={[
-        ['集めるもの', '登録したRSS 3本の、前日分の新着だけ'],
+        ['集めるもの', 'はてブ（テクノロジー）／Publickey／ITmedia NEWS の前日分'],
         ['出力', '日付ごとのMarkdown 1枚（タイトル・リンク・3行要約）'],
         ['要約のさせ方', 'claude -p に投げる'],
         ['動かし方', '自分のPCで毎朝6時。失敗したら気づけるように']
@@ -497,7 +497,7 @@ function DemoInterviewSlide({ frame }: SlideRenderContext) {
       watch={[]}
       foot={
         <>
-          聞かれるのは「何を作るか」だけ。<b>「毎朝6時に動かしたい」もここで渡しておく。</b>
+          聞かれるのは「何を作るか」だけ。<b>運用の希望もここで渡す。</b>
         </>
       }
     />
