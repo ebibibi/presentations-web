@@ -45,7 +45,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
 
   const goals = [
     ['01', 'ターミナルの外へ', 'ターミナル以外からもClaude Codeを動かす'],
-    ['02', 'シリーズを締める', '全18回を貫いたテーマで、コースを完結させる']
+    ['02', 'ここまでを振り返る', '18回を貫いてきたテーマを、あらためて確認する']
   ]
 
   return (
@@ -53,7 +53,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       <LogoMark />
       <div className="motion-grid" />
       <div className="e18-opening-copy" style={lift(title, 48)}>
-        <span className="slide-kicker">Claude Codeの使い方コース ─ 第18回・最終回</span>
+        <span className="slide-kicker">Claude Codeの使い方コース ─ 第18回</span>
         <h1>
           どこからでも
           <br />
@@ -309,7 +309,7 @@ function BackboneSlide({ frame }: SlideRenderContext) {
     <section className="remotion-slide e18-slide e18-confession">
       <div style={lift(heading, 24)}>
         <span className="slide-kicker">シリーズの背骨</span>
-        <h1>全18回を貫いたテーマ</h1>
+        <h1>ここまでの18回を貫いたテーマ</h1>
       </div>
       <div className="e18-confession-card" style={lift(card, 30)}>
         <p>
@@ -410,7 +410,7 @@ function YourWaySlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <p className="e18-judge" style={lift(note, 18)}>
-        シリーズはここで一区切り。でも<b>実践はここから始まる。</b>
+        学ぶのはここまで。でも<b>実践はここから始まる。</b>
       </p>
     </section>
   )
@@ -458,7 +458,7 @@ function RecapSlide({ frame }: SlideRenderContext) {
     '公式はRemote Control / Web / Desktop / Channels',
     'ローカル・クラウド・イベントpushを目的で選ぶ',
     'CCDBはDiscordを複数AIセッションの作業台にする',
-    '全18回を貫いたのはコンテキスト管理。最後は使い方次第'
+    'ここまでの18回を貫いたのはコンテキスト管理。あとは使い方次第'
   ]
 
   return (
@@ -489,13 +489,13 @@ function FinaleSlide({ frame }: SlideRenderContext) {
     <section className="remotion-slide e18-slide e18-next">
       <div className="motion-grid" />
       <div style={lift(title, 30)}>
-        <span className="slide-kicker">全18回・完結</span>
+        <span className="slide-kicker">第18回・おわりに</span>
         <h1>ありがとうございました</h1>
       </div>
       <div className="e18-next-card" style={lift(card, 28)}>
         <strong>Claude Codeの使い方コース</strong>
-        <span>全18回、最後までご視聴ありがとう！</span>
-        <p>ここで一区切り。これからも一緒にClaude Codeを楽しんでいきましょう。</p>
+        <span>ここまで18回、ご視聴ありがとう！</span>
+        <p>コースはまだ続きます。これからも一緒にClaude Codeを楽しんでいきましょう。</p>
       </div>
       <p className="e18-cta" style={lift(cta, 18)}>
         チャンネル登録 &amp; メンバーシップ登録もよろしくお願いします！

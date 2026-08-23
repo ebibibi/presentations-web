@@ -1,6 +1,6 @@
 slug: claude-anywhere
 title: 第18回 どこからでもClaude Code
-summary: Claude Codeを机の前だけで使う時代は終わった。公式のRemote Control、Web、Desktop＋Dispatch、Channelsを整理し、DiscordからClaude/Codexの複数セッションを運用するOSS「CCDB」との違いも正直に比較する。Claude Codeの使い方コース 第18回・本編最終回。
+summary: Claude Codeを机の前だけで使う時代は終わった。公式のRemote Control、Web、Desktop＋Dispatch、Channelsを整理し、DiscordからClaude/Codexの複数セッションを運用するOSS「CCDB」との違いも正直に比較する。Claude Codeの使い方コース 第18回。
 status: public
 visibility: members
 createdAt: "2026-06-26"
@@ -13,7 +13,7 @@ slides:
   - id: opening
     title: どこからでもClaude Code
     durationInFrames: 175
-    notes: 最終回スタート。Claude Codeはターミナルの中だけのツールじゃない。今日のゴールは2つ。①ターミナル以外からClaude Codeを動かす ②全18回のシリーズを締めくくる。難易度は🟢、肩の力を抜いて聞ける回。
+    notes: 第18回スタート。Claude Codeはターミナルの中だけのツールじゃない。今日のゴールは2つ。①ターミナル以外からClaude Codeを動かす ②ここまでの18回を貫いてきたテーマを確認する。難易度は🟢、肩の力を抜いて聞ける回。
   - id: cta-intro
     title: 応援お願いします！
     durationInFrames: 150
@@ -49,7 +49,7 @@ slides:
   - id: backbone
     title: シリーズの背骨
     durationInFrames: 175
-    notes: ここから振り返り。全18回を通して、ずっと根っこにあったテーマは「コンテキスト管理」だった。どの回も、AIに正しい文脈を渡す工夫の話に行き着いていた。今日の「どこからでも」も、結局は文脈を運ぶ話の延長線上にある。
+    notes: ここでいったん振り返り。ここまでの18回を通して、ずっと根っこにあったテーマは「コンテキスト管理」だった。どの回も、AIに正しい文脈を渡す工夫の話に行き着いていた。今日の「どこからでも」も、結局は文脈を運ぶ話の延長線上にある。
   - id: journey
     title: 学びの旅
     durationInFrames: 180
@@ -61,7 +61,7 @@ slides:
   - id: your-way
     title: あなたの使い方次第
     durationInFrames: 170
-    notes: Claude Codeはどこからでも動く。あとは、それをどう使うかはあなた次第。テンプレ通りでなく、自分の生活と仕事に合わせて道具を組み立てていってほしい。シリーズはここで一区切り、でも実践はここから始まる。
+    notes: Claude Codeはどこからでも動く。あとは、それをどう使うかはあなた次第。テンプレ通りでなく、自分の生活と仕事に合わせて道具を組み立てていってほしい。学ぶだけで終わらせず、実践はここから始まる。
   - id: demo
     title: ここで手を動かす
     durationInFrames: 180
@@ -69,11 +69,11 @@ slides:
   - id: recap
     title: 今日のまとめ
     durationInFrames: 160
-    notes: 今日のまとめ。公式にはRemote Control、Web、Desktop＋Dispatch、Channelsがある。ローカルの続きを操るのか、クラウドへ仕事を投げるのか、外部イベントを実行中セッションへ送るのかで選ぶ。CCDBはDiscordを複数AIセッションの作業台にする別解。そして全18回を貫いたのはコンテキスト管理。
+    notes: 今日のまとめ。公式にはRemote Control、Web、Desktop＋Dispatch、Channelsがある。ローカルの続きを操るのか、クラウドへ仕事を投げるのか、外部イベントを実行中セッションへ送るのかで選ぶ。CCDBはDiscordを複数AIセッションの作業台にする別解。そしてここまでの18回を貫いてきたのはコンテキスト管理。
   - id: finale
-    title: 全18回完結・ありがとう
+    title: ここまでありがとう・続きます
     durationInFrames: 175
-    notes: 最終回の締め。全18回、最後までご視聴ありがとうございました。次回予告ではなく、シリーズの完結とお礼の回。これからもClaude Codeを一緒に楽しんでいきましょう。チャンネル登録とメンバーシップ登録もよろしくお願いします！
+    notes: 締め。ここまで18回、ご視聴ありがとうございました。コースはまだ続くので、次回もぜひ。これからもClaude Codeを一緒に楽しんでいきましょう。チャンネル登録とメンバーシップ登録もよろしくお願いします！
   - id: cta-outro
     title: 応援お願いします！
     durationInFrames: 150
