@@ -406,6 +406,7 @@ function DemoScaffold({
   step,
   title,
   prompts,
+  answers,
   watch,
   foot
 }: {
@@ -413,6 +414,7 @@ function DemoScaffold({
   step: string
   title: string
   prompts: ReadonlyArray<string>
+  answers?: ReadonlyArray<readonly [string, string]>
   watch: ReadonlyArray<string>
   foot: ReactNode
 }) {
@@ -420,35 +422,55 @@ function DemoScaffold({
   const heading = entrance(frame, fps)
   const terminal = entrance(frame, fps, 24)
 
+  const terminalBlock = (
+    <div className="e17-terminal" style={lift(terminal, 28)}>
+      <div className="e17-terminal-bar">
+        <span />
+        <span />
+        <span />
+        <strong>claude</strong>
+      </div>
+      <div className="e17-terminal-body">
+        {prompts.map((line) => (
+          <code key={line} className="e17-prompt">
+            &gt; {line}
+          </code>
+        ))}
+      </div>
+    </div>
+  )
+
   return (
     <section className="remotion-slide e17-slide demo-slide">
       <div style={lift(heading, 24)}>
         <span className="demo-badge">▶ 実演 / LIVE DEMO ─ {step}</span>
         <h1>{title}</h1>
       </div>
-      <div className="e17-terminal" style={lift(terminal, 28)}>
-        <div className="e17-terminal-bar">
-          <span />
-          <span />
-          <span />
-          <strong>claude</strong>
+      {answers ? (
+        <div className="e17-how-stage">
+          {terminalBlock}
+          <div className="e17-examples">
+            {answers.map(([label, body], index) => (
+              <div key={label} style={lift(entrance(frame, fps, 40 + index * 10), 24)}>
+                <strong>{label}</strong>
+                <span>{body}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="e17-terminal-body">
-          {prompts.map((line) => (
-            <code key={line} className="e17-prompt">
-              &gt; {line}
-            </code>
+      ) : (
+        terminalBlock
+      )}
+      {watch.length > 0 && (
+        <div className="e17-recap">
+          {watch.map((line, index) => (
+            <div key={line} style={lift(entrance(frame, fps, 52 + index * 10), 22)}>
+              <span className="e17-check">{index + 1}</span>
+              <p>{line}</p>
+            </div>
           ))}
         </div>
-      </div>
-      <div className="e17-recap">
-        {watch.map((line, index) => (
-          <div key={line} style={lift(entrance(frame, fps, 52 + index * 10), 22)}>
-            <span className="e17-check">{index + 1}</span>
-            <p>{line}</p>
-          </div>
-        ))}
-      </div>
+      )}
       <p className="demo-foot" style={lift(entrance(frame, fps, 92), 18)}>
         {foot}
       </p>
@@ -461,19 +483,21 @@ function DemoInterviewSlide({ frame }: SlideRenderContext) {
     <DemoScaffold
       frame={frame}
       step="その1"
-      title="インタビューさせて SPEC.md"
+      title="作るものを、取材させて決める"
       prompts={[
-        '小さなツールを作りたい。実装はまだしないで。',
-        '1問ずつ質問して要件を引き出して、決まったら SPEC.md にまとめて。'
+        '毎朝の情報収集を自動化する小さなツールがほしい。実装はまだしないで。',
+        '1問ずつ質問して要件を引き出して、SPEC.md にまとめて。'
       ]}
-      watch={[
-        'Claudeが1問ずつ聞いてくる。答えるだけで要件が言葉になる',
-        'こちらが答えるのは「何を作るか」だけ。作り方は聞かれない',
-        '最後に SPEC.md が出来上がる ─ これがこの先の地図'
+      answers={[
+        ['集めるもの', '登録したRSS 3本の、前日分の新着だけ'],
+        ['出力', '日付ごとのMarkdown 1枚（タイトル・リンク・3行要約）'],
+        ['要約のさせ方', 'claude -p に投げる'],
+        ['動かし方', '自分のPCで毎朝6時。失敗したら気づけるように']
       ]}
+      watch={[]}
       foot={
         <>
-          真っ白から書かせない。<b>まず取材させる。</b>
+          聞かれるのは「何を作るか」だけ。<b>「毎朝6時に動かしたい」もここで渡しておく。</b>
         </>
       }
     />
@@ -485,16 +509,19 @@ function DemoBuildSlide({ frame }: SlideRenderContext) {
     <DemoScaffold
       frame={frame}
       step="その2"
-      title="仕様書を渡して作らせる"
-      prompts={['SPEC.md のとおりに実装して。実際に動かして、動くところまで確認して。']}
+      title="運用込みの計画を書かせる"
+      prompts={[
+        'SPEC.md をもとに、毎朝6時の自動実行と失敗時の通知まで含めて',
+        'PLAN.md に実装計画を書いて。まだ実装はしないで。'
+      ]}
       watch={[
-        '仕様が共有済みなので、途中で「これでいい？」が起きない',
-        'Claudeが自分で実行して、出力を見て直す（第16回の自己検証）',
-        'ここまでで小さなアプリが1個できあがる'
+        '「まだ実装しないで」で、いきなり手が動くのを止める',
+        '実行基盤の候補（cron・タスクスケジューラなど）を出してくる',
+        '失敗したときの扱いも、動かす前に決まる'
       ]}
       foot={
         <>
-          指示は1行。<b>効いているのは、前のステップで作った SPEC.md。</b>
+          作ってから運用を考えると二度手間。<b>運用込みで設計させる。</b>
         </>
       }
     />
@@ -506,20 +533,16 @@ function DemoPipelineSlide({ frame }: SlideRenderContext) {
     <DemoScaffold
       frame={frame}
       step="その3"
-      title="運用の計画まで立てさせて、投げる"
-      prompts={[
-        'これを毎朝6時に自動で動かしたい。失敗したときの通知まで含めて、',
-        'PIPELINE.md に計画だけ書いて。まだ実装はしないで。',
-        '（計画を読んでOKなら）そのとおり実装して。'
-      ]}
+      title="計画にOKを出して、投げる"
+      prompts={['PLAN.md のとおり実装して。毎朝6時の自動実行の設定まで含めて。']}
       watch={[
-        '「まだ実装しないで」で、いきなり手を動かすのを止める',
-        '実行基盤・通知・失敗時の扱いをClaudeが選択肢で出してくる',
-        '人間は選ぶだけ。OKを出したら、あとは投げて席を立つ'
+        '計画を画面で一緒に読んで、選択肢に答えるだけでOKになる',
+        '走り出したら、ここで終わり。完走は待たない',
+        '人間がやったのは、質問に答えることと、計画にOKを出すことだけ'
       ]}
       foot={
         <>
-          今日やったのは<b>質問に答えることと、計画にOKを出すことだけ。</b>
+          作る → 毎朝動かす、までが1本の計画。<b>渡すのは、この一言。</b>
         </>
       }
     />
