@@ -1,0 +1,63 @@
+slug: kerberos-rc4-hardening-2026
+title: ADのRC4が「既定で」使えなくなった — 2026年 Kerberos暗号ハードニング
+summary: CVE-2026-20833に対応する3段階のKDC変更で、Active DirectoryのKerberosは既定でRC4のサービスチケットを発行しなくなりました。何が変わり、何が残り、どこが壊れ、どう棚卸しして直すのかを整理します。
+status: draft
+visibility: public
+createdAt: "2026-08-28"
+updatedAt: "2026-08-28"
+order: 107
+tags:
+  - active-directory
+  - kerberos
+  - windows-server
+  - security
+  - microsoft
+slides:
+  - id: opening
+    title: ADのRC4が「既定で」使えなくなった
+    durationInFrames: 200
+    notes: 2026年7月14日の更新でハード強制フェーズに入りました。まず「何が変わったか」を1文で言い切ります。
+  - id: why-now
+    title: なぜ今RC4を止めるのか
+    durationInFrames: 220
+    notes: RC4のサービスチケットはKerberoastingでオフライン解析される。CVE-2026-20833はこれを情報漏えいリスクとして扱った、という順で説明します。
+  - id: misunderstanding
+    title: よくある3つの誤解
+    durationInFrames: 240
+    notes: 「RC4が禁止された」「延期された」「DCを更新しなければ関係ない」の3つを先に潰します。ここを外すと以降の判断が全部ずれます。
+  - id: phases
+    title: 3段階のロールアウト
+    durationInFrames: 260
+    notes: 1月=監査、4月=既定値変更（ロールバック可）、7月=ハード強制。猶予ではなく依存関係を発見するための移行期間だったと位置づけます。
+  - id: phase3
+    title: フェーズ3で消えたもの／残ったもの
+    durationInFrames: 250
+    notes: 消えたのはRC4DefaultDisablementPhaseと監査モードだけ。明示設定の2系統は生きている、が核心です。
+  - id: two-knobs
+    title: つまみは2つ、効く範囲が違う
+    durationInFrames: 260
+    notes: DC単位のレジストリはそのDCだけ、AD属性は複製されて全DCに効く。この差が障害の見え方を決めます。
+  - id: bits
+    title: 値の読み方と、紛らわしい0x18
+    durationInFrames: 250
+    notes: msDS-SupportedEncryptionTypesの0x18とイベント4769の0x18は別物。ここは実務で必ず事故ります。
+  - id: who-breaks
+    title: 壊れるのは誰か
+    durationInFrames: 250
+    notes: 一般ユーザーのログオンではなく、SPN付きサービスアカウントと非Windows実装が主役だと明示します。
+  - id: intermittent
+    title: DC単位で効く＝「たまに失敗する」
+    durationInFrames: 240
+    notes: 更新済みDCと未更新DCが混在すると、サイトとサブネットの設計次第で間欠障害になります。原因究明が長引く典型パターンです。
+  - id: inventory
+    title: 棚卸しのやり方
+    durationInFrames: 260
+    notes: 4769のTicket Encryption Type 0x17が最も広く取れる。KDCSVC 201〜209は補助。イベントが出ないことは安全の証明にならない、を必ず添えます。
+  - id: remediation
+    title: 直し方の優先順位
+    durationInFrames: 260
+    notes: AES化が本線、属性で個別例外が次善、DC既定の0x24は最終手段。AES鍵はパスワード変更で作られる点を強調します。
+  - id: recap
+    title: まとめと出典
+    durationInFrames: 220
+    notes: 3行でまとめ、一次情報へのリンクを提示して終わります。
