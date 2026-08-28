@@ -1,10 +1,10 @@
 slug: system-levels-and-ai
 title: AIの前に、見るべきものがある ─ 経営者のための業務レベル論
 summary: 業務がどのレベルで回っているかを見極めないまま、AIやRPAをかぶせても事態は悪化する。理想は人が介在しない業務、最悪は中途半端なシステム。Amazonの姿を基準に、自社の業務レベルを測り、レガシーという負の資産を落とすまでのロードマップを経営者向けに解説する。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-08-16"
-updatedAt: "2026-08-16"
+updatedAt: "2026-08-18"
 order: 105
 tags:
   - ai
@@ -12,6 +12,11 @@ tags:
   - management
   - legacy
   - automation
+youtube:
+  id: RuJlkElGcyk
+  url: https://www.youtube.com/watch?v=RuJlkElGcyk
+  title: "AI導入以前にやるべきこと"
+  publishedAt: "2026-08-18"
 slides:
   - id: opening
     title: AIの前に、見るべきものがある
