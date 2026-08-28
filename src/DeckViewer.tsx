@@ -22,6 +22,7 @@ import {
 } from './studio-timeline'
 import type { AuthState } from './auth'
 import type { DeckBundle } from './types'
+import { DeckOutro } from './DeckOutro'
 
 const fps = 30
 const settledFrameOffset = 112
@@ -583,6 +584,8 @@ export function DeckViewer({
           </div>
         </section>
       ) : null}
+
+      {isStudioRoute ? null : <DeckOutro meta={deck.meta} />}
 
       {isStudioRoute && !auth.canRecord ? null : (
         <footer className="viewer-footer">
