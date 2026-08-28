@@ -125,6 +125,7 @@ Use the `frame` value when animation adds meaning. If the slide is static, it is
 - Avoid nested cards and decorative blobs.
 - Use real visual structure: diagrams, timelines, code blocks, comparisons, and screenshots when helpful.
 - Do not cover the whole slide with an external click overlay; links and text selection should remain usable.
+- `LogoMark` without a `className` falls back to `.deck-logo`, which is absolutely positioned for the corner logo. When you place it inside a card, pass a class and reset `position`, `z-index` and `box-shadow`, or the mark will float over the card text.
 
 ## Recommended Deck Shape
 
