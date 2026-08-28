@@ -7112,7 +7112,7 @@ main {
 .m365-profile-slide { background: radial-gradient(circle at 18% 58%, rgba(37, 99, 235, 0.11), transparent 31%), var(--paper); }
 .m365-profile-layout { align-items: stretch; display: grid; gap: 34px; grid-template-columns: 0.78fr 1.22fr; }
 .m365-profile-mark { align-items: center; background: linear-gradient(145deg, #172554, #1d4ed8); border-radius: 28px; box-shadow: 0 24px 60px rgba(29, 78, 216, 0.24); color: white; display: flex; flex-direction: column; gap: 10px; justify-content: center; min-height: 390px; padding: 34px; text-align: center; }
-.m365-profile-mark img { height: 82px; margin-bottom: 8px; object-fit: contain; width: 82px; }
+.m365-profile-mark img { border-radius: 50%; box-shadow: none; height: 82px; margin-bottom: 8px; object-fit: contain; position: static; width: 82px; z-index: auto; }
 .m365-profile-mark strong { font-size: 46px; line-height: 1.02; }
 .m365-profile-mark span { color: #bfdbfe; font-size: 22px; font-weight: 800; }
 .m365-profile-facts { display: grid; gap: 14px; }
@@ -7887,7 +7887,15 @@ main {
   padding: 30px 20px;
 }
 
-.svc-profile-mark img { height: 96px; width: 96px; }
+.svc-profile-mark img {
+  border-radius: 50%;
+  box-shadow: none;
+  height: 96px;
+  object-fit: contain;
+  position: static;
+  width: 96px;
+  z-index: auto;
+}
 .svc-profile-mark strong { font-size: 27px; line-height: 1.2; text-align: center; }
 .svc-profile-mark span { color: var(--muted); font-size: 19px; }
 
