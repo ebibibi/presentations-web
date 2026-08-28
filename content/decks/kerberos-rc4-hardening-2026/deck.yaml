@@ -1,7 +1,7 @@
 slug: kerberos-rc4-hardening-2026
 title: ADのRC4が「既定で」使えなくなった — 2026年 Kerberos暗号ハードニング
 summary: CVE-2026-20833に対応する3段階のKDC変更で、Active DirectoryのKerberosは既定でRC4のサービスチケットを発行しなくなりました。何が変わり、何が残り、どこが壊れ、どう棚卸しして直すのかを整理します。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-08-28"
 updatedAt: "2026-08-28"
@@ -12,6 +12,11 @@ tags:
   - windows-server
   - security
   - microsoft
+youtube:
+  id: Pc7i03UdPgA
+  url: https://www.youtube.com/watch?v=Pc7i03UdPgA
+  title: "rc4"
+  publishedAt: "2026-08-28"
 slides:
   - id: opening
     title: ADのRC4が「既定で」使えなくなった
