@@ -1,10 +1,10 @@
 slug: video-event-automation
 title: 「ファイルができた」から先は、人がやらない ─ 動画1本で実証した業務自動化の設計図
 summary: 撮影から編集、アップロード、タイトル・概要欄・サムネイルの生成、公開、SNS宣伝まで。個人のYouTube運用で人の手をほぼ外した実例を具体的に見せたうえで、これが「動画」の話ではなく「ファイルが生成された」というイベントを起点にした業務ワークフローの話であることを示す。会議録画・文字起こし・台帳転記・資料生成といった一般企業の手作業へそのまま置き換えられる、5層のアーキテクチャとして解説する。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-08-17"
-updatedAt: "2026-08-17"
+updatedAt: "2026-08-28"
 order: 106
 tags:
   - automation
@@ -12,6 +12,11 @@ tags:
   - ai
   - dx
   - video
+youtube:
+  id: gjUjCDAFiUc
+  url: https://www.youtube.com/watch?v=gjUjCDAFiUc
+  title: "【AI活用事例】10工程の動画公開を自動化 ─ 人は2か所だけ"
+  publishedAt: "2026-08-23"
 slides:
   - id: opening
     title: 「ファイルができた」から先は、人がやらない
