@@ -272,7 +272,7 @@ function TheWallSlide({ frame }: SlideRenderContext) {
         <div className="svc-formula-part">
           <Smartphone size={40} />
           <strong>MFA</strong>
-          <span>人が「持っているもの」で本人を確かめる</span>
+          <span>知っているもの・持っているもの・体の特徴を組み合わせる</span>
         </div>
         <div className="svc-formula-op">
           <UserX size={44} />
@@ -280,7 +280,7 @@ function TheWallSlide({ frame }: SlideRenderContext) {
         <div className="svc-formula-part svc-formula-bad">
           <Bot size={40} />
           <strong>確かめる人がいない</strong>
-          <span>だから、原理的にかけられない</span>
+          <span>ワークロードIDには適用しない／無人のユーザーIDは通せない</span>
         </div>
       </div>
       <div className="svc-chip-row">
@@ -292,7 +292,7 @@ function TheWallSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <Punch frame={frame} delay={96}>
-        まずここを認める。<b>工夫でどうにかする話ではない。</b>
+        SP・マネージドIDは<b>そもそもMFAの対象外</b>。無人で動く<b>ユーザーID</b>がここで詰まる。
       </Punch>
     </section>
   )
@@ -374,11 +374,11 @@ function MethodsSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const rows: [string, string, boolean][] = [
     ['パスキー（FIDO2）', '単独でも / 2要素目でも', true],
-    ['Microsoft Authenticator（パスキー）', '単独でも / 2要素目でも', true],
-    ['Windows Hello for Business', '単独でも / 2要素目でも', true],
+    ['Microsoft Authenticator のパスキー', '単独でも / 2要素目でも', true],
+    ['Windows Hello for Business', '単独 ／ 2要素目はパスキー登録が前提', true],
     ['証明書ベース認証（CBA）', '単独でも / 2要素目でも', true],
-    ['Authenticator プッシュ通知', '単独でも / 2要素目でも', false],
-    ['ハードウェア / ソフトウェア OATH トークン', '2要素目のみ', false],
+    ['Authenticator（電話サインイン / プッシュ承認）', '単独 ／ プッシュ承認は2要素目', false],
+    ['OATH トークン（ハードウェアはプレビュー）', '2要素目のみ', false],
     ['SMS / 音声通話', 'SMSは単独可 / 音声は2要素目のみ', false]
   ]
   return (
@@ -424,7 +424,7 @@ function GuestsSlide({ frame }: SlideRenderContext) {
           <strong>実際の動き</strong>
           <p>
             B2Bコラボレーションのゲストは、既定では<b>招待した側のテナントでMFAを登録して満たす</b>。
-            相手組織の展開状況は関係ない。ライセンスも招待した側が持つ。
+            相手組織の展開状況は関係ない。必要なライセンスも招待した側が用意し、ゲストがそれを消費する。
           </p>
         </div>
       </div>
@@ -446,6 +446,7 @@ function GuestMethodsSlide({ frame }: SlideRenderContext) {
     ['音声通話', true, true],
     ['Authenticator プッシュ通知', true, true],
     ['ソフトウェア OATH トークン', true, true],
+    ['Authenticator 電話サインイン', true, false],
     ['ハードウェア OATH トークン', true, false],
     ['FIDO2 セキュリティキー', true, false],
     ['Windows Hello for Business', true, false],
@@ -453,7 +454,7 @@ function GuestMethodsSlide({ frame }: SlideRenderContext) {
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="PEOPLE ─ 03" title="自社側で登録できる方式は限られる" frame={frame} />
+      <Header kicker="PEOPLE ─ 03" title="どちらで満たすかで、方式が変わる" frame={frame} />
       <div className="svc-guest-table">
         <div className="svc-guest-head" style={lift(entrance(frame, fps, 10), 14)}>
           <span />
@@ -468,8 +469,8 @@ function GuestMethodsSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
-      <Punch frame={frame} delay={74}>
-        ゲストに<b>フィッシング耐性のある方式</b>を求めるなら、相手テナントのMFAを信頼する設定とセットで考える。
+      <Punch frame={frame} delay={80}>
+        自社CAで<b>認証強度</b>を要求し、かつ相手のMFAを信頼する。<b>信頼だけでは強度を指定できない。</b>
       </Punch>
     </section>
   )
@@ -529,14 +530,14 @@ function InventoryLogsSlide({ frame }: SlideRenderContext) {
             <FileSearch size={30} />
             <strong>{log.label}</strong>
             <span>{log.note}</span>
-            {log.muted ? <i>管理画面の既定表示</i> : null}
+            {log.muted ? <i>旧来の画面はこれだけ</i> : null}
           </div>
         ))}
       </div>
       <div className="svc-alert" style={lift(entrance(frame, fps, 70), 16)}>
         <TriangleAlert size={34} />
         <p>
-          既定表示は<b>対話型だけ</b>。ここだけ見て「サービスIDは無い」と結論するのが典型的な取りこぼし。
+          旧来のサインインログ画面は<b>対話型しか含まない</b>。ここだけ見て「サービスIDは無い」と結論するのが典型的な取りこぼし。
         </p>
       </div>
       <SourceLine
@@ -560,16 +561,16 @@ function SortByLogSlide({ frame }: SlideRenderContext) {
     {
       tone: 'work',
       icon: <Bot size={34} />,
-      title: '移行を検討する',
-      body: '非対話型・サービスプリンシパル・マネージドIDのログ',
-      note: '＝ 今日の主題のサービスID'
+      title: '確実にワークロードID',
+      body: 'サービスプリンシパル / マネージドIDのログ',
+      note: '＝ 今日の主題。ここは迷わない'
     },
     {
       tone: 'warn',
       icon: <TriangleAlert size={34} />,
-      title: '個別に確認する',
-      body: '対話型に見えるが、実体はスクリプト',
-      note: '人の操作があるかをログだけでは決められない'
+      title: '追加確認が要る',
+      body: '非対話型サインインのログ',
+      note: '普通の利用者のトークン更新も大量に入る'
     }
   ]
   return (
@@ -589,8 +590,8 @@ function SortByLogSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
-      <Punch frame={frame} delay={76}>
-        <b>まだMFAをかけていない今の状態</b>のログでやる。かけた後では、止まってから気づくことになる。
+      <Punch frame={frame} delay={80}>
+        <b>非対話型を丸ごとサービスID扱いしない。</b>利用者・クライアントアプリ・認証プロトコル・用途で絞って初めて抽出できる。
       </Punch>
     </section>
   )
@@ -599,7 +600,7 @@ function SortByLogSlide({ frame }: SlideRenderContext) {
 function LogsBlindspotsSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const spots = [
-    { icon: <Timer size={30} />, title: '保持期間', body: '既定は最大30日。月次・四半期のバッチは窓に入らない' },
+    { icon: <Timer size={30} />, title: '保持期間', body: '既定はFree 7日 / P1・P2で30日。四半期のバッチは捉えられない' },
     { icon: <RefreshCw size={30} />, title: '既存トークン', body: '再認証しないIDは、そもそもログに現れない' },
     { icon: <CloudOff size={30} />, title: 'Entra外の認証', body: 'オンプレ直結、SQL認証、アクセスキーは対象外' },
     { icon: <User size={30} />, title: '所有者・用途', body: 'どこにも書かれていない。人に聞くしかない' },
@@ -749,13 +750,13 @@ function ClassifySlide({ frame }: SlideRenderContext) {
       tone: 'good'
     },
     {
-      q: 'Q2. 動く場所はAzureの中か？（Azure Arcでオンボードした機器を含む）',
+      q: 'Q2. Azureの中（Arc含む）で、実行元も接続先もマネージドIDに対応しているか？',
       yes: 'はい',
       to: 'マネージドID',
       tone: 'good'
     },
     {
-      q: 'Q3. 信頼できるOIDCのトークンを発行できるワークロードか？',
+      q: 'Q3. Entraの要件を満たすOIDCトークンを発行できるワークロードか？',
       yes: 'はい',
       to: 'Workload identity federation',
       tone: 'good'
@@ -763,7 +764,7 @@ function ClassifySlide({ frame }: SlideRenderContext) {
     {
       q: 'Q4. 資格情報を安全に保管できるか？',
       yes: 'はい',
-      to: '証明書を使うサービスプリンシパル',
+      to: '証明書を使うアプリケーション（SPへ権限）',
       tone: 'ok'
     }
   ]
@@ -787,7 +788,7 @@ function ClassifySlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <Punch frame={frame} delay={78}>
-        上から順に答えるだけ。<b>迷うのは技術ではなく、Q1とQ2の事実確認</b>。
+        上から順に答えるだけ。<b>Q2は「場所」だけでは決まらない</b>——実行元と接続先の対応状況まで見る。
       </Punch>
     </section>
   )
@@ -849,7 +850,7 @@ function ManagedIdentitySlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <Punch frame={frame} delay={60}>
-        どちらも<b>パスワードもシークレットもコードに出てこない</b>。
+        どちらも<b>パスワードもシークレットもコードに出てこない</b>。前提として<b>実行元リソースが対応</b>していること。
       </Punch>
       <SourceLine
         href="https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview"
@@ -876,15 +877,15 @@ function ArcSlide({ frame }: SlideRenderContext) {
         </div>
         <div className="svc-arc-node svc-arc-in" style={lift(entrance(frame, fps, 42), 22)}>
           <ShieldCheck size={34} />
-          <strong>マネージドIDを持てる</strong>
-          <span>Q2が「はい」の枠に入る</span>
+          <strong>システム割り当てMIを持てる</strong>
+          <span>Azureリソースとして管理でき、Q2が「はい」に</span>
         </div>
       </div>
       <div className="svc-alert" style={lift(entrance(frame, fps, 64), 16)}>
         <TriangleAlert size={34} />
         <p>
-          Windows 10 / 11 クライアントも対応OSだが、<b>常時電源とネットワークにつながったサーバー的な使い方</b>
-          に限る。持ち歩く業務用PCはIntuneを使う、と公式に明記。
+          処理が動く場所はオンプレのまま。Windows 10 / 11 クライアントも対応OSだが
+          <b>常時接続・常時給電・常時電源オン</b>のサーバー的な使い方に限る。長時間オフラインになるPCはIntuneを使う、と公式に明記。
         </p>
       </div>
       <SourceLine
@@ -899,7 +900,8 @@ function MiNotSilverBulletSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const limits = [
     { icon: <CloudOff size={30} />, body: 'Azureの外で、Arcも入れられない場所' },
-    { icon: <Boxes size={30} />, body: 'サービス側がマネージドIDでの認証に対応していない' }
+    { icon: <ServerCog size={30} />, body: '実行元のリソースがマネージドIDに対応していない' },
+    { icon: <Boxes size={30} />, body: '接続先のサービスがEntra認証を受け付けない' }
   ]
   return (
     <section className="remotion-slide svc-slide">
@@ -913,7 +915,7 @@ function MiNotSilverBulletSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <Punch frame={frame} delay={56}>
-        使えるかどうかは<b>接続先のサービスごとに確認</b>する。ここでQ3へ進む。
+        使えるかどうかは<b>実行元と接続先の両方</b>で確認する。ここでQ3へ進む。
       </Punch>
     </section>
   )
@@ -923,7 +925,7 @@ function WifSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 06" title="OIDCのトークンを出せるなら、フェデレーション" frame={frame} />
+      <Header kicker="DESTINATION ─ 06" title="要件を満たすOIDCトークンを出せるなら、フェデレーション" frame={frame} />
       <div className="svc-wif-flow">
         <div className="svc-wif-node" style={lift(entrance(frame, fps, 16), 22)}>
           <Workflow size={34} />
@@ -937,7 +939,7 @@ function WifSlide({ frame }: SlideRenderContext) {
         <div className="svc-wif-node svc-wif-entra" style={lift(entrance(frame, fps, 42), 22)}>
           <ShieldCheck size={34} />
           <strong>Microsoft Entra ID</strong>
-          <span>事前に設定した信頼に基づいて交換</span>
+          <span>issuer / subject / audience を事前登録して交換</span>
         </div>
         <div className="svc-wif-arrow" style={lift(entrance(frame, fps, 54), 10)}>
           <span>アクセストークン</span>
@@ -950,7 +952,7 @@ function WifSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <Punch frame={frame} delay={82}>
-        利点は明確。<b>長期のシークレットを相手側へ保存しなくてよくなる。</b>
+        利点は明確。<b>長期のシークレットを相手側へ保存しなくてよくなる。</b>ただしOIDCなら何でも通るわけではない（署名方式等の要件あり）。
       </Punch>
       <SourceLine
         href="https://learn.microsoft.com/entra/workload-id/workload-identity-federation"
@@ -963,7 +965,7 @@ function WifSlide({ frame }: SlideRenderContext) {
 function UamiVsAppSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const rows = [
-    ['実体', 'Azureリソースに内包', '独立したAzureリソース', 'Entra IDのアプリ'],
+    ['実体', 'Azureリソースに内包', '独立したAzureリソース', 'アプリケーション + SP'],
     ['フェデレーション', '設定できない', '設定できる', '設定できる'],
     ['共有', 'そのリソース専用', '複数リソースで共有可', 'アプリとして共有'],
     ['向く場面', 'Azure内の単一リソース', 'Azure内 / 外部CI-CD', 'API公開・マルチテナント']
@@ -988,7 +990,8 @@ function UamiVsAppSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <Punch frame={frame} delay={70}>
-        安全性の優劣ではなく<b>管理モデルの違い</b>。フェデレーションを使うなら右2つから選ぶ。
+        安全性の優劣ではなく<b>管理モデルの違い</b>。フェデレーションは右2つ。アプリ登録では
+        <b>資格情報はアプリ側、権限はSP側</b>。
       </Punch>
       <SourceLine
         href="https://learn.microsoft.com/entra/workload-id/workload-identity-federation-create-trust-user-assigned-managed-identity"
@@ -1139,33 +1142,37 @@ function DeviceCodeSlide({ frame }: SlideRenderContext) {
 
 function DeviceCodeScopeSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const scopes = ['ユーザー / グループ', '対象リソース', 'デバイスプラットフォーム', 'ネットワークの場所']
+  const scopes = ['ユーザー / グループ', '対象リソース', 'デバイスプラットフォーム', 'ネットワークの場所', 'デバイスフィルター']
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="PITFALL ─ 02b" title="「この機器だけ許可」とは書けない" frame={frame} />
+      <Header kicker="PITFALL ─ 02b" title="例外はアカウント単位になる" frame={frame} />
       <div className="svc-scope">
-        <div className="svc-scope-no" style={lift(entrance(frame, fps, 14), 20)}>
-          <X size={34} />
-          <strong>できない書き方</strong>
-          <p>「この1台だけデバイスコードフローを許可する」</p>
-        </div>
-        <div className="svc-scope-yes" style={lift(entrance(frame, fps, 30), 20)}>
+        <div className="svc-scope-yes" style={lift(entrance(frame, fps, 14), 20)}>
           <Check size={34} />
           <strong>条件付きアクセスで指定できるのは</strong>
           <div className="svc-scope-chips">
             {scopes.map((scope, i) => (
-              <span key={scope} style={lift(entrance(frame, fps, 42 + i * 7), 12)}>
+              <span key={scope} style={lift(entrance(frame, fps, 26 + i * 6), 12)}>
                 {scope}
               </span>
             ))}
           </div>
-          <i>公式の例：「特定のネットワーク場所のAndroidデバイス以外はすべてブロック」</i>
+          <i>デバイスフィルターなら deviceId や拡張属性で特定の端末も指定できる</i>
+        </div>
+        <div className="svc-scope-no" style={lift(entrance(frame, fps, 50), 20)}>
+          <X size={34} />
+          <strong>ただしEntra未登録のデバイスには効かない</strong>
+          <p>
+            属性がすべて空として扱われ、肯定の条件は一致しない。
+            デバイスコードフローを使う機器は<b>未登録なことが多い</b>。
+          </p>
         </div>
       </div>
       <div className="svc-alert" style={lift(entrance(frame, fps, 76), 16)}>
         <TriangleAlert size={34} />
         <p>
-          さらに<b>プロトコルトラッキング</b>。一度この方式を使ったセッションは、以後ほかの方式で認証しても対象になる。
+          だから公式のTeamsデバイス設計は<b>リソースアカウント単位の除外</b>。
+          そのアカウントが別アプリで使うことは止められず、<b>プロトコルトラッキング</b>で以後のセッションも対象になる。
         </p>
       </div>
       <SourceLine
@@ -1179,9 +1186,10 @@ function DeviceCodeScopeSlide({ frame }: SlideRenderContext) {
 function ReportOnlyTrapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const facts = [
-    { icon: <FileSearch size={28} />, title: '評価期間中に再認証しないIDは、ログに出ない', body: 'だから「該当ゼロ」に見える' },
-    { icon: <Timer size={28} />, title: 'アクセストークンは既定1時間 / CAE対応なら最大28時間', body: '有効化しても、その間は動き続ける' },
-    { icon: <RefreshCw size={28} />, title: 'ポリシーやグループの変更が届くまで最大24時間', body: '一部の更新は2時間まで短縮される' }
+    { icon: <FileSearch size={28} />, title: '評価期間中にサインインもトークン要求もしないIDは出てこない', body: 'だから「該当ゼロ」に見える' },
+    { icon: <RefreshCw size={28} />, title: 'CAは対話サインインだけでなく、非対話のトークン取得でも評価される', body: 'リフレッシュトークンでの更新も対象' },
+    { icon: <Timer size={28} />, title: 'アクセストークンは既定1時間 / CAE対応なら最大28時間', body: 'その間は手元のトークンで動き続ける' },
+    { icon: <CalendarClock size={28} />, title: 'ポリシー・グループ変更がリソース側へ届くまで最大24時間', body: '一部の更新は2時間まで短縮' }
   ]
   return (
     <section className="remotion-slide svc-slide">
@@ -1200,8 +1208,8 @@ function ReportOnlyTrapSlide({ frame }: SlideRenderContext) {
       <div className="svc-alert" style={lift(entrance(frame, fps, 62), 16)}>
         <TriangleAlert size={34} />
         <p>
-          止まるのは有効化した瞬間ではなく、<b>トークンが切れて再認証した時点</b>。数日かけて順に出てくる。
-          すぐ効かせたいならセッションを明示的に失効させる。
+          止まるのは有効化した瞬間ではなく、<b>次のトークン要求のとき</b>から順に。逆にCAEでは重大イベントで
+          <b>期限前に取り消される</b>こともある。すぐ効かせたいならセッションを明示的に失効させる。
         </p>
       </div>
       <SourceLine
@@ -1246,24 +1254,25 @@ function MicrosoftMfaSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="ONE MORE THING" title="テナントの除外だけでは守れない場所がある" frame={frame} />
+      <Header kicker="ONE MORE THING" title="テナントの除外が効かない場所がある" frame={frame} />
       <div className="svc-mandatory">
         <div className="svc-mandatory-card" style={lift(entrance(frame, fps, 18), 22)}>
           <ShieldCheck size={38} />
           <strong>自分のテナントの条件付きアクセス</strong>
-          <span>除外を設定できる</span>
+          <span>除外を設定できる — が、下には効かない</span>
         </div>
         <div className="svc-mandatory-plus" style={lift(entrance(frame, fps, 32), 12)}>
           +
         </div>
         <div className="svc-mandatory-card svc-mandatory-strong" style={lift(entrance(frame, fps, 44), 22)}>
           <Siren size={38} />
-          <strong>Microsoft側の必須MFA</strong>
-          <span>Azureの管理画面などへは別に適用される</span>
+          <strong>Microsoftの必須MFA</strong>
+          <span>Azureポータル / 各管理センター / CLI・PowerShell・IaC・ARM REST</span>
         </div>
       </div>
       <Punch frame={frame} delay={70}>
-        ユーザーのIDを無人処理へ使い続ける構成は、<b>除外だけでは維持できない</b>。
+        「除外を設定していても、その除外はもう効かない」と公式に明記。緊急アクセス用も対象。
+        一方<b>マネージドIDとサービスプリンシパルは対象外</b>——だからワークロードIDへ移す。
       </Punch>
       <SourceLine
         href="https://learn.microsoft.com/entra/identity/authentication/concept-mandatory-multifactor-authentication"
@@ -1277,8 +1286,8 @@ function RecapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const items = [
     ['01', 'MFAが使えないことと、弱いままでよいことは別', 'シークレットを持たない仕組みへ移す。除外して終わりにしない'],
-    ['02', '棚卸しはログで大半が埋まる', '残るのは所有者を探す作業'],
-    ['03', '移行先は「動く場所」と「トークンを出せるか」で決まる', '4つの質問に上から答えるだけ']
+    ['02', '棚卸しはログで大半が埋まる', 'ただし非対話型を丸ごとサービスID扱いしない'],
+    ['03', '移行先は「場所」「対応状況」「トークンを出せるか」で決まる', '4つの質問に上から答えるだけ']
   ]
   return (
     <section className="remotion-slide svc-slide">
