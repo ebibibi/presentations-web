@@ -8567,7 +8567,7 @@ main {
 .svc-myth p { font-size: 24px; line-height: 1.5; }
 
 /* mfa-service-identity: guest method matrix */
-.svc-guest-table { display: grid; gap: 7px; }
+.svc-guest-table { display: grid; gap: 5px; }
 
 .svc-guest-head,
 .svc-guest-row {
@@ -8580,8 +8580,8 @@ main {
 .svc-guest-head b {
   background: rgba(37, 99, 235, 0.1);
   border-radius: 12px;
-  font-size: 22px;
-  padding: 12px 16px;
+  font-size: 21px;
+  padding: 10px 16px;
   text-align: center;
 }
 
@@ -8589,11 +8589,11 @@ main {
   background: #fff;
   border: 1px solid rgba(23, 32, 27, 0.1);
   border-radius: 13px;
-  padding: 12px 24px;
+  padding: 9px 24px;
 }
 
-.svc-guest-row strong { font-size: 24px; }
-.svc-guest-row span { font-size: 27px; font-weight: 800; text-align: center; }
+.svc-guest-row strong { font-size: 22px; }
+.svc-guest-row span { font-size: 24px; font-weight: 800; text-align: center; }
 .svc-yes { color: var(--svc-green); }
 .svc-no { color: var(--svc-red); }
 
