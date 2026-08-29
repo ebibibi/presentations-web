@@ -88,7 +88,7 @@ function WhyNowSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide e19-slide">
       <div style={lift(heading, 24)}>
-        <span className="slide-kicker">なぜ今ループなのか</span>
+        <span className="slide-kicker">なぜ今ループなのか？</span>
         <h1>手動で進めるループから次へ</h1>
       </div>
       <div className="e19-compare">
