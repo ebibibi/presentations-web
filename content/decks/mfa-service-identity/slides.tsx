@@ -7,6 +7,7 @@ import {
   Boxes,
   CalendarClock,
   Check,
+  CirclePlay,
   ClipboardList,
   Cloud,
   CloudOff,
@@ -14,9 +15,7 @@ import {
   FileSearch,
   Filter,
   Fingerprint,
-  GitBranch,
-  Workflow,
-  KeyRound,
+  Globe,
   Layers,
   ListChecks,
   Lock,
@@ -24,7 +23,6 @@ import {
   Monitor,
   Radar,
   RefreshCw,
-  ScrollText,
   ServerCog,
   ShieldAlert,
   ShieldCheck,
@@ -35,8 +33,10 @@ import {
   Trash2,
   TriangleAlert,
   User,
+  UserCheck,
   UserX,
-  CirclePlay
+  Workflow,
+  X
 } from 'lucide-react'
 import { spring, useVideoConfig } from 'remotion'
 import type { SlideModule, SlideRenderContext } from '../../../src/types'
@@ -49,23 +49,32 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <TheWallSlide {...props} /> },
   { render: (props) => <ExclusionTrapSlide {...props} /> },
   { render: (props) => <WhatIsServiceIdSlide {...props} /> },
+  { render: (props) => <SectionPeopleSlide {...props} /> },
+  { render: (props) => <MethodsSlide {...props} /> },
+  { render: (props) => <GuestsSlide {...props} /> },
+  { render: (props) => <GuestMethodsSlide {...props} /> },
   { render: (props) => <RealQuestionSlide {...props} /> },
+  { render: (props) => <SectionInventorySlide {...props} /> },
   { render: (props) => <InventoryLogsSlide {...props} /> },
-  { render: (props) => <LogsExcludedSlide {...props} /> },
+  { render: (props) => <SortByLogSlide {...props} /> },
   { render: (props) => <LogsBlindspotsSlide {...props} /> },
   { render: (props) => <RetentionSlide {...props} /> },
   { render: (props) => <LedgerSlide {...props} /> },
   { render: (props) => <LedgerHumanPartSlide {...props} /> },
+  { render: (props) => <SectionDestinationSlide {...props} /> },
   { render: (props) => <ClassifySlide {...props} /> },
   { render: (props) => <NotByNameSlide {...props} /> },
   { render: (props) => <ManagedIdentitySlide {...props} /> },
+  { render: (props) => <ArcSlide {...props} /> },
   { render: (props) => <MiNotSilverBulletSlide {...props} /> },
   { render: (props) => <WifSlide {...props} /> },
   { render: (props) => <UamiVsAppSlide {...props} /> },
   { render: (props) => <WifGuardrailsSlide {...props} /> },
   { render: (props) => <LegacyCageSlide {...props} /> },
+  { render: (props) => <SectionPitfallSlide {...props} /> },
   { render: (props) => <RopcSlide {...props} /> },
   { render: (props) => <DeviceCodeSlide {...props} /> },
+  { render: (props) => <DeviceCodeScopeSlide {...props} /> },
   { render: (props) => <ReportOnlyTrapSlide {...props} /> },
   { render: (props) => <RolloutSlide {...props} /> },
   { render: (props) => <MicrosoftMfaSlide {...props} /> },
@@ -108,6 +117,32 @@ function SourceLine({ href, label }: { href: string; label: string }) {
     <a className="svc-source-line" href={href} target="_blank" rel="noreferrer">
       Source: {label}
     </a>
+  )
+}
+
+function SectionSlide({
+  frame,
+  number,
+  title,
+  lead
+}: {
+  frame: number
+  number: string
+  title: string
+  lead: string
+}) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide svc-slide svc-section">
+      <div className="svc-grid-bg" />
+      <div className="svc-section-body">
+        <span className="svc-section-number" style={lift(entrance(frame, fps), 30)}>
+          {number}
+        </span>
+        <h1 style={lift(entrance(frame, fps, 12), 26)}>{title}</h1>
+        <p style={lift(entrance(frame, fps, 26), 20)}>{lead}</p>
+      </div>
+    </section>
   )
 }
 
@@ -190,19 +225,18 @@ function ProfileSlide({ frame }: SlideRenderContext) {
 function TheSceneSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const drivers = [
-    ['ランサムウェアの被害事例', 'Siren'],
-    ['サイバー保険・監査の要件', 'ShieldCheck'],
-    ['取引先からの要請', 'Boxes']
+    { label: 'ランサムウェアの被害事例', icon: <Siren size={32} /> },
+    { label: 'サイバー保険・監査の要件', icon: <ShieldCheck size={32} /> },
+    { label: '取引先からの要請', icon: <Boxes size={32} /> }
   ]
-  const icons = { Siren: <Siren size={32} />, ShieldCheck: <ShieldCheck size={32} />, Boxes: <Boxes size={32} /> }
   return (
     <section className="remotion-slide svc-slide">
       <Header kicker="THE SITUATION ─ 01" title="「今年こそMFAを全社へ」" frame={frame} />
       <div className="svc-driver-row">
-        {drivers.map(([label, icon], i) => (
-          <div key={label} className="svc-driver" style={lift(entrance(frame, fps, 18 + i * 12), 20)}>
-            {icons[icon as keyof typeof icons]}
-            <strong>{label}</strong>
+        {drivers.map((driver, i) => (
+          <div key={driver.label} className="svc-driver" style={lift(entrance(frame, fps, 18 + i * 12), 20)}>
+            {driver.icon}
+            <strong>{driver.label}</strong>
           </div>
         ))}
       </div>
@@ -238,14 +272,14 @@ function TheWallSlide({ frame }: SlideRenderContext) {
         <div className="svc-formula-part">
           <Smartphone size={40} />
           <strong>MFA</strong>
-          <span>人がスマホで承認する</span>
+          <span>人が「持っているもの」で本人を確かめる</span>
         </div>
         <div className="svc-formula-op">
           <UserX size={44} />
         </div>
         <div className="svc-formula-part svc-formula-bad">
           <Bot size={40} />
-          <strong>承認する人がいない</strong>
+          <strong>確かめる人がいない</strong>
           <span>だから、原理的にかけられない</span>
         </div>
       </div>
@@ -288,7 +322,7 @@ function ExclusionTrapSlide({ frame }: SlideRenderContext) {
       <div className="svc-alert" style={lift(entrance(frame, fps, 82), 16)}>
         <TriangleAlert size={34} />
         <p>
-          全社にMFAを入れたのに、<b>一番おいしい入口が一箇所にまとまる</b>。
+          全社にMFAを入れたのに、<b>攻撃者から見て一番おいしい入口</b>が一箇所にまとまる。
         </p>
       </div>
     </section>
@@ -325,11 +359,127 @@ function WhatIsServiceIdSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function SectionPeopleSlide(props: SlideRenderContext) {
+  return (
+    <SectionSlide
+      frame={props.frame}
+      number="SECTION 1"
+      title="まず、人にどうかけるのか"
+      lead="ここが曖昧なままだと、本来かけられるものまで例外にしてしまう。"
+    />
+  )
+}
+
+function MethodsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const rows: [string, string, boolean][] = [
+    ['パスキー（FIDO2）', '単独でも / 2要素目でも', true],
+    ['Microsoft Authenticator（パスキー）', '単独でも / 2要素目でも', true],
+    ['Windows Hello for Business', '単独でも / 2要素目でも', true],
+    ['証明書ベース認証（CBA）', '単独でも / 2要素目でも', true],
+    ['Authenticator プッシュ通知', '単独でも / 2要素目でも', false],
+    ['ハードウェア / ソフトウェア OATH トークン', '2要素目のみ', false],
+    ['SMS / 音声通話', 'SMSは単独可 / 音声は2要素目のみ', false]
+  ]
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="PEOPLE ─ 01" title="使える「要素」は、思っているより多い" frame={frame} />
+      <div className="svc-method-table">
+        {rows.map((row, i) => (
+          <div
+            key={row[0]}
+            className={`svc-method-row${row[2] ? ' svc-method-strong' : ''}`}
+            style={lift(entrance(frame, fps, 12 + i * 7), 14)}
+          >
+            <strong>{row[0]}</strong>
+            <span>{row[1]}</span>
+            {row[2] ? <i>フィッシング耐性</i> : <i />}
+          </div>
+        ))}
+      </div>
+      <Punch frame={frame} delay={72}>
+        「スマホを配っていないからMFAは無理」ではない。<b>選択肢を知らないだけ</b>のことが多い。
+      </Punch>
+      <SourceLine
+        href="https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
+        label="Microsoft Learn ─ Authentication methods"
+      />
+    </section>
+  )
+}
+
+function GuestsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="PEOPLE ─ 02" title="「相手がMFAを入れていないから無理」は誤り" frame={frame} />
+      <div className="svc-myth">
+        <div className="svc-myth-wrong" style={lift(entrance(frame, fps, 16), 22)}>
+          <X size={36} />
+          <strong>よく言われること</strong>
+          <p>「うちはMFAを展開していないので、ゲストとして対応できません」</p>
+        </div>
+        <div className="svc-myth-right" style={lift(entrance(frame, fps, 38), 22)}>
+          <Check size={36} />
+          <strong>実際の動き</strong>
+          <p>
+            B2Bコラボレーションのゲストは、既定では<b>招待した側のテナントでMFAを登録して満たす</b>。
+            相手組織の展開状況は関係ない。ライセンスも招待した側が持つ。
+          </p>
+        </div>
+      </div>
+      <Punch frame={frame} delay={64}>
+        相手テナントのMFAを信頼したいときだけ、<b>テナント間アクセス設定で明示的に信頼</b>を入れる。
+      </Punch>
+      <SourceLine
+        href="https://learn.microsoft.com/entra/external-id/authentication-conditional-access"
+        label="Microsoft Learn ─ Authentication and Conditional Access for B2B users"
+      />
+    </section>
+  )
+}
+
+function GuestMethodsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const rows: [string, boolean, boolean][] = [
+    ['SMS（2要素目）', true, true],
+    ['音声通話', true, true],
+    ['Authenticator プッシュ通知', true, true],
+    ['ソフトウェア OATH トークン', true, true],
+    ['ハードウェア OATH トークン', true, false],
+    ['FIDO2 セキュリティキー', true, false],
+    ['Windows Hello for Business', true, false],
+    ['証明書ベース認証', true, false]
+  ]
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="PEOPLE ─ 03" title="自社側で登録できる方式は限られる" frame={frame} />
+      <div className="svc-guest-table">
+        <div className="svc-guest-head" style={lift(entrance(frame, fps, 10), 14)}>
+          <span />
+          <b>相手（ホーム）テナント</b>
+          <b>自社（リソース）テナント</b>
+        </div>
+        {rows.map((row, i) => (
+          <div key={row[0]} className="svc-guest-row" style={lift(entrance(frame, fps, 18 + i * 6), 12)}>
+            <strong>{row[0]}</strong>
+            <span className={row[1] ? 'svc-yes' : 'svc-no'}>{row[1] ? '○' : '×'}</span>
+            <span className={row[2] ? 'svc-yes' : 'svc-no'}>{row[2] ? '○' : '×'}</span>
+          </div>
+        ))}
+      </div>
+      <Punch frame={frame} delay={74}>
+        ゲストに<b>フィッシング耐性のある方式</b>を求めるなら、相手テナントのMFAを信頼する設定とセットで考える。
+      </Punch>
+    </section>
+  )
+}
+
 function RealQuestionSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide svc-slide svc-question-slide">
-      <Header kicker="THE CORE" title="本当の問いは、2つだけ" frame={frame} />
+      <Header kicker="THE CORE" title="ここから先が、本題の2つ" frame={frame} />
       <div className="svc-question-row">
         <div className="svc-question-card" style={lift(entrance(frame, fps, 20), 26)}>
           <span>Q1</span>
@@ -343,14 +493,18 @@ function RealQuestionSlide({ frame }: SlideRenderContext) {
           <p>移行先の設計</p>
         </div>
       </div>
-      <div className="svc-alert svc-alert-info" style={lift(entrance(frame, fps, 72), 16)}>
-        <TriangleAlert size={34} />
-        <p>
-          順番を逆にすると失敗する。移行先の技術から入ると、必ず
-          <b>「うちにいくつあるか分からない」</b>で止まる。
-        </p>
-      </div>
     </section>
+  )
+}
+
+function SectionInventorySlide(props: SlideRenderContext) {
+  return (
+    <SectionSlide
+      frame={props.frame}
+      number="SECTION 2"
+      title="どこにいるのかを見つける"
+      lead="移行先の技術より先に、まず対象を見つける。"
+    />
   )
 }
 
@@ -364,7 +518,7 @@ function InventoryLogsSlide({ frame }: SlideRenderContext) {
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 1 ─ INVENTORY" title="まず、サインインログで8割わかる" frame={frame} />
+      <Header kicker="INVENTORY ─ 01" title="サインインログは、4種類ある" frame={frame} />
       <div className="svc-log-row">
         {logs.map((log, i) => (
           <div
@@ -393,39 +547,51 @@ function InventoryLogsSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function LogsExcludedSlide({ frame }: SlideRenderContext) {
+function SortByLogSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
+  const buckets = [
+    {
+      tone: 'good',
+      icon: <UserCheck size={34} />,
+      title: 'そのままMFAをかける',
+      body: '対話型ログに出てくる、人のサインイン',
+      note: '本来ここが大多数。例外にしない'
+    },
+    {
+      tone: 'work',
+      icon: <Bot size={34} />,
+      title: '移行を検討する',
+      body: '非対話型・サービスプリンシパル・マネージドIDのログ',
+      note: '＝ 今日の主題のサービスID'
+    },
+    {
+      tone: 'warn',
+      icon: <TriangleAlert size={34} />,
+      title: '個別に確認する',
+      body: '対話型に見えるが、実体はスクリプト',
+      note: '人の操作があるかをログだけでは決められない'
+    }
+  ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 1 ─ THE GOOD TRICK" title="「除外で通ったサインイン」は逆引きできる" frame={frame} />
-      <div className="svc-reverse-flow">
-        <div className="svc-reverse-card" style={lift(entrance(frame, fps, 18), 22)}>
-          <ScrollText size={36} />
-          <strong>サインインログ</strong>
-          <span>1件ごとに、CAポリシーの適用結果が残る</span>
-        </div>
-        <ArrowRight size={44} />
-        <div className="svc-reverse-card svc-reverse-filter" style={lift(entrance(frame, fps, 36), 22)}>
-          <Filter size={36} />
-          <strong>結果で絞る</strong>
-          <span>
-            適用されなかった / <b>除外された</b>
-          </span>
-        </div>
-        <ArrowRight size={44} />
-        <div className="svc-reverse-card svc-reverse-result" style={lift(entrance(frame, fps, 54), 22)}>
-          <ListChecks size={36} />
-          <strong>MFAの網から外れて通っているサインインの一覧</strong>
-          <span>= 探していたIDの、かなりの部分</span>
-        </div>
+      <Header kicker="INVENTORY ─ 02" title="今のログを、3つに仕分ける" frame={frame} />
+      <div className="svc-bucket-row">
+        {buckets.map((bucket, i) => (
+          <div
+            key={bucket.title}
+            className={`svc-bucket svc-bucket-${bucket.tone}`}
+            style={lift(entrance(frame, fps, 18 + i * 13), 22)}
+          >
+            {bucket.icon}
+            <strong>{bucket.title}</strong>
+            <span>{bucket.body}</span>
+            <i>{bucket.note}</i>
+          </div>
+        ))}
       </div>
-      <Punch frame={frame} delay={80}>
-        「かけられないIDが分からない」の答えは、<b>すでにログに落ちている</b>ことが多い。
+      <Punch frame={frame} delay={76}>
+        <b>まだMFAをかけていない今の状態</b>のログでやる。かけた後では、止まってから気づくことになる。
       </Punch>
-      <SourceLine
-        href="https://learn.microsoft.com/entra/identity/conditional-access/howto-conditional-access-insights-reporting"
-        label="Microsoft Learn ─ Conditional Access insights and reporting"
-      />
     </section>
   )
 }
@@ -441,7 +607,7 @@ function LogsBlindspotsSlide({ frame }: SlideRenderContext) {
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 1 ─ LIMITS" title="それでも、ログで埋まらない5つ" frame={frame} />
+      <Header kicker="INVENTORY ─ 03" title="それでも、ログで埋まらない5つ" frame={frame} />
       <div className="svc-blind-grid">
         {spots.map((spot, i) => (
           <div key={spot.title} className="svc-blind-card" style={lift(entrance(frame, fps, 16 + i * 10), 18)}>
@@ -462,7 +628,7 @@ function RetentionSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 0 ─ DO THIS TODAY" title="最初にやるのは、ログを貯め始めること" frame={frame} />
+      <Header kicker="INVENTORY ─ 04" title="最初にやるのは、ログを貯め始めること" frame={frame} />
       <div className="svc-retention">
         <div className="svc-retention-bad" style={lift(entrance(frame, fps, 18), 22)}>
           <Archive size={40} />
@@ -499,6 +665,8 @@ function LedgerSlide({ frame }: SlideRenderContext) {
     '所有部門・責任者',
     '利用アプリ・対象リソース',
     '認証方式',
+    '人の操作があるか',
+    '実行場所',
     '接続元',
     '付与権限',
     '最終サインイン',
@@ -507,7 +675,7 @@ function LedgerSlide({ frame }: SlideRenderContext) {
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 2 ─ ONE LEDGER" title="出てきたIDを、1つの台帳へ" frame={frame} />
+      <Header kicker="INVENTORY ─ 05" title="出てきたIDを、1つの台帳へ" frame={frame} />
       <div className="svc-ledger-grid">
         {columns.map((col, i) => (
           <div key={col} className="svc-ledger-cell" style={lift(entrance(frame, fps, 12 + i * 5), 14)}>
@@ -515,7 +683,7 @@ function LedgerSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
-      <div className="svc-alert" style={lift(entrance(frame, fps, 80), 16)}>
+      <div className="svc-alert" style={lift(entrance(frame, fps, 84), 16)}>
         <TriangleAlert size={34} />
         <p>
           施策ごとに台帳を分けない。分けると<b>片方だけ見直されないID</b>が必ず残る。
@@ -529,7 +697,7 @@ function LedgerHumanPartSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 2 ─ THE REAL COST" title="台帳の「人にしか埋められない列」" frame={frame} />
+      <Header kicker="INVENTORY ─ 06" title="台帳の「人にしか埋められない列」" frame={frame} />
       <div className="svc-split">
         <div className="svc-split-card svc-split-machine" style={lift(entrance(frame, fps, 18), 22)}>
           <Bot size={38} />
@@ -554,37 +722,72 @@ function LedgerHumanPartSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <Punch frame={frame} delay={70}>
-        <b>7割埋まった表</b>を持って所有者を探しに行けば、作業量は現実的になる。
+        <b>大半が埋まった表</b>を持って所有者を探しに行けば、作業量は現実的になる。
       </Punch>
     </section>
   )
 }
 
+function SectionDestinationSlide(props: SlideRenderContext) {
+  return (
+    <SectionSlide
+      frame={props.frame}
+      number="SECTION 3"
+      title="どこへ移すのかを決める"
+      lead="判断の順番さえ決めれば、機械的に振り分けられる。"
+    />
+  )
+}
+
 function ClassifySlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const rows = [
-    { icon: <Cloud size={30} />, when: 'Azureの中で動く無人処理', to: 'マネージドID', tone: 'best' },
-    { icon: <Workflow size={30} />, when: 'Azureの外のワークロード', to: 'Workload identity federation', tone: 'best' },
-    { icon: <KeyRound size={30} />, when: 'マネージドIDが使えない製品', to: '証明書を使うサービスプリンシパル', tone: 'ok' },
-    { icon: <Lock size={30} />, when: '手を入れられないレガシー', to: '条件を絞った期限付き例外', tone: 'last' }
+  const steps = [
+    {
+      q: 'Q1. 人が操作するか？',
+      yes: 'はい',
+      to: '人のID。MFAをかける（できればフィッシング耐性のある方式）',
+      tone: 'good'
+    },
+    {
+      q: 'Q2. 動く場所はAzureの中か？（Azure Arcでオンボードした機器を含む）',
+      yes: 'はい',
+      to: 'マネージドID',
+      tone: 'good'
+    },
+    {
+      q: 'Q3. 信頼できるOIDCのトークンを発行できるワークロードか？',
+      yes: 'はい',
+      to: 'Workload identity federation',
+      tone: 'good'
+    },
+    {
+      q: 'Q4. 資格情報を安全に保管できるか？',
+      yes: 'はい',
+      to: '証明書を使うサービスプリンシパル',
+      tone: 'ok'
+    }
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 3 ─ DECIDE" title="移行先は、4分類で決まる" frame={frame} />
-      <div className="svc-classify">
-        {rows.map((row, i) => (
-          <div key={row.when} className={`svc-classify-row svc-tone-${row.tone}`} style={lift(entrance(frame, fps, 18 + i * 12), 18)}>
-            <div className="svc-classify-when">
-              {row.icon}
-              <strong>{row.when}</strong>
+      <Header kicker="DESTINATION ─ 01" title="移行先は、4つの質問で決まる" frame={frame} />
+      <div className="svc-tree">
+        {steps.map((step, i) => (
+          <div key={step.q} className="svc-tree-row" style={lift(entrance(frame, fps, 14 + i * 11), 16)}>
+            <div className="svc-tree-q">{step.q}</div>
+            <div className="svc-tree-yes">
+              {step.yes} <ArrowRight size={22} />
             </div>
-            <ArrowRight size={32} />
-            <div className="svc-classify-to">{row.to}</div>
+            <div className={`svc-tree-to svc-tone-${step.tone}`}>{step.to}</div>
           </div>
         ))}
+        <div className="svc-tree-else" style={lift(entrance(frame, fps, 62), 16)}>
+          <Lock size={28} />
+          <span>Q4も「いいえ」なら</span>
+          <strong>期限付きの例外として、条件を絞って残す</strong>
+        </div>
       </div>
-      <Punch frame={frame} delay={80}>
-        技術の選択はシンプル。難しいのは<b>どの行に入るかを決めること</b>。
+      <Punch frame={frame} delay={78}>
+        上から順に答えるだけ。<b>迷うのは技術ではなく、Q1とQ2の事実確認</b>。
       </Punch>
     </section>
   )
@@ -594,7 +797,7 @@ function NotByNameSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="STEP 3 ─ CAUTION" title="アプリ名だけで判断してはいけない" frame={frame} />
+      <Header kicker="DESTINATION ─ 02" title="アプリ名だけで判断してはいけない" frame={frame} />
       <div className="svc-samename">
         <div className="svc-samename-top" style={lift(entrance(frame, fps, 16), 20)}>
           <ServerCog size={38} />
@@ -604,12 +807,12 @@ function NotByNameSlide({ frame }: SlideRenderContext) {
           <div style={lift(entrance(frame, fps, 34), 22)}>
             <User size={32} />
             <strong>人が手で叩いている</strong>
-            <span>→ 対話サインインへ移す</span>
+            <span>→ Q1が「はい」。人のIDとしてMFA</span>
           </div>
           <div style={lift(entrance(frame, fps, 48), 22)}>
             <Bot size={32} />
             <strong>スクリプトが無人で回している</strong>
-            <span>→ マネージドID / フェデレーションへ移す</span>
+            <span>→ Q1が「いいえ」。Q2へ進む</span>
           </div>
         </div>
       </div>
@@ -622,34 +825,32 @@ function NotByNameSlide({ frame }: SlideRenderContext) {
 
 function ManagedIdentitySlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const points = ['IDそのものをAzureが管理', 'パスワードもシークレットもコードに書かない', '有効期限や更新を自分で運用しなくていい']
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 01" title="Azureの中なら、マネージドID" frame={frame} />
-      <div className="svc-mi-stage">
-        <div className="svc-mi-box" style={lift(entrance(frame, fps, 18), 22)}>
-          <Cloud size={38} />
-          <strong>Azure上のリソース</strong>
-          <span>App Service / Functions / VM など</span>
+      <Header kicker="DESTINATION ─ 03" title="Azureの中なら、マネージドID" frame={frame} />
+      <div className="svc-mi-types">
+        <div className="svc-mi-type" style={lift(entrance(frame, fps, 16), 22)}>
+          <Cloud size={34} />
+          <strong>システム割り当て</strong>
+          <ul>
+            <li>リソースと1対1</li>
+            <li>リソースを消せば一緒に消える</li>
+            <li>フェデレーションは設定できない</li>
+          </ul>
         </div>
-        <div className="svc-mi-link" style={lift(entrance(frame, fps, 34), 12)}>
-          <ShieldCheck size={34} />
-          <b>マネージドID</b>
-        </div>
-        <div className="svc-mi-box" style={lift(entrance(frame, fps, 44), 22)}>
-          <Database size={38} />
-          <strong>アクセス先</strong>
-          <span>Storage / Key Vault / SQL など</span>
+        <div className="svc-mi-type svc-mi-type-user" style={lift(entrance(frame, fps, 34), 22)}>
+          <Layers size={34} />
+          <strong>ユーザー割り当て</strong>
+          <ul>
+            <li>独立したAzureリソース</li>
+            <li>複数のリソースで共有できる</li>
+            <li>フェデレーションを設定できる</li>
+          </ul>
         </div>
       </div>
-      <div className="svc-point-row">
-        {points.map((point, i) => (
-          <div key={point} style={lift(entrance(frame, fps, 62 + i * 9), 14)}>
-            <Check size={24} />
-            <span>{point}</span>
-          </div>
-        ))}
-      </div>
+      <Punch frame={frame} delay={60}>
+        どちらも<b>パスワードもシークレットもコードに出てこない</b>。
+      </Punch>
       <SourceLine
         href="https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview"
         label="Microsoft Learn ─ Managed identities overview"
@@ -658,16 +859,51 @@ function ManagedIdentitySlide({ frame }: SlideRenderContext) {
   )
 }
 
+function ArcSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="DESTINATION ─ 04" title="Azure Arcを入れれば、「Azureの中」にできる" frame={frame} />
+      <div className="svc-arc-flow">
+        <div className="svc-arc-node" style={lift(entrance(frame, fps, 16), 22)}>
+          <Globe size={34} />
+          <strong>オンプレ / 他社クラウドのサーバー</strong>
+          <span>Q2が「いいえ」だった機器</span>
+        </div>
+        <div className="svc-arc-arrow" style={lift(entrance(frame, fps, 30), 10)}>
+          <span>Azure Arc でオンボード</span>
+          <ArrowRight size={38} />
+        </div>
+        <div className="svc-arc-node svc-arc-in" style={lift(entrance(frame, fps, 42), 22)}>
+          <ShieldCheck size={34} />
+          <strong>マネージドIDを持てる</strong>
+          <span>Q2が「はい」の枠に入る</span>
+        </div>
+      </div>
+      <div className="svc-alert" style={lift(entrance(frame, fps, 64), 16)}>
+        <TriangleAlert size={34} />
+        <p>
+          Windows 10 / 11 クライアントも対応OSだが、<b>常時電源とネットワークにつながったサーバー的な使い方</b>
+          に限る。持ち歩く業務用PCはIntuneを使う、と公式に明記。
+        </p>
+      </div>
+      <SourceLine
+        href="https://learn.microsoft.com/azure/azure-arc/servers/prerequisites"
+        label="Microsoft Learn ─ Connected Machine agent prerequisites"
+      />
+    </section>
+  )
+}
+
 function MiNotSilverBulletSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const limits = [
-    { icon: <CloudOff size={30} />, body: 'Azureの外では使えない' },
-    { icon: <Boxes size={30} />, body: '製品側が対応していないことがある' },
-    { icon: <User size={30} />, body: '人が使うIDの代わりにはならない' }
+    { icon: <CloudOff size={30} />, body: 'Azureの外で、Arcも入れられない場所' },
+    { icon: <Boxes size={30} />, body: 'サービス側がマネージドIDでの認証に対応していない' }
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 01b" title="ただし、万能薬ではない" frame={frame} />
+      <Header kicker="DESTINATION ─ 05" title="マネージドIDが使えない場合もある" frame={frame} />
       <div className="svc-limit-row">
         {limits.map((limit, i) => (
           <div key={limit.body} className="svc-limit-card" style={lift(entrance(frame, fps, 18 + i * 12), 20)}>
@@ -676,12 +912,9 @@ function MiNotSilverBulletSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
-      <div className="svc-alert" style={lift(entrance(frame, fps, 62), 16)}>
-        <TriangleAlert size={34} />
-        <p>
-          「マネージドIDにすれば解決」と考えると、<b>残りの大半で行き詰まる</b>。
-        </p>
-      </div>
+      <Punch frame={frame} delay={56}>
+        使えるかどうかは<b>接続先のサービスごとに確認</b>する。ここでQ3へ進む。
+      </Punch>
     </section>
   )
 }
@@ -690,21 +923,21 @@ function WifSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 02" title="Azureの外なら、フェデレーション" frame={frame} />
+      <Header kicker="DESTINATION ─ 06" title="OIDCのトークンを出せるなら、フェデレーション" frame={frame} />
       <div className="svc-wif-flow">
         <div className="svc-wif-node" style={lift(entrance(frame, fps, 16), 22)}>
-          <GitBranch size={34} />
+          <Workflow size={34} />
           <strong>外部のワークロード</strong>
-          <span>CI/CD、他社クラウド など</span>
+          <span>CI/CD、Kubernetes、他社クラウド</span>
         </div>
         <div className="svc-wif-arrow" style={lift(entrance(frame, fps, 30), 10)}>
-          <span>短命なトークン</span>
+          <span>短命なOIDCトークン</span>
           <ArrowRight size={38} />
         </div>
         <div className="svc-wif-node svc-wif-entra" style={lift(entrance(frame, fps, 42), 22)}>
           <ShieldCheck size={34} />
           <strong>Microsoft Entra ID</strong>
-          <span>信頼を設定しておき、トークンを交換</span>
+          <span>事前に設定した信頼に基づいて交換</span>
         </div>
         <div className="svc-wif-arrow" style={lift(entrance(frame, fps, 54), 10)}>
           <span>アクセストークン</span>
@@ -730,34 +963,33 @@ function WifSlide({ frame }: SlideRenderContext) {
 function UamiVsAppSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const rows = [
-    ['実体', 'Azureリソースとして管理', 'Entra IDのアプリとして管理'],
-    ['向く用途', 'Azureへの権限付与が主目的', 'API公開・マルチテナント等も必要'],
-    ['管理する人', 'Azure基盤チーム（IaCで管理しやすい）', 'ディレクトリのアプリ管理プロセス']
+    ['実体', 'Azureリソースに内包', '独立したAzureリソース', 'Entra IDのアプリ'],
+    ['フェデレーション', '設定できない', '設定できる', '設定できる'],
+    ['共有', 'そのリソース専用', '複数リソースで共有可', 'アプリとして共有'],
+    ['向く場面', 'Azure内の単一リソース', 'Azure内 / 外部CI-CD', 'API公開・マルチテナント']
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="FAQ" title="マネージドIDとアプリ登録、どっち？" frame={frame} />
-      <div className="svc-compare">
-        <div className="svc-compare-head" style={lift(entrance(frame, fps, 14), 16)}>
+      <Header kicker="DESTINATION ─ 07" title="3つの器を並べて比べる" frame={frame} />
+      <div className="svc-compare3">
+        <div className="svc-compare3-head" style={lift(entrance(frame, fps, 12), 16)}>
           <span />
-          <strong>ユーザー割り当てマネージドID</strong>
-          <strong>アプリ登録</strong>
+          <b>システム割り当てMI</b>
+          <b>ユーザー割り当てMI</b>
+          <b>アプリ登録</b>
         </div>
         {rows.map((row, i) => (
-          <div key={row[0]} className="svc-compare-row" style={lift(entrance(frame, fps, 26 + i * 12), 16)}>
+          <div key={row[0]} className="svc-compare3-row" style={lift(entrance(frame, fps, 24 + i * 10), 14)}>
             <span>{row[0]}</span>
             <p>{row[1]}</p>
             <p>{row[2]}</p>
+            <p>{row[3]}</p>
           </div>
         ))}
       </div>
-      <div className="svc-alert svc-alert-info" style={lift(entrance(frame, fps, 72), 16)}>
-        <TriangleAlert size={34} />
-        <p>
-          安全性の優劣ではなく<b>管理モデルの違い</b>。なお、フェデレーション資格情報を設定できるのは
-          <b>ユーザー割り当て型だけ</b>。
-        </p>
-      </div>
+      <Punch frame={frame} delay={70}>
+        安全性の優劣ではなく<b>管理モデルの違い</b>。フェデレーションを使うなら右2つから選ぶ。
+      </Punch>
       <SourceLine
         href="https://learn.microsoft.com/entra/workload-id/workload-identity-federation-create-trust-user-assigned-managed-identity"
         label="Microsoft Learn ─ Federated identity credential on a user-assigned managed identity"
@@ -776,7 +1008,7 @@ function WifGuardrailsSlide({ frame }: SlideRenderContext) {
   ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 02b" title="フェデレーションで必ず確認すること" frame={frame} />
+      <Header kicker="DESTINATION ─ 08" title="フェデレーションで必ず確認すること" frame={frame} />
       <div className="svc-rule-grid">
         {rules.map((rule, i) => (
           <div key={rule.title} className="svc-rule-card" style={lift(entrance(frame, fps, 16 + i * 11), 18)}>
@@ -799,10 +1031,10 @@ function WifGuardrailsSlide({ frame }: SlideRenderContext) {
 
 function LegacyCageSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const bars = ['接続元を限定', '使えるアプリを限定', '権限を最小化', '失効日を設定', '責任者を明記']
+  const bars = ['長いランダムなパスワード', '接続元を限定', '使えるアプリを限定', '権限を最小化', '失効日を設定', '責任者を明記']
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 03" title="どうしても残すIDは「檻」に入れる" frame={frame} />
+      <Header kicker="DESTINATION ─ 09" title="それでも残るIDは「檻」に入れる" frame={frame} />
       <div className="svc-cage" style={lift(entrance(frame, fps, 16), 22)}>
         <div className="svc-cage-inner">
           <UserX size={54} />
@@ -811,17 +1043,28 @@ function LegacyCageSlide({ frame }: SlideRenderContext) {
         </div>
         <div className="svc-cage-bars">
           {bars.map((bar, i) => (
-            <div key={bar} style={lift(entrance(frame, fps, 30 + i * 10), 16)}>
+            <div key={bar} style={lift(entrance(frame, fps, 30 + i * 9), 16)}>
               <ShieldCheck size={24} />
               <span>{bar}</span>
             </div>
           ))}
         </div>
       </div>
-      <Punch frame={frame} delay={86}>
-        「除外グループをゴミ箱にしない」とは、<b>具体的にはこういうこと</b>。
+      <Punch frame={frame} delay={90}>
+        MFAが使えなくても<b>危険度は大きく下げられる</b>。何もせず除外グループへ入れるのとは別物。
       </Punch>
     </section>
+  )
+}
+
+function SectionPitfallSlide(props: SlideRenderContext) {
+  return (
+    <SectionSlide
+      frame={props.frame}
+      number="SECTION 4"
+      title="ここから、3つの落とし穴"
+      lead="どれも「対策したつもり」になる種類のもの。"
+    />
   )
 }
 
@@ -853,7 +1096,7 @@ function RopcSlide({ frame }: SlideRenderContext) {
       <div className="svc-alert" style={lift(entrance(frame, fps, 62), 16)}>
         <TriangleAlert size={34} />
         <p>
-          いわゆる<b>レガシー認証のブロックとは別物</b>。止めたから大丈夫、とは言えない。
+          <b>レガシー認証だけをブロックしても、それで大丈夫とは言えない。</b>これは別物。
         </p>
       </div>
       <SourceLine
@@ -884,11 +1127,50 @@ function DeviceCodeSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <Punch frame={frame} delay={64}>
-        方針は<b>原則ブロック、必要な機器だけ例外</b>。例外は用途別に分け、人単位で広く外さない。
+        Microsoftの案内は<b>「可能な限りブロックする」</b>。
       </Punch>
       <SourceLine
-        href="https://learn.microsoft.com/entra/identity/conditional-access/policy-block-authentication-flows"
-        label="Microsoft Learn ─ Block authentication flows with Conditional Access"
+        href="https://learn.microsoft.com/entra/identity/conditional-access/concept-authentication-flows"
+        label="Microsoft Learn ─ Authentication flows as a condition"
+      />
+    </section>
+  )
+}
+
+function DeviceCodeScopeSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const scopes = ['ユーザー / グループ', '対象リソース', 'デバイスプラットフォーム', 'ネットワークの場所']
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="PITFALL ─ 02b" title="「この機器だけ許可」とは書けない" frame={frame} />
+      <div className="svc-scope">
+        <div className="svc-scope-no" style={lift(entrance(frame, fps, 14), 20)}>
+          <X size={34} />
+          <strong>できない書き方</strong>
+          <p>「この1台だけデバイスコードフローを許可する」</p>
+        </div>
+        <div className="svc-scope-yes" style={lift(entrance(frame, fps, 30), 20)}>
+          <Check size={34} />
+          <strong>条件付きアクセスで指定できるのは</strong>
+          <div className="svc-scope-chips">
+            {scopes.map((scope, i) => (
+              <span key={scope} style={lift(entrance(frame, fps, 42 + i * 7), 12)}>
+                {scope}
+              </span>
+            ))}
+          </div>
+          <i>公式の例：「特定のネットワーク場所のAndroidデバイス以外はすべてブロック」</i>
+        </div>
+      </div>
+      <div className="svc-alert" style={lift(entrance(frame, fps, 76), 16)}>
+        <TriangleAlert size={34} />
+        <p>
+          さらに<b>プロトコルトラッキング</b>。一度この方式を使ったセッションは、以後ほかの方式で認証しても対象になる。
+        </p>
+      </div>
+      <SourceLine
+        href="https://learn.microsoft.com/entra/identity/conditional-access/concept-authentication-flows"
+        label="Microsoft Learn ─ Authentication flows as a condition"
       />
     </section>
   )
@@ -896,33 +1178,36 @@ function DeviceCodeSlide({ frame }: SlideRenderContext) {
 
 function ReportOnlyTrapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
+  const facts = [
+    { icon: <FileSearch size={28} />, title: '評価期間中に再認証しないIDは、ログに出ない', body: 'だから「該当ゼロ」に見える' },
+    { icon: <Timer size={28} />, title: 'アクセストークンは既定1時間 / CAE対応なら最大28時間', body: '有効化しても、その間は動き続ける' },
+    { icon: <RefreshCw size={28} />, title: 'ポリシーやグループの変更が届くまで最大24時間', body: '一部の更新は2時間まで短縮される' }
+  ]
   return (
     <section className="remotion-slide svc-slide">
-      <Header kicker="PITFALL ─ 03" title="レポート専用モードは「該当なし」と嘘をつく" frame={frame} />
-      <div className="svc-timeline">
-        <div style={lift(entrance(frame, fps, 16), 20)}>
-          <span>1</span>
-          <strong>レポート専用モードで様子を見る</strong>
-          <i>正しい手順</i>
-        </div>
-        <div style={lift(entrance(frame, fps, 30), 20)}>
-          <span>2</span>
-          <strong>該当ゼロ。影響なしと判断</strong>
-          <i>ここが罠</i>
-        </div>
-        <div className="svc-timeline-bad" style={lift(entrance(frame, fps, 44), 20)}>
-          <span>3</span>
-          <strong>有効化した日に止まる</strong>
-          <i>トークンが切れて再認証した瞬間</i>
-        </div>
+      <Header kicker="PITFALL ─ 03" title="レポート専用モードの「該当なし」" frame={frame} />
+      <div className="svc-fact-list">
+        {facts.map((fact, i) => (
+          <div key={fact.title} style={lift(entrance(frame, fps, 16 + i * 12), 18)}>
+            {fact.icon}
+            <div>
+              <strong>{fact.title}</strong>
+              <span>{fact.body}</span>
+            </div>
+          </div>
+        ))}
       </div>
-      <div className="svc-alert" style={lift(entrance(frame, fps, 66), 16)}>
-        <RefreshCw size={34} />
+      <div className="svc-alert" style={lift(entrance(frame, fps, 62), 16)}>
+        <TriangleAlert size={34} />
         <p>
-          すでにトークンを持つ端末は<b>評価期間中に現れない</b>。機器台帳との突合と、
-          <b>再認証を強制したテスト</b>を組み合わせる。
+          止まるのは有効化した瞬間ではなく、<b>トークンが切れて再認証した時点</b>。数日かけて順に出てくる。
+          すぐ効かせたいならセッションを明示的に失効させる。
         </p>
       </div>
+      <SourceLine
+        href="https://learn.microsoft.com/entra/identity/conditional-access/concept-continuous-access-evaluation"
+        label="Microsoft Learn ─ Continuous access evaluation"
+      />
     </section>
   )
 }
@@ -991,9 +1276,9 @@ function MicrosoftMfaSlide({ frame }: SlideRenderContext) {
 function RecapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const items = [
-    ['01', '除外は正しい。台帳にしないのが事故', '人がいないIDにMFAはかけられない'],
-    ['02', '棚卸しはログで8割埋まる', '残りは所有者を探す作業'],
-    ['03', '移行先は4分類で決まる', 'マネージドIDは万能薬ではない']
+    ['01', 'MFAが使えないことと、弱いままでよいことは別', 'シークレットを持たない仕組みへ移す。除外して終わりにしない'],
+    ['02', '棚卸しはログで大半が埋まる', '残るのは所有者を探す作業'],
+    ['03', '移行先は「動く場所」と「トークンを出せるか」で決まる', '4つの質問に上から答えるだけ']
   ]
   return (
     <section className="remotion-slide svc-slide">
@@ -1084,11 +1369,11 @@ function EbiStudySlide({ frame }: SlideRenderContext) {
 function SourcesSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const sources = [
+    ['認証方式の一覧', 'https://learn.microsoft.com/entra/identity/authentication/overview-authentication'],
+    ['ゲストの認証と条件付きアクセス', 'https://learn.microsoft.com/entra/external-id/authentication-conditional-access'],
     ['認証フローを条件にする', 'https://learn.microsoft.com/entra/identity/conditional-access/concept-authentication-flows'],
-    ['サインインログ', 'https://learn.microsoft.com/entra/identity/monitoring-health/concept-sign-ins'],
-    ['マネージドID概要', 'https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview'],
-    ['Workload identity federation', 'https://learn.microsoft.com/entra/workload-id/workload-identity-federation'],
-    ['条件付きアクセスのレポートと分析', 'https://learn.microsoft.com/entra/identity/conditional-access/howto-conditional-access-insights-reporting']
+    ['継続的アクセス評価', 'https://learn.microsoft.com/entra/identity/conditional-access/concept-continuous-access-evaluation'],
+    ['Azure Arc 接続マシンエージェントの前提条件', 'https://learn.microsoft.com/azure/azure-arc/servers/prerequisites']
   ]
   return (
     <section className="remotion-slide svc-slide">
