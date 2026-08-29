@@ -72,3 +72,9 @@ When changing the recording workflow, run:
 ```bash
 npm run check:recording
 ```
+
+When changing the header or the auth controls, run:
+
+```bash
+npm run check:mobile-header
+```

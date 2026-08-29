@@ -227,7 +227,12 @@ function Shell({
   return (
     <>
       <header className="site-header">
-        <button className="brand" type="button" onClick={() => navigate('/')}>
+        <button
+          className="brand"
+          type="button"
+          aria-label="Ebisuda Presentations"
+          onClick={() => navigate('/')}
+        >
           <Presentation size={24} aria-hidden />
           <span>Ebisuda Presentations</span>
         </button>
@@ -236,7 +241,7 @@ function Shell({
             Ebi Study
           </a>
           <a href="https://ebisuda.net/">ebisuda.net</a>
-          <AuthControls auth={auth} onAuthChange={onAuthChange} />
+          <AuthControls auth={auth} onAuthChange={onAuthChange} allowCompact />
         </nav>
       </header>
       {children}

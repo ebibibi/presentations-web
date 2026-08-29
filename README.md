@@ -54,6 +54,7 @@ Open the local URL printed by Vite.
 npm run lint
 npm run build
 npm run check:recording
+npm run check:mobile-header
 ```
 
 ## Deployment
@@ -111,6 +112,12 @@ Owner studio pages include a dedicated recording surface:
 - The `全画面撮影` button fullscreenes only that recording surface, not the whole studio page.
 
 Run `npm run check:recording` to render the production build in Chromium, enter recording fullscreen, assert the dimensions, and write `tmp/recording-surface.png`.
+
+## Header on small screens
+
+The header keeps the sign-in control at every viewport width. Below `680px` the Google button switches to its icon form and below `430px` the brand drops to its icon, which is what keeps the single 64px row from overflowing on a phone.
+
+Run `npm run check:mobile-header` to assert, from `1280px` down to `320px`, that the sign-in control stays visible, keeps a 44px tap target, and never pushes the header past the viewport.
 
 ## Future Work
 
