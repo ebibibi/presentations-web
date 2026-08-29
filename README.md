@@ -74,6 +74,13 @@ edit button opens a list of the copy on the current slide instead, and the edito
 docks to the bottom of the screen. Strings the rewriter cannot resolve (slide
 numbering, generated labels) are filtered out of that list.
 
+The dev endpoints rewrite source and can push, so they require a custom request
+header and reject a cross-origin `Origin` — a page you happen to be visiting
+cannot drive them, because a cross-origin request can only omit the preflight if
+it sends no custom headers. That is protection against a drive-by page, not
+against the network: a dev server on `0.0.0.0` trusts everyone who can reach it,
+so use it on a network you trust.
+
 **From the terminal.**
 
 ```bash
