@@ -13,6 +13,9 @@ This repository is intended to be public. Use English for code comments, README 
   do the same from the terminal. See "Editing Slide Copy" in the README.
 - The overlay is usable from a phone against the dev server (list of the current
   slide's copy + bottom sheet editor); keep both the pointer and the list path working.
+- Saving from the editor commits and pushes by default (`vite-plugins/deck-git.mjs`).
+  Keep git calls path-scoped to the files a save wrote: the checkout may hold
+  unrelated work.
 - The extractor and rewriter are `scripts/deck-text-core.mjs`; changes there must keep
   `npm run check:text` passing.
 - Script and build output is English; anything rendered in the browser UI is Japanese,

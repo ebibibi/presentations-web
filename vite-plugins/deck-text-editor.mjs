@@ -7,6 +7,7 @@
  */
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { publishFiles } from './deck-git.mjs'
 import {
   collectTsxStrings,
   collectYamlStrings,
@@ -173,7 +174,28 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
             if (unknown) {
               return send(400, { error: `不明なデッキです: ${unknown.slug}` })
             }
-            return send(200, applyPatch(repoRoot, targets, body.text))
+            const result = applyPatch(repoRoot, targets, body.text)
+
+            if (!body.publish) {
+              return send(200, result)
+            }
+
+            // Publishing is best effort: the copy is already written, so a git
+            // failure must be reported without losing the edit.
+            try {
+              const slugs = [...new Set(targets.map((target) => target.slug))].join(', ')
+              const published = await publishFiles(
+                repoRoot,
+                result.files,
+                `fix(copy): update slide text in ${slugs}`
+              )
+              return send(200, { ...result, published })
+            } catch (error) {
+              return send(200, {
+                ...result,
+                publishError: error instanceof Error ? error.message : String(error)
+              })
+            }
           }
 
           return next()

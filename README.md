@@ -55,6 +55,16 @@ editor offers to change every occurrence at once so the timeline title cannot dr
 away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
 the production bundle.
 
+**Saving publishes.** By default a save also commits the touched files and pushes
+the current branch, so a fix from a phone is live without going back to a
+terminal — on `main` that means a production deploy about a minute later. The
+commit is restricted to the files the save wrote (`git commit -- <paths>`), so
+unrelated work in the checkout is never swept in. Uncheck "保存したら公開" in the
+editor to keep saves local; the choice is remembered. If the push is rejected
+because the remote moved, the editor rebases and retries when the checkout is
+otherwise clean, and otherwise says so — the copy is already saved and committed
+locally either way.
+
 **From a phone.** `npm run dev` already listens on `0.0.0.0`, so open
 `http://<dev-machine-ip>:5173/decks/<slug>` from a device on the same network (or
 over Tailscale). Use the IP printed by Vite — a hostname is rejected by Vite's
