@@ -28,6 +28,30 @@ type Candidate = {
 type Target = { rect: DOMRect; candidates: Candidate[] }
 
 const PANEL_WIDTH = 460
+const PUBLISH_KEY = 'deck-text-publish'
+const STATUS_KEY = 'deck-text-status'
+
+type SaveResult = {
+  files: string[]
+  published?: { branch: string; commit?: string; committed: boolean; pushed: boolean }
+  publishError?: string
+}
+
+/** What the toast says after a save, including where the change ended up. */
+function saveMessage(result: SaveResult): { tone: 'info' | 'error'; message: string } {
+  if (result.publishError) {
+    return {
+      tone: 'error',
+      message: `保存はできましたが公開に失敗しました: ${result.publishError}`
+    }
+  }
+  if (result.published?.pushed) {
+    const { branch, commit } = result.published
+    const deploying = branch === 'main' ? '（1〜2分で本番に反映）' : ''
+    return { tone: 'info', message: `公開しました: ${branch} ${commit}${deploying}` }
+  }
+  return { tone: 'info', message: `保存しました: ${result.files.join(', ')}` }
+}
 
 function currentSlug(): string | undefined {
   return window.location.pathname.match(/\/decks\/([^/]+)/)?.[1]
@@ -137,11 +161,25 @@ export function TextEditOverlay() {
   const [chosen, setChosen] = useState(0)
   const [editAll, setEditAll] = useState(true)
   const [draft, setDraft] = useState('')
-  const [status, setStatus] = useState<{ tone: 'info' | 'error'; message: string } | null>(null)
+  // Publishing can pull in remote changes, which makes Vite reload the page and
+  // would otherwise take the result of the save with it.
+  const [status, setStatus] = useState<{ tone: 'info' | 'error'; message: string } | null>(() => {
+    const stored = window.sessionStorage.getItem(STATUS_KEY)
+    window.sessionStorage.removeItem(STATUS_KEY)
+    return stored ? (JSON.parse(stored) as { tone: 'info' | 'error'; message: string }) : null
+  })
+
+  useEffect(() => {
+    if (status) window.sessionStorage.setItem(STATUS_KEY, JSON.stringify(status))
+    else window.sessionStorage.removeItem(STATUS_KEY)
+  }, [status])
   const [isSaving, setIsSaving] = useState(false)
   const [hover, setHover] = useState<DOMRect | null>(null)
   const [list, setList] = useState<Text[] | null>(null)
   const [isNarrow, setIsNarrow] = useState(() => window.innerWidth < 700)
+  const [publishOnSave, setPublishOnSave] = useState(
+    () => window.localStorage.getItem(PUBLISH_KEY) !== 'off'
+  )
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -239,8 +277,9 @@ export function TextEditOverlay() {
 
     setIsSaving(true)
     try {
-      const result = await post<{ files: string[] }>('patch', {
+      const result = await post<SaveResult>('patch', {
         text: draft,
+        publish: publishOnSave,
         targets: targets.map((candidate) => ({
           slug: candidate.slug,
           source: candidate.source,
@@ -248,7 +287,7 @@ export function TextEditOverlay() {
           original: candidate.text
         }))
       })
-      setStatus({ tone: 'info', message: `保存しました: ${result.files.join(', ')}` })
+      setStatus(saveMessage(result))
       close()
     } catch (error) {
       setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
@@ -518,6 +557,27 @@ export function TextEditOverlay() {
             }}
           />
 
+          <label
+            style={{
+              display: 'flex',
+              gap: 6,
+              alignItems: 'center',
+              marginTop: 10,
+              cursor: 'pointer',
+              opacity: 0.85
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={publishOnSave}
+              onChange={(event) => {
+                setPublishOnSave(event.target.checked)
+                window.localStorage.setItem(PUBLISH_KEY, event.target.checked ? 'on' : 'off')
+              }}
+            />
+            保存したら公開（commit &amp; push）
+          </label>
+
           <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
             <button
               onClick={() => void save()}
@@ -532,7 +592,7 @@ export function TextEditOverlay() {
                 color: '#0b1020'
               }}
             >
-              {isSaving ? '保存中…' : '保存 (⌘/Ctrl+Enter)'}
+              {isSaving ? (publishOnSave ? '公開中…' : '保存中…') : publishOnSave ? '保存して公開' : '保存 (⌘/Ctrl+Enter)'}
             </button>
             <button
               onClick={() => {
