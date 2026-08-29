@@ -15,6 +15,7 @@ import {
   deckPaths,
   patchTsxSource,
   patchYamlSource,
+  resolveRange,
   tsxSyntaxErrors
 } from './deck-text-core.mjs'
 
@@ -70,6 +71,16 @@ for (const slug of slugs) {
   const syntaxErrors = tsxSyntaxErrors(paths.tsx, hostile)
   if (syntaxErrors.length) {
     failures.push(`${slug}/slides.tsx: rewriting copy containing JSX syntax broke the file (${syntaxErrors[0]})`)
+  }
+
+  // The production editor works from ranges published at build time and
+  // re-verified with resolveRange; every extracted item must survive that.
+  for (const item of tsxItems) {
+    const range = resolveRange(tsxSource, item)
+    if (!range || range.start !== item.start || range.end !== item.end) {
+      failures.push(`${slug}/slides.tsx: L${item.line} の範囲が索引から復元できません`)
+      break
+    }
   }
 
   const yamlSource = readFileSync(paths.yaml, 'utf8')

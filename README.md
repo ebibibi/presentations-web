@@ -55,6 +55,23 @@ editor offers to change every occurrence at once so the timeline title cannot dr
 away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
 the production bundle.
 
+**In production.** Signed in as an owner on `presentations.ebisuda.net`, the same
+editor appears. There is no checkout there, so a save is a commit on GitHub
+instead of a file write: the copy index published with the build
+(`/deck-text/<slug>.json`) locates the string, a Pages Function re-verifies the
+range against the file on the default branch, and one commit carries every file
+the edit touched. The change appears on the site when that deploy finishes,
+usually a minute or two later — the editor says so rather than pretending the
+page updated.
+
+Production editing needs two variables on the Pages project, and stays hidden
+until both are set (the editor is never even downloaded by a visitor):
+
+| variable | value |
+| --- | --- |
+| `GITHUB_REPO` | `ebibibi/presentations-web` |
+| `GITHUB_TOKEN` | fine-grained token, **Contents: Read and write** on this repository only, stored as a secret |
+
 **Saving publishes.** By default a save also commits the touched files and pushes
 the current branch, so a fix from a phone is live without going back to a
 terminal — on `main` that means a production deploy about a minute later. The

@@ -1,9 +1,10 @@
 /**
- * Dev-only click-to-edit layer for slide copy.
+ * Click-to-edit layer for slide copy.
  *
- * Click any text on a slide, retype it, save: the string is written straight
- * back into `slides.tsx` / `deck.yaml` and Vite hot-reloads the slide. Loaded
- * only under `import.meta.env.DEV` (see main.tsx), so it never ships.
+ * Click any text on a slide, retype it, save. Where the edit goes depends on the
+ * environment (see `backend.ts`): on the dev server it rewrites the file on disk
+ * and hot-reloads; in production it commits on GitHub and appears once the
+ * deploy finishes. In production the editor only appears for a signed-in owner.
  *
  * Editing happens in a floating panel rather than contentEditable on the node
  * itself: the Remotion player re-renders the slide on every seek and would
@@ -14,44 +15,14 @@
  * of the copy on the current slide instead, and the editor opens as a bottom
  * sheet.
  */
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
-
-type Candidate = {
-  slug: string
-  source: 'tsx' | 'yaml'
-  index: number
-  component: string
-  line: number | null
-  text: string
-}
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { createBackend, type Candidate } from './backend'
 
 type Target = { rect: DOMRect; candidates: Candidate[] }
 
 const PANEL_WIDTH = 460
 const PUBLISH_KEY = 'deck-text-publish'
 const STATUS_KEY = 'deck-text-status'
-
-type SaveResult = {
-  files: string[]
-  published?: { branch: string; commit?: string; committed: boolean; pushed: boolean }
-  publishError?: string
-}
-
-/** What the toast says after a save, including where the change ended up. */
-function saveMessage(result: SaveResult): { tone: 'info' | 'error'; message: string } {
-  if (result.publishError) {
-    return {
-      tone: 'error',
-      message: `保存はできましたが公開に失敗しました: ${result.publishError}`
-    }
-  }
-  if (result.published?.pushed) {
-    const { branch, commit } = result.published
-    const deploying = branch === 'main' ? '（1〜2分で本番に反映）' : ''
-    return { tone: 'info', message: `公開しました: ${branch} ${commit}${deploying}` }
-  }
-  return { tone: 'info', message: `保存しました: ${result.files.join(', ')}` }
-}
 
 function currentSlug(): string | undefined {
   return window.location.pathname.match(/\/decks\/([^/]+)/)?.[1]
@@ -144,20 +115,8 @@ function rectOf(node: Text): DOMRect {
   return range.getBoundingClientRect()
 }
 
-async function post<T>(endpoint: string, body: unknown): Promise<T> {
-  const response = await fetch(`/__deck-text/${endpoint}`, {
-    method: 'POST',
-    // Custom header: the dev endpoints reject anything that could be sent by
-    // another page without a CORS preflight.
-    headers: { 'Content-Type': 'application/json', 'X-Deck-Text-Editor': '1' },
-    body: JSON.stringify(body)
-  })
-  const result = await response.json().catch(() => ({ error: '応答を読み取れませんでした' }))
-  if (!response.ok) throw new Error(result.error ?? '不明なエラー')
-  return result as T
-}
-
 export function TextEditOverlay() {
+  const backend = useMemo(() => createBackend(), [])
   const [isActive, setIsActive] = useState(false)
   const [target, setTarget] = useState<Target | null>(null)
   const [chosen, setChosen] = useState(0)
@@ -201,10 +160,7 @@ export function TextEditOverlay() {
     const rect = rectOf(node)
 
     try {
-      const { candidates } = await post<{ candidates: Candidate[] }>('find', {
-        text,
-        slug: currentSlug()
-      })
+      const candidates = await backend.find(text, currentSlug())
       if (!candidates.length) {
         setStatus({
           tone: 'error',
@@ -221,7 +177,7 @@ export function TextEditOverlay() {
     } catch (error) {
       setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
     }
-  }, [])
+  }, [backend])
 
   // Pick a string by clicking it. Capture phase + preventDefault keeps the
   // click from reaching the deck viewer's own navigation handlers.
@@ -275,21 +231,11 @@ export function TextEditOverlay() {
     if (!target || isSaving) return
     // Slide headings are often duplicated in deck.yaml (timeline titles), so the
     // default is to move every occurrence together and keep them in sync.
-    const targets = editAll ? target.candidates : [target.candidates[chosen]]
+    const candidates = editAll ? target.candidates : [target.candidates[chosen]]
 
     setIsSaving(true)
     try {
-      const result = await post<SaveResult>('patch', {
-        text: draft,
-        publish: publishOnSave,
-        targets: targets.map((candidate) => ({
-          slug: candidate.slug,
-          source: candidate.source,
-          index: candidate.index,
-          original: candidate.text
-        }))
-      })
-      setStatus(saveMessage(result))
+      setStatus(await backend.save(candidates, draft, publishOnSave))
       close()
     } catch (error) {
       setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
@@ -318,11 +264,11 @@ export function TextEditOverlay() {
     // ask the server which strings it can resolve before listing them.
     let editable = nodes
     try {
-      const { matches } = await post<{ matches: number[] }>('find', {
-        slug: currentSlug(),
-        texts: nodes.map((node) => node.textContent ?? '')
-      })
-      editable = nodes.filter((_, index) => matches[index] > 0)
+      const matches = await backend.countMatches(
+        nodes.map((node) => node.textContent ?? ''),
+        currentSlug()
+      )
+      editable = nodes.filter((_node: Text, index: number) => matches[index] > 0)
     } catch {
       // Fall back to the unfiltered list rather than blocking the edit.
     }
@@ -505,9 +451,7 @@ export function TextEditOverlay() {
           }}
         >
           <div style={{ opacity: 0.7, marginBottom: 8 }}>
-            {target.candidates[chosen].source === 'yaml' ? 'deck.yaml' : 'slides.tsx'} ·{' '}
-            {target.candidates[chosen].component}
-            {target.candidates[chosen].line ? ` · L${target.candidates[chosen].line}` : ''}
+            {target.candidates[chosen].label}
           </div>
 
           {target.candidates.length > 1 && (
@@ -527,10 +471,8 @@ export function TextEditOverlay() {
                   style={{ width: '100%', marginTop: 6, padding: 6, borderRadius: 6 }}
                 >
                   {target.candidates.map((candidate, index) => (
-                    <option key={`${candidate.source}-${candidate.index}`} value={index}>
-                      {candidate.slug} / {candidate.source === 'yaml' ? 'deck.yaml' : 'slides.tsx'} /{' '}
-                      {candidate.component}
-                      {candidate.line ? ` L${candidate.line}` : ''}
+                    <option key={candidate.label} value={index}>
+                      {candidate.label}
                     </option>
                   ))}
                 </select>
@@ -559,6 +501,7 @@ export function TextEditOverlay() {
             }}
           />
 
+          {backend.mode === 'dev' && (
           <label
             style={{
               display: 'flex',
@@ -579,6 +522,7 @@ export function TextEditOverlay() {
             />
             保存したら公開（commit &amp; push）
           </label>
+          )}
 
           <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
             <button

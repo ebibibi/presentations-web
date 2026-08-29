@@ -13,6 +13,11 @@ This repository is intended to be public. Use English for code comments, README 
   do the same from the terminal. See "Editing Slide Copy" in the README.
 - The overlay is usable from a phone against the dev server (list of the current
   slide's copy + bottom sheet editor); keep both the pointer and the list path working.
+- The editor runs in production too, for an owner session, committing through
+  `functions/api/deck-text/patch.js`. Extraction needs TypeScript and cannot ship to a
+  Function, so ranges come from the build-time index (`scripts/build-text-index.mjs`)
+  and are re-verified with `resolveRange`; encoding lives in `shared/deck-text-rewrite.mjs`
+  and must stay dependency free.
 - Saving from the editor commits and pushes by default (`vite-plugins/deck-git.mjs`).
   Keep git calls path-scoped to the files a save wrote: the checkout may hold
   unrelated work.

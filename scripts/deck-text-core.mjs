@@ -15,6 +15,8 @@ import path from 'node:path'
 import ts from 'typescript'
 import YAML from 'yaml'
 
+export { patchTsxSource, encodeForKind, resolveRange } from '../shared/deck-text-rewrite.mjs'
+
 /** JSX attributes whose value is copy shown to (or read by) a human. */
 const COPY_ATTRIBUTES = new Set(['alt', 'title', 'aria-label', 'label', 'caption', 'placeholder'])
 
@@ -168,57 +170,6 @@ export function collectTsxStrings(filePath, source = readFileSync(filePath, 'utf
   visit(sourceFile)
   items.sort((left, right) => left.start - right.start)
   return items
-}
-
-/**
- * JSX attribute strings are raw: `\"` is a literal backslash, and the delimiter
- * cannot appear inside. Swap the quote when possible, otherwise fall back to an
- * expression container where normal escaping applies.
- */
-function encodeJsxAttribute(text) {
-  if (!text.includes('\n')) {
-    if (!text.includes('"')) return `"${text}"`
-    if (!text.includes("'")) return `'${text}'`
-  }
-  return `{${encodeLiteral('string', text, "'")}}`
-}
-
-/** Re-encodes copy as a literal, keeping the quote style the source used. */
-function encodeLiteral(kind, text, quote = "'") {
-  if (kind === 'template') {
-    return '`' + text.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${') + '`'
-  }
-  const mark = quote === '"' ? '"' : "'"
-  const escaped = text
-    .replace(/\\/g, '\\\\')
-    .replaceAll(mark, `\\${mark}`)
-    .replace(/\n/g, '\\n')
-  return `${mark}${escaped}${mark}`
-}
-
-/**
- * Applies edits to a tsx source string. `edits` are `{ start, end, kind, text }`
- * taken from collectTsxStrings, with `text` replaced by the new copy.
- */
-export function patchTsxSource(source, edits) {
-  const ordered = [...edits].sort((left, right) => right.start - left.start)
-  let next = source
-
-  for (const edit of ordered) {
-    // Untouched copy keeps its exact source form, so a no-op patch is a no-op
-    // diff even where the original spans several lines.
-    if (edit.text === edit.original) continue
-
-    const replacement =
-      edit.kind === 'jsx-text'
-        ? edit.text.replace(/[{}<>]/g, (match) => `{'${match}'}`)
-        : edit.kind === 'jsx-attribute'
-          ? encodeJsxAttribute(edit.text)
-          : encodeLiteral(edit.kind, edit.text, edit.quote)
-    next = next.slice(0, edit.start) + replacement + next.slice(edit.end)
-  }
-
-  return next
 }
 
 /** Editable copy inside deck.yaml: deck title/summary and per-slide title/notes. */
