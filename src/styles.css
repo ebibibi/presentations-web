@@ -9346,3 +9346,61 @@ main {
 .phr-thanks svg { color: var(--phr-green); }
 .phr-thanks h1 { font-size: 76px; }
 .phr-thanks p { font-size: 32px; }
+
+/* mfa-service-identity: scope and fork */
+.svc-ideal { display: grid; gap: 20px; grid-template-columns: repeat(2, 1fr); }
+
+.svc-ideal-card {
+  background: #fff;
+  border: 1px solid rgba(23, 32, 27, 0.12);
+  border-left: 6px solid var(--svc-blue);
+  border-radius: 22px;
+  display: grid;
+  gap: 10px;
+  padding: 30px 32px;
+}
+
+.svc-ideal-card strong { font-size: 31px; }
+.svc-ideal-card span { color: var(--muted); font-size: 22px; }
+.svc-ideal-card i { color: var(--svc-green); font-size: 25px; font-style: normal; font-weight: 800; }
+.svc-ideal-card svg { color: var(--svc-blue); }
+.svc-ideal-machine { border-left-color: var(--svc-green); }
+.svc-ideal-machine svg { color: var(--svc-green); }
+
+.svc-targets { display: grid; gap: 14px; }
+
+.svc-targets > div {
+  align-items: center;
+  background: #fff;
+  border: 1px solid rgba(23, 32, 27, 0.1);
+  border-left: 6px solid var(--svc-amber);
+  border-radius: 18px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 56px 40px 1fr;
+  padding: 20px 26px;
+}
+
+.svc-target-n { color: var(--svc-amber); font-size: 25px; font-weight: 800; }
+.svc-targets svg { color: var(--svc-amber); }
+.svc-targets strong { display: block; font-size: 27px; }
+.svc-targets span { color: var(--muted); display: block; font-size: 21px; }
+.svc-targets i { color: var(--svc-blue); font-size: 20px; font-style: normal; font-weight: 700; }
+
+.svc-fork { display: grid; gap: 22px; grid-template-columns: repeat(2, 1fr); }
+
+.svc-fork-card { border-radius: 24px; display: grid; gap: 12px; padding: 30px 32px; }
+.svc-fork-ok { background: rgba(15, 138, 114, 0.08); border: 1px solid rgba(15, 138, 114, 0.34); }
+.svc-fork-ok svg { color: var(--svc-green); }
+.svc-fork-todo { background: rgba(194, 116, 11, 0.08); border: 1px solid rgba(194, 116, 11, 0.34); }
+.svc-fork-todo svg { color: var(--svc-amber); }
+.svc-fork-card strong { font-size: 31px; }
+.svc-fork-card p { font-size: 23px; margin: 0; }
+
+.svc-fork-go {
+  background: #fff;
+  border-radius: 14px;
+  font-size: 22px;
+  font-weight: 800;
+  padding: 14px 20px;
+}

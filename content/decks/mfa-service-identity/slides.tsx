@@ -49,11 +49,14 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <TheWallSlide {...props} /> },
   { render: (props) => <ExclusionTrapSlide {...props} /> },
   { render: (props) => <WhatIsServiceIdSlide {...props} /> },
+  { render: (props) => <IdealStateSlide {...props} /> },
+  { render: (props) => <RealTargetSlide {...props} /> },
   { render: (props) => <SectionPeopleSlide {...props} /> },
   { render: (props) => <MethodsSlide {...props} /> },
   { render: (props) => <GuestsSlide {...props} /> },
   { render: (props) => <GuestMethodsSlide {...props} /> },
   { render: (props) => <RealQuestionSlide {...props} /> },
+  { render: (props) => <WhichOrgSlide {...props} /> },
   { render: (props) => <SectionInventorySlide {...props} /> },
   { render: (props) => <InventoryLogsSlide {...props} /> },
   { render: (props) => <SortByLogSlide {...props} /> },
@@ -354,6 +357,108 @@ function WhatIsServiceIdSlide({ frame }: SlideRenderContext) {
       </div>
       <Punch frame={frame} delay={86}>
         呼び方は組織ごとに違う。まず<b>自分の組織の言葉</b>で言えるようにする。
+      </Punch>
+    </section>
+  )
+}
+
+function IdealStateSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="SCOPE ─ 01" title="本来は、最初から分かれているはず" frame={frame} />
+      <div className="svc-ideal">
+        <div className="svc-ideal-card" style={lift(entrance(frame, fps, 16), 22)}>
+          <User size={36} />
+          <strong>人のID</strong>
+          <span>Aさん / Bさん — 個人に紐づく</span>
+          <i>→ そのままMFAをかける</i>
+        </div>
+        <div className="svc-ideal-card svc-ideal-machine" style={lift(entrance(frame, fps, 34), 22)}>
+          <Bot size={36} />
+          <strong>自動化用のID</strong>
+          <span>人のIDを使わず、専用に用意して権限を付ける</span>
+          <i>→ ワークロードIDを使う</i>
+        </div>
+      </div>
+      <Punch frame={frame} delay={62}>
+        これができていれば<b>今日の話の半分は要らない</b>。人にMFA、自動化にワークロードID。それで終わり。
+      </Punch>
+    </section>
+  )
+}
+
+function RealTargetSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const targets = [
+    {
+      n: '01',
+      icon: <UserCheck size={32} />,
+      title: '人のIDを、自動化にも使っている',
+      body: 'Aさんが対話的に使いながら、同じアカウントでバッチも動いている',
+      note: 'Microsoftも必須MFAの案内で名指ししている本命'
+    },
+    {
+      n: '02',
+      icon: <ServerCog size={32} />,
+      title: 'システム用だが、実体はユーザーID',
+      body: '分類はできている。でもユーザーIDである以上、MFAはかけられない',
+      note: '発見は不要でも、移行作業はまるごと残る'
+    },
+    {
+      n: '03',
+      icon: <Monitor size={32} />,
+      title: 'リソースアカウント',
+      body: 'Teams Rooms、Bookings など。人ではないがユーザーオブジェクト',
+      note: '運用の失敗ではなく製品の仕様。正しく運用していても残る'
+    }
+  ]
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="SCOPE ─ 02" title="実際に問題になるのは、この3つ" frame={frame} />
+      <div className="svc-targets">
+        {targets.map((t, i) => (
+          <div key={t.n} style={lift(entrance(frame, fps, 14 + i * 14), 18)}>
+            <span className="svc-target-n">{t.n}</span>
+            {t.icon}
+            <div>
+              <strong>{t.title}</strong>
+              <span>{t.body}</span>
+              <i>{t.note}</i>
+            </div>
+          </div>
+        ))}
+      </div>
+      <SourceLine
+        href="https://learn.microsoft.com/entra/identity/authentication/concept-mandatory-multifactor-authentication"
+        label="Microsoft Learn ─ user-based service accounts をワークロードIDへ"
+      />
+    </section>
+  )
+}
+
+function WhichOrgSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="THE FORK" title="あなたの組織は、どちらですか" frame={frame} />
+      <div className="svc-fork">
+        <div className="svc-fork-card svc-fork-ok" style={lift(entrance(frame, fps, 16), 22)}>
+          <Check size={34} />
+          <strong>台帳で分かれている</strong>
+          <p>どれが人で、どれがシステムかを即答できる</p>
+          <div className="svc-fork-go">SECTION 2 を飛ばし、移行先の決定へ</div>
+        </div>
+        <div className="svc-fork-card svc-fork-todo" style={lift(entrance(frame, fps, 36), 22)}>
+          <TriangleAlert size={34} />
+          <strong>即答できない</strong>
+          <p>人のIDで動いている自動化が、ありそうだ</p>
+          <div className="svc-fork-go">SECTION 2 の棚卸しから</div>
+        </div>
+      </div>
+      <Punch frame={frame} delay={64}>
+        正直なところ、<b>MFAを本格適用してこなかった組織で、サービスIDの台帳だけ整っていることは少ない</b>。
+        強制する仕組みが無かったから、人のIDで自動化しても誰も困らなかった。
       </Punch>
     </section>
   )
