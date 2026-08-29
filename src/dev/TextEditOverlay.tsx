@@ -8,8 +8,13 @@
  * Editing happens in a floating panel rather than contentEditable on the node
  * itself: the Remotion player re-renders the slide on every seek and would
  * throw away in-place DOM edits.
+ *
+ * On a phone the whole slide is scaled down — body copy renders a few pixels
+ * tall — so tapping an exact word is not realistic. Narrow screens get a list
+ * of the copy on the current slide instead, and the editor opens as a bottom
+ * sheet.
  */
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 
 type Candidate = {
   slug: string
@@ -26,6 +31,39 @@ const PANEL_WIDTH = 460
 
 function currentSlug(): string | undefined {
   return window.location.pathname.match(/\/decks\/([^/]+)/)?.[1]
+}
+
+/** The slide currently on screen, ignoring the offscreen recording surface. */
+function visibleSlide(): Element | null {
+  const slides = [...document.querySelectorAll('.remotion-slide')]
+  let best: { element: Element; area: number } | null = null
+
+  for (const element of slides) {
+    const rect = element.getBoundingClientRect()
+    const visible =
+      Math.max(0, Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0)) *
+      Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0))
+    if (visible > 0 && (!best || visible > best.area)) best = { element, area: visible }
+  }
+
+  return best?.element ?? null
+}
+
+/** Every piece of copy rendered on the current slide, in reading order. */
+function slideTextNodes(): Text[] {
+  const slide = visibleSlide()
+  if (!slide) return []
+
+  const walker = document.createTreeWalker(slide, NodeFilter.SHOW_TEXT)
+  const nodes: Text[] = []
+  let node = walker.nextNode()
+
+  while (node) {
+    if (node.textContent?.trim()) nodes.push(node as Text)
+    node = walker.nextNode()
+  }
+
+  return nodes
 }
 
 function textNodeAt(event: MouseEvent): Text | null {
@@ -102,54 +140,67 @@ export function TextEditOverlay() {
   const [status, setStatus] = useState<{ tone: 'info' | 'error'; message: string } | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [hover, setHover] = useState<DOMRect | null>(null)
+  const [list, setList] = useState<Text[] | null>(null)
+  const [isNarrow, setIsNarrow] = useState(() => window.innerWidth < 700)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    const onResize = () => setIsNarrow(window.innerWidth < 700)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const close = useCallback(() => {
     setTarget(null)
     setHover(null)
   }, [])
 
+  /** Resolves a rendered text node back to source and opens the editor on it. */
+  const openFor = useCallback(async (node: Text) => {
+    const text = node.textContent ?? ''
+    const rect = rectOf(node)
+
+    try {
+      const { candidates } = await post<{ candidates: Candidate[] }>('find', {
+        text,
+        slug: currentSlug()
+      })
+      if (!candidates.length) {
+        setStatus({
+          tone: 'error',
+          message: `「${text.trim().slice(0, 24)}」はソースの文字列として見つかりませんでした（共通部品や自動生成かもしれません）`
+        })
+        return
+      }
+      setList(null)
+      setTarget({ rect, candidates })
+      setChosen(0)
+      setEditAll(true)
+      setDraft(candidates[0].text)
+      setStatus(null)
+    } catch (error) {
+      setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
+    }
+  }, [])
+
   // Pick a string by clicking it. Capture phase + preventDefault keeps the
   // click from reaching the deck viewer's own navigation handlers.
   useEffect(() => {
-    if (!isActive || target) return
+    if (!isActive || target || list) return
 
     const onMove = (event: MouseEvent) => {
       const node = textNodeAt(event)
       setHover(node ? rectOf(node) : null)
     }
 
-    const onClick = async (event: MouseEvent) => {
+    const onClick = (event: MouseEvent) => {
       if ((event.target as Element | null)?.closest('[data-deck-text-ui]')) return
       const node = textNodeAt(event)
       if (!node) return
 
       event.preventDefault()
       event.stopPropagation()
-
-      const text = node.textContent ?? ''
-      const rect = rectOf(node)
-
-      try {
-        const { candidates } = await post<{ candidates: Candidate[] }>('find', {
-          text,
-          slug: currentSlug()
-        })
-        if (!candidates.length) {
-          setStatus({
-            tone: 'error',
-            message: `「${text.trim().slice(0, 24)}」はソースの文字列として見つかりませんでした（共通部品や自動生成かもしれません）`
-          })
-          return
-        }
-        setTarget({ rect, candidates })
-        setChosen(0)
-        setEditAll(true)
-        setDraft(candidates[0].text)
-        setStatus(null)
-      } catch (error) {
-        setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
-      }
+      void openFor(node)
     }
 
     document.addEventListener('mousemove', onMove)
@@ -158,7 +209,7 @@ export function TextEditOverlay() {
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('click', onClick, true)
     }
-  }, [isActive, target])
+  }, [isActive, target, list, openFor])
 
   useEffect(() => {
     if (target) inputRef.current?.focus()
@@ -206,19 +257,55 @@ export function TextEditOverlay() {
     }
   }
 
-  const panelTop = target ? Math.min(target.rect.bottom + 12, window.innerHeight - 220) : 0
-  const panelLeft = target
-    ? Math.max(12, Math.min(target.rect.left, window.innerWidth - PANEL_WIDTH - 12))
-    : 0
+  const panelWidth = Math.min(PANEL_WIDTH, window.innerWidth - 24)
+  // A phone renders slide copy a few pixels tall, so anchoring the editor to the
+  // text is pointless there; dock it to the bottom of the screen instead.
+  const panelStyle: CSSProperties = isNarrow
+    ? { left: 12, right: 12, bottom: 12, width: 'auto' }
+    : {
+        top: target ? Math.min(target.rect.bottom + 12, window.innerHeight - 220) : 0,
+        left: target
+          ? Math.max(12, Math.min(target.rect.left, window.innerWidth - panelWidth - 12))
+          : 0,
+        width: panelWidth
+      }
+
+  const openList = async () => {
+    const nodes = slideTextNodes()
+
+    // Not everything rendered is editable copy (numbering, generated labels), so
+    // ask the server which strings it can resolve before listing them.
+    let editable = nodes
+    try {
+      const { matches } = await post<{ matches: number[] }>('find', {
+        slug: currentSlug(),
+        texts: nodes.map((node) => node.textContent ?? '')
+      })
+      editable = nodes.filter((_, index) => matches[index] > 0)
+    } catch {
+      // Fall back to the unfiltered list rather than blocking the edit.
+    }
+
+    setList(editable)
+    setStatus(
+      editable.length
+        ? null
+        : { tone: 'error', message: 'このスライドに編集できる文言が見つかりませんでした' }
+    )
+  }
 
   return (
     <div data-deck-text-ui="root">
       <button
         data-deck-text-ui="toggle"
         onClick={() => {
-          setIsActive((value) => !value)
+          const next = !isActive
+          setIsActive(next)
           close()
+          setList(null)
           setStatus(null)
+          // Tapping an exact word is not realistic at phone scale.
+          if (next && isNarrow) void openList()
         }}
         style={{
           position: 'fixed',
@@ -238,6 +325,88 @@ export function TextEditOverlay() {
       >
         {isActive ? '✏️ 文字編集: ON' : '✏️ 文字編集'}
       </button>
+
+      {isActive && !target && !list && (
+        <button
+          data-deck-text-ui="open-list"
+          onClick={() => void openList()}
+          style={{
+            position: 'fixed',
+            left: 16,
+            bottom: 60,
+            zIndex: 2147483000,
+            padding: '8px 14px',
+            borderRadius: 999,
+            border: '1px solid rgba(255,255,255,0.25)',
+            cursor: 'pointer',
+            fontSize: 13,
+            fontWeight: 700,
+            color: '#e8ecff',
+            background: 'rgba(20,26,48,0.9)'
+          }}
+        >
+          ☰ このスライドの文言
+        </button>
+      )}
+
+      {list && (
+        <div
+          data-deck-text-ui="list"
+          style={{
+            position: 'fixed',
+            left: 12,
+            right: 12,
+            bottom: 12,
+            maxHeight: '70vh',
+            overflowY: 'auto',
+            zIndex: 2147483000,
+            padding: 12,
+            borderRadius: 12,
+            background: 'rgba(12,16,32,0.97)',
+            border: '1px solid rgba(124,245,196,0.4)',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
+            color: '#e8ecff'
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <strong style={{ fontSize: 14 }}>このスライドの文言（{list.length}）</strong>
+            <button
+              onClick={() => setList(null)}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                color: '#e8ecff',
+                fontSize: 16,
+                cursor: 'pointer'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+          {list.map((node, index) => (
+            <button
+              key={index}
+              onClick={() => void openFor(node)}
+              style={{
+                display: 'block',
+                width: '100%',
+                textAlign: 'left',
+                marginBottom: 6,
+                padding: '12px 10px',
+                borderRadius: 8,
+                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'rgba(255,255,255,0.04)',
+                color: '#e8ecff',
+                fontSize: 15,
+                lineHeight: 1.5,
+                cursor: 'pointer'
+              }}
+            >
+              {node.textContent?.trim()}
+            </button>
+          ))}
+        </div>
+      )}
 
       {isActive && (target?.rect ?? hover) && (
         <div
@@ -283,9 +452,7 @@ export function TextEditOverlay() {
           data-deck-text-ui="panel"
           style={{
             position: 'fixed',
-            top: panelTop,
-            left: panelLeft,
-            width: PANEL_WIDTH,
+            ...panelStyle,
             zIndex: 2147483000,
             padding: 14,
             borderRadius: 12,
@@ -345,7 +512,7 @@ export function TextEditOverlay() {
               border: '1px solid rgba(255,255,255,0.2)',
               background: 'rgba(0,0,0,0.4)',
               color: '#fff',
-              fontSize: 14,
+              fontSize: 16,
               lineHeight: 1.6,
               resize: 'vertical'
             }}
@@ -368,7 +535,10 @@ export function TextEditOverlay() {
               {isSaving ? '保存中…' : '保存 (⌘/Ctrl+Enter)'}
             </button>
             <button
-              onClick={close}
+              onClick={() => {
+                close()
+                if (isNarrow) void openList()
+              }}
               style={{
                 padding: '7px 12px',
                 borderRadius: 8,
