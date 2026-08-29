@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "node scripts/check-decks.mjs && node scripts/check-deck-text.mjs && tsc -b && vite build",
+    "build": "node scripts/check-decks.mjs && node scripts/check-deck-text.mjs && node scripts/build-text-index.mjs && tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
     "check:recording": "npm run build && node scripts/check-recording-surface.mjs",
@@ -14,7 +14,8 @@
     "text": "node scripts/deck-text.mjs edit",
     "text:apply": "node scripts/deck-text.mjs apply",
     "text:list": "node scripts/deck-text.mjs list",
-    "check:text": "node scripts/check-deck-text.mjs"
+    "check:text": "node scripts/check-deck-text.mjs",
+    "build:text-index": "node scripts/build-text-index.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.481",
