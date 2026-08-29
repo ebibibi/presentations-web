@@ -55,6 +55,23 @@ editor offers to change every occurrence at once so the timeline title cannot dr
 away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
 the production bundle.
 
+**Keeping the editor up.** The local server runs as a system unit so it survives
+reboots, the same shape as the machine's other always-on services
+(`scheduler.service`, `discord-bot.service`) — a system unit under
+`/etc/systemd/system` with `User=ebi`, not a `--user` unit:
+
+```bash
+sudo cp presentations-dev.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now presentations-dev
+systemctl status presentations-dev
+journalctl -u presentations-dev -f
+```
+
+The unit pins port 5173 with `--strictPort` so a clash fails loudly rather than
+moving the server to a port the link cannot find, and sets `PATH` explicitly
+because node lives in `~/.local/bin`, which systemd does not have on its path.
+
 **Getting to the editor from the published site.** The published site cannot edit
 its own copy, so a signed-in owner sees a `✏️ ローカルで編集` link that opens the
 same path on the local dev server (`src/edit/LocalEditorLink.tsx`). The addresses

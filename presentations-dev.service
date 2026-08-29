@@ -1,0 +1,43 @@
+# Local editing server for presentations.ebisuda.net.
+#
+# The published site is static, so slide copy is edited against `npm run dev`
+# running here; the owner-only link on the public site points at this port.
+# Install as a system unit, matching the other always-on services on this
+# machine (scheduler.service / discord-bot.service):
+#
+#   sudo cp presentations-dev.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now presentations-dev
+#
+# Saves through this server commit and push content/decks to main, which
+# deploys the site. Anyone who can reach the port can do that, so keep it on a
+# trusted network.
+[Unit]
+Description=presentations.ebisuda.net local editing server (Vite dev)
+After=network.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=ebi
+WorkingDirectory=/home/ebi/presentations-web
+# node/npm live in ~/.local/bin, which is not on systemd's default PATH; without
+# this the unit dies at once with status=203/EXEC.
+Environment=PATH=/home/ebi/.local/bin:/usr/local/bin:/usr/bin:/bin
+# Saving pushes, and the credential helper in ~/.gitconfig is found through HOME.
+Environment=HOME=/home/ebi
+# The port the public site's "ローカルで編集" link points at. --strictPort makes a
+# clash fail loudly instead of moving the server somewhere the link cannot find.
+ExecStart=/home/ebi/presentations-web/node_modules/.bin/vite --host 0.0.0.0 --port 5173 --strictPort
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+NoNewPrivileges=yes
+ProtectSystem=strict
+ReadWritePaths=/home/ebi /tmp
+
+[Install]
+WantedBy=multi-user.target
