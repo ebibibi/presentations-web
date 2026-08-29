@@ -17,7 +17,6 @@ import {
   Fingerprint,
   Globe,
   Layers,
-  KeyRound,
   ListChecks,
   Lock,
   LockKeyhole,
@@ -25,7 +24,6 @@ import {
   Radar,
   RefreshCw,
   ServerCog,
-  ShieldAlert,
   ShieldCheck,
   Siren,
   Smartphone,
@@ -36,8 +34,7 @@ import {
   User,
   UserCheck,
   UserX,
-  Workflow,
-  X
+  Workflow
 } from 'lucide-react'
 import { spring, useVideoConfig } from 'remotion'
 import type { SlideModule, SlideRenderContext } from '../../../src/types'
@@ -52,11 +49,6 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <WhatIsServiceIdSlide {...props} /> },
   { render: (props) => <IdealStateSlide {...props} /> },
   { render: (props) => <RealTargetSlide {...props} /> },
-  { render: (props) => <SectionPeopleSlide {...props} /> },
-  { render: (props) => <MethodsSlide {...props} /> },
-  { render: (props) => <GuestsSlide {...props} /> },
-  { render: (props) => <GuestMethodsSlide {...props} /> },
-  { render: (props) => <RealQuestionSlide {...props} /> },
   { render: (props) => <WhichOrgSlide {...props} /> },
   { render: (props) => <SectionInventorySlide {...props} /> },
   { render: (props) => <InventoryLogsSlide {...props} /> },
@@ -74,17 +66,10 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <WifSlide {...props} /> },
   { render: (props) => <UamiVsAppSlide {...props} /> },
   { render: (props) => <WifGuardrailsSlide {...props} /> },
-  { render: (props) => <LegacyCageSlide {...props} /> },
-  { render: (props) => <TeamsRoomsSlide {...props} /> },
-  { render: (props) => <TeamsRoomsPasswordlessSlide {...props} /> },
-  { render: (props) => <SectionPitfallSlide {...props} /> },
-  { render: (props) => <RopcSlide {...props} /> },
-  { render: (props) => <DeviceCodeSlide {...props} /> },
-  { render: (props) => <DeviceCodeScopeSlide {...props} /> },
-  { render: (props) => <ReportOnlyTrapSlide {...props} /> },
   { render: (props) => <RolloutSlide {...props} /> },
   { render: (props) => <MicrosoftMfaSlide {...props} /> },
   { render: (props) => <RecapSlide {...props} /> },
+  { render: (props) => <NextDecksSlide {...props} /> },
   { render: (props) => <RelatedVideosSlide {...props} /> },
   { render: (props) => <EbiStudySlide {...props} /> },
   { render: (props) => <SourcesSlide {...props} /> },
@@ -450,13 +435,13 @@ function WhichOrgSlide({ frame }: SlideRenderContext) {
           <Check size={34} />
           <strong>台帳で分かれている</strong>
           <p>どれが人で、どれがシステムかを即答できる</p>
-          <div className="svc-fork-go">SECTION 2 を飛ばし、移行先の決定へ</div>
+          <div className="svc-fork-go">SECTION 1 を飛ばし、移行先の決定へ</div>
         </div>
         <div className="svc-fork-card svc-fork-todo" style={lift(entrance(frame, fps, 36), 22)}>
           <TriangleAlert size={34} />
           <strong>即答できない</strong>
           <p>人のIDで動いている自動化が、ありそうだ</p>
-          <div className="svc-fork-go">SECTION 2 の棚卸しから</div>
+          <div className="svc-fork-go">SECTION 1 の棚卸しから</div>
         </div>
       </div>
       <Punch frame={frame} delay={64}>
@@ -467,150 +452,11 @@ function WhichOrgSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function SectionPeopleSlide(props: SlideRenderContext) {
-  return (
-    <SectionSlide
-      frame={props.frame}
-      number="SECTION 1"
-      title="まず、人にどうかけるのか"
-      lead="ここが曖昧なままだと、本来かけられるものまで例外にしてしまう。"
-    />
-  )
-}
-
-function MethodsSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const rows: [string, string, boolean][] = [
-    ['パスキー（FIDO2）', '単独でも / 2要素目でも', true],
-    ['Microsoft Authenticator のパスキー', '単独でも / 2要素目でも', true],
-    ['Windows Hello for Business', '単独 ／ 2要素目はパスキー登録が前提', true],
-    ['証明書ベース認証（CBA）', '単独でも / 2要素目でも', true],
-    ['Authenticator（電話サインイン / プッシュ承認）', '単独 ／ プッシュ承認は2要素目', false],
-    ['OATH トークン（ハードウェアはプレビュー）', '2要素目のみ', false],
-    ['SMS / 音声通話', 'SMSは単独可 / 音声は2要素目のみ', false]
-  ]
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="PEOPLE ─ 01" title="使える「要素」は、思っているより多い" frame={frame} />
-      <div className="svc-method-table">
-        {rows.map((row, i) => (
-          <div
-            key={row[0]}
-            className={`svc-method-row${row[2] ? ' svc-method-strong' : ''}`}
-            style={lift(entrance(frame, fps, 12 + i * 7), 14)}
-          >
-            <strong>{row[0]}</strong>
-            <span>{row[1]}</span>
-            {row[2] ? <i>フィッシング耐性</i> : <i />}
-          </div>
-        ))}
-      </div>
-      <Punch frame={frame} delay={72}>
-        「スマホを配っていないからMFAは無理」ではない。<b>選択肢を知らないだけ</b>のことが多い。
-      </Punch>
-      <SourceLine
-        href="https://learn.microsoft.com/entra/identity/authentication/overview-authentication"
-        label="Microsoft Learn ─ Authentication methods"
-      />
-    </section>
-  )
-}
-
-function GuestsSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="PEOPLE ─ 02" title="「相手がMFAを入れていないから無理」は誤り" frame={frame} />
-      <div className="svc-myth">
-        <div className="svc-myth-wrong" style={lift(entrance(frame, fps, 16), 22)}>
-          <X size={36} />
-          <strong>よく言われること</strong>
-          <p>「うちはMFAを展開していないので、ゲストとして対応できません」</p>
-        </div>
-        <div className="svc-myth-right" style={lift(entrance(frame, fps, 38), 22)}>
-          <Check size={36} />
-          <strong>実際の動き</strong>
-          <p>
-            B2Bコラボレーションのゲストは、既定では<b>招待した側のテナントでMFAを登録して満たす</b>。
-            相手組織の展開状況は関係ない。必要なライセンスも招待した側が用意し、ゲストがそれを消費する。
-          </p>
-        </div>
-      </div>
-      <Punch frame={frame} delay={64}>
-        相手テナントのMFAを信頼したいときだけ、<b>テナント間アクセス設定で明示的に信頼</b>を入れる。
-      </Punch>
-      <SourceLine
-        href="https://learn.microsoft.com/entra/external-id/authentication-conditional-access"
-        label="Microsoft Learn ─ Authentication and Conditional Access for B2B users"
-      />
-    </section>
-  )
-}
-
-function GuestMethodsSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const rows: [string, boolean, boolean][] = [
-    ['SMS（2要素目）', true, true],
-    ['音声通話', true, true],
-    ['Authenticator プッシュ通知', true, true],
-    ['ソフトウェア OATH トークン', true, true],
-    ['Authenticator 電話サインイン', true, false],
-    ['ハードウェア OATH トークン', true, false],
-    ['FIDO2 セキュリティキー', true, false],
-    ['Windows Hello for Business', true, false],
-    ['証明書ベース認証', true, false]
-  ]
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="PEOPLE ─ 03" title="どちらで満たすかで、方式が変わる" frame={frame} />
-      <div className="svc-guest-table">
-        <div className="svc-guest-head" style={lift(entrance(frame, fps, 10), 14)}>
-          <span />
-          <b>相手（ホーム）テナント</b>
-          <b>自社（リソース）テナント</b>
-        </div>
-        {rows.map((row, i) => (
-          <div key={row[0]} className="svc-guest-row" style={lift(entrance(frame, fps, 18 + i * 6), 12)}>
-            <strong>{row[0]}</strong>
-            <span className={row[1] ? 'svc-yes' : 'svc-no'}>{row[1] ? '○' : '×'}</span>
-            <span className={row[2] ? 'svc-yes' : 'svc-no'}>{row[2] ? '○' : '×'}</span>
-          </div>
-        ))}
-      </div>
-      <Punch frame={frame} delay={80}>
-        自社CAで<b>認証強度</b>を要求し、かつ相手のMFAを信頼する。<b>信頼だけでは強度を指定できない。</b>
-      </Punch>
-    </section>
-  )
-}
-
-function RealQuestionSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide svc-slide svc-question-slide">
-      <Header kicker="THE CORE" title="ここから先が、本題の2つ" frame={frame} />
-      <div className="svc-question-row">
-        <div className="svc-question-card" style={lift(entrance(frame, fps, 20), 26)}>
-          <span>Q1</span>
-          <strong>どこにいるのか</strong>
-          <p>棚卸し</p>
-        </div>
-        <ArrowRight size={52} />
-        <div className="svc-question-card" style={lift(entrance(frame, fps, 40), 26)}>
-          <span>Q2</span>
-          <strong>どこへ移すのか</strong>
-          <p>移行先の設計</p>
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function SectionInventorySlide(props: SlideRenderContext) {
   return (
     <SectionSlide
       frame={props.frame}
-      number="SECTION 2"
+      number="SECTION 1"
       title="どこにいるのかを見つける"
       lead="移行先の技術より先に、まず対象を見つける。"
     />
@@ -841,7 +687,7 @@ function SectionDestinationSlide(props: SlideRenderContext) {
   return (
     <SectionSlide
       frame={props.frame}
-      number="SECTION 3"
+      number="SECTION 2"
       title="どこへ移すのかを決める"
       lead="判断の順番さえ決めれば、機械的に振り分けられる。"
     />
@@ -1140,269 +986,6 @@ function WifGuardrailsSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function LegacyCageSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const bars = ['長いランダムなパスワード', '接続元を限定', '使えるアプリを限定', '権限を最小化', '失効日を設定', '責任者を明記']
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 09" title="それでも残るIDは「檻」に入れる" frame={frame} />
-      <div className="svc-cage" style={lift(entrance(frame, fps, 16), 22)}>
-        <div className="svc-cage-inner">
-          <UserX size={54} />
-          <strong>移行できないID</strong>
-          <span>MFAは適用できない</span>
-        </div>
-        <div className="svc-cage-bars">
-          {bars.map((bar, i) => (
-            <div key={bar} style={lift(entrance(frame, fps, 30 + i * 9), 16)}>
-              <ShieldCheck size={24} />
-              <span>{bar}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <Punch frame={frame} delay={90}>
-        MFAが使えなくても<b>危険度は大きく下げられる</b>。何もせず除外グループへ入れるのとは別物。
-      </Punch>
-    </section>
-  )
-}
-
-function TeamsRoomsSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const rows: [string, string, string][] = [
-    ['Require MFA', '非サポート', '技術的には可。ただし「強制するな」と注記'],
-    ['認証強度（FIDO2等）', '非サポート', '非サポート'],
-    ['準拠デバイス', 'サポート', 'サポート'],
-    ['場所 / デバイスフィルター', 'サポート', 'サポート'],
-    ['認証フロー条件', 'サポート', '非サポート「ブロックするな」']
-  ]
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 10" title="公式が「MFAをかけるな」と書くID" frame={frame} />
-      <div className="svc-tr-table">
-        <div className="svc-tr-head" style={lift(entrance(frame, fps, 10), 14)}>
-          <span />
-          <b>Rooms on Windows</b>
-          <b>Rooms on Android / パネル</b>
-        </div>
-        {rows.map((row, i) => (
-          <div key={row[0]} className="svc-tr-row" style={lift(entrance(frame, fps, 18 + i * 8), 12)}>
-            <strong>{row[0]}</strong>
-            <span>{row[1]}</span>
-            <span>{row[2]}</span>
-          </div>
-        ))}
-      </div>
-      <div className="svc-alert" style={lift(entrance(frame, fps, 66), 16)}>
-        <TriangleAlert size={34} />
-        <p>
-          Windows版は設計上<b>ROPC</b>、Android版は登録・再認証で<b>デバイスコードフロー</b>を使う。
-          全面ブロックは<b>Teams Roomsを止めること</b>と同義。
-        </p>
-      </div>
-      <Punch frame={frame} delay={86}>
-        公式の代替は<b>準拠デバイス ＋ 既知のネットワーク場所</b>。除外して終わりではなく、専用の強いポリシーを当てる。
-      </Punch>
-      <SourceLine
-        href="https://learn.microsoft.com/microsoftteams/rooms/supported-ca-and-compliance-policies"
-        label="Microsoft Learn ─ Supported CA policies for Teams Rooms"
-      />
-    </section>
-  )
-}
-
-function TeamsRoomsPasswordlessSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const points = [
-    { icon: <ShieldCheck size={30} />, title: 'デバイスに紐づく資格情報', body: 'WindowsはTPM、AndroidはKeystoreに保管。端末から持ち出せない' },
-    { icon: <KeyRound size={30} />, title: 'パスワードを消せる', body: '移行後に削除またはスクランブル。変更してもサインアウトしない' },
-    { icon: <Layers size={30} />, title: '前提は重め', body: 'Rooms ライセンス / Pro Management Portal / Win11 24H2 + Entra参加（ハイブリッド不可）' }
-  ]
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="DESTINATION ─ 11" title="そして今は、パスワードを消せる" frame={frame} />
-      <div className="svc-blind-grid svc-pwless-grid">
-        {points.map((p, i) => (
-          <div key={p.title} className="svc-blind-card svc-pwless-card" style={lift(entrance(frame, fps, 16 + i * 12), 18)}>
-            {p.icon}
-            <strong>{p.title}</strong>
-            <span>{p.body}</span>
-          </div>
-        ))}
-      </div>
-      <Punch frame={frame} delay={64}>
-        仕組みは<b>Windows Hello for Businessに近い</b>と公式が説明。
-        MFAが使えないIDに残る<b>唯一の現実的リスク＝パスワード漏えい</b>を、構造的に消せる。
-      </Punch>
-      <SourceLine
-        href="https://learn.microsoft.com/microsoftteams/rooms/passwordlessentraresourceaccounts"
-        label="Microsoft Learn ─ Password-less Teams shared device resource accounts"
-      />
-    </section>
-  )
-}
-
-function SectionPitfallSlide(props: SlideRenderContext) {
-  return (
-    <SectionSlide
-      frame={props.frame}
-      number="SECTION 4"
-      title="ここから、3つの落とし穴"
-      lead="どれも「対策したつもり」になる種類のもの。"
-    />
-  )
-}
-
-function RopcSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="PITFALL ─ 01" title="パスワードを、アプリに直接渡す方式" frame={frame} />
-      <div className="svc-ropc">
-        <div className="svc-ropc-flow" style={lift(entrance(frame, fps, 16), 22)}>
-          <div>
-            <ServerCog size={32} />
-            <span>アプリ</span>
-          </div>
-          <div className="svc-ropc-creds">ID + パスワード</div>
-          <ArrowRight size={36} />
-          <div>
-            <ShieldCheck size={32} />
-            <span>Entra ID</span>
-          </div>
-        </div>
-        <div className="svc-ropc-note" style={lift(entrance(frame, fps, 38), 20)}>
-          <TriangleAlert size={34} />
-          <p>
-            ブラウザーが出てこない = <b>MFAを差し込む場所がない</b>
-          </p>
-        </div>
-      </div>
-      <div className="svc-alert" style={lift(entrance(frame, fps, 62), 16)}>
-        <TriangleAlert size={34} />
-        <p>
-          <b>レガシー認証だけをブロックしても、それで大丈夫とは言えない。</b>これは別物。
-        </p>
-      </div>
-      <SourceLine
-        href="https://learn.microsoft.com/entra/identity-platform/v2-oauth-ropc"
-        label="Microsoft Learn ─ Resource owner password credentials"
-      />
-    </section>
-  )
-}
-
-function DeviceCodeSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="PITFALL ─ 02" title="デバイスコードフロー" frame={frame} />
-      <div className="svc-devicecode">
-        <div className="svc-devicecode-legit" style={lift(entrance(frame, fps, 16), 22)}>
-          <Monitor size={34} />
-          <strong>本来の用途</strong>
-          <span>画面に出たコードを、別の端末で入力する</span>
-          <i>キーボードやブラウザーが使いにくい機器のため</i>
-        </div>
-        <div className="svc-devicecode-abuse" style={lift(entrance(frame, fps, 38), 22)}>
-          <ShieldAlert size={34} />
-          <strong>攻撃者にとっては</strong>
-          <span>コードを発行して「これを入力してください」と送るだけ</span>
-          <i>被害者は自分の正規の画面で承認してしまう</i>
-        </div>
-      </div>
-      <Punch frame={frame} delay={64}>
-        Microsoftの案内は<b>「可能な限りブロックする」</b>。
-      </Punch>
-      <SourceLine
-        href="https://learn.microsoft.com/entra/identity/conditional-access/concept-authentication-flows"
-        label="Microsoft Learn ─ Authentication flows as a condition"
-      />
-    </section>
-  )
-}
-
-function DeviceCodeScopeSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const scopes = ['ユーザー / グループ', '対象リソース', 'デバイスプラットフォーム', 'ネットワークの場所', 'デバイスフィルター']
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="PITFALL ─ 02b" title="例外はアカウント単位になる" frame={frame} />
-      <div className="svc-scope">
-        <div className="svc-scope-yes" style={lift(entrance(frame, fps, 14), 20)}>
-          <Check size={34} />
-          <strong>条件付きアクセスで指定できるのは</strong>
-          <div className="svc-scope-chips">
-            {scopes.map((scope, i) => (
-              <span key={scope} style={lift(entrance(frame, fps, 26 + i * 6), 12)}>
-                {scope}
-              </span>
-            ))}
-          </div>
-          <i>デバイスフィルターなら deviceId や拡張属性で特定の端末も指定できる</i>
-        </div>
-        <div className="svc-scope-no" style={lift(entrance(frame, fps, 50), 20)}>
-          <X size={34} />
-          <strong>ただしEntra未登録のデバイスには効かない</strong>
-          <p>
-            属性がすべて空として扱われ、肯定の条件は一致しない。
-            デバイスコードフローを使う機器は<b>未登録なことが多い</b>。
-          </p>
-        </div>
-      </div>
-      <div className="svc-alert" style={lift(entrance(frame, fps, 76), 16)}>
-        <TriangleAlert size={34} />
-        <p>
-          だから公式のTeamsデバイス設計は<b>リソースアカウント単位の除外</b>。
-          そのアカウントが別アプリで使うことは止められず、<b>プロトコルトラッキング</b>で以後のセッションも対象になる。
-        </p>
-      </div>
-      <SourceLine
-        href="https://learn.microsoft.com/entra/identity/conditional-access/concept-authentication-flows"
-        label="Microsoft Learn ─ Authentication flows as a condition"
-      />
-    </section>
-  )
-}
-
-function ReportOnlyTrapSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const facts = [
-    { icon: <FileSearch size={28} />, title: '評価期間中にサインインもトークン要求もしないIDは出てこない', body: 'だから「該当ゼロ」に見える' },
-    { icon: <RefreshCw size={28} />, title: 'CAは対話サインインだけでなく、非対話のトークン取得でも評価される', body: 'リフレッシュトークンでの更新も対象' },
-    { icon: <Timer size={28} />, title: 'アクセストークンは既定1時間 / CAE対応なら最大28時間', body: 'その間は手元のトークンで動き続ける' },
-    { icon: <CalendarClock size={28} />, title: 'ポリシー・グループ変更がリソース側へ届くまで最大24時間', body: '一部の更新は2時間まで短縮' }
-  ]
-  return (
-    <section className="remotion-slide svc-slide">
-      <Header kicker="PITFALL ─ 03" title="レポート専用モードの「該当なし」" frame={frame} />
-      <div className="svc-fact-list">
-        {facts.map((fact, i) => (
-          <div key={fact.title} style={lift(entrance(frame, fps, 16 + i * 12), 18)}>
-            {fact.icon}
-            <div>
-              <strong>{fact.title}</strong>
-              <span>{fact.body}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="svc-alert" style={lift(entrance(frame, fps, 62), 16)}>
-        <TriangleAlert size={34} />
-        <p>
-          止まるのは有効化した瞬間ではなく、<b>次のトークン要求のとき</b>から順に。逆にCAEでは重大イベントで
-          <b>期限前に取り消される</b>こともある。すぐ効かせたいならセッションを明示的に失効させる。
-        </p>
-      </div>
-      <SourceLine
-        href="https://learn.microsoft.com/entra/identity/conditional-access/concept-continuous-access-evaluation"
-        label="Microsoft Learn ─ Continuous access evaluation"
-      />
-    </section>
-  )
-}
-
 function RolloutSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const steps = [
@@ -1484,6 +1067,47 @@ function RecapSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
+    </section>
+  )
+}
+
+function NextDecksSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const decks = [
+    {
+      icon: <Monitor size={34} />,
+      title: 'MFAをかけられない機器の守り方',
+      note: 'Teams Rooms / ROPC / デバイスコードフロー',
+      slug: 'mfa-exempt-identities'
+    },
+    {
+      icon: <User size={34} />,
+      title: 'そのMFA、中継されて終わりです',
+      note: '人にどうかけるか。方式の選択肢とフィッシング耐性',
+      slug: 'phishing-resistant-mfa'
+    }
+  ]
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="NEXT" title="この続きは、別の回で" frame={frame} />
+      <div className="svc-next-decks">
+        {decks.map((deck, i) => (
+          <a
+            key={deck.slug}
+            href={`https://presentations.ebisuda.net/decks/${deck.slug}`}
+            target="_blank"
+            rel="noreferrer"
+            style={lift(entrance(frame, fps, 18 + i * 14), 22)}
+          >
+            {deck.icon}
+            <strong>{deck.title}</strong>
+            <span>{deck.note}</span>
+          </a>
+        ))}
+      </div>
+      <Punch frame={frame} delay={60}>
+        今日は<b>棚卸しと移行</b>まで。残る2つは同じ場所に置いてあります。
+      </Punch>
     </section>
   )
 }

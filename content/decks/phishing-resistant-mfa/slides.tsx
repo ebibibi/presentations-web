@@ -34,6 +34,8 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <NotOneThingSlide {...props} /> },
   { render: (props) => <MethodsSlide {...props} /> },
   { render: (props) => <StrengthsSlide {...props} /> },
+  { render: (props) => <GuestsSlide {...props} /> },
+  { render: (props) => <GuestMethodsSlide {...props} /> },
   { render: (props) => <SectionWhatSlide {...props} /> },
   { render: (props) => <DefinitionSlide {...props} /> },
   { render: (props) => <HandoffSlide {...props} /> },
@@ -301,6 +303,72 @@ function StrengthsSlide({ frame }: SlideRenderContext) {
         href="https://learn.microsoft.com/entra/identity/authentication/concept-authentication-strengths"
         label="Microsoft Learn ─ Authentication strengths"
       />
+    </section>
+  )
+}
+
+function GuestsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide phr-slide">
+      <Header kicker="KINDS ─ 04" title="ゲストは「相手のMFA展開」と無関係" frame={frame} />
+      <div className="phr-then-now">
+        <div className="phr-then" style={lift(entrance(frame, fps, 16), 22)}>
+          <span className="phr-era">よく言われること</span>
+          <strong>「うちはMFAを展開していないので無理」</strong>
+          <p>相手組織からこう返ってくる</p>
+        </div>
+        <div className="phr-now" style={lift(entrance(frame, fps, 34), 22)}>
+          <span className="phr-era phr-era-now">実際は</span>
+          <strong>招待した側のテナントで登録して満たす</strong>
+          <p>相手の展開状況は関係ない。ライセンスも招待側が用意し、ゲストが消費する</p>
+        </div>
+      </div>
+      <Punch frame={frame} delay={62}>
+        相手テナントのMFAを信頼したいときだけ、<b>テナント間アクセス設定で明示的に信頼</b>を入れる。
+      </Punch>
+      <SourceLine
+        href="https://learn.microsoft.com/entra/external-id/authentication-conditional-access"
+        label="Microsoft Learn ─ Authentication and Conditional Access for B2B users"
+      />
+    </section>
+  )
+}
+
+function GuestMethodsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const rows: [string, boolean, boolean][] = [
+    ['SMS（2要素目）', true, true],
+    ['音声通話', true, true],
+    ['Authenticator プッシュ通知', true, true],
+    ['ソフトウェア OATH トークン', true, true],
+    ['Authenticator 電話サインイン', true, false],
+    ['ハードウェア OATH トークン', true, false],
+    ['FIDO2 セキュリティキー', true, false],
+    ['Windows Hello for Business', true, false],
+    ['証明書ベース認証', true, false]
+  ]
+  return (
+    <section className="remotion-slide phr-slide">
+      <Header kicker="KINDS ─ 05" title="どちらで満たすかで、方式が変わる" frame={frame} />
+      <div className="phr-guest-table">
+        <div className="phr-guest-head" style={lift(entrance(frame, fps, 10), 14)}>
+          <span />
+          <b>相手（ホーム）テナント</b>
+          <b>自社（リソース）テナント</b>
+        </div>
+        {rows.map((row, i) => (
+          <div key={row[0]} className="phr-guest-row" style={lift(entrance(frame, fps, 16 + i * 6), 12)}>
+            <strong>{row[0]}</strong>
+            <span className={row[1] ? 'phr-yes' : 'phr-no'}>{row[1] ? '○' : '×'}</span>
+            <span className={row[2] ? 'phr-yes' : 'phr-no'}>{row[2] ? '○' : '×'}</span>
+          </div>
+        ))}
+      </div>
+      <Punch frame={frame} delay={76}>
+        <b>フィッシング耐性のある方式は、すべてホームテナント側にしかない。</b>
+        自社CAで認証強度を要求し、かつ相手のMFAを信頼する。この2点セット。
+      </Punch>
     </section>
   )
 }
