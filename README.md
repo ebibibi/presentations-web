@@ -55,6 +55,14 @@ editor offers to change every occurrence at once so the timeline title cannot dr
 away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
 the production bundle.
 
+**Getting to the editor from the published site.** The published site cannot edit
+its own copy, so a signed-in owner sees a `✏️ ローカルで編集` link that opens the
+same path on the local dev server (`src/edit/LocalEditorLink.tsx`). The addresses
+are private-range and configurable through `VITE_LOCAL_EDITOR_HOSTS` at build
+time or the `deck-local-editor-hosts` localStorage key in the browser. It is a
+plain link on purpose: an HTTPS page may not fetch a private address, so the site
+cannot tell whether the dev server is up — it only offers the door.
+
 **In production.** Signed in as an owner on `presentations.ebisuda.net`, the same
 editor appears. There is no checkout there, so a save is a commit on GitHub
 instead of a file write: the copy index published with the build
@@ -64,8 +72,10 @@ the edit touched. The change appears on the site when that deploy finishes,
 usually a minute or two later — the editor says so rather than pretending the
 page updated.
 
-Production editing needs two variables on the Pages project, and stays hidden
-until both are set (the editor is never even downloaded by a visitor):
+Production editing is optional and currently unconfigured, so the editor itself
+does not appear there — the link above is the way in. It needs two variables on
+the Pages project, and stays hidden until both are set (the editor is never even
+downloaded by a visitor):
 
 | variable | value |
 | --- | --- |
