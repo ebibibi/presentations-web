@@ -18,6 +18,31 @@ import {
 
 const NORMALIZE = (value) => value.replace(/\s+/g, ' ').trim()
 
+/**
+ * These endpoints rewrite source files and can commit and push, so a page the
+ * developer happens to be visiting must not be able to drive them.
+ *
+ * A cross-origin form or fetch can only send "simple" requests without a CORS
+ * preflight, and a simple request cannot carry a custom header. Requiring one —
+ * plus a same-origin check when the browser tells us the origin — blocks the
+ * drive-by case; nothing here is a substitute for the fact that a dev server on
+ * 0.0.0.0 trusts everyone who can reach it.
+ */
+const EDITOR_HEADER = 'x-deck-text-editor'
+
+function isTrustedRequest(request) {
+  if (request.headers[EDITOR_HEADER] !== '1') return false
+
+  const origin = request.headers.origin
+  if (!origin) return true
+
+  try {
+    return new URL(origin).host === request.headers.host
+  } catch {
+    return false
+  }
+}
+
 function listSlugs(repoRoot) {
   return readdirSync(path.join(repoRoot, 'content', 'decks'), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -133,6 +158,13 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
     configureServer(server) {
       server.middlewares.use('/__deck-text', async (request, response, next) => {
         if (request.method !== 'POST') return next()
+
+        if (!isTrustedRequest(request)) {
+          response.statusCode = 403
+          response.setHeader('Content-Type', 'application/json')
+          response.end(JSON.stringify({ error: 'この編集APIはページ内の編集UIからのみ使えます' }))
+          return
+        }
 
         const send = (status, payload) => {
           response.statusCode = status

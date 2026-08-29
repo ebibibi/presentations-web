@@ -147,7 +147,9 @@ function rectOf(node: Text): DOMRect {
 async function post<T>(endpoint: string, body: unknown): Promise<T> {
   const response = await fetch(`/__deck-text/${endpoint}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    // Custom header: the dev endpoints reject anything that could be sent by
+    // another page without a CORS preflight.
+    headers: { 'Content-Type': 'application/json', 'X-Deck-Text-Editor': '1' },
     body: JSON.stringify(body)
   })
   const result = await response.json().catch(() => ({ error: '応答を読み取れませんでした' }))
