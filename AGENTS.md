@@ -13,6 +13,10 @@ This repository is intended to be public. Use English for code comments, README 
   do the same from the terminal. See "Editing Slide Copy" in the README.
 - The overlay is usable from a phone against the dev server (list of the current
   slide's copy + bottom sheet editor); keep both the pointer and the list path working.
+- The local server is a system unit (`presentations-dev.service`, copied to
+  `/etc/systemd/system`, `User=ebi`) like the machine's other always-on services —
+  not a `systemd --user` unit. Restart it with
+  `sudo systemctl restart presentations-dev`, never by killing every vite process.
 - The published site links an owner to the local dev server
   (`src/edit/LocalEditorLink.tsx`); that is the normal way copy gets edited.
 - The editor can also run in production, for an owner session, committing through
