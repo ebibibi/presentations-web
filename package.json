@@ -5,12 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "node scripts/check-decks.mjs && tsc -b && vite build",
+    "build": "node scripts/check-decks.mjs && node scripts/check-deck-text.mjs && tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
     "check:recording": "npm run build && node scripts/check-recording-surface.mjs",
     "check:mobile-header": "npm run build && node scripts/check-mobile-header.mjs",
-    "check:decks": "node scripts/check-decks.mjs"
+    "check:decks": "node scripts/check-decks.mjs",
+    "text": "node scripts/deck-text.mjs edit",
+    "text:apply": "node scripts/deck-text.mjs apply",
+    "text:list": "node scripts/deck-text.mjs list",
+    "check:text": "node scripts/check-deck-text.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.481",

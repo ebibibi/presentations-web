@@ -6,6 +6,16 @@ This is the source for `presentations.ebisuda.net`, a public browser-based prese
 
 This repository is intended to be public. Use English for code comments, README updates, commits, issues, and pull requests.
 
+## Slide Copy Edits
+
+- Small wording fixes do not need an agent: `npm run dev` has a click-to-edit layer
+  (`src/dev/TextEditOverlay.tsx`), and `npm run text <slug>` / `npm run text:apply <slug>`
+  do the same from the terminal. See "Editing Slide Copy" in the README.
+- The extractor and rewriter are `scripts/deck-text-core.mjs`; changes there must keep
+  `npm run check:text` passing.
+- Script and build output is English; anything rendered in the browser UI is Japanese,
+  matching the rest of the app.
+
 ## Content Model
 
 - Deck metadata lives in `content/decks/*/deck.yaml`.
