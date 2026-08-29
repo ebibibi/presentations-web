@@ -143,6 +143,17 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
           const body = await readJson(request)
 
           if (request.url.startsWith('/find')) {
+            // Batch form: the client asks which of the strings it rendered are
+            // actually editable, so a phone list can hide the rest.
+            if (Array.isArray(body.texts)) {
+              return send(200, {
+                matches: body.texts.map((text) =>
+                  typeof text === 'string' && text.trim()
+                    ? candidatesFor(repoRoot, body.slug, text).length
+                    : 0
+                )
+              })
+            }
             if (typeof body.text !== 'string' || !body.text.trim()) {
               return send(400, { error: '対象の文字列が空です' })
             }

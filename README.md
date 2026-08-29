@@ -55,6 +55,15 @@ editor offers to change every occurrence at once so the timeline title cannot dr
 away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
 the production bundle.
 
+**From a phone.** `npm run dev` already listens on `0.0.0.0`, so open
+`http://<dev-machine-ip>:5173/decks/<slug>` from a device on the same network (or
+over Tailscale). Use the IP printed by Vite — a hostname is rejected by Vite's
+allowed-hosts check. At phone scale a slide is scaled down until body copy is a
+few pixels tall, so tapping an exact word is not realistic: on narrow screens the
+edit button opens a list of the copy on the current slide instead, and the editor
+docks to the bottom of the screen. Strings the rewriter cannot resolve (slide
+numbering, generated labels) are filtered out of that list.
+
 **From the terminal.**
 
 ```bash

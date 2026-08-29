@@ -11,6 +11,8 @@ This repository is intended to be public. Use English for code comments, README 
 - Small wording fixes do not need an agent: `npm run dev` has a click-to-edit layer
   (`src/dev/TextEditOverlay.tsx`), and `npm run text <slug>` / `npm run text:apply <slug>`
   do the same from the terminal. See "Editing Slide Copy" in the README.
+- The overlay is usable from a phone against the dev server (list of the current
+  slide's copy + bottom sheet editor); keep both the pointer and the list path working.
 - The extractor and rewriter are `scripts/deck-text-core.mjs`; changes there must keep
   `npm run check:text` passing.
 - Script and build output is English; anything rendered in the browser UI is Japanese,
