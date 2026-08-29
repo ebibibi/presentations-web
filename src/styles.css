@@ -117,6 +117,19 @@ a {
   max-width: 220px;
 }
 
+.auth-login-compact {
+  flex: 0 0 auto;
+  gap: 4px;
+  justify-content: flex-end;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.auth-login-compact span {
+  font-weight: 700;
+  max-width: 12px;
+}
+
 .auth-user {
   align-items: center;
   display: inline-flex;
@@ -2019,11 +2032,6 @@ main {
     gap: 8px;
   }
 
-  .site-header .auth-login,
-  .site-header .auth-status {
-    display: none;
-  }
-
   .auth-user span {
     display: none;
   }
@@ -2074,6 +2082,16 @@ main {
   .viewer-footer button:nth-of-type(3) {
     grid-column: 1 / -1;
     grid-row: 2;
+  }
+}
+
+@media (max-width: 430px) {
+  .brand span {
+    display: none;
+  }
+
+  .brand {
+    padding-right: 0;
   }
 }
 

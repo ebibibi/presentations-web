@@ -9,6 +9,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
     "check:recording": "npm run build && node scripts/check-recording-surface.mjs",
+    "check:mobile-header": "npm run build && node scripts/check-mobile-header.mjs",
     "check:decks": "node scripts/check-decks.mjs"
   },
   "dependencies": {

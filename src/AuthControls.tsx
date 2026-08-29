@@ -6,16 +6,24 @@ import {
   loginWithCredential,
   logout
 } from './auth'
+import { useMediaQuery } from './useMediaQuery'
+
+/** Matches the header breakpoint in styles.css where the nav runs out of room. */
+const COMPACT_HEADER_QUERY = '(max-width: 680px)'
 
 export function AuthControls({
   auth,
-  onAuthChange
+  onAuthChange,
+  allowCompact = false
 }: {
   auth: AuthState
   onAuthChange: (auth: AuthState) => void
+  /** Render an icon-only sign-in button when the viewport is too narrow for the wide one. */
+  allowCompact?: boolean
 }) {
   const buttonRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
+  const compact = useMediaQuery(COMPACT_HEADER_QUERY) && allowCompact
 
   useEffect(() => {
     if (!auth.enabled || auth.authenticated || !auth.googleClientId || !buttonRef.current) {
@@ -51,14 +59,25 @@ export function AuthControls({
           auto_select: false,
           cancel_on_tap_outside: true
         })
-        window.google.accounts.id.renderButton(buttonRef.current, {
-          theme: 'outline',
-          size: 'medium',
-          text: 'signin',
-          shape: 'rectangular',
-          width: 92,
-          locale: 'ja'
-        })
+        window.google.accounts.id.renderButton(
+          buttonRef.current,
+          compact
+            ? {
+                theme: 'outline',
+                size: 'medium',
+                type: 'icon',
+                shape: 'circle',
+                locale: 'ja'
+              }
+            : {
+                theme: 'outline',
+                size: 'medium',
+                text: 'signin',
+                shape: 'rectangular',
+                width: 92,
+                locale: 'ja'
+              }
+        )
       })
       .catch((scriptError) => {
         setError(
@@ -71,7 +90,7 @@ export function AuthControls({
     return () => {
       cancelled = true
     }
-  }, [auth.authenticated, auth.enabled, auth.googleClientId, onAuthChange])
+  }, [auth.authenticated, auth.enabled, auth.googleClientId, compact, onAuthChange])
 
   if (auth.loading) {
     return <span className="auth-status">確認中</span>
@@ -102,9 +121,15 @@ export function AuthControls({
   }
 
   return (
-    <div className="auth-login">
-      <div ref={buttonRef} />
-      {error ? <span>{error}</span> : null}
+    <div className={compact ? 'auth-login auth-login-compact' : 'auth-login'}>
+      <div ref={buttonRef} title="ログイン" />
+      {error ? (
+        // The compact header has no room for the message, so surface a marker
+        // that still carries the full text rather than dropping the error.
+        <span role="alert" title={error} aria-label={`ログインエラー: ${error}`}>
+          {compact ? '!' : error}
+        </span>
+      ) : null}
     </div>
   )
 }
