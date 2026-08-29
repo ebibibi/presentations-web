@@ -236,7 +236,7 @@ function MethodsSlide({ frame }: SlideRenderContext) {
   const rows: [string, string][] = [
     ['パスキー（FIDO2）／Authenticatorのパスキー', '単独でも / 2要素目でも'],
     ['Windows Hello for Business', '単独 ／ 2要素目はパスキー登録が前提'],
-    ['証明書ベース認証（CBA）', '単独でも / 2要素目でも'],
+    ['証明書ベース認証（CBA）', '単独でも / 2要素目でも ※多要素として構成した場合'],
     ['Authenticator（電話サインイン / プッシュ承認）', '単独 ／ プッシュ承認は2要素目'],
     ['Temporary Access Pass', '単独でも / 2要素目でも'],
     ['OATH トークン（ハードウェアはプレビュー）', '2要素目のみ'],
@@ -297,7 +297,7 @@ function StrengthsSlide({ frame }: SlideRenderContext) {
       </div>
       <Punch frame={frame} delay={72}>
         所持要素＝SMS / 音声 / プッシュ通知 / ソフトウェアOATH / ハードウェアOATH。
-        <b>まとめて一番左の段にしか入らない。</b>
+        <b>まとめて一番左の段にしか入らない。</b>CBAは<b>「多要素」と構成したものだけ</b>が右2列（既定は単一要素）。
       </Punch>
       <SourceLine
         href="https://learn.microsoft.com/entra/identity/authentication/concept-authentication-strengths"
