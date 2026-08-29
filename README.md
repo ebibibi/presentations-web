@@ -110,9 +110,11 @@ otherwise clean, and otherwise says so — the copy is already saved and committ
 locally either way.
 
 **From a phone.** `npm run dev` already listens on `0.0.0.0`, so open
-`http://<dev-machine-ip>:5173/decks/<slug>` from a device on the same network (or
-over Tailscale). Use the IP printed by Vite — a hostname is rejected by Vite's
-allowed-hosts check. At phone scale a slide is scaled down until body copy is a
+`http://moviegen:5173/decks/<slug>` from a device on the same network or over
+Tailscale — the same address the owner-only link uses. Vite rejects any Host it
+was not told about, so a different machine name needs adding to
+`server.allowedHosts` in `vite.config.ts`; the IP printed by Vite always works
+and needs no entry. At phone scale a slide is scaled down until body copy is a
 few pixels tall, so tapping an exact word is not realistic: on narrow screens the
 edit button opens a list of the copy on the current slide instead, and the editor
 docks to the bottom of the screen. Strings the rewriter cannot resolve (slide
