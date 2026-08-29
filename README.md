@@ -39,6 +39,39 @@ content/decks/my-deck/
 
 `slides.tsx` owns the visual implementation. The number of slide components must match the number of slide metadata entries.
 
+## Editing Slide Copy
+
+Copy lives inline in `slides.tsx` (JSX children and data arrays) and in `deck.yaml`
+(title, summary, per-slide title and notes). Fixing a typo should not mean reading
+around animation code, so two tools extract the strings and write them back into
+the exact source range they came from — layout, indentation and everything else in
+the file stay untouched.
+
+**In the browser (dev server only).** Run `npm run dev`, open a deck, click the
+`✏️ 文字編集` button in the corner, then click any text on the slide. Retype it,
+press save, and the string is written back to source; Vite hot-reloads the slide.
+When the same string also appears in `deck.yaml` (slide headings usually do), the
+editor offers to change every occurrence at once so the timeline title cannot drift
+away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
+the production bundle.
+
+**From the terminal.**
+
+```bash
+npm run text:list                  # deck slugs
+npm run text agentic-loops         # dump every editable string to tmp/deck-text/<slug>.txt
+npm run text:apply agentic-loops   # write the edited dump back into the deck
+```
+
+The dump records a fingerprint of both source files. If the deck changed after the
+dump was written, `text:apply` refuses rather than clobbering that change
+(`--force` overrides).
+
+`npm run check:text` (part of `npm run build`) proves the rewriter is lossless: for
+every deck it re-encodes all strings and verifies that a no-op rewrite is byte
+identical, that quote characters survive re-parsing, and that copy containing JSX
+syntax still produces a parsable file.
+
 ## Local Development
 
 ```bash
