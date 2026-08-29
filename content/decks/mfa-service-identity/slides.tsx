@@ -17,6 +17,7 @@ import {
   Fingerprint,
   Globe,
   Layers,
+  KeyRound,
   ListChecks,
   Lock,
   LockKeyhole,
@@ -74,6 +75,8 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <UamiVsAppSlide {...props} /> },
   { render: (props) => <WifGuardrailsSlide {...props} /> },
   { render: (props) => <LegacyCageSlide {...props} /> },
+  { render: (props) => <TeamsRoomsSlide {...props} /> },
+  { render: (props) => <TeamsRoomsPasswordlessSlide {...props} /> },
   { render: (props) => <SectionPitfallSlide {...props} /> },
   { render: (props) => <RopcSlide {...props} /> },
   { render: (props) => <DeviceCodeSlide {...props} /> },
@@ -401,15 +404,15 @@ function RealTargetSlide({ frame }: SlideRenderContext) {
     {
       n: '02',
       icon: <ServerCog size={32} />,
-      title: 'システム用だが、実体はユーザーID',
-      body: '分類はできている。でもユーザーIDである以上、MFAはかけられない',
+      title: 'システム用だが、器は人のIDと同じ',
+      body: 'MFAの登録自体はできる。でも無人なので、要求された時点で止まる',
       note: '発見は不要でも、移行作業はまるごと残る'
     },
     {
       n: '03',
       icon: <Monitor size={32} />,
       title: 'リソースアカウント',
-      body: 'Teams Rooms、Bookings など。人ではないがユーザーオブジェクト',
+      body: 'Teams Rooms など。Microsoftが「MFAをかけるな」と明記している',
       note: '運用の失敗ではなく製品の仕様。正しく運用していても残る'
     }
   ]
@@ -1161,6 +1164,81 @@ function LegacyCageSlide({ frame }: SlideRenderContext) {
       <Punch frame={frame} delay={90}>
         MFAが使えなくても<b>危険度は大きく下げられる</b>。何もせず除外グループへ入れるのとは別物。
       </Punch>
+    </section>
+  )
+}
+
+function TeamsRoomsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const rows: [string, string, string][] = [
+    ['Require MFA', '非サポート', '技術的には可。ただし「強制するな」と注記'],
+    ['認証強度（FIDO2等）', '非サポート', '非サポート'],
+    ['準拠デバイス', 'サポート', 'サポート'],
+    ['場所 / デバイスフィルター', 'サポート', 'サポート'],
+    ['認証フロー条件', 'サポート', '非サポート「ブロックするな」']
+  ]
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="DESTINATION ─ 10" title="公式が「MFAをかけるな」と書くID" frame={frame} />
+      <div className="svc-tr-table">
+        <div className="svc-tr-head" style={lift(entrance(frame, fps, 10), 14)}>
+          <span />
+          <b>Rooms on Windows</b>
+          <b>Rooms on Android / パネル</b>
+        </div>
+        {rows.map((row, i) => (
+          <div key={row[0]} className="svc-tr-row" style={lift(entrance(frame, fps, 18 + i * 8), 12)}>
+            <strong>{row[0]}</strong>
+            <span>{row[1]}</span>
+            <span>{row[2]}</span>
+          </div>
+        ))}
+      </div>
+      <div className="svc-alert" style={lift(entrance(frame, fps, 66), 16)}>
+        <TriangleAlert size={34} />
+        <p>
+          Windows版は設計上<b>ROPC</b>、Android版は登録・再認証で<b>デバイスコードフロー</b>を使う。
+          全面ブロックは<b>Teams Roomsを止めること</b>と同義。
+        </p>
+      </div>
+      <Punch frame={frame} delay={86}>
+        公式の代替は<b>準拠デバイス ＋ 既知のネットワーク場所</b>。除外して終わりではなく、専用の強いポリシーを当てる。
+      </Punch>
+      <SourceLine
+        href="https://learn.microsoft.com/microsoftteams/rooms/supported-ca-and-compliance-policies"
+        label="Microsoft Learn ─ Supported CA policies for Teams Rooms"
+      />
+    </section>
+  )
+}
+
+function TeamsRoomsPasswordlessSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const points = [
+    { icon: <ShieldCheck size={30} />, title: 'デバイスに紐づく資格情報', body: 'WindowsはTPM、AndroidはKeystoreに保管。端末から持ち出せない' },
+    { icon: <KeyRound size={30} />, title: 'パスワードを消せる', body: '移行後に削除またはスクランブル。変更してもサインアウトしない' },
+    { icon: <Layers size={30} />, title: '前提は重め', body: 'Rooms ライセンス / Pro Management Portal / Win11 24H2 + Entra参加（ハイブリッド不可）' }
+  ]
+  return (
+    <section className="remotion-slide svc-slide">
+      <Header kicker="DESTINATION ─ 11" title="そして今は、パスワードを消せる" frame={frame} />
+      <div className="svc-blind-grid svc-pwless-grid">
+        {points.map((p, i) => (
+          <div key={p.title} className="svc-blind-card svc-pwless-card" style={lift(entrance(frame, fps, 16 + i * 12), 18)}>
+            {p.icon}
+            <strong>{p.title}</strong>
+            <span>{p.body}</span>
+          </div>
+        ))}
+      </div>
+      <Punch frame={frame} delay={64}>
+        仕組みは<b>Windows Hello for Businessに近い</b>と公式が説明。
+        MFAが使えないIDに残る<b>唯一の現実的リスク＝パスワード漏えい</b>を、構造的に消せる。
+      </Punch>
+      <SourceLine
+        href="https://learn.microsoft.com/microsoftteams/rooms/passwordlessentraresourceaccounts"
+        label="Microsoft Learn ─ Password-less Teams shared device resource accounts"
+      />
     </section>
   )
 }

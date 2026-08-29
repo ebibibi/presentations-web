@@ -9404,3 +9404,36 @@ main {
   font-weight: 800;
   padding: 14px 20px;
 }
+
+/* mfa-service-identity: Teams Rooms support matrix */
+.svc-tr-table { display: grid; gap: 7px; }
+
+.svc-tr-head,
+.svc-tr-row {
+  align-items: center;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr 280px 360px;
+}
+
+.svc-tr-head b {
+  background: rgba(37, 99, 235, 0.1);
+  border-radius: 12px;
+  font-size: 21px;
+  padding: 11px 14px;
+  text-align: center;
+}
+
+.svc-tr-row {
+  background: #fff;
+  border: 1px solid rgba(23, 32, 27, 0.1);
+  border-radius: 13px;
+  padding: 12px 24px;
+}
+
+.svc-tr-row strong { font-size: 23px; }
+.svc-tr-row span { color: var(--muted); font-size: 20px; text-align: center; }
+
+.svc-pwless-grid { grid-template-columns: repeat(3, 1fr); }
+.svc-pwless-card { border-left: 6px solid var(--svc-green); }
+.svc-pwless-card svg { color: var(--svc-green); }
