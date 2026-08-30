@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './App'
 import './styles.css'
+import { onOwnerChange } from './edit/owner-signal'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -13,20 +14,21 @@ createRoot(document.getElementById('root')!).render(
 // On the published site the copy cannot be edited in place, so the owner gets a
 // link to the same page on the local dev server instead — and the full editor
 // only if a commit backend is configured.
-async function mount(node: React.ReactNode) {
+function mount(node: React.ReactNode) {
   const host = document.createElement('div')
   document.body.appendChild(host)
-  createRoot(host).render(node)
+  const root = createRoot(host)
+  root.render(node)
+
+  return () => {
+    root.unmount()
+    host.remove()
+  }
 }
 
 async function mountEditor() {
   const { TextEditOverlay } = await import('./edit/TextEditOverlay')
-  await mount(<TextEditOverlay />)
-}
-
-async function mountLocalEditorLink() {
-  const { LocalEditorLink } = await import('./edit/LocalEditorLink')
-  await mount(<LocalEditorLink />)
+  mount(<TextEditOverlay />)
 }
 
 async function isOwner() {
@@ -50,12 +52,57 @@ async function canCommitFromProduction() {
   }
 }
 
+async function ownerUi() {
+  const { LocalEditorLink } = await import('./edit/LocalEditorLink')
+  const nodes: React.ReactNode[] = [<LocalEditorLink key="local-editor-link" />]
+
+  if (await canCommitFromProduction()) {
+    const { TextEditOverlay } = await import('./edit/TextEditOverlay')
+    nodes.push(<TextEditOverlay key="text-edit-overlay" />)
+  }
+
+  return nodes
+}
+
 if (import.meta.env.DEV) {
   void mountEditor()
 } else {
-  void isOwner().then(async (owner) => {
-    if (!owner) return
-    await mountLocalEditorLink()
-    if (await canCommitFromProduction()) await mountEditor()
+  // The sign-in state is not known at load and can change afterwards, so the
+  // owner UI follows it instead of being decided once. Mounting is async, so a
+  // single in-flight sync loops until the DOM matches the latest state rather
+  // than racing a second call.
+  let wanted = false
+  let unmount: (() => void) | null = null
+  let syncing = false
+
+  async function syncOwnerUi() {
+    if (syncing) return
+    syncing = true
+
+    try {
+      while (wanted !== Boolean(unmount)) {
+        if (!wanted) {
+          unmount?.()
+          unmount = null
+          continue
+        }
+
+        const nodes = await ownerUi()
+        if (!wanted) continue
+        unmount = mount(<>{nodes}</>)
+      }
+    } finally {
+      syncing = false
+    }
+  }
+
+  onOwnerChange((canRecord) => {
+    wanted = canRecord
+    void syncOwnerUi()
+  })
+
+  void isOwner().then((owner) => {
+    wanted = owner
+    return syncOwnerUi()
   })
 }

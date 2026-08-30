@@ -160,6 +160,7 @@ npm run lint
 npm run build
 npm run check:recording
 npm run check:mobile-header
+npm run check:owner-editor-link
 ```
 
 ## Deployment
@@ -223,6 +224,12 @@ Run `npm run check:recording` to render the production build in Chromium, enter 
 The header keeps the sign-in control at every viewport width. Below `680px` the Google button switches to its icon form and below `430px` the brand drops to its icon, which is what keeps the single 64px row from overflowing on a phone.
 
 Run `npm run check:mobile-header` to assert, from `1280px` down to `320px`, that the sign-in control stays visible, keeps a 44px tap target, and never pushes the header past the viewport.
+
+## Local editor link
+
+The published site is static, so the owner edits the copy on the machine running `npm run dev`. Signed in as the owner, the site shows a `✏️ ローカルで編集` pill that carries the current path to `http://moviegen:5173`. It appears and disappears with the sign-in state, without a reload.
+
+Run `npm run check:owner-editor-link` to assert that a signed-out visitor never sees the pill and that signing in reveals it in place.
 
 ## Future Work
 
