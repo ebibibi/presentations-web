@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AuthControls } from './AuthControls'
+import { announceOwner } from './edit/owner-signal'
 import { DeckViewer } from './DeckViewer'
 import { initializeAnalytics, trackPageView } from './analytics'
 import {
@@ -65,6 +66,8 @@ export function App() {
     }
 
     setAuth(nextAuth)
+    // The owner-only editing UI lives outside this tree, so it has to be told.
+    announceOwner(nextAuth.canRecord)
   }, [])
 
   useEffect(() => {
