@@ -1,0 +1,128 @@
+slug: mfa-is-for-humans
+title: MFAの"factor"は回数ではない ─ 多要素認証が人間だけを相手にしている理由
+summary: Multi-Factor Authentication の factor は「認証材料の個数」ではなく「本人確認の種類」を指す。だからパスワード＋PINは2個でもMFAではなく、顔を見せるだけのWindows Hello for Businessは2要素になる。そしてシステムIDには、そもそもMFAという概念が適用されない。Microsoftが公式に「Can't perform multifactor authentication」と書く理由と、代わりに何で守るのかを整理する。
+status: draft
+visibility: public
+createdAt: "2026-08-31"
+updatedAt: "2026-08-31"
+order: 111
+tags:
+  - entra-id
+  - mfa
+  - workload-identity
+  - managed-identity
+  - windows-hello
+  - security
+slides:
+  - id: opening
+    title: MFAの"factor"は、回数ではない
+    durationInFrames: 210
+    notes: 多要素認証、Multi-Factor Authentication。この名前、かなり紛らわしいと思っています。「複数のものを使って認証すること」に読めるからです。でも違います。factor は個数ではなく種類のことで、しかもその種類というのは、人間をどう本人確認するかという話でしかありません。今日はこの一点だけを、丁寧に解いていきます。
+  - id: profile
+    title: 解説する人：胡田 昌彦
+    durationInFrames: 190
+    notes: 解説する胡田昌彦です。Microsoft MVPを14年連続で受賞し、Windows、Azure、Microsoft 365を実機で検証してきました。今日は設定手順ではなく、用語の意味そのものを扱います。
+  - id: three-questions
+    title: この3つ、答えられますか
+    durationInFrames: 215
+    notes: 最初に3つ質問します。証明書とシークレットを両方要求したら、それは二要素認証でしょうか。Windows Hello for Business は顔を見せるだけですが、あれは何要素でしょうか。そしてサービスプリンシパルにMFAはかけられるのでしょうか。この3つは、実は全部同じ一行から答えが出ます。
+  - id: section-factor
+    title: SECTION 1 ─ factor とは何か
+    durationInFrames: 150
+    notes: まず言葉の定義からです。ここが曖昧なままだと、あとの話が全部ずれます。
+  - id: factor-is-category
+    title: factor＝「認証材料の個数」ではない
+    durationInFrames: 220
+    notes: factor は、認証に使った材料の個数ではありません。本人確認の種類、カテゴリのことです。英語の factor という単語が「要素」とも「要因」とも読めるので、日本語にすると余計に個数っぽく見えてしまう。ここが誤解の入口です。
+  - id: three-categories
+    title: 種類は、この3つしかない
+    durationInFrames: 225
+    notes: 種類は3つです。知っているもの、パスワードやPIN。持っているもの、スマートフォンやFIDO2キー、そのPC自体。そして本人そのもの、顔や指紋。NISTのSP 800-63Bでも、この3分類が基礎になっています。多要素認証というのは、このうち異なる箱から2つ以上を組み合わせる、という意味です。
+  - id: password-pin
+    title: パスワード＋PIN は、MFAではない
+    durationInFrames: 230
+    notes: だからパスワードとPINを両方要求しても、それはMFAとは呼びません。材料は2個ありますが、どちらも「知っているもの」の箱の中だからです。パスワードを盗んだ攻撃者は、たいてい同じ手口でPINも盗めます。増えているのは個数だけで、攻撃者が突破すべき壁の種類は増えていない。
+  - id: definition
+    title: 定義は、たった一行
+    durationInFrames: 210
+    notes: なのでMFAの定義は一行で言えます。異なる種類の本人確認要素を組み合わせること。複数の認証情報を使うことではありません。この一行を最初に言ってしまうのが、いちばん誤解が少ないです。
+  - id: section-count
+    title: SECTION 2 ─ 操作の回数と、要素の数は別
+    durationInFrames: 150
+    notes: 次は体験の話です。ここでWindows Hello for Businessが出てきます。
+  - id: whfb-feels-like-one
+    title: 顔を見せるだけなのに、2要素
+    durationInFrames: 215
+    notes: Windows Hello for Business は、PCを開いて顔を見せるだけです。体験としては明らかに1アクションで、MFAをしている感覚がありません。でも中身は2要素になっています。
+  - id: whfb-inside
+    title: 中で起きていること
+    durationInFrames: 250
+    notes: 順番に見ます。顔を見せる。ローカルで、このPCを使っている本人だと確認される。その確認によってTPMの中の秘密鍵の利用が許可される。その秘密鍵でEntra IDへ認証する。つまり顔認証だけでクラウドにログインしているわけではありません。持っているもの、TPMに保護された端末固有の鍵。そして本人であること、顔。この2つが成立しています。PINの場合も同じで、持っているものと知っているものの組み合わせになります。
+  - id: sms-vs-whfb
+    title: 操作2回でも、操作1回でも、要素は2
+    durationInFrames: 235
+    notes: 比べてみます。パスワードを入れてSMSのコードを入れる。操作は2回で、いかにも二要素という感じがします。一方Windows Hello for BusinessやPasskeyは操作1回。でもどちらも2要素です。何回操作したかと、何要素かは、まったく別の話です。むしろ操作回数の多いSMS方式のほうが、フィッシング耐性の観点では弱い。
+  - id: modern-design
+    title: 最近の設計は「意識させずに強くする」
+    durationInFrames: 210
+    notes: 認証設計の方向はここです。強度は上げるが、利用者にMFAをしていると意識させない。Windows Hello for BusinessやFIDO2、Passkeyが使いやすいのは、まさに1回の自然な操作の中に複数の要素を埋め込んでいるからです。使いにくさは強度の証拠ではありません。
+  - id: section-system
+    title: SECTION 3 ─ システムIDに、MFAは無い
+    durationInFrames: 150
+    notes: ここからが本題です。人間の話が終わると、必ず出てくる疑問があります。
+  - id: official-line
+    title: 公式に、こう書いてある
+    durationInFrames: 220
+    notes: Entra IDの条件付きアクセスのドキュメントには、ワークロードIDについて、Can't perform multifactor authentication、多要素認証は実行できない、と明記されています。これは制限や未実装ではなく、そもそも適用対象ではない、という意味です。
+  - id: no-hands
+    title: 承認ボタンを押す人が、いない
+    durationInFrames: 215
+    notes: 理由は単純です。MFAの3つの箱は、全部人間を前提にしています。知っている、持っている、本人である。サービスプリンシパルはスマホを持てませんし、顔もありません。承認ボタンを押す人がその場にいない。だからMFAという概念が最初から噛み合わないのです。
+  - id: cert-plus-secret
+    title: 証明書＋シークレットは、2要素か
+    durationInFrames: 235
+    notes: では最初の質問に戻ります。システムIDに証明書とクライアントシークレットを両方要求したら、二要素認証でしょうか。呼びません。これは複数のクレデンシャルを組み合わせた認証、多層防御に近いものです。パスワードとPINの話と同じ構造です。
+  - id: trust-boundary
+    title: しかも「2個だから2倍強い」ではない
+    durationInFrames: 245
+    notes: さらに重要な点があります。証明書とシークレットを、同じサーバーの同じディスク、あるいは同じKey Vaultから取得できるようにしていたらどうなるか。攻撃者がその実行環境を奪ったとき、両方まとめて盗まれます。個数は2ですが、突破すべき壁は1枚です。人間のMFAが強いのは、パスワードを盗まれても物理的なFIDO2キーまでは持っていない、というように、攻撃に必要なものが独立しているからでした。
+  - id: what-matters
+    title: システムIDで見るべきは、この3つ
+    durationInFrames: 235
+    notes: なのでシステムIDでは、要素の数ではなく別の軸で強度を考えます。盗みにくいか。別々の信頼境界にあるか。短命で再利用できないか。この3つです。個数を数えるのをやめて、この3つを見る。それが正しい読み替えです。
+  - id: preference-order
+    title: だから、望ましい順番はこうなる
+    durationInFrames: 250
+    notes: この軸で並べると順番が決まります。いちばん良いのはマネージドID。そもそも長期の秘密を保存しないし、資格情報の管理をAzureのプラットフォームに任せられます。次がワークロードIDフェデレーション、GitHub ActionsからOIDCでフェデレーテッド資格情報を使う形。ここも保存する秘密がありません。その次が証明書。いちばん下がクライアントシークレット。個数を増やすより、この階段を一段上がるほうが効きます。
+  - id: ca-still-applies
+    title: MFAが無い＝無防備、ではない
+    durationInFrames: 240
+    notes: 誤解しやすいので補足します。MFAができないからといって、システムIDが条件付きアクセスの対象外になるわけではありません。Entra IDにはワークロードID向けの条件付きアクセスがあり、特定のIPアドレス以外からはブロックする、ワークロードIDリスクが高ければブロックする、といった制御ができます。ただしユーザー向けの「MFAを要求する」を要求できるわけではない、というだけです。
+  - id: naming
+    title: 名前が、悪い
+    durationInFrames: 230
+    notes: ここまで来ると言いたくなります。名前が悪い。Multi-Factor Authentication の factor は種類のことだ、と知らないと、証明書とシークレットで2 factorでは、と思うのはかなり自然です。実態に近い名前を付けるなら、Multi-Category Authentication、あるいは Independent-Factor Authentication のほうがよかった。ただ、この用語が生まれた背景では主眼が人間の本人確認だったので、機械のIDまで含めて読むと急に名前の悪さが目立つ、という事情もあります。
+  - id: recap
+    title: 覚えるのは、この3つ
+    durationInFrames: 215
+    notes: まとめます。1つ目、factorは個数ではなく種類。異なる箱から2つ以上でMFAです。2つ目、操作の回数と要素の数は別。顔を見せるだけでも2要素になります。3つ目、システムIDにMFAは無い。個数ではなく、盗みにくさ、信頼境界、短命性で強度を考えます。
+  - id: related-decks
+    title: 関連するスライド
+    durationInFrames: 180
+    notes: このMFAシリーズには他のスライドもあります。人にどうMFAをかけるかはフィッシング耐性の回、かけられないIDの運用はサービスIDの回と機器の回で扱っています。
+  - id: related-videos
+    title: 関連する解説動画
+    durationInFrames: 180
+    notes: 認証の基礎や、アプリにIDが必要な理由については、こちらの動画で扱っています。
+  - id: ebi-study
+    title: 体系的に、順番に学びたい方へ
+    durationInFrames: 175
+    notes: 順番に体系立てて学びたい方は、Ebi Studyをご覧ください。
+  - id: sources
+    title: 出典
+    durationInFrames: 175
+    notes: 今日の内容の出典です。設定を変える前に、必ず最新の公式ドキュメントを確認してください。
+  - id: thanks
+    title: ご視聴ありがとうございました！
+    durationInFrames: 160
+    notes: ご視聴ありがとうございました。高評価とチャンネル登録をお願いします。
