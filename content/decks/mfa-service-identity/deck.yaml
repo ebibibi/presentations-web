@@ -1,10 +1,10 @@
 slug: mfa-service-identity
 title: サービスIDの棚卸しと移行 ─ MFA展開の最後に残るID
 summary: MFAを全社へ展開すると、最後に「人がいないから承認できないID」が残る。それをサインインログから見つけ、ひとつの台帳へ載せ、実行場所とトークン発行能力で移行先を決めるまで。人へのMFAとTeams Rooms等の機器は別デッキに分割した。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-08-29"
-updatedAt: "2026-08-29"
+updatedAt: "2026-08-30"
 order: 108
 tags:
   - entra-id
@@ -13,6 +13,11 @@ tags:
   - managed-identity
   - workload-identity
   - security
+youtube:
+  id: abOB7LaXDIg
+  url: https://www.youtube.com/watch?v=abOB7LaXDIg
+  title: "mfa"
+  publishedAt: "2026-08-30"
 slides:
   - id: opening
     title: MFAをかけられないIDをどうするか
