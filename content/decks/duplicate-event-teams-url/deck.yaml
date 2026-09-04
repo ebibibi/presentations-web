@@ -1,0 +1,87 @@
+slug: duplicate-event-teams-url
+title: その「イベントを複製」、Teams会議は同じままです
+summary: 新しい Outlook / Outlook on the web / Teams のカレンダーで使える「イベントを複製 (Duplicate Event)」は、従来の Outlook の会議コピー＆ペーストとは別の機能で、会議の複製はサポートされている。ただし Teams 会議が設定された予定を複製すると、Teams 会議の URL は複製元から引き継がれる。出席者だけ差し替えて別の会議として使うと、前の相手が入れてしまい、チャットやファイルまで見えてしまう。仕組みと安全な使いどころを整理する。
+status: draft
+visibility: public
+createdAt: "2026-09-04"
+updatedAt: "2026-09-04"
+order: 112
+tags:
+  - outlook
+  - microsoft-teams
+  - microsoft-365
+  - calendar
+  - security
+slides:
+  - id: opening
+    title: その「イベントを複製」、Teams会議は同じままです
+    durationInFrames: 210
+    notes: 新しい Outlook や Outlook on the web に「イベントを複製」という機能があります。前と同じ会議をもう一度やりたいときに、とても便利です。ただ、これを「参加者だけ変えて別の会議を作る」目的で使うと、事故が起きます。Outlook の画面上は別の予定に見えているのに、Teams 会議としては同じ会議のまま、という状態になるからです。今日はこの一点を丁寧に解きます。
+  - id: profile
+    title: 解説する人：胡田 昌彦
+    durationInFrames: 180
+    notes: 解説する胡田昌彦です。Microsoft MVP を14年連続で受賞し、Windows・Azure・Microsoft 365 を実機で検証してきました。今日は管理者向けの設定の話ではなく、利用者が日常的に踏む落とし穴の話です。社内への周知ネタとしても使えます。
+  - id: question
+    title: 複製したら、Teams会議のURLはどうなる？
+    durationInFrames: 200
+    notes: 最初に質問です。Teams 会議つきの予定を複製して、出席者を別の人に差し替えました。このとき、Teams 会議の URL は新しく発行されるでしょうか、それとも元のままでしょうか。答えは元のままです。この一行が、今日の話のすべての起点になります。
+  - id: section-what
+    title: SECTION 1 ─ 「イベントを複製」とは
+    durationInFrames: 140
+    notes: まず機能そのものの説明からです。何ができる機能なのかをはっきりさせます。
+  - id: what-is-it
+    title: 既存の予定を土台に、新しい予定を作る
+    durationInFrames: 225
+    notes: 「イベントを複製」は、既存の予定に設定されている件名・場所・参加者といった情報を再利用して、新しい予定を作る機能です。Outlook on the web、新しい Outlook for Windows、そして Teams のカレンダーで、予定を右クリックすると出てきます。同じメンバーでもう一度ミーティングを開きたいとき、不定期の打ち合わせの次回を作りたいとき、毎回ゼロから作らなくて済みます。
+  - id: not-copy-paste
+    title: 従来Outlookの「会議のコピー」とは別の機能
+    durationInFrames: 235
+    notes: ここで一つ、混同されやすい点があります。従来の Outlook for Windows でやっていた、会議のコピー＆ペースト。あれはマイクロソフトとしてサポートしていません。公開情報でも、会議のコピーはブロックされると案内されています。では新しい Outlook の「イベントを複製」もダメなのか。そうではありません。仕組みが違う、別の機能です。
+  - id: supported
+    title: 「イベントを複製」による会議の複製は、サポートされています
+    durationInFrames: 195
+    notes: 「イベントを複製」は、新しい Outlook や Outlook on the web で既存のイベント情報を再利用して新しいイベントを作るために開発された機能です。従来の Outlook のコピー＆ペーストとは仕組みが異なるため、この機能による会議の複製はサポートされています。使ってはいけない機能ではありません。ただし、使い方には注意が要る。次からが本題です。
+  - id: section-caution
+    title: SECTION 2 ─ 注意すべきはTeams会議
+    durationInFrames: 140
+    notes: 注意が必要なのは、Teams 会議が設定されたイベントを複製する場合です。
+  - id: url-inherited
+    title: Teams会議のURLは、複製元のものが引き継がれる
+    durationInFrames: 215
+    notes: Teams 会議つきのイベントを複製すると、Teams 会議の URL は複製元のものがそのまま引き継がれます。新しい会議 URL が発行されるわけではありません。ここを知らないまま出席者を差し替えると、事故になります。
+  - id: url-is-not-a-link
+    title: URLは「入口のリンク」ではなく、会議そのもの
+    durationInFrames: 240
+    notes: 重要なのは、Teams 会議の URL が単なる参加するためのリンクではない、という点です。Teams 会議には、その会議に紐づくチャットやファイルなどの情報があります。URL が同じということは、その中身も同じものを共有しているということです。だから URL の引き継ぎは、見た目以上に重い話になります。
+  - id: scenario
+    title: 起きること：AさんとBさんの会議を、Cさん用に複製した
+    durationInFrames: 260
+    notes: 具体例です。開催者の A さんが、B さんと Teams 会議をしました。同じ趣旨の話を C さんともしたいので、B さんとの会議を複製して、出席者を C さんに差し替えました。Outlook 上は、A さんと C さんの新しい会議に見えます。ところが Teams 会議としては、B さんとの会議と同じものです。
+  - id: consequences
+    title: 何が起きるか
+    durationInFrames: 250
+    notes: 結果として、こういうことが起きます。Teams 会議側の参加者情報が元の会議のまま、つまり B さんのままになる。A さんと C さんで話すはずの会議に、B さんが参加できてしまう。そして C さんがそのチャットに書き込んだり、ファイルを共有したりすると、それが B さんにも見えてしまう。単なる参加者の混乱ではなく、意図しない相手への情報共有につながります。
+  - id: section-use
+    title: SECTION 3 ─ どう使えばいいか
+    durationInFrames: 140
+    notes: では、この機能はどう使うのが正解なのか。実はとてもシンプルです。
+  - id: good-cases
+    title: 「同じ趣旨・同じ参加者」なら、複製が活きる
+    durationInFrames: 240
+    notes: おすすめの使い方は、同じ趣旨の会議で、参加者も同じ場合です。同じメンバーで前回の続きをやる。同じメンバーで次回の打ち合わせを設定する。こういう場面なら、会議を作る手間が減るうえに、Teams 会議が引き継がれること自体がメリットになります。前回のチャットもファイルも、そのまま続きとして使えるからです。
+  - id: rule
+    title: 参加者が変わるなら、複製しない
+    durationInFrames: 200
+    notes: 覚えて帰っていただきたいのは、この一行です。参加者が変わるなら、複製しない。新しく作る。逆に、参加者が同じで前回の続きなら、複製が最適です。判断基準は「参加者が同じかどうか」だけです。
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 230
+    notes: まとめます。「イベントを複製」は、新しい Outlook と Outlook on the web の機能で、会議の複製はサポートされています。従来の Outlook のコピー＆ペーストとは別物です。ただし Teams 会議の URL は複製元から引き継がれるため、参加者を変えて別の会議として使うと、意図しない相手が会議に入れたり、チャットやファイルが見えたりします。前回の続きの会議を作る目的で使えば、混乱なくメリットだけを活かせます。
+  - id: sources
+    title: 出典
+    durationInFrames: 190
+    notes: 出典です。日本マイクロソフトの Exchange・Outlook サポートチームの公式ブログ記事と、従来の Outlook の会議コピーに関する公開情報です。記事は2026年9月3日時点の情報をもとに書かれています。仕様は変わる可能性があるので、実際の運用前には必ず最新の公式情報をご確認ください。
+  - id: thanks
+    title: ご視聴ありがとうございました
+    durationInFrames: 160
+    notes: ご視聴ありがとうございました。高評価とチャンネル登録をお願いします。
