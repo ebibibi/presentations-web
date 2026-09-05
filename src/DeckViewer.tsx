@@ -65,6 +65,7 @@ export function DeckViewer({
   const playerRef = useRef<PlayerRef>(null)
   const recordingPlayerRef = useRef<PlayerRef>(null)
   const recordingSurfaceRef = useRef<HTMLDivElement>(null)
+  const slideFrameRef = useRef<HTMLDivElement>(null)
   const smoothSeekRef = useRef<number | null>(null)
   const studioPlaybackResetRef = useRef(false)
   const slideStarts = useMemo(() => getSlideStarts(deck), [deck])
@@ -313,6 +314,16 @@ export function DeckViewer({
     await recordingSurfaceRef.current?.requestFullscreen()
   }, [])
 
+  // Project the slide itself. Unlike the recording surface this has no reserved
+  // side panel, so an event projector shows the slide and nothing else.
+  const toggleSlideFullscreen = useCallback(async () => {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen()
+      return
+    }
+    await slideFrameRef.current?.requestFullscreen()
+  }, [])
+
   const playTimeline = useCallback(() => {
     if (isStudioRoute && auth.canRecord && isStudio) {
       targetIndexRef.current = 0
@@ -399,6 +410,10 @@ export function DeckViewer({
           <h1>{deck.meta.title}</h1>
         </div>
         <div className="viewer-actions">
+          <button type="button" onClick={toggleSlideFullscreen} title="スライドだけを全画面表示">
+            <Fullscreen size={18} aria-hidden />
+            全画面
+          </button>
           {isStudioRoute && auth.canRecord ? (
             <>
               <button
@@ -458,7 +473,7 @@ export function DeckViewer({
             } as CSSProperties
           }
         >
-          <div className="slide-frame">
+          <div className="slide-frame" ref={slideFrameRef}>
             <Player
               ref={playerRef}
               component={isStudio ? StudioDeckTimeline : DeckTimeline}
