@@ -11683,3 +11683,25 @@ main {
 .h77-quad > .h77-card {
   min-height: 0;
 }
+
+/* Projecting a deck at an event: fullscreen the slide itself, with no reserved
+   side panel. The Remotion player keeps the deck aspect ratio inside the black
+   surface, so a non-16:9 projector letterboxes instead of stretching. */
+
+.slide-frame:fullscreen {
+  aspect-ratio: auto;
+  background: #000;
+  height: 100vh;
+  width: 100vw;
+}
+
+.slide-frame:fullscreen .nav-zone {
+  opacity: 0;
+  transition: opacity 160ms ease;
+  z-index: 3;
+}
+
+.slide-frame:fullscreen .nav-zone:hover,
+.slide-frame:fullscreen .nav-zone:focus-visible {
+  opacity: 1;
+}
