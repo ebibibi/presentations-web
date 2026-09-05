@@ -10,6 +10,7 @@ import {
   Play,
   StickyNote
 } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Player, type PlayerRef } from '@remotion/player'
 import { AuthControls } from './AuthControls'
@@ -51,6 +52,10 @@ export function DeckViewer({
     initialMode === 'studio' ? 'hook' : null
   )
   const [isTimelinePlaying, setIsTimelinePlaying] = useState(false)
+  // Deck canvas. Most decks use the 1280x1080 studio canvas; a deck can opt into
+  // a full 16:9 surface with `canvas: wide` in deck.yaml.
+  const canvas = deck.meta.canvas === 'wide' ? { width: 1920, height: 1080 } : { width: 1280, height: 1080 }
+
   const isStudio = mode === 'studio'
   const isStudioRoute = initialMode === 'studio'
   // Tracks the slide we are heading to, updated synchronously on every
@@ -444,14 +449,22 @@ export function DeckViewer({
       ) : null}
 
       {isStudioRoute && !auth.canRecord ? null : (
-        <section className={isStudio ? 'stage-shell studio' : 'stage-shell audience'}>
+        <section
+          className={isStudio ? 'stage-shell studio' : 'stage-shell audience'}
+          style={
+            {
+              '--slide-canvas-width': canvas.width,
+              '--slide-canvas-height': canvas.height
+            } as CSSProperties
+          }
+        >
           <div className="slide-frame">
             <Player
               ref={playerRef}
               component={isStudio ? StudioDeckTimeline : DeckTimeline}
               durationInFrames={Math.max(isStudio ? studioTotalFrames : totalFrames, 1)}
-              compositionWidth={1280}
-              compositionHeight={1080}
+              compositionWidth={canvas.width}
+              compositionHeight={canvas.height}
               fps={fps}
               initialFrame={isStudio ? studioDisplayFrame : getSlideSettledFrame(slideIndex)}
               controls={false}
@@ -531,8 +544,8 @@ export function DeckViewer({
                 ref={recordingPlayerRef}
                 component={StudioDeckTimeline}
                 durationInFrames={Math.max(studioTotalFrames, 1)}
-                compositionWidth={1280}
-                compositionHeight={1080}
+                compositionWidth={canvas.width}
+                compositionHeight={canvas.height}
                 fps={fps}
                 initialFrame={studioDisplayFrame}
                 controls={false}

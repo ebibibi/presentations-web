@@ -1,0 +1,109 @@
+slug: hccjp-77-arc-operations
+title: 「Azure Arc、便利なのはわかった。で、壊れたら？」 ─ 運用で気になることを試してみた
+summary: Azure Arc で繋げばオンプレの管理は楽になる。では本番運用に入れる前に確かめておきたいこと ─ パッチで壊れた、スナップショットで巻き戻した、バックアップから復元した、そのとき Azure 側はどうなるのか ─ を実機で検証した記録。Arc 経由で使える機能の棚卸しから、Azure Update Manager、無料化された Hotpatch、そして「戻し方」まで。HCCJP 第77回勉強会（2026-09-11）の進行スライド。
+status: unlisted
+visibility: public
+createdAt: "2026-09-05"
+updatedAt: "2026-09-05"
+canvas: wide
+order: 77
+tags:
+  - azure-arc
+  - hybrid-cloud
+  - azure-update-manager
+  - hotpatch
+  - backup
+  - hccjp
+slides:
+  - id: opening
+    title: Azure Arc、便利なのはわかった。で、壊れたら？
+    durationInFrames: 240
+    notes: HCCJP第77回勉強会を始めます。今日のテーマは「Azure Arc、便利なのはわかった。で、壊れたら？」です。前回まででArcを使うとオンプレの管理が楽になることはお見せしました。今日はその先、本番運用に入れる前に確かめておきたいことを、実機で片っ端から試した結果をお話しします。
+  - id: agenda
+    title: 本日の流れ
+    durationInFrames: 200
+    notes: 本日の流れです。14時5分から45分ほど私のセッション、そのあとQ&A、15時から高添さんのAdaptive Cloud最新動向、最後にクロージングという構成です。
+  - id: profile
+    title: 話す人
+    durationInFrames: 170
+    notes: 胡田昌彦です。日本ビジネスシステムズ株式会社に所属し、Microsoft MVPを14年連続で受賞しています。HCCJPの主幹事もしています。
+  - id: recap76
+    title: 前回のおさらい ─ Arcで繋ぐと、ここまで楽になる
+    durationInFrames: 230
+    notes: 前回、第76回では、オンプレのサーバーをその場で壊して、AIエージェントに直してもらいました。誰もそのサーバーにログインせず、VPNも踏み台もなしで、Azure越しに調査から復旧まで通しました。Arcで繋いでおけば、オンプレの面倒くささはかなり消える、というところまではお見せできたと思います。
+  - id: the-wall
+    title: でも、本番に入れるとなると
+    durationInFrames: 260
+    notes: ただ、そこから「じゃあ本番でも使おう」に進むには、もうひとつ越える壁があります。何かあったとき、どうなるのか。パッチを当てて壊れた、巻き戻した、復元した。そのときAzure側はどうなっているのか。ここが分からないままだと、いざというときに手が止まります。
+  - id: inventory
+    title: まず棚卸し ─ Arc経由で何が手に入るのか
+    durationInFrames: 250
+    notes: 本題の前に、Arcで繋ぐと何が手に入るのかを整理します。公式は統制・保護・構成・監視の4つに分けています。エージェント1本入れるだけで、この全部が使えるようになります。
+  - id: proof
+    title: 実際に動かして確かめた
+    durationInFrames: 240
+    notes: 一覧で見せるだけでは意味がないので、実際に動かしました。Arc経由のコマンド実行は42秒で返ってきます。マネージドIDのトークンもゲストの中から取れました。拡張機能の配布も動きます。全部、インバウンドのポートを開けずにです。
+  - id: update-manager
+    title: Azure Update Manager ─ オンプレもクラウドも1画面
+    durationInFrames: 240
+    notes: 今日の中心にあるのがAzure Update Managerです。AzureのVMもオンプレのサーバーも、同じ画面でパッチの状態を見て、メンテナンス時間を決めて当てられます。ただし課金の線引きがあって、Azure VMは無料、Arc対応サーバーは1台あたり月5ドルです。
+  - id: hotpatch
+    title: Hotpatch が、無料になっていました
+    durationInFrames: 230
+    notes: そしてこれはぜひ知っていただきたいのですが、2026年5月19日から、Windows Server 2025のHotpatchがArc接続マシンで追加費用ゼロになりました。GAした2025年7月時点ではコアあたり月1.5ドルの有償でしたが、per-coreのメーターごと廃止されています。再起動を減らせる選択肢が、オンプレの資産にタダで降りてきています。
+  - id: two-nets
+    title: 戻す手段は二段構え
+    durationInFrames: 250
+    notes: ここから本題です。パッチを当てる前に、戻せる手段を用意しますよね。ここで大事なのは、チェックポイントとバックアップは役割が違うということです。チェックポイントは同じホストの同じストレージに乗るので、ホストごと死んだら一緒に消えます。速く戻せるかわりに、保険にはならない。
+  - id: checkpoint-doc
+    title: 「スナップショットはダメ」は半分だけ正しい
+    durationInFrames: 240
+    notes: よく「本番でスナップショットを使うな」と言われますが、公式ドキュメントの冒頭には、ソフトウェア更新を当てる前にチェックポイントを作るとよい、と書かれています。ダメなのはバックアップの代わりに使うことです。ただし標準チェックポイントはADのような分散レプリケーションで不整合を起こすので、本番チェックポイントを明示的に選んでください。
+  - id: experiment
+    title: 【実験】Azureが先へ進んだあとに、ローカルだけ巻き戻す
+    durationInFrames: 280
+    notes: そこで実験を組みました。Arcに繋いだWindows Server 2025とUbuntuに、拡張機能と構成ポリシーを配ります。チェックポイントを取ります。その後Azure側から変更を進めます。そして巻き戻す。Azureは先に進んでいて、ローカルだけ過去に戻る。この状態で何が起きるかを測りました。
+  - id: result-ext
+    title: 【結果1】拡張機能は、自力で追いついた
+    durationInFrames: 280
+    notes: 結果です。拡張機能は両方のOSで自動的に追いつきました。Linuxは巻き戻しから約80秒。Windowsは約9分かかり、しかも2段階でした。まず巻き戻したローカルの古い設定でそのまま1回実行し、その8分後にAzureの最新を取り直しています。つまり一時的に古い状態が復活する窓があります。
+  - id: result-blind
+    title: 【結果2】Azureは、巻き戻しに気づかない
+    durationInFrames: 260
+    notes: そしてこれが重要です。巻き戻しと再起動をまたいでも、Azureポータルのステータスは終始Connected、拡張機能はSucceededのままでした。ハートビートは5分ごと、15分途切れて初めてDisconnectedになるので、その猶予に収まってしまいます。ポータルの緑は、実機の中身を保証していません。
+  - id: result-mc
+    title: 【結果3】構成ポリシーは、直りませんでした
+    durationInFrames: 270
+    notes: 一方で、machine configurationは自動修正されませんでした。ApplyAndAutoCorrect、つまりドリフトしたら直すモードで割り当てていたのに、35分待っても実機は元の値のままで、NonCompliantが記録され続けました。評価は動いているのに、修正が効いていない。ここは原因を特定できていないので、正直に未解明としてお伝えします。
+  - id: byproducts
+    title: ついでに分かったこと
+    durationInFrames: 250
+    notes: 検証の途中で分かったことも共有します。Azure側のリソースを消すと、エージェントは自力で復帰できません。実際このラボは22日間ずっとDisconnectedのまま、トークンが取れないというエラーを出し続けていました。復旧はコマンド2つ、1分から2分です。
+  - id: backup-line
+    title: バックアップと復元 ─ サポート内と、その外
+    durationInFrames: 260
+    notes: バックアップの話もします。Microsoft純正でHyper-VのVMを丸ごと守るならMABSが必要です。そして復元先で扱いが変わります。元のVMインスタンスに戻すのは公式にworks as expected。別の場所に戻すと管理対象外のVMになり、Azure Local VMには変換できません。つまり元の場所に戻す設計にすれば、全部サポート内で回ります。
+  - id: checklist
+    title: 持ち帰っていただきたい ─ 戻し方チェックリスト
+    durationInFrames: 270
+    notes: 今日いちばん持ち帰っていただきたいのがこれです。復元や巻き戻しのあとに何を確認するか。Arcの接続状態、拡張機能が最新の設定で再適用されたか、構成ポリシーは手で是正が要るか、そしてパッチのコンプライアンス表示は再評価したか。この4つです。
+  - id: conclusion
+    title: だから、運用に入れていい
+    durationInFrames: 260
+    notes: まとめです。Arcは思ったより強い。拡張機能は自力で追いつきますし、Azure側のオブジェクトは巻き戻しでは消えません。ただし追いつくまでに時間差があり、その間ポータルは緑です。そして構成ポリシーのように追いついてこないものもある。だからこそ、戻し方を手元に持っておけば、Arcは安心して運用に入れられます。Update Managerも使っていきましょう。
+  - id: next-session
+    title: 続いて ─ Microsoft "Adaptive Cloud" 最新動向
+    durationInFrames: 180
+    notes: それではここからは高添さんに、Microsoft Adaptive Cloudの最新動向をお話しいただきます。高添さん、よろしくお願いします。
+  - id: qa
+    title: 質疑応答
+    durationInFrames: 180
+    notes: 質疑応答の時間です。チャットにいただいた質問にお答えしていきます。
+  - id: promo-1003
+    title: 【告知】10月3日、ITと音楽の文化祭やります
+    durationInFrames: 300
+    notes: 最後に個人的な告知をさせてください。10月3日の土曜日、千葉県南柏のライブバー「ケサラ」で、胡田昌彦のITと音楽の文化祭2026というイベントをやります。前半はIT勉強会、後半は東京事変のコピーバンドでライブをやります。私はバンドのメンバーでもあります。参加は無料、connpassで募集しています。ITと音楽、両方好きな方はぜひ遊びに来てください。
+  - id: closing
+    title: ありがとうございました
+    durationInFrames: 200
+    notes: 本日はご参加ありがとうございました。次回は10月9日、第2金曜日の14時からです。またお会いしましょう。
