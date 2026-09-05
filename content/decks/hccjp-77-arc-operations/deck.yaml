@@ -2,7 +2,7 @@ slug: hccjp-77-arc-operations
 title: 「Azure Arc、便利なのはわかった。で、壊れたら？」 ─ 運用で気になることを試してみた
 summary: Azure Arc で繋げばオンプレの管理は楽になる。では本番運用に入れる前に確かめておきたいこと ─ パッチで壊れた、スナップショットで巻き戻した、バックアップから復元した、そのとき Azure 側はどうなるのか ─ を実機で検証した記録。Arc 経由で使える機能の棚卸しから、Azure Update Manager、無料化された Hotpatch、そして「戻し方」まで。HCCJP 第77回勉強会（2026-09-11）の進行スライド。
 status: draft
-visibility: public
+visibility: private
 createdAt: "2026-09-05"
 updatedAt: "2026-09-05"
 canvas: wide
