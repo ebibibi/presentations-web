@@ -475,11 +475,17 @@ main {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* Audience slides are nearly square (1280x1080); cap the width so the whole
-   slide fits within the viewport height instead of overflowing into a
-   vertical scroll. min() keeps it full-width on narrow/mobile screens. */
+/* Audience slides default to a nearly square canvas (1280x1080); cap the width
+   so the whole slide fits within the viewport height instead of overflowing
+   into a vertical scroll. min() keeps it full-width on narrow/mobile screens.
+   A deck with `canvas: wide` sets the custom properties to 1920x1080. */
 .stage-shell.audience .slide-frame {
-  width: min(100%, calc((100dvh - 168px) * (1280 / 1080)));
+  width: min(
+    100%,
+    calc(
+      (100dvh - 168px) * (var(--slide-canvas-width, 1280) / var(--slide-canvas-height, 1080))
+    )
+  );
   margin-inline: auto;
 }
 
@@ -488,7 +494,7 @@ main {
 }
 
 .slide-frame {
-  aspect-ratio: 1280 / 1080;
+  aspect-ratio: var(--slide-canvas-width, 1280) / var(--slide-canvas-height, 1080);
   background: #0f1412;
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -10754,3 +10760,926 @@ main {
 .dup-thanks svg { color: var(--dup-green); }
 .dup-thanks h1 { font-size: 76px; }
 .dup-thanks p { font-size: 32px; }
+
+/* ─────────────────────────────────────────────────────────────
+   HCCJP 77 ─ Azure Arc operations deck (wide 1920x1080 canvas)
+   ───────────────────────────────────────────────────────────── */
+
+.h77-slide {
+  --h77-navy: #08111f;
+  --h77-cyan: #6edcff;
+  --h77-amber: #ffb454;
+  --h77-green: #52d7a0;
+  --h77-red: #ff7a7a;
+  background: linear-gradient(140deg, #0a1628 0%, #08111f 55%, #0c1c30 100%);
+  color: #eaf3ff;
+  padding: 64px 84px;
+}
+
+.h77-grid {
+  background-image:
+    linear-gradient(rgba(110, 220, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(110, 220, 255, 0.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+  inset: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.h77-slide > *:not(.h77-grid):not(.h77-logo):not(.h77-speaker):not(.h77-source):not(.h77-promo-glow) {
+  position: relative;
+  z-index: 1;
+}
+
+.h77-logo,
+.h77-speaker,
+.h77-source {
+  z-index: 2;
+}
+
+.h77-kicker {
+  color: var(--h77-cyan);
+  display: block;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.h77-kicker-warm {
+  color: var(--h77-amber);
+}
+
+.h77-head {
+  margin-bottom: 30px;
+}
+
+.h77-slide h1 {
+  color: #fff;
+  font-size: 62px;
+  line-height: 1.12;
+  margin: 0;
+  max-width: 1500px;
+}
+
+.h77-slide h2 {
+  color: #fff;
+  font-size: 32px;
+  margin: 0 0 12px;
+}
+
+.h77-slide p,
+.h77-slide li {
+  font-size: 25px;
+  line-height: 1.55;
+}
+
+.h77-slide code {
+  background: rgba(110, 220, 255, 0.12);
+  border-radius: 6px;
+  color: var(--h77-cyan);
+  font-size: 0.92em;
+  padding: 2px 8px;
+}
+
+.h77-logo {
+  height: 62px;
+  opacity: 0.9;
+  position: absolute;
+  right: 72px;
+  top: 56px;
+  width: auto;
+}
+
+.h77-note {
+  color: rgba(234, 243, 255, 0.72);
+  font-size: 23px;
+}
+
+.h77-center {
+  text-align: center;
+}
+
+.h77-source {
+  bottom: 34px;
+  color: rgba(234, 243, 255, 0.45);
+  font-size: 18px;
+  left: 84px;
+  position: absolute;
+  text-decoration: none;
+}
+
+/* Opening ---------------------------------------------------- */
+
+.h77-opening {
+  align-items: center;
+  display: grid;
+  gap: 70px;
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+.h77-opening-copy {
+  grid-column: 1;
+}
+
+.h77-opening-visual {
+  grid-column: 2;
+}
+
+.h77-opening-copy h1 {
+  font-size: 82px;
+  line-height: 1.08;
+}
+
+.h77-opening-copy em {
+  color: var(--h77-cyan);
+  font-style: normal;
+}
+
+.h77-opening-copy p {
+  color: rgba(234, 243, 255, 0.8);
+  font-size: 30px;
+  margin-top: 26px;
+}
+
+.h77-opening-visual {
+  display: grid;
+  place-items: center;
+}
+
+.h77-orbit {
+  align-items: center;
+  display: grid;
+  gap: 26px;
+  justify-items: center;
+}
+
+.h77-ic-cloud {
+  color: var(--h77-cyan);
+}
+
+.h77-ic-server {
+  color: #cfe3ff;
+}
+
+.h77-ic-rewind {
+  color: var(--h77-amber);
+}
+
+.h77-dash {
+  background-image: linear-gradient(
+    to bottom,
+    var(--h77-cyan) 0 14px,
+    transparent 14px 30px
+  );
+  background-size: 6px 30px;
+  height: 120px;
+  width: 6px;
+}
+
+.h77-speaker {
+  bottom: 56px;
+  color: rgba(234, 243, 255, 0.66);
+  font-size: 24px;
+  left: 84px;
+  position: absolute;
+}
+
+/* Tables ----------------------------------------------------- */
+
+.h77-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.h77-table th,
+.h77-table td {
+  border-bottom: 1px solid rgba(110, 220, 255, 0.18);
+  font-size: 25px;
+  padding: 16px 18px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.h77-table th {
+  color: var(--h77-cyan);
+  font-size: 26px;
+}
+
+.h77-table th svg {
+  vertical-align: -6px;
+  margin-right: 8px;
+}
+
+.h77-th {
+  color: rgba(234, 243, 255, 0.68);
+}
+
+.h77-agenda .h77-time {
+  color: var(--h77-cyan);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  width: 130px;
+}
+
+.h77-agenda .h77-dur {
+  color: rgba(234, 243, 255, 0.55);
+  width: 100px;
+}
+
+.h77-agenda .h77-title {
+  color: #fff;
+}
+
+.h77-agenda .h77-who {
+  color: rgba(234, 243, 255, 0.7);
+  text-align: right;
+  width: 240px;
+}
+
+.h77-compare td:nth-child(2) {
+  color: var(--h77-amber);
+}
+
+.h77-compare td:nth-child(3) {
+  color: var(--h77-green);
+}
+
+.h77-support .h77-ok {
+  color: var(--h77-green);
+}
+
+.h77-support .h77-ng {
+  color: var(--h77-red);
+}
+
+/* Cards ------------------------------------------------------ */
+
+.h77-two {
+  display: grid;
+  gap: 34px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.h77-two-tight {
+  gap: 26px;
+}
+
+.h77-quad {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.h77-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(110, 220, 255, 0.22);
+  border-radius: 18px;
+  padding: 28px 30px;
+}
+
+.h77-card ul {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.h77-card li {
+  font-size: 23px;
+  margin-bottom: 8px;
+}
+
+.h77-card-head {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.h77-card-head svg {
+  color: var(--h77-cyan);
+}
+
+.h77-card-head h2 {
+  margin: 0;
+}
+
+.h77-card-quiet {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.h77-card-accent {
+  border-color: rgba(255, 180, 84, 0.45);
+}
+
+.h77-card-good {
+  border-color: rgba(82, 215, 160, 0.5);
+}
+
+.h77-card-warn {
+  border-color: rgba(255, 180, 84, 0.5);
+}
+
+.h77-card-bad {
+  border-color: rgba(255, 122, 122, 0.45);
+}
+
+/* Recap ------------------------------------------------------ */
+
+.h77-recap {
+  display: grid;
+  gap: 34px;
+  grid-template-columns: 1.3fr 0.7fr;
+}
+
+.h77-lead {
+  font-size: 32px;
+}
+
+.h77-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 26px 0;
+}
+
+.h77-chips span {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(110, 220, 255, 0.24);
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 23px;
+  gap: 10px;
+  padding: 10px 20px;
+}
+
+.h77-chips svg {
+  color: var(--h77-cyan);
+}
+
+.h77-recap-side {
+  align-content: center;
+  background: rgba(110, 220, 255, 0.08);
+  border-radius: 18px;
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  padding: 28px;
+  text-align: center;
+}
+
+.h77-recap-side svg {
+  color: var(--h77-cyan);
+}
+
+/* The wall --------------------------------------------------- */
+
+.h77-big-q {
+  color: var(--h77-amber);
+  font-size: 40px;
+  font-weight: 800;
+  margin: 6px 0 24px;
+}
+
+.h77-qlist {
+  display: grid;
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.h77-qlist li {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.045);
+  border-left: 4px solid var(--h77-amber);
+  border-radius: 0 12px 12px 0;
+  display: flex;
+  gap: 18px;
+  padding: 16px 24px;
+}
+
+.h77-qlist svg {
+  color: var(--h77-amber);
+  flex: none;
+}
+
+/* Rows ------------------------------------------------------- */
+
+.h77-rows {
+  display: grid;
+  gap: 16px;
+}
+
+.h77-row {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.045);
+  border-radius: 14px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 60px 1fr 40px 1fr;
+  padding: 20px 26px;
+}
+
+.h77-row-ic svg {
+  color: var(--h77-cyan);
+}
+
+.h77-row-arrow {
+  color: rgba(234, 243, 255, 0.45);
+}
+
+.h77-row-got {
+  color: var(--h77-green);
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.h77-rows-tall .h77-row-block {
+  align-items: start;
+  grid-template-columns: 48px 1fr;
+}
+
+.h77-row-block svg {
+  color: var(--h77-amber);
+  margin-top: 4px;
+}
+
+.h77-row-block strong {
+  color: #fff;
+  display: block;
+  font-size: 27px;
+  margin-bottom: 6px;
+}
+
+.h77-row-block p {
+  color: rgba(234, 243, 255, 0.75);
+  font-size: 23px;
+  margin: 0;
+}
+
+/* Pricing / hotpatch ----------------------------------------- */
+
+.h77-price {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.h77-price div {
+  align-items: baseline;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.h77-price strong {
+  color: var(--h77-amber);
+  font-size: 34px;
+}
+
+.h77-timeline2 {
+  align-items: center;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr 70px 1fr;
+  margin: 20px 0 34px;
+}
+
+.h77-tl-item {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(110, 220, 255, 0.2);
+  border-radius: 18px;
+  padding: 26px 30px;
+}
+
+.h77-tl-item p {
+  margin: 8px 0;
+}
+
+.h77-tl-date {
+  color: var(--h77-cyan);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.h77-tl-item strong {
+  font-size: 38px;
+}
+
+.h77-muted {
+  color: rgba(234, 243, 255, 0.45);
+  text-decoration: line-through;
+}
+
+.h77-tl-now {
+  border-color: rgba(82, 215, 160, 0.6);
+}
+
+.h77-tl-now strong {
+  color: var(--h77-green);
+}
+
+.h77-tl-arrow {
+  color: rgba(234, 243, 255, 0.5);
+  justify-self: center;
+}
+
+.h77-punch,
+.h77-punch-line {
+  align-items: center;
+  background: rgba(110, 220, 255, 0.08);
+  border-radius: 18px;
+  display: flex;
+  gap: 22px;
+  padding: 26px 32px;
+}
+
+.h77-punch svg,
+.h77-punch-line svg {
+  color: var(--h77-amber);
+  flex: none;
+}
+
+.h77-punch-line svg {
+  color: var(--h77-green);
+}
+
+.h77-punch p {
+  margin: 0;
+}
+
+/* Quote ------------------------------------------------------ */
+
+.h77-quote {
+  border-left: 5px solid var(--h77-cyan);
+  color: #fff;
+  font-size: 30px;
+  line-height: 1.5;
+  margin: 0 0 26px;
+  padding: 14px 0 14px 30px;
+}
+
+/* Experiment steps ------------------------------------------- */
+
+.h77-steps {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.h77-step {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(110, 220, 255, 0.2);
+  border-radius: 16px;
+  padding: 24px 22px;
+}
+
+.h77-step-no {
+  color: var(--h77-cyan);
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.h77-step p {
+  font-size: 24px;
+  margin: 10px 0 8px;
+}
+
+.h77-step small {
+  color: rgba(234, 243, 255, 0.55);
+  font-size: 20px;
+}
+
+.h77-env {
+  align-items: center;
+  color: rgba(234, 243, 255, 0.7);
+  display: flex;
+  font-size: 23px;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.h77-env svg {
+  color: var(--h77-cyan);
+}
+
+/* Metrics ---------------------------------------------------- */
+
+.h77-metric {
+  color: var(--h77-green);
+  font-size: 56px;
+  font-weight: 800;
+  margin: 10px 0 14px;
+}
+
+.h77-metric-bad {
+  color: var(--h77-red);
+}
+
+/* Split (Azure vs real) -------------------------------------- */
+
+.h77-split {
+  align-items: center;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr 260px 1fr;
+}
+
+.h77-split-side {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  display: grid;
+  gap: 16px;
+  padding: 30px;
+}
+
+.h77-side-label {
+  color: var(--h77-cyan);
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.h77-status-ok {
+  align-items: center;
+  color: var(--h77-green);
+  display: flex;
+  font-size: 30px;
+  gap: 14px;
+}
+
+.h77-split-vs {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  text-align: center;
+}
+
+.h77-split-vs svg {
+  color: var(--h77-amber);
+}
+
+.h77-split-vs span {
+  color: rgba(234, 243, 255, 0.7);
+  font-size: 22px;
+}
+
+.h77-split-real {
+  border: 1px solid rgba(255, 180, 84, 0.4);
+}
+
+/* Machine config --------------------------------------------- */
+
+.h77-mc {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.h77-mc-expect,
+.h77-mc-real {
+  background: rgba(255, 255, 255, 0.045);
+  border-radius: 18px;
+  padding: 30px;
+}
+
+.h77-mc-real {
+  border: 1px solid rgba(255, 122, 122, 0.4);
+}
+
+/* Checklist -------------------------------------------------- */
+
+.h77-check {
+  display: grid;
+  gap: 18px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.h77-check li {
+  align-items: start;
+  background: rgba(255, 255, 255, 0.045);
+  border-radius: 16px;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 62px 1fr;
+  padding: 22px 28px;
+}
+
+.h77-check-no {
+  align-items: center;
+  background: var(--h77-cyan);
+  border-radius: 50%;
+  color: #08111f;
+  display: grid;
+  font-size: 28px;
+  font-weight: 800;
+  height: 52px;
+  justify-content: center;
+  width: 52px;
+}
+
+.h77-check strong {
+  color: #fff;
+  display: block;
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.h77-check p {
+  color: rgba(234, 243, 255, 0.75);
+  font-size: 23px;
+  margin: 0;
+}
+
+/* Conclusion ------------------------------------------------- */
+
+.h77-conc {
+  display: grid;
+  gap: 22px;
+}
+
+.h77-conc > div {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.045);
+  border-radius: 16px;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 60px 1fr;
+  padding: 24px 30px;
+}
+
+.h77-conc svg {
+  color: var(--h77-green);
+}
+
+.h77-conc p {
+  margin: 0;
+  font-size: 27px;
+}
+
+/* Section breaks --------------------------------------------- */
+
+.h77-section-break,
+.h77-closing {
+  align-content: center;
+  justify-items: center;
+  display: grid;
+  text-align: center;
+}
+
+.h77-break-body h1 {
+  font-size: 76px;
+  margin: 12px 0 20px;
+}
+
+.h77-break-body p {
+  color: rgba(234, 243, 255, 0.75);
+  font-size: 30px;
+}
+
+.h77-links {
+  color: rgba(234, 243, 255, 0.6);
+  display: flex;
+  font-size: 24px;
+  gap: 34px;
+  justify-content: center;
+  margin-top: 34px;
+}
+
+/* Promo (2026-10-03) ----------------------------------------- */
+
+.h77-promo {
+  background: linear-gradient(135deg, #1b1026 0%, #24122c 50%, #341a2a 100%);
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.h77-promo-glow {
+  background: radial-gradient(circle at 78% 42%, rgba(255, 180, 84, 0.28), transparent 62%);
+  inset: 0;
+  position: absolute;
+}
+
+.h77-promo-body h1 {
+  font-size: 74px;
+  line-height: 1.1;
+}
+
+.h77-promo-body em {
+  color: var(--h77-amber);
+  font-style: normal;
+}
+
+.h77-promo-lead {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 30px;
+  margin: 14px 0 22px;
+}
+
+.h77-promo-list {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+}
+
+.h77-promo-list li {
+  align-items: center;
+  display: flex;
+  font-size: 26px;
+  gap: 14px;
+}
+
+.h77-promo-list svg {
+  color: var(--h77-amber);
+  flex: none;
+}
+
+.h77-promo-note {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 23px;
+}
+
+.h77-promo-link {
+  background: var(--h77-amber);
+  border-radius: 12px;
+  color: #2a1206;
+  display: inline-block;
+  font-size: 27px;
+  font-weight: 800;
+  margin-top: 20px;
+  padding: 14px 26px;
+  text-decoration: none;
+}
+
+.h77-promo-art {
+  color: rgba(255, 180, 84, 0.35);
+  display: grid;
+  place-items: center;
+}
+
+/* h77: layout corrections for the 16:9 canvas.
+   `.h77-slide p` beats a single class, so metric/lead sizes need the same
+   specificity. Main blocks also stretch so slides do not bunch at the top. */
+
+.h77-slide .h77-metric {
+  font-size: 68px;
+  line-height: 1.05;
+  margin: 14px 0 18px;
+}
+
+.h77-slide .h77-lead {
+  font-size: 34px;
+}
+
+.h77-slide .h77-big-q {
+  font-size: 44px;
+}
+
+.h77-slide .h77-promo-lead {
+  font-size: 32px;
+}
+
+.h77-slide .h77-note {
+  font-size: 24px;
+}
+
+.h77-two,
+.h77-quad,
+.h77-rows,
+.h77-steps,
+.h77-check,
+.h77-conc,
+.h77-split,
+.h77-mc,
+.h77-recap,
+.h77-qlist,
+.h77-timeline2 {
+  align-content: center;
+  flex: 1;
+}
+
+.h77-table {
+  flex: 1;
+}
+
+.h77-slide .h77-note.h77-center {
+  flex: none;
+  margin-top: 22px;
+}
+
+.h77-card {
+  align-content: start;
+  display: grid;
+}
+
+.h77-two > .h77-card,
+.h77-quad > .h77-card {
+  min-height: 0;
+}
