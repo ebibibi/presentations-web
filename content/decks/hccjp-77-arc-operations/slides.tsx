@@ -34,6 +34,8 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <InventorySlide {...props} /> },
   { render: (props) => <ProofSlide {...props} /> },
   { render: (props) => <UpdateManagerSlide {...props} /> },
+  { render: (props) => <AssessResultSlide {...props} /> },
+  { render: (props) => <BillingSlide {...props} /> },
   { render: (props) => <HotpatchSlide {...props} /> },
   { render: (props) => <TwoNetsSlide {...props} /> },
   { render: (props) => <CheckpointDocSlide {...props} /> },
@@ -303,7 +305,8 @@ function ProofSlide({ frame }: SlideRenderContext) {
     { icon: <Terminal size={34} />, what: 'Arc経由のコマンド実行（Run Command）', got: '42秒で結果が返る', ok: true },
     { icon: <KeyRound size={34} />, what: 'マネージドID でトークン取得', got: 'ゲスト内から取得成功・有効 24時間', ok: true },
     { icon: <Boxes size={34} />, what: '拡張機能の配布・設定更新', got: '2分以内に実機へ反映', ok: true },
-    { icon: <MonitorCheck size={34} />, what: 'マシン構成（Guest Configuration）', got: '5分ごとに割当取得・15分ごとに評価', ok: true }
+    { icon: <MonitorCheck size={34} />, what: 'マシン構成（Guest Configuration）', got: '5分ごとに割当取得・15分ごとに評価', ok: true },
+    { icon: <KeyRound size={34} />, what: 'Arc 経由の SSH（az ssh arc）', got: 'NAT内側の 10.10.0.41 へ、穴なしで到達', ok: true }
   ]
   return (
     <section className="remotion-slide h77-slide">
@@ -320,7 +323,7 @@ function ProofSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 52), 14)}>
-        すべて、インバウンドのポートを1つも開けずに。
+        すべて、インバウンドのポートを1つも開けずに。ここまで課金はゼロ。
       </p>
     </section>
   )
@@ -331,37 +334,143 @@ function UpdateManagerSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="AZURE UPDATE MANAGER" title="オンプレもクラウドも、1画面で当てる" frame={frame} />
+      <Head kicker="AZURE UPDATE MANAGER" title="同じ画面から、パッチを適用する" frame={frame} />
       <div className="h77-two">
         <div className="h77-card" style={lift(entrance(frame, fps, 12), 20)}>
-          <h2>できること</h2>
+          <h2>評価する</h2>
           <ul>
-            <li>Windows / Linux、Azure / オンプレを同じ画面で評価</li>
-            <li>メンテナンス時間を決めて定期適用（動的スコープ）</li>
-            <li>適用の前後にスクリプトを挟める（pre / post イベント）</li>
-            <li>オンプレ側は Arc で繋ぐだけ・通信はアウトバウンド443のみ</li>
+            <li>Windows / Linux、Azure / オンプレを同じ画面で一覧</li>
+            <li>保留中の更新を分類（セキュリティ／重要／その他）で把握</li>
+            <li>定期評価をポリシーで一括有効化できる</li>
           </ul>
         </div>
-        <div className="h77-card h77-card-accent" style={lift(entrance(frame, fps, 26), 20)}>
-          <h2>課金の線引き</h2>
-          <div className="h77-price">
-            <div>
-              <span>Azure VM</span>
-              <strong>無料</strong>
-            </div>
-            <div>
-              <span>Arc 対応サーバー</span>
-              <strong>$5 / 台 / 月</strong>
-            </div>
-          </div>
-          <p className="h77-note">
-            日割 $0.162 / 台 / 日。オンプレを混ぜた瞬間に有料になる。200台なら年間 $12,000。
-          </p>
+        <div className="h77-card" style={lift(entrance(frame, fps, 24), 20)}>
+          <h2>適用する</h2>
+          <ul>
+            <li>メンテナンス時間を決めて定期適用（動的スコープ）</li>
+            <li>その場で今すぐ適用も可能</li>
+            <li>適用の前後にスクリプトを挟める（pre / post イベント）</li>
+            <li>再起動の扱いも指定できる</li>
+          </ul>
         </div>
       </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 40), 14)}>
+        オンプレ側は Arc で繋ぐだけ。エージェントの通信はアウトバウンド443のみ。
+      </p>
+    </section>
+  )
+}
+
+function AssessResultSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="MEASURED" title="評価してみた ─ 中身はいつもの仕組み" frame={frame} />
+      <table className="h77-table h77-assess">
+        <thead>
+          <tr style={lift(entrance(frame, fps, 8), 14)}>
+            <th />
+            <th>arcwin01 ─ Windows Server 2025</th>
+            <th>arclnx01 ─ Ubuntu 24.04</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style={lift(entrance(frame, fps, 14), 14)}>
+            <td className="h77-th">使われた仕組み</td>
+            <td>
+              <strong>Windows Update</strong>
+            </td>
+            <td>
+              <strong>APT</strong>
+            </td>
+          </tr>
+          <tr style={lift(entrance(frame, fps, 20), 14)}>
+            <td className="h77-th">評価の所要時間</td>
+            <td>約 2 分</td>
+            <td>約 4 分</td>
+          </tr>
+          <tr style={lift(entrance(frame, fps, 26), 14)}>
+            <td className="h77-th">保留中の更新</td>
+            <td>セキュリティ 2 ／ 定義 2 ／ ロールアップ 1 ／ その他 2</td>
+            <td>その他 40 ／ セキュリティ 0</td>
+          </tr>
+          <tr style={lift(entrance(frame, fps, 32), 14)}>
+            <td className="h77-th">再起動保留</td>
+            <td>なし</td>
+            <td>あり</td>
+          </tr>
+        </tbody>
+      </table>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          Linux では <strong>3件が Ubuntu Pro を要求</strong>してエラー（<code>UA_ESM_Required</code>）。
+          <br />
+          評価はできる。でも当てられない ─ ハイブリッドの現実。
+        </span>
+      </p>
+    </section>
+  )
+}
+
+function BillingSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const free = [
+    'Arc に接続する（エージェント導入・オンボード）',
+    'Azure のリソースとして見える・タグを付ける',
+    'RBAC で権限を切る',
+    'Resource Graph で横断検索する',
+    '拡張機能を配る・Run Command を流す・Arc 経由で SSH'
+  ]
+  const paid: Array<[string, string]> = [
+    ['Azure Update Manager', '$5 / 台 / 月（日割 $0.162）'],
+    ['マシン構成（Azure Policy）', '$6 / 台 / 月'],
+    ['Azure Monitor / Log Analytics', '取り込んだデータ量'],
+    ['Microsoft Defender for Servers', 'プランごとの単価'],
+    ['Microsoft Sentinel', '取り込んだデータ量'],
+    ['Change Tracking / Automation', '台数課金（マシン構成と使用権が相互に含まれる）']
+  ]
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="BILLING" title="何をすると、いくら課金されるのか" frame={frame} />
+      <div className="h77-two">
+        <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 10), 20)}>
+          <div className="h77-card-head">
+            <Check size={38} />
+            <h2>無料 ─ Arc のコントロールプレーン</h2>
+          </div>
+          <ul>
+            {free.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <p className="h77-note">繋ぐだけなら、1円もかからない。</p>
+        </div>
+        <div className="h77-card h77-card-accent" style={lift(entrance(frame, fps, 24), 20)}>
+          <div className="h77-card-head">
+            <Zap size={38} />
+            <h2>課金 ─ その上で使うサービス</h2>
+          </div>
+          <table className="h77-mini">
+            <tbody>
+              {paid.map((row) => (
+                <tr key={row[0]}>
+                  <td>{row[0]}</td>
+                  <td>{row[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 42), 14)}>
+        いずれも <strong>Azure VM なら無料</strong>。オンプレを混ぜた瞬間に有料になる。
+      </p>
       <Source
-        href="https://learn.microsoft.com/azure/update-manager/update-manager-faq"
-        label="Microsoft Learn ─ Azure Update Manager FAQ（価格）"
+        href="https://azure.microsoft.com/pricing/details/azure-arc/core-control-plane/"
+        label="Azure Arc 価格（コントロールプレーン）／ Azure Policy・Update Manager の価格ページ"
       />
     </section>
   )
@@ -585,26 +694,39 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="RESULT 3" title="構成ポリシーは、直りませんでした" frame={frame} />
-      <div className="h77-mc">
-        <div className="h77-mc-expect" style={lift(entrance(frame, fps, 10), 20)}>
-          <span className="h77-side-label">公式の説明</span>
+      <Head kicker="RESULT 3" title="構成ポリシーは ─ 直るものと、直らないものがあった" frame={frame} />
+      <div className="h77-two">
+        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 10), 20)}>
+          <div className="h77-card-head">
+            <X size={36} />
+            <h2>SetWindowsTimeZone</h2>
+          </div>
+          <p className="h77-metric h77-metric-bad">24時間+ 直らず</p>
           <p>
-            <code>ApplyAndAutoCorrect</code> ─ ドリフトしたら
-            <strong>次の評価で修正する</strong>
+            <code>ApplyAndAutoCorrect</code> なのに実機は変わらず、
+            15分ごとに <code>NonCompliant</code> が記録され続けた。
           </p>
         </div>
-        <div className="h77-mc-real" style={lift(entrance(frame, fps, 22), 20)}>
-          <span className="h77-side-label">実測</span>
-          <p className="h77-metric h77-metric-bad">35分待っても、直らず</p>
+        <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 24), 20)}>
+          <div className="h77-card-head">
+            <Check size={36} />
+            <h2>SetSecureProtocol</h2>
+          </div>
+          <p className="h77-metric">16分で Compliant</p>
           <p>
-            15分ごとに <code>NonCompliant</code> が記録され続けた。
-            評価は動いている。修正だけが効いていない。
+            同じ Windows・同じモードで割り当て。
+            <strong>実機のレジストリに TLS 1.2 が作られた</strong>（適用前は存在しなかった）。
           </p>
         </div>
       </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 38), 14)}>
-        原因は特定できていません。<strong>未解明のまま、事実としてお伝えします。</strong>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 38), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          <strong>Windows だからダメ、ではなかった。</strong>
+          特定の構成パッケージだけが動いていない。
+          <br />
+          1つの失敗から「機能が使えない」と一般化するところだった ─ 切り分けが要る。
+        </span>
       </p>
     </section>
   )
