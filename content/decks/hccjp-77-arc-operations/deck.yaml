@@ -42,11 +42,19 @@ slides:
   - id: proof
     title: 実際に動かして確かめた
     durationInFrames: 240
-    notes: 一覧で見せるだけでは意味がないので、実際に動かしました。Arc経由のコマンド実行は42秒で返ってきます。マネージドIDのトークンもゲストの中から取れました。拡張機能の配布も動きます。全部、インバウンドのポートを開けずにです。
+    notes: 一覧で見せるだけでは意味がないので、実際に動かしました。Arc経由のコマンド実行は42秒で返ってきます。マネージドIDのトークンもゲストの中から取れました。拡張機能の配布も動きます。そしてSSH。NATの内側にいる10.10.0.41のサーバーに、ポートを1つも開けずにインターネット越しでログインできました。全部、インバウンドの穴なしです。
   - id: update-manager
-    title: Azure Update Manager ─ オンプレもクラウドも1画面
-    durationInFrames: 240
-    notes: 今日の中心にあるのがAzure Update Managerです。AzureのVMもオンプレのサーバーも、同じ画面でパッチの状態を見て、メンテナンス時間を決めて当てられます。ただし課金の線引きがあって、Azure VMは無料、Arc対応サーバーは1台あたり月5ドルです。
+    title: Azure Update Manager ─ 同じ画面から、パッチを適用する
+    durationInFrames: 230
+    notes: 今日の中心にあるのがAzure Update Managerです。AzureのVMもオンプレのサーバーも、同じ画面で更新プログラムの状態を評価して、メンテナンス時間を決めて、パッチを適用できます。Windows と Linux が同じ操作で扱えるのがポイントです。
+  - id: assess-result
+    title: 【実機】評価してみた ─ WindowsはWU、LinuxはAPT
+    durationInFrames: 250
+    notes: 実際に両方のOSで評価をかけてみました。Windowsは2分、Linuxは4分で完了しています。裏で使われているのはWindowsがWindows Update、LinuxがAPTで、Update Managerはそれぞれのネイティブな仕組みを呼んでいるだけです。面白いのはLinuxで、3件がUbuntu Proのサブスクリプションを要求するというエラーが返りました。評価はできるが当てられない。ハイブリッド運用のリアルです。
+  - id: billing
+    title: 何をすると、いくら課金されるのか
+    durationInFrames: 280
+    notes: 課金の話を整理します。まず大事なのは、Arcに繋ぐこと自体は無料だということです。エージェントを入れて、Azureにサーバーを見えるようにして、タグを付けて、RBACで権限を切って、Resource Graphで検索して、拡張機能を配って、Run Commandを流す。ここまでは1円もかかりません。課金されるのは、その上で使うサービスです。Update Managerはサーバー1台あたり月5ドル、マシン構成は月6ドル。どちらもAzure VMなら無料で、オンプレを混ぜた瞬間に有料になります。
   - id: hotpatch
     title: Hotpatch が、無料になっていました
     durationInFrames: 230
@@ -72,9 +80,9 @@ slides:
     durationInFrames: 260
     notes: そしてこれが重要です。巻き戻しと再起動をまたいでも、Azureポータルのステータスは終始Connected、拡張機能はSucceededのままでした。ハートビートは5分ごと、15分途切れて初めてDisconnectedになるので、その猶予に収まってしまいます。ポータルの緑は、実機の中身を保証していません。
   - id: result-mc
-    title: 【結果3】構成ポリシーは、直りませんでした
-    durationInFrames: 270
-    notes: 一方で、machine configurationは自動修正されませんでした。ApplyAndAutoCorrect、つまりドリフトしたら直すモードで割り当てていたのに、35分待っても実機は元の値のままで、NonCompliantが記録され続けました。評価は動いているのに、修正が効いていない。ここは原因を特定できていないので、正直に未解明としてお伝えします。
+    title: 【結果3】構成ポリシーは ─ 直るものと、直らないものがあった
+    durationInFrames: 290
+    notes: 一方で、machine configurationには続きがあります。最初に試したタイムゾーンの構成は、ApplyAndAutoCorrectで割り当てたのに24時間以上たっても実機が変わらず、NonCompliantが記録され続けました。ここで止めれば「構成ポリシーは効かない」という結論になったのですが、切り分けをしました。同じWindowsマシンに、別のビルトイン構成、TLSの最小バージョンを設定するものを同じモードで割り当てたところ、16分でCompliantになり、実機のレジストリも実際に作られていました。つまりWindowsだからダメなのではなく、特定の構成パッケージだけが動いていない。ここは切り分けないと誤った一般化をするところでした。
   - id: byproducts
     title: ついでに分かったこと
     durationInFrames: 250

@@ -11705,3 +11705,30 @@ main {
 .slide-frame:fullscreen .nav-zone:focus-visible {
   opacity: 1;
 }
+
+/* h77: billing + assessment tables */
+
+.h77-mini {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.h77-mini td {
+  border-bottom: 1px solid rgba(110, 220, 255, 0.14);
+  font-size: 21px;
+  padding: 9px 4px;
+}
+
+.h77-mini td:last-child {
+  color: var(--h77-amber);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.h77-assess td:not(.h77-th) {
+  font-size: 23px;
+}
+
+.h77-assess strong {
+  color: var(--h77-cyan);
+}
