@@ -563,6 +563,8 @@ main {
   color: #d6d0c2;
   line-height: 1.7;
   margin: 0;
+  /* Notes carry demo cues on their own lines; keep the author's line breaks. */
+  white-space: pre-line;
 }
 
 .recording-inspector {
@@ -657,6 +659,10 @@ main {
   font-size: 3.5cqw;
   line-height: 1.8;
   margin: 0;
+  /* Presenter notes carry demo cues on separate lines. Keep the line breaks the
+     deck author wrote, and scroll instead of overflowing the reserved panel. */
+  overflow-y: auto;
+  white-space: pre-line;
 }
 
 .recording-notes-next {
@@ -10786,14 +10792,15 @@ main {
   pointer-events: none;
 }
 
-.h77-slide > *:not(.h77-grid):not(.h77-logo):not(.h77-speaker):not(.h77-source):not(.h77-promo-glow) {
+.h77-slide > *:not(.h77-grid):not(.h77-logo):not(.h77-speaker):not(.h77-source):not(.h77-live):not(.h77-promo-glow) {
   position: relative;
   z-index: 1;
 }
 
 .h77-logo,
 .h77-speaker,
-.h77-source {
+.h77-source,
+.h77-live {
   z-index: 2;
 }
 
@@ -10867,6 +10874,36 @@ main {
   left: 84px;
   position: absolute;
   text-decoration: none;
+}
+
+/* Live-demo cue. Tells the room the presenter is about to leave the deck, and
+   doubles as the presenter's own reminder of which screen to open. */
+.h77-live {
+  align-items: center;
+  background: rgba(255, 122, 122, 0.14);
+  border: 1px solid rgba(255, 122, 122, 0.5);
+  border-radius: 999px;
+  bottom: 26px;
+  color: #ffd0d0;
+  display: inline-flex;
+  font-size: 19px;
+  font-weight: 700;
+  gap: 10px;
+  letter-spacing: 0.02em;
+  left: auto;
+  padding: 8px 20px;
+  position: absolute;
+  right: 84px;
+  width: max-content;
+  z-index: 2;
+}
+
+.h77-live-dot {
+  background: var(--h77-red);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(255, 122, 122, 0.22);
+  height: 11px;
+  width: 11px;
 }
 
 /* Opening ---------------------------------------------------- */

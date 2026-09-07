@@ -47,6 +47,11 @@ export function DeckViewer({
   onAuthChange: (auth: AuthState) => void
 }) {
   const [slideIndex, setSlideIndex] = useState(() => getInitialSlideIndex(deck))
+  // The slide the presenter is now on. `slideIndex` only commits once the
+  // entrance animation has finished playing, which is several seconds on a long
+  // slide — too late for the notes panel, where the speaker reads the demo cue
+  // for the slide already on screen. This one moves as soon as navigation starts.
+  const [notesIndex, setNotesIndex] = useState(() => getInitialSlideIndex(deck))
   const [mode, setMode] = useState<ViewerMode>(initialMode)
   const [studioCue, setStudioCue] = useState<StudioCue>(
     initialMode === 'studio' ? 'hook' : null
@@ -143,6 +148,7 @@ export function DeckViewer({
         return
       }
       targetIndexRef.current = nextIndex
+      setNotesIndex(nextIndex)
 
       // Always start from the destination slide's first frame and play its
       // entrance through to the settled frame, mirroring the play button.
@@ -288,7 +294,7 @@ export function DeckViewer({
     showStudioSignoff
   ])
 
-  const currentSlide = deck.meta.slides[slideIndex]
+  const currentSlide = deck.meta.slides[notesIndex]
   const currentStudioTitle = studioCue === 'hook'
     ? '開始前 · 冒頭フック'
     : studioCue === 'signoff'
@@ -303,7 +309,7 @@ export function DeckViewer({
     ? `開始前 / ${deck.meta.slides.length}`
     : studioCue === 'signoff'
       ? `終了 / ${deck.meta.slides.length}`
-      : `${slideIndex + 1} / ${deck.meta.slides.length}`
+      : `${notesIndex + 1} / ${deck.meta.slides.length}`
   const studioDisplayFrame = studioCue === 'hook'
     ? 0
     : studioCue === 'signoff'
@@ -327,6 +333,7 @@ export function DeckViewer({
   const playTimeline = useCallback(() => {
     if (isStudioRoute && auth.canRecord && isStudio) {
       targetIndexRef.current = 0
+      setNotesIndex(0)
       if (slideIndex !== 0) {
         studioPlaybackResetRef.current = true
         setSlideIndex(0)
@@ -598,9 +605,9 @@ export function DeckViewer({
                   <span className="recording-notes-next">
                     次 → {deck.meta.slides[0]?.title}
                   </span>
-                ) : studioCue === null && deck.meta.slides[slideIndex + 1] ? (
+                ) : studioCue === null && deck.meta.slides[notesIndex + 1] ? (
                   <span className="recording-notes-next">
-                    次 → {deck.meta.slides[slideIndex + 1].title}
+                    次 → {deck.meta.slides[notesIndex + 1].title}
                   </span>
                 ) : studioCue === null ? (
                   <span className="recording-notes-next">
@@ -622,7 +629,7 @@ export function DeckViewer({
             前へ
           </button>
           <span>
-            {isStudio ? currentStudioCount : `${slideIndex + 1} / ${deck.meta.slides.length}`}
+            {isStudio ? currentStudioCount : `${notesIndex + 1} / ${deck.meta.slides.length}`}
           </span>
           <button type="button" onClick={() => goRelative(1)}>
             次へ
