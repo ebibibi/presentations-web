@@ -71,6 +71,18 @@ function Head({ kicker, title, frame }: { kicker: string; title: React.ReactNode
   )
 }
 
+// Marks a slide where the presenter leaves the deck for a real screen. The
+// label is the screen to open, so it works as a cue for the room and for the
+// presenter at the same time. Full steps live in the slide notes.
+function LiveCue({ label }: { label: string }) {
+  return (
+    <span className="h77-live">
+      <span className="h77-live-dot" />
+      LIVE ─ {label}
+    </span>
+  )
+}
+
 function Source({ href, label }: { href: string; label: string }) {
   return (
     <a className="h77-source" href={href} target="_blank" rel="noreferrer">
@@ -295,6 +307,7 @@ function InventorySlide({ frame }: SlideRenderContext) {
         href="https://learn.microsoft.com/azure/azure-arc/servers/overview"
         label="Microsoft Learn ─ Azure Arc-enabled servers overview"
       />
+      <LiveCue label="ポータル ─ arcwin01 の左メニュー" />
     </section>
   )
 }
@@ -325,6 +338,7 @@ function ProofSlide({ frame }: SlideRenderContext) {
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 52), 14)}>
         すべて、インバウンドのポートを1つも開けずに。ここまで課金はゼロ。
       </p>
+      <LiveCue label="Run Command を実行" />
     </section>
   )
 }
@@ -357,6 +371,7 @@ function UpdateManagerSlide({ frame }: SlideRenderContext) {
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 40), 14)}>
         オンプレ側は Arc で繋ぐだけ。エージェントの通信はアウトバウンド443のみ。
       </p>
+      <LiveCue label="ポータル ─ Update Manager / マシン" />
     </section>
   )
 }
@@ -410,6 +425,7 @@ function AssessResultSlide({ frame }: SlideRenderContext) {
           評価はできる。でも当てられない ─ ハイブリッドの現実。
         </span>
       </p>
+      <LiveCue label="ポータル ─ 評価結果（開始前に実行済み）" />
     </section>
   )
 }
@@ -472,6 +488,7 @@ function BillingSlide({ frame }: SlideRenderContext) {
         href="https://azure.microsoft.com/pricing/details/azure-arc/core-control-plane/"
         label="Azure Arc 価格（コントロールプレーン）／ Azure Policy・Update Manager の価格ページ"
       />
+      <LiveCue label="ポータル ─ コスト分析（日別）" />
     </section>
   )
 }
@@ -612,6 +629,7 @@ function ExperimentSlide({ frame }: SlideRenderContext) {
       <div className="h77-env" style={lift(entrance(frame, fps, 52), 16)}>
         <Server size={30} /> arcwin01 ─ Windows Server 2025 ／ arclnx01 ─ Ubuntu 24.04（Nested Hyper-V ラボ）
       </div>
+      <LiveCue label="Hyper-V マネージャー ─ T1-hccjp77" />
     </section>
   )
 }
@@ -649,6 +667,7 @@ function ResultExtSlide({ frame }: SlideRenderContext) {
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 40), 14)}>
         つまり Windows では、一時的に「古い状態」が復活する窓が開く。
       </p>
+      <LiveCue label="実機の marker.txt" />
     </section>
   )
 }
@@ -685,6 +704,7 @@ function ResultBlindSlide({ frame }: SlideRenderContext) {
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 44), 14)}>
         ハートビートは5分ごと・15分途切れて初めて Disconnected。その猶予に収まってしまう。
       </p>
+      <LiveCue label="ポータル ─ Connected / Succeeded" />
     </section>
   )
 }
@@ -728,6 +748,7 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
           1つの失敗から「機能が使えない」と一般化するところだった ─ 切り分けが要る。
         </span>
       </p>
+      <LiveCue label="ポータル ─ arcwin01 / マシン構成" />
     </section>
   )
 }
@@ -830,6 +851,7 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
           </li>
         ))}
       </ol>
+      <LiveCue label="Resource Graph エクスプローラー" />
     </section>
   )
 }
