@@ -72,6 +72,10 @@ export function DeckViewer({
   const recordingSurfaceRef = useRef<HTMLDivElement>(null)
   const slideFrameRef = useRef<HTMLDivElement>(null)
   const smoothSeekRef = useRef<number | null>(null)
+  // Cross-window navigation. The slide is projected fullscreen, so the notes
+  // (demo cues) have to live in a second window that follows along.
+  const navChannelRef = useRef<BroadcastChannel | null>(null)
+  const applyingRemoteNavRef = useRef(false)
   const studioPlaybackResetRef = useRef(false)
   const slideStarts = useMemo(() => getSlideStarts(deck), [deck])
   const totalFrames = useMemo(
@@ -149,6 +153,9 @@ export function DeckViewer({
       }
       targetIndexRef.current = nextIndex
       setNotesIndex(nextIndex)
+      if (!applyingRemoteNavRef.current) {
+        navChannelRef.current?.postMessage({ type: 'goto', index: nextIndex })
+      }
 
       // Always start from the destination slide's first frame and play its
       // entrance through to the settled frame, mirroring the play button.
@@ -168,6 +175,59 @@ export function DeckViewer({
       studioCue
     ]
   )
+
+  // Keep the projected window and a presenter-notes window on the same slide.
+  // At an event the slide runs fullscreen, so the demo cues in the notes have to
+  // be read from a second window (other screen) that follows the projection.
+  const goToSlideRef = useRef(goToSlide)
+  const studioCueRef = useRef(studioCue)
+
+  useEffect(() => {
+    goToSlideRef.current = goToSlide
+    studioCueRef.current = studioCue
+  }, [goToSlide, studioCue])
+
+  useEffect(() => {
+    if (typeof BroadcastChannel === 'undefined') {
+      return
+    }
+
+    const channel = new BroadcastChannel(`deck-nav:${deck.meta.slug}`)
+    navChannelRef.current = channel
+    channel.onmessage = (event: MessageEvent) => {
+      const data = event.data as { type?: string; index?: number } | null
+      if (!data || data.type !== 'goto' || typeof data.index !== 'number') {
+        return
+      }
+      // A window sitting on a studio bookend still has to move, even when the
+      // incoming index matches the slide it last committed.
+      if (data.index === targetIndexRef.current && studioCueRef.current === null) {
+        return
+      }
+
+      applyingRemoteNavRef.current = true
+      try {
+        goToSlideRef.current(data.index)
+      } finally {
+        applyingRemoteNavRef.current = false
+      }
+    }
+
+    return () => {
+      channel.close()
+      navChannelRef.current = null
+    }
+  }, [deck.meta.slug])
+
+  // Opens the same deck in studio layout, where the notes panel lives. Reused
+  // by name so a second click focuses the window instead of stacking copies.
+  const openPresenterNotes = useCallback(() => {
+    window.open(
+      `/decks/${deck.meta.slug}/studio`,
+      `deck-notes-${deck.meta.slug}`,
+      'width=980,height=900'
+    )
+  }, [deck.meta.slug])
 
   const showStudioHook = useCallback(() => {
     setIsTimelinePlaying(false)
@@ -421,6 +481,16 @@ export function DeckViewer({
             <Fullscreen size={18} aria-hidden />
             全画面
           </button>
+          {auth.canRecord ? (
+            <button
+              type="button"
+              onClick={openPresenterNotes}
+              title="別ウィンドウでノートを開く（この窓の送りに追従する）"
+            >
+              <StickyNote size={18} aria-hidden />
+              ノート別窓
+            </button>
+          ) : null}
           {isStudioRoute && auth.canRecord ? (
             <>
               <button
