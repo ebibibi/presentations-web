@@ -1,6 +1,6 @@
 slug: patch-tuesday-972
 title: 1か月で972件 — Microsoftの月例更新が「新しい普通」に入った
-summary: 2026年9月のMicrosoft月例更新は新規CVE 972件、Chromium等を含めて997件、Criticalは114件という過去最多になりました。AI支援の脆弱性発見が生んだこの件数増加を、MSRCの公開データを自分で集計したグラフで確認し、全部読めない量のパッチにどう優先順位を付けるかを整理します。
+summary: 2026年9月のMicrosoft月例更新は新規CVE 972件という過去最多になりました。MSRCの公開データを自分で集計したグラフで件数の跳ね上がりを確認し、全部読めない量のパッチにどう優先順位を付けるかを6枚で整理します。
 status: draft
 visibility: public
 createdAt: "2026-09-09"
@@ -16,49 +16,25 @@ tags:
 slides:
   - id: opening
     title: 1か月で972件
-    durationInFrames: 200
-    notes: 2026年9月のPatch Tuesdayは新規CVE 972件。まず件数の異常さを1文で言い切ります。数を読み上げるより「先月の1.5倍」「去年1年分の8割を1か月で」の実感を先に置きます。
-  - id: numbers
-    title: 今月の数字
-    durationInFrames: 200
-    notes: 972（新規）/ 997（Chromium等込み）/ 114 Critical / ゼロデイ2件。Ars TechnicaはCritical 112としており、数え方で数十件動くことに触れておきます。
+    durationInFrames: 240
+    notes: 2026年9月のPatch Tuesdayは新規CVE 972件、Criticalが114件、悪用中のゼロデイが2件。まず件数の異常さだけを置きます。先月は約620件、その前が570件でした。
   - id: chart-year
-    title: 年別に見ると異常さが分かる
-    durationInFrames: 260
-    notes: MSRCのCVRF APIを自分で叩いて集計した年別件数。2021〜2025は年900〜1200件台で安定していたのが、2026年は9月までで2871件。ZDIやArsの集計と数十〜百件ずれるのは数え方の違いで、傾向は同じだと補足します。
+    title: 5年横ばいだったものが、今年だけ跳ねた
+    durationInFrames: 300
+    notes: MSRCのCVRF APIを自分で叩いて集計した年別件数。2021〜2025は年900〜1200件台で安定していたのが、2026年は9月までで2871件。ZDIやArsの集計とは数十〜百件ずれますが、数え方の違いで傾向は同じです。
   - id: chart-month
     title: 跳ねたのは今年の夏から
-    durationInFrames: 260
-    notes: 2026年の月別。6月まで月100〜200件台だったものが7月に急増し、9月に1000件近くへ。ZDIの集計では7月570件・8月620件・9月972件で、私の集計と月ごとの値は違いますが、跳ね上がりの時期は一致します。
+    durationInFrames: 300
+    notes: 2026年の月別。6月まで月100〜200件台だったものが7月に急増し、9月に1000件近くへ。ZDIの集計では7月570件・8月620件・9月972件。月ごとの値は違いますが、跳ね上がりの時期は一致します。
   - id: why
-    title: なぜ急に増えたのか
-    durationInFrames: 240
-    notes: AI支援の脆弱性発見。ベンダー側が見つけて直す速度が上がったという話で、製品が急に脆くなったわけではないと明確にします。
-  - id: letter
-    title: 業界は「先に見つけられる側」を競っている
-    durationInFrames: 240
-    notes: 8月下旬にOpenAI・Anthropic・AWS・Google・Microsoftら100超の企業・団体が共同書簡を出し、AI主導の攻撃がパッチ適用の猶予を縮めると警告した流れを説明します。
-  - id: not-yet
-    title: ただし「悪用の急増」はまだ来ていない
-    durationInFrames: 230
-    notes: ZDIのDustin Childsの言葉。件数は跳ねたが、それに比例した実際の悪用の急増はまだ観測されていない。だから今は仕組みを整える時間がある、という位置づけにします。
-  - id: notable
-    title: 今月これだけは見る
+    title: 増えたのは発見の速度。悪用の急増はまだ来ていない
     durationInFrames: 260
-    notes: ゼロデイ2件（Windows Update Stack / ALPC、いずれもEoP）と、Exchange・SharePoint・SQL Server・リモートデスクトップ・Authenticatorの重い項目。CVE番号は読み上げず、資産の名前で覚えてもらいます。
-  - id: wormable
-    title: 数えるのをやめた、という数え方
-    durationInFrames: 220
-    notes: ユーザー操作なしで感染が広がりうる脆弱性が20件を超えたところで数えるのをやめた、というChildsのコメント。件数の話から「性質」の話へ切り替える節目です。
+    notes: 原因はAI支援の脆弱性発見で、製品が急に脆くなったわけではありません。ZDIのDustin Childs氏は、それに比例した実際の悪用の急増はまだ見えていないと書いています。だから今は仕組みを整える時間です。
   - id: triage
-    title: 全部読むのは、もう無理
-    durationInFrames: 280
-    notes: 972件を読む運用は破綻する。悪用中→インターネット公開資産→ワーム性→自分が実際に持っている製品、の順で絞る。CVE単位の精読から、資産インベントリ起点の運用へ移す話にします。
-  - id: counting
-    title: 件数そのものを指標にしない
-    durationInFrames: 240
-    notes: 972なのか997なのか2760なのか2871なのかは数え方で変わる。件数を経営報告のKPIにすると、数え方が変わっただけで「急増」に見える。見るべきは適用までの日数と未適用資産の数だと結びます。
+    title: 全部読む運用は、もう成り立たない
+    durationInFrames: 320
+    notes: 悪用中→インターネット公開資産→ワーム性→保有製品の順で絞ります。今月なら、ゼロデイ2件、Exchange・SharePoint・リモートデスクトップ、ワーム性は20件を超えたところでZDIが数えるのをやめた、という並びです。CVE番号ではなく資産の名前で覚えます。
   - id: recap
     title: まとめ
-    durationInFrames: 240
-    notes: 3行に畳んで、一次情報リンクを出します。
+    durationInFrames: 260
+    notes: 3行に畳んで一次情報を出します。件数を報告の指標にしないこと、見るのは適用までの日数と未適用資産の数であることを最後に言い切ります。
