@@ -41,6 +41,7 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <ExperimentSlide {...props} /> },
   { render: (props) => <ResultAgentSlide {...props} /> },
   { render: (props) => <ResultMcSlide {...props} /> },
+  { render: (props) => <GhostSlide {...props} /> },
   { render: (props) => <ResultPolicySlide {...props} /> },
   { render: (props) => <TimezoneTrapSlide {...props} /> },
   { render: (props) => <RecoveryRunbookSlide {...props} /> },
@@ -82,14 +83,6 @@ function LiveCue({ label }: { label: string }) {
       LIVE ─ {label}
     </span>
   )
-}
-
-// Placeholder for a number the 2026-09-09 re-run has not produced yet. It is
-// deliberately loud: a blank that still looks like a slide is how you end up
-// reading "約 分" out loud on stage. Every one of these must be gone before
-// the deck goes from draft to ready.
-function TBM({ hint }: { hint: string }) {
-  return <span className="h77-tbm">要測定 ─ {hint}</span>
 }
 
 function Source({ href, label }: { href: string; label: string }) {
@@ -564,7 +557,7 @@ function ResultAgentSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide h77-blind">
       <div className="h77-grid" />
-      <Head kicker="① AGENT" title="エージェントは、どうなるのか" frame={frame} />
+      <Head kicker="① AGENT" title="エージェントは ─ 落ちませんでした" frame={frame} />
       <div className="h77-split">
         <div className="h77-split-side" style={lift(entrance(frame, fps, 10), 20)}>
           <span className="h77-side-label">Azure ポータル</span>
@@ -572,7 +565,7 @@ function ResultAgentSlide({ frame }: SlideRenderContext) {
             <Check size={40} />
             <strong>Connected</strong>
           </div>
-          <p>Arc のリソースも、割り当ても、そのまま残っている</p>
+          <p>70分間、一度も Disconnected にならず</p>
         </div>
         <div className="h77-split-vs" style={lift(entrance(frame, fps, 20), 12)}>
           <span>実機は</span>
@@ -581,20 +574,23 @@ function ResultAgentSlide({ frame }: SlideRenderContext) {
         </div>
         <div className="h77-split-side h77-split-real" style={lift(entrance(frame, fps, 28), 20)}>
           <span className="h77-side-label">実機</span>
-          <p>巻き戻し・再起動を実施</p>
-          <p>ローカルの構成・証明書も過去のもの</p>
+          <p>復元＋起動 ＝ 11.5秒</p>
+          <p>OSは再起動し、設定は過去のもの</p>
         </div>
       </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 40), 14)}>
-        ハートビートは5分ごと・<strong>15分途切れて初めて Disconnected</strong>。巻き戻しはその猶予に収まる。
-        <br />
-        <strong>ポータルの緑は、実機の中身を保証していない。</strong>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          <strong>「巻き戻すとエージェントが死ぬ」は誤りでした。</strong>
+          再接続コマンドの出番はありません。
+          <br />
+          死ぬのは <strong>Azure側のリソースを消したとき</strong>（実測22日間 Disconnected）。巻き戻しでは起きない。
+        </span>
       </p>
-      <div className="h77-measure" style={lift(entrance(frame, fps, 48), 16)}>
-        <TBM hint="Disconnected になるか／何分で" />
-        <TBM hint="自力で復帰するか" />
-        <TBM hint="出るエラー" />
-      </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 50), 14)}>
+        ハートビートは5分ごと・15分途切れて初めて Disconnected。巻き戻しはその猶予に収まる。
+        <code>lastStatusChange</code> だけが9分後に動いたが、状態は Connected のまま。
+      </p>
       <LiveCue label="ポータル ─ arcwin01 概要（Connected のまま）" />
     </section>
   )
@@ -605,20 +601,18 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="② MACHINE CONFIG" title="マシン構成は、どうなるのか" frame={frame} />
+      <Head kicker="② MACHINE CONFIG" title="適用型は直る。監査型は、直さない" frame={frame} />
       <div className="h77-two">
         <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 10), 20)}>
           <div className="h77-card-head">
             <Check size={36} />
             <h2>ApplyAndAutoCorrect</h2>
           </div>
-          <p>SetWindowsTimeZone ／ SetSecureProtocol</p>
-          <p className="h77-metric">
-            <TBM hint="何分で Compliant に戻るか" />
-          </p>
+          <p>SetSecureProtocol ／ SetWindowsTimeZone</p>
+          <p className="h77-metric">4分30秒で復旧</p>
           <p>
-            実機の設定は巻き戻る。<strong>割り当ては Azure 側なので残る。</strong>
-            あとは、自分で直しに来るのを待てるかどうか。
+            実機のレジストリに <strong>TLS 1.2 が書き戻された</strong>（Enabled=1）。
+            表示が戻っただけではなく、<strong>本当に直っている</strong>。
           </p>
         </div>
         <div className="h77-card h77-card-warn" style={lift(entrance(frame, fps, 24), 20)}>
@@ -626,20 +620,21 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
             <TriangleAlert size={36} />
             <h2>Audit</h2>
           </div>
-          <p>AzureWindowsBaseline（373項目）</p>
-          <p className="h77-metric h77-metric-bad">278項目が非準拠</p>
+          <p>WindowsDefenderExploitGuard ／ AuditSecureProtocol</p>
+          <p className="h77-metric h77-metric-bad">永久に非準拠</p>
           <p>
-            <strong>Audit は直さない。教えてくれるだけ。</strong>
-            巻き戻しても、非準拠が非準拠として報告され続ける。
+            <strong>監査型は Set を持たない。</strong>元から何も適用しない仕組みなので、
+            「自己修復に失敗した」のではなく<strong>直す気がない</strong>。
           </p>
         </div>
       </div>
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
         <TriangleAlert size={38} />
         <span>
-          割り当てモードを見ないまま「構成が効いていない」と言ってはいけない。
+          ただし、その4分30秒に辿り着くまで <strong>43分かかりました</strong>。
+          最初はずっと非準拠のままで、「適用型も復元後は直らない」と結論しかけた。
           <br />
-          <strong>Audit は、最初から直す気がない。</strong>
+          犯人は、この構成の外にいます ─ 次のスライド。
         </span>
       </p>
       <LiveCue label="ポータル ─ arcwin01 / マシン構成" />
@@ -647,42 +642,100 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function ResultPolicySlide({ frame }: SlideRenderContext) {
+function GhostSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const timeline = [
-    ['10:24', 'Azure Policy: 非準拠', 'bad'],
-    ['10:33', 'マシン構成: 準拠 ✔', 'good'],
-    ['10:43', 'Azure Policy: まだ非準拠', 'bad']
+  const rows: Array<[string, string]> = [
+    ['21:13:05', 'ゴーストが評価キューを取る'],
+    ['21:18 / 21:28', '他の構成のタイマーは鳴る。でも順番が来ない'],
+    ['21:51:47', 'ゴーストの1周がやっと終わる ─ 2321秒（38分41秒）'],
+    ['21:52:10', 'キューを空けてやる'],
+    ['21:56:48', 'SetSecureProtocol が自力で準拠へ戻る']
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="③ POLICY" title="Policyの「赤」は、9分前の話かもしれない" frame={frame} />
-      <div className="h77-tl3">
-        {timeline.map((item, index) => (
-          <div
-            className={`h77-tl3-item h77-tl3-${item[2]}`}
-            key={item[0]}
-            style={lift(entrance(frame, fps, 10 + index * 10), 18)}
-          >
-            <span className="h77-tl3-time">{item[0]}</span>
-            <strong>{item[1]}</strong>
+      <Head
+        kicker="THE CULPRIT"
+        title="Azureで消したはずの割り当てが、復元で蘇る"
+        frame={frame}
+      />
+      <div className="h77-two h77-two-tight">
+        <div className="h77-card h77-card-quiet" style={lift(entrance(frame, fps, 8), 18)}>
+          <h2>Azure が持っている割り当て</h2>
+          <p className="h77-mono">4件</p>
+        </div>
+        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 14), 18)}>
+          <h2>実機のローカルキャッシュ</h2>
+          <p className="h77-mono">5件 ─ 消したはずの重い監査つき</p>
+        </div>
+      </div>
+      <div className="h77-tl5">
+        {rows.map((row, index) => (
+          <div className="h77-tl5-row" key={row[0]} style={lift(entrance(frame, fps, 22 + index * 6), 14)}>
+            <span className="h77-tl5-t">{row[0]}</span>
+            <span>{row[1]}</span>
           </div>
         ))}
       </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 42), 14)}>
-        2026-09-09 の実測。<strong>OSの中身はもう直っているのに、Policy はまだ赤い。</strong>
-        <br />
-        Policy の準拠評価は既定で24時間ごと。マシン構成の15分とは、そもそも時計が違う。
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 54), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          マシン構成の評価は<strong>1台につき1本ずつ順番待ち</strong>。
+          復元で蘇った重い監査が居座ると、<strong>他の構成は自己修復すらできない</strong>。
+          <br />
+          公式ドキュメントに記載なし。<strong>復元後は、実機側の割り当てを数えて掃除する。</strong>
+        </span>
       </p>
-      <div className="h77-cmd" style={lift(entrance(frame, fps, 50), 16)}>
-        <Terminal size={30} />
-        <code>az policy state trigger-scan --resource-group rg-hccjp76-arc</code>
+    </section>
+  )
+}
+
+function ResultPolicySlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="③ POLICY / 準拠表示" title="緑には、2種類あります" frame={frame} />
+      <div className="h77-two">
+        <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 10), 20)}>
+          <div className="h77-card-head">
+            <Check size={36} />
+            <h2>無事な緑</h2>
+          </div>
+          <p>復元後に評価され、本当に準拠している</p>
+        </div>
+        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 22), 20)}>
+          <div className="h77-card-head">
+            <TriangleAlert size={36} />
+            <h2>誰も見ていない緑</h2>
+          </div>
+          <p>
+            <strong>巻き戻す前の判定が残っているだけ。</strong>
+            復元後に一度も評価されていない
+          </p>
+        </div>
       </div>
-      <div className="h77-measure" style={lift(entrance(frame, fps, 56), 16)}>
-        <TBM hint="巻き戻し後、Policy が赤くなるまで何分か" />
-        <TBM hint="再スキャンで即座に追いつくか" />
+      <div className="h77-cmp" style={lift(entrance(frame, fps, 34), 16)}>
+        <div className="h77-cmp-row h77-cmp-bad">
+          <span>WindowsDefenderExploitGuard</span>
+          <span>非準拠</span>
+          <span>最終評価 41分前</span>
+        </div>
+        <div className="h77-cmp-row h77-cmp-stale">
+          <span>SetWindowsTimeZone</span>
+          <span>準拠</span>
+          <span>最終評価 72分前 ← 巻き戻し前のまま</span>
+        </div>
       </div>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 46), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          <strong>画面上、この2つの緑は見分けがつきません。</strong>
+          復元後に見るのは「緑かどうか」ではなく「<strong>いつ評価されたか</strong>」。
+          <br />
+          評価の周期も違う ─ 適用型は15分、<strong>監査型は60分</strong>、Azure Policy は既定で24時間。
+        </span>
+      </p>
       <LiveCue label="ポータル ─ Policy / コンプライアンス" />
     </section>
   )
@@ -746,32 +799,30 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const items: Array<[string, React.ReactNode]> = [
     [
-      'Arc の接続を戻す',
+      'Arc の接続を見る（たぶん無事）',
+      <>巻き戻しでは切れなかった。切れるのは Azure 側を消したとき ─ そのときだけ再接続2コマンド</>
+    ],
+    [
+      '実機の割り当てを「数える」',
       <>
-        Disconnected なら現地に行かず2コマンド。
-        <code>azcmagent disconnect --force-local-only</code> →{' '}
-        <code>azcmagent connect</code>（1〜2分）
+        <strong>Azure の件数と一致しない</strong>なら、復元で蘇ったゴーストがいる。消すまで他が直らない
       </>
     ],
     [
-      '拡張機能を待つ',
-      <>最新の設定で再適用されるまで待つ。急ぐなら設定を更新して配り直す</>
-    ],
-    [
-      'マシン構成は、割り当てモードで仕分ける',
+      '割り当てモードで期待値を分ける',
       <>
-        <strong>ApplyAndAutoCorrect は待てば直る。Audit は待っても直らない。</strong>
+        <strong>適用型は待てば直る。監査型は待っても直らない</strong>ので手当ては別途
       </>
     ],
     [
-      'Policy は再スキャンしてから見る',
-      <>
-        <code>az policy state trigger-scan</code> を打つまで、画面は前の判定のまま
-      </>
+      '緑を見ずに「最終評価時刻」を見る',
+      <>復元前の判定が残る。適用型15分・監査型60分・Policy は既定24時間と、時計が3つある</>
     ],
     [
-      'パッチは再評価してから判断',
-      <>Update Manager の表示も、復元直後は実機とズレている</>
+      'Policy とパッチは再評価してから判断',
+      <>
+        <code>az policy state trigger-scan</code> と Update Manager の再評価を先に打つ
+      </>
     ]
   ]
   return (
@@ -790,7 +841,7 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
         ))}
       </ol>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
-        1〜4 の状態確認は、Resource Graph のクエリ1本で全台まとめて見られます。
+        2番だけが今回の新発見です。ここを飛ばすと、1〜5を全部やっても直りません。
       </p>
       <LiveCue label="巻き戻した arcwin01 が、戻ってきたか" />
     </section>
