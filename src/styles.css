@@ -11697,9 +11697,21 @@ main {
 .h77-mc,
 .h77-recap,
 .h77-qlist,
-.h77-timeline2 {
+.h77-timeline2,
+.h77-layers,
+.h77-q3,
+.h77-tl3 {
   align-content: center;
   flex: 1;
+}
+
+/* Trailing blocks under a growing content area must not grow themselves,
+   otherwise the slide splits its whitespace between them instead of
+   centring the thing the audience is looking at. */
+.h77-slide .h77-cmd,
+.h77-slide .h77-measure,
+.h77-slide .h77-code-quote {
+  flex: none;
 }
 
 .h77-table {
@@ -11768,4 +11780,239 @@ main {
 
 .h77-assess strong {
   color: var(--h77-cyan);
+}
+
+/* HCCJP77 ─ 2026-09-09 restructure ---------------------------- */
+
+/* "not measured yet" marker. Loud on purpose: a placeholder that reads as
+   finished copy is how a blank number reaches the stage. */
+.h77-tbm {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 180, 84, 0.22) 0 12px,
+    rgba(255, 180, 84, 0.08) 12px 24px
+  );
+  border: 2px dashed var(--h77-amber);
+  border-radius: 10px;
+  color: var(--h77-amber);
+  display: inline-block;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 8px 16px;
+}
+
+.h77-measure {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+/* Lab layers (L0 / L1 / L2) ---------------------------------- */
+
+.h77-layers {
+  display: grid;
+  gap: 18px;
+}
+
+.h77-layer {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(110, 220, 255, 0.2);
+  border-radius: 16px;
+  display: grid;
+  gap: 26px;
+  grid-template-columns: 86px 1fr auto;
+  padding: 22px 28px;
+}
+
+.h77-layer-target {
+  background: rgba(110, 220, 255, 0.1);
+  border-color: var(--h77-cyan);
+}
+
+.h77-layer-tag {
+  color: var(--h77-cyan);
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.h77-layer-body strong {
+  display: block;
+  font-size: 30px;
+}
+
+.h77-layer-body p {
+  color: rgba(234, 243, 255, 0.72);
+  font-size: 23px;
+  margin: 4px 0 0;
+}
+
+.h77-layer-note {
+  color: var(--h77-amber);
+  font-size: 22px;
+  text-align: right;
+}
+
+/* Three questions -------------------------------------------- */
+
+.h77-q3 {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 26px;
+}
+
+.h77-q3-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(110, 220, 255, 0.22);
+  border-radius: 18px;
+  padding: 26px 24px;
+}
+
+.h77-q3-item svg {
+  color: var(--h77-cyan);
+  display: block;
+  margin: 10px 0 12px;
+}
+
+.h77-q3-no {
+  color: var(--h77-amber);
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.h77-q3-item strong {
+  display: block;
+  font-size: 27px;
+  margin-bottom: 10px;
+}
+
+.h77-q3-item p {
+  color: rgba(234, 243, 255, 0.75);
+  font-size: 22px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Experiment ─ the step we perform live ---------------------- */
+
+.h77-step-now {
+  background: rgba(255, 180, 84, 0.14);
+  border-color: var(--h77-amber);
+}
+
+.h77-step-now .h77-step-no {
+  color: var(--h77-amber);
+}
+
+/* Policy lag timeline ---------------------------------------- */
+
+.h77-tl3 {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 30px;
+}
+
+.h77-tl3-item {
+  border-radius: 16px;
+  padding: 30px 26px;
+  text-align: center;
+}
+
+.h77-tl3-time {
+  display: block;
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.h77-tl3-item strong {
+  font-size: 26px;
+}
+
+.h77-tl3-bad {
+  background: rgba(255, 122, 122, 0.12);
+  border: 1px solid var(--h77-red);
+  color: var(--h77-red);
+}
+
+.h77-tl3-good {
+  background: rgba(82, 215, 160, 0.12);
+  border: 1px solid var(--h77-green);
+  color: var(--h77-green);
+}
+
+/* Inline command --------------------------------------------- */
+
+.h77-cmd {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.32);
+  border-left: 4px solid var(--h77-cyan);
+  border-radius: 12px;
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 18px 24px;
+}
+
+.h77-cmd svg {
+  color: var(--h77-cyan);
+  flex: none;
+}
+
+.h77-cmd code {
+  font-size: 24px;
+}
+
+/* Code quote (DSC source) ------------------------------------ */
+
+.h77-code-quote {
+  background: rgba(0, 0, 0, 0.34);
+  border-left: 5px solid var(--h77-amber);
+  border-radius: 12px;
+  padding: 22px 28px;
+}
+
+.h77-code-quote code {
+  font-size: 25px;
+  line-height: 1.7;
+}
+
+.h77-code-quote strong {
+  background: rgba(255, 180, 84, 0.25);
+  color: var(--h77-amber);
+  padding: 0 4px;
+}
+
+.h77-code-note {
+  color: rgba(234, 243, 255, 0.5);
+  display: block;
+  font-size: 20px;
+  margin-top: 12px;
+}
+
+.h77-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 26px;
+}
+
+/* The runbook grew from 4 steps to 5, which pushed the closing line past the
+   bottom edge. Tighten only this slide's list rather than every checklist. */
+.h77-checklist .h77-check {
+  gap: 14px;
+}
+
+.h77-checklist .h77-check li {
+  padding: 18px 28px;
+}
+
+/* .h77-punch-line is a callout box, not body copy, so the global
+   `.remotion-slide p { max-width: 940px }` measure makes it render at half the
+   slide width with its icon stranded on the left. Class+class beats the global
+   class+element selector. */
+.h77-slide .h77-punch-line {
+  max-width: none;
 }

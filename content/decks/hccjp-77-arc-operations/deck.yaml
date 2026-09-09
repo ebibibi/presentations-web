@@ -1,34 +1,36 @@
 slug: hccjp-77-arc-operations
-title: 「Azure Arc、便利なのはわかった。で、壊れたら？」 ─ 運用で気になることを試してみた
-summary: Azure Arc で繋げばオンプレの管理は楽になる。では本番運用に入れる前に確かめておきたいこと ─ パッチで壊れた、スナップショットで巻き戻した、バックアップから復元した、そのとき Azure 側はどうなるのか ─ を実機で検証した記録。Arc 経由で使える機能の棚卸しから、Azure Update Manager、無料化された Hotpatch、そして「戻し方」まで。HCCJP 第77回勉強会（2026-09-11）の進行スライド。
+title: サーバーが巻き戻ったとき、Azureはどうなる？ ─ Arcのエージェント・マシン構成・Policyを実機で戻してみた
+summary: バックアップから復元した、スナップショットで巻き戻した。そのとき Azure Arc のエージェント、マシン構成、Azure Policy はどうなるのか。実機（Windows Server 2025）をセッション中に4日前へ巻き戻し、何が自力で戻り、何が戻らないかを測ります。持ち帰りは「復元・巻き戻しのあとに回す5つの手順」。戻し方が確立していれば、Azure Update Manager でパッチを当てるのは怖くない、というところまで。HCCJP 第77回勉強会（2026-09-11）の進行スライド。
 status: draft
 visibility: private
 createdAt: "2026-09-05"
-updatedAt: "2026-09-05"
+updatedAt: "2026-09-09"
 canvas: wide
 order: 77
 tags:
   - azure-arc
   - hybrid-cloud
+  - azure-policy
+  - guest-configuration
   - azure-update-manager
-  - hotpatch
-  - backup
   - hccjp
 slides:
   - id: opening
-    title: Azure Arc、便利なのはわかった。で、壊れたら？
+    title: サーバーが巻き戻ったとき、Azureはどうなる？
     durationInFrames: 240
     notes: |-
-      HCCJP第77回勉強会を始めます。今日のテーマは「Azure Arc、便利なのはわかった。で、壊れたら？」です。前回まででArcを使うとオンプレの管理が楽になることはお見せしました。今日はその先、本番運用に入れる前に確かめておきたいことを、実機で片っ端から試した結果をお話しします。
+      HCCJP第77回勉強会を始めます。今日のテーマは「サーバーが巻き戻ったとき、Azureはどうなるのか」です。前回まででArcを使うとオンプレの管理が楽になることはお見せしました。今日はその先です。バックアップから戻した、スナップショットで巻き戻した。そのときAzure側で何が起きるのか。エージェント、マシン構成、Azure Policyの3つに絞って、実機で確かめた結果をお話しします。
 
-      【開始前の仕込み・13:50】ポータルで Update Manager の評価を arcwin01 / arclnx01 の2台にかけておく（結果が出るまで2〜4分。ここで回しておけば assess-result のスライドで即座に見せられる）。ブラウザのタブは左から［Arc マシン一覧］［arcwin01 Overview］［Update Manager］［マシン構成］［Resource Graph エクスプローラー］の順に開いておく。ターミナルは1枚、文字サイズは18pt以上（コマンド中の $SUB は export SUB=... で先に通しておく。詳細は presentations リポジトリの HCCJP_77/run-of-show.md）。
+      しかも今日は、このセッションの途中で実際に巻き戻します。戻したあとの15分を、そのまま結果を見る時間に使います。
+
+      【開始前の仕込み・13:50】(1) Update Manager の評価を arcwin01 / arclnx01 にかけておく（2〜4分かかる）。(2) **Run Command を1回空打ちしておく** ─ 初回は約9分かかるので、温めないと本番で必ず待たされる。(3) ブラウザのタブを左から［Arc マシン一覧］［arcwin01 Overview］［arcwin01 マシン構成］［Policy コンプライアンス］［Update Manager］［Resource Graph エクスプローラー］［Hyper-V マネージャー（nested-lab-01 へRDP）］の順に固定。(4) ターミナル1枚・18pt以上、`export SUB=...` を通しておく。詳細は presentations リポジトリの HCCJP_77/run-of-show.md。
   - id: agenda
     title: 本日の流れ
     durationInFrames: 200
     notes: |-
       本日の流れです。14時5分から45分ほど私のセッション、そのあとQ&A、15時から高添さんのAdaptive Cloud最新動向、最後にクロージングという構成です。
 
-      【画面なし】ここは口頭のみ。次の profile を出しながら、共有画面がスライドになっていることを確認する。
+      【画面なし】口頭のみ。ここは30秒で抜ける。
   - id: profile
     title: 話す人
     durationInFrames: 170
@@ -39,11 +41,18 @@ slides:
     notes: |-
       前回、第76回では、オンプレのサーバーをその場で壊して、AIエージェントに直してもらいました。誰もそのサーバーにログインせず、VPNも踏み台もなしで、Azure越しに調査から復旧まで通しました。Arcで繋いでおけば、オンプレの面倒くささはかなり消える、というところまではお見せできたと思います。
 
+      ポイントは右側です。Azure側の入口が az コマンドに統一されているので、AIエージェントがそのまま運用の手を持てる。これは今日の最後にもう一度出てきます。
+
       【画面・15秒】第76回のアーカイブ（https://www.youtube.com/@hccjp）のサムネイルを一瞬だけ見せて「これです」と言う。再生はしない。
-  - id: the-wall
-    title: でも、本番に入れるとなると
+  - id: the-lab
+    title: 今日の登場人物 ─ どこにいるサーバーなのか
     durationInFrames: 260
-    notes: ただ、そこから「じゃあ本番でも使おう」に進むには、もうひとつ越える壁があります。何かあったとき、どうなるのか。パッチを当てて壊れた、巻き戻した、復元した。そのときAzure側はどうなっているのか。ここが分からないままだと、いざというときに手が止まります。
+    notes: |-
+      今日巻き戻すサーバーが、どこにいるのかを先に共有させてください。3層になっています。一番外側のL0が事務所の物理サーバー。その中で動いているL1が、ネストされたHyper-Vホスト。そのさらに中にいるL2が、Arcに繋いであるarcwin01とarclnx01です。
+
+      ここで押さえていただきたいのは、**戻す人と戻される人が別の層にいる**ということです。チェックポイントを持っているのはL1で、Azureから見えているのはL2だけ。つまりAzureは、自分の管理下のサーバーが巻き戻されたことを、直接には知りようがない。この構造が、今日の結果のほとんどを説明します。
+
+      【画面・40秒】nested-lab-01 に RDP して Hyper-V マネージャーを開き、arcwin01 / arclnx01 と、そこに刺さっているチェックポイント（T1-hccjp77 と T3-compliant-20260909）を見せる。「この画面はAzureポータルではありません。Azureからは触れない場所です」と言う。
   - id: inventory
     title: まず棚卸し ─ Arc経由で何が手に入るのか
     durationInFrames: 250
@@ -57,137 +66,173 @@ slides:
     notes: |-
       一覧で見せるだけでは意味がないので、実際に動かしました。Arc経由のコマンド実行は42秒で返ってきます。マネージドIDのトークンもゲストの中から取れました。拡張機能の配布も動きます。そしてSSH。NATの内側にいる10.10.0.41のサーバーに、ポートを1つも開けずにインターネット越しでログインできました。全部、インバウンドの穴なしです。
 
-      【デモ①・実機・2〜3分】Run Command をその場で流す。PowerShell（Windows Terminal）でそのまま貼れる形。
-        ポイント: PowerShell では `--body @runcmd.json` の `@` が splatting 演算子と解釈されて ParserError になる。必ず `"@runcmd.json"` とダブルクオートで囲む。
-        URL 内の `$expand` も同じ理由でシングルクオート側に置く（ダブルクオートだと空変数に展開されて消える）。
-
-        # ① 準備（開始前に1回だけ流しておく。runcmd.json をカレントに作る）
-        $SUB = az account show --query id -o tsv
-        $RG = "rg-hccjp76-arc"; $M = "arclnx01"
-        $body = '{"location":"japaneast","properties":{"source":{"script":"echo HOST=$(hostname); . /etc/os-release; echo OS=$PRETTY_NAME"},"asyncExecution":false,"timeoutInSeconds":90}}'
-        Set-Content -Path runcmd.json -Value $body -Encoding ascii
-
-        # ② 本番。実行のたびに名前を変える（同名を消して作り直すと Deleting で数分待たされる）
-        $RC = "hccjp77-" + (Get-Date -Format HHmmss)
-        $URL = "https://management.azure.com/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.HybridCompute/machines/$M/runCommands/$RC" + "?api-version=2024-07-10"
-        az rest --method put --url $URL --body "@runcmd.json" -o none
-
-        # ③ 結果を取りに行く（Creating の間ポーリング。出たら output を表示）
-        $GET = $URL + '&$expand=instanceView'
-        foreach ($i in 1..40) { $r = az rest --method get --url $GET | ConvertFrom-Json; Write-Host "$($i*5)s $($r.properties.provisioningState)"; if ($r.properties.provisioningState -ne 'Creating') { break }; Start-Sleep 5 }
-        $r.properties.instanceView.output
-
-        HOST=arclnx01 / OS=Ubuntu 24.04.4 LTS が出れば成功。
-        タイミング: ②の PUT は1秒で返る（ここで「投げた瞬間に返ってきます」と言える）。結果が出るまでは実測で約80秒。
-        待っている80秒が話す時間。「インバウンドは1つも開けていません」「今このコマンドは Azure からエージェントに降りていっています」。
-        ゲスト内での実行時間そのものは1秒。残りは Azure とエージェントの往復。
-      ※戻ってこないときは深追いしない。スライドの数字に戻す。
-  - id: update-manager
-    title: Azure Update Manager ─ 同じ画面から、パッチを適用する
-    durationInFrames: 230
-    notes: |-
-      今日の中心にあるのがAzure Update Managerです。AzureのVMもオンプレのサーバーも、同じ画面で更新プログラムの状態を評価して、メンテナンス時間を決めて、パッチを適用できます。Windows と Linux が同じ操作で扱えるのがポイントです。
-
-      【画面・1分】ポータル ＞ Azure Update Manager ＞［マシン］。Azure VM とオンプレの arcwin01 / arclnx01 が同じ一覧に並んでいるところを見せるのがこのデモの主役。フィルターで［Arc 対応サーバー］に絞って戻す動きを1回入れると伝わる。
-  - id: assess-result
-    title: 【実機】評価してみた ─ WindowsはWU、LinuxはAPT
-    durationInFrames: 250
-    notes: |-
-      実際に両方のOSで評価をかけてみました。Windowsは2分、Linuxは4分で完了しています。裏で使われているのはWindowsがWindows Update、LinuxがAPTで、Update Managerはそれぞれのネイティブな仕組みを呼んでいるだけです。面白いのはLinuxで、3件がUbuntu Proのサブスクリプションを要求するというエラーが返りました。評価はできるが当てられない。ハイブリッド運用のリアルです。
-
-      【デモ②・開始前に仕込んだ結果を回収】Update Manager の評価結果を開き、Windows と Linux を並べて見せる。Linux の「Ubuntu Pro のサブスクリプションが必要」というエラー行を必ず指差す（ここが今日いちばん実務的な発見）。
-      CLI で見せるなら（実測で動作確認済み）:
-        az graph query -q "patchassessmentresources | where type =~ 'microsoft.hybridcompute/machines/patchassessmentresults' | project machine=split(id,'/')[8], status=properties.status, counts=properties.availablePatchCountByClassification" --subscriptions $SUB -o json
-  - id: billing
-    title: 何をすると、いくら課金されるのか
+      【デモ①・実機・2〜3分】Run Command をその場で流す（**開始前に空打ちで温めてあること**）。コマンドは run-of-show.md のデモ①から。待っている間に「インバウンドのポートは1つも開けていません。エージェントが外向き443だけで取りに来ています」と話す。
+      **保険**: 40秒で返らなければ深追いしない。既存の実行結果（runCommands/hccjp77-check）を GET して見せるか、スライドの「42秒」に戻す。
+  - id: three-questions
+    title: 今日はっきりさせる、3つだけ
     durationInFrames: 280
     notes: |-
-      課金の話を整理します。まず大事なのは、Arcに繋ぐこと自体は無料だということです。エージェントを入れて、Azureにサーバーを見えるようにして、タグを付けて、RBACで権限を切って、Resource Graphで検索して、拡張機能を配って、Run Commandを流す。ここまでは1円もかかりません。課金されるのは、その上で使うサービスです。Update Managerはサーバー1台あたり月5ドル、マシン構成は月6ドル。どちらもAzure VMなら無料で、オンプレを混ぜた瞬間に有料になります。
+      ここからが今日の本題です。機能の紹介はここまでにして、残りの時間は3つの問いだけを追いかけます。
 
-      【画面・30秒】ポータル ＞ コスト管理 ＞ コスト分析。粒度を［日別］、フィルターをリソースグループ rg-hccjp76-arc にして、2台で1日あたり数十円のグラフを見せる。「繋ぐだけなら0円、Update Manager を有効にした日から線が立ち上がる」と読み上げる。
-  - id: hotpatch
-    title: Hotpatch が、無料になっていました
-    durationInFrames: 230
+      パッチで壊れた。スナップショットで巻き戻した。バックアップから復元した。そのとき、1つ目、エージェントはどうなるのか。Azureとの繋がりは切れるのか、切れたら現地に行かずに戻せるのか。2つ目、マシン構成はどうなるのか。配ったOS設定は当然巻き戻りますが、Azureは気づいて自分で直してくれるのか。3つ目、Policyはどうなるのか。割り当ては残るのか、そしてポータルに出ている準拠・非準拠の表示は、いつ本当のことを言っているのか。
+
+      この3つの答えを、手順書の形にして持ち帰っていただきます。
+
+      【画面なし】ここはスライドのまま、ゆっくり。3つを指で数えながら話す。
+  - id: mc-vs-policy
+    title: 「マシン構成」と「Azure Policy」は、別のもの
+    durationInFrames: 300
     notes: |-
-      そしてこれはぜひ知っていただきたいのですが、2026年5月19日から、Windows Server 2025のHotpatchがArc接続マシンで追加費用ゼロになりました。GAした2025年7月時点ではコアあたり月1.5ドルの有償でしたが、per-coreのメーターごと廃止されています。再起動を減らせる選択肢が、オンプレの資産にタダで降りてきています。
+      その前に、1つだけ用語を整理させてください。ここを混ぜると、このあとの話が全部ぼやけます。実は前回の私が混ぜていました。
 
-      【画面・30秒】Microsoft Learn の Hotpatch の価格に関するページを開き、「2026年5月19日以降、Arc 接続マシンでは追加費用なし」の一文をカーソルで指す。一次情報を見せることが目的なので、ページを開いて指すだけでよい。
+      Azure Policyが見るのは、Azureリソースの「形」です。このArcマシンに拡張機能が入っているか、といった話。一方マシン構成、Guest Configurationが見るのは、OSの「中身」です。タイムゾーンが東京か、TLS 1.2が有効か。動く場所も違って、Policyの評価はAzure側で、マシン構成の評価は実機の中の拡張機能が行います。
+
+      そして下の行が今日の伏線です。Policyはマシン構成を配る入れ物にもなるので、**準拠状態が2か所に出ます**。しかもその2つは、同じタイミングで更新されません。マシン構成は15分ごと、Policyは既定で24時間ごと。この時計のズレが、あとで効いてきます。
+
+      【画面なし】スライドのまま。ここは急がない。「2か所に出る」「時計が違う」の2つだけ持って帰ってもらえれば十分。
   - id: two-nets
-    title: 戻す手段は二段構え
-    durationInFrames: 250
-    notes: |-
-      ここから本題です。パッチを当てる前に、戻せる手段を用意しますよね。ここで大事なのは、チェックポイントとバックアップは役割が違うということです。チェックポイントは同じホストの同じストレージに乗るので、ホストごと死んだら一緒に消えます。速く戻せるかわりに、保険にはならない。
-
-      【画面なし】口頭のみ。次の checkpoint-doc で公式ドキュメントを開くので、ブラウザのタブを先に選んでおく。
-  - id: checkpoint-doc
-    title: 「スナップショットはダメ」は半分だけ正しい
-    durationInFrames: 240
-    notes: |-
-      よく「本番でスナップショットを使うな」と言われますが、公式ドキュメントの冒頭には、ソフトウェア更新を当てる前にチェックポイントを作るとよい、と書かれています。ダメなのはバックアップの代わりに使うことです。ただし標準チェックポイントはADのような分散レプリケーションで不整合を起こすので、本番チェックポイントを明示的に選んでください。
-
-      【画面・30秒】Hyper-V のチェックポイントに関する Microsoft Learn のページを開き、「ソフトウェア更新を適用する前にチェックポイントを作成するとよい」の記述と、本番/標準チェックポイントの違いの節を指す。「ダメと言われているのはバックアップの代用にすることです」と重ねる。
-  - id: experiment
-    title: 【実験】Azureが先へ進んだあとに、ローカルだけ巻き戻す
-    durationInFrames: 280
-    notes: |-
-      そこで実験を組みました。Arcに繋いだWindows Server 2025とUbuntuに、拡張機能と構成ポリシーを配ります。チェックポイントを取ります。その後Azure側から変更を進めます。そして巻き戻す。Azureは先に進んでいて、ローカルだけ過去に戻る。この状態で何が起きるかを測りました。
-
-      【画面・1分】nested-lab-01（10.20.0.20）の Hyper-V マネージャーをリモートデスクトップで開く。arcwin01 / arclnx01 と、それぞれに残っているチェックポイント T1-hccjp77 を見せる。実験の舞台が本物であることを1回見せておくと、後の実測値が効く。
-      ※このデモは「巻き戻しを本番でやる」のではなく、既に取ってある T1 を見せるだけ。時間があれば arcwin01 を実際に巻き戻して、result-ext の9分をタイマーで回しながら進めてもよい（上級編・進行に余裕があるときだけ）。
-  - id: result-ext
-    title: 【結果1】拡張機能は、自力で追いついた
-    durationInFrames: 280
-    notes: |-
-      結果です。拡張機能は両方のOSで自動的に追いつきました。Linuxは巻き戻しから約80秒。Windowsは約9分かかり、しかも2段階でした。まず巻き戻したローカルの古い設定でそのまま1回実行し、その8分後にAzureの最新を取り直しています。つまり一時的に古い状態が復活する窓があります。
-
-      【デモ③・実機・1分】巻き戻し後に拡張機能が追いついた証拠として、実機の marker.txt を Run Command で表示する（Windows は C:\hccjp77\marker.txt、Linux は /var/tmp/hccjp77/marker.txt）。今は T2 の内容が入っている。
-      ログを見せる場合は事前に撮ったスクリーンショットを使う。「has new settings - enqueuing extension」「already installed - Not enqueuing」の2行が主役。ライブでログを掘りに行かない。
-  - id: result-blind
-    title: 【結果2】Azureは、巻き戻しに気づかない
-    durationInFrames: 260
-    notes: |-
-      そしてこれが重要です。巻き戻しと再起動をまたいでも、Azureポータルのステータスは終始Connected、拡張機能はSucceededのままでした。ハートビートは5分ごと、15分途切れて初めてDisconnectedになるので、その猶予に収まってしまいます。ポータルの緑は、実機の中身を保証していません。
-
-      【画面・40秒】ポータルの arcwin01 Overview（ステータス = Connected）と、［拡張機能］一覧（hccjp77-marker = Succeeded）を続けて見せる。「巻き戻している最中も、この画面はずっとこの色でした」と言う。ここが今日いちばんの持ち帰りポイント。
-  - id: result-mc
-    title: 【結果3】構成ポリシーは ─ 直るものと、直らないものがあった
+    title: 戻す手段は、二段構え
     durationInFrames: 290
     notes: |-
-      一方で、machine configurationには続きがあります。最初に試したタイムゾーンの構成は、ApplyAndAutoCorrectで割り当てたのに24時間以上たっても実機が変わらず、NonCompliantが記録され続けました。ここで止めれば「構成ポリシーは効かない」という結論になったのですが、切り分けをしました。同じWindowsマシンに、別のビルトイン構成、TLSの最小バージョンを設定するものを同じモードで割り当てたところ、16分でCompliantになり、実機のレジストリも実際に作られていました。つまりWindowsだからダメなのではなく、特定の構成パッケージだけが動いていない。ここは切り分けないと誤った一般化をするところでした。
+      戻す手段の整理です。チェックポイントとバックアップは役割が違います。チェックポイントは同じホストの同じストレージに乗るので、ホストごと死んだら一緒に消えます。速く戻せるかわりに、保険にはならない。ランサムウェアにもほぼ無力です。
 
-      【デモ④・実機・1分】ポータル ＞ arcwin01 ＞［マシン構成］。実際に今の割り当てが並んでいる（2026-09-07 時点の実測: SetWindowsTimeZone = 非準拠 / SetSecureProtocol = 準拠 / AuditSecureProtocol = 準拠）。同じ ApplyAndAutoCorrect でも直るものと直らないものがある、を画面で見せる。
-      CLI で見せるなら:
-        az rest --method get --url "https://management.azure.com/subscriptions/$SUB/resourceGroups/rg-hccjp76-arc/providers/Microsoft.HybridCompute/machines/arcwin01/providers/Microsoft.GuestConfiguration/guestConfigurationAssignments?api-version=2022-01-25"
-  - id: byproducts
-    title: ついでに分かったこと
-    durationInFrames: 250
+      よく「本番でスナップショットを使うな」と言われますが、公式ドキュメントには、ソフトウェア更新を当てる前にチェックポイントを作るとよい、と書かれています。ダメなのはバックアップの代わりに使うことです。
+
+      それから、これは今回の検証中に踏んだ罠なので共有します。本番チェックポイントを使えという話はよく聞きますが、**Get-VMSnapshot の SnapshotType では本番と標準を見分けられません**。実測で、VMのCheckpointTypeがProductionOnlyになっているのに、作られたチェックポイントのSnapshotTypeはStandardと表示されました。確認したいときは Get-VM の CheckpointType を見てください。
+
+      復元先の話も1行入れてあります。MABSで戻す場合、元のVMに戻すのは公式にサポート内。別ホストに戻すと管理対象外のVMになります。つまり**元の場所に戻す設計にすれば、全部サポート内で回ります**。パッチ失敗のロールバックは、まさにこのケースです。
+
+      【画面・20秒】必要なら Microsoft Learn のチェックポイントのページを開いて「applying a software update」の一文を指す。時間が押していたら開かずに口頭だけでよい。
+  - id: experiment
+    title: 今ここで、4日前まで巻き戻します
+    durationInFrames: 300
     notes: |-
-      検証の途中で分かったことも共有します。Azure側のリソースを消すと、エージェントは自力で復帰できません。実際このラボは22日間ずっとDisconnectedのまま、トークンが取れないというエラーを出し続けていました。復旧はコマンド2つ、1分から2分です。
+      では、やります。9月5日にチェックポイントを取ってあります。そこから9日の今日まで、Azure側で構成を積み上げて、マシン構成を全部準拠の状態にしました。今の状態も念のため保存してあります。
 
-      【画面・20秒】事前スクリーンショットで、22日間 Disconnected だったときのエージェントのエラー（Unable to acquire token - please disconnect and reconnect）を見せる。復旧コマンド2本はスライドの文字で足りるので、ライブで切断はしない。
-  - id: backup-line
-    title: バックアップと復元 ─ サポート内と、その外
-    durationInFrames: 260
+      これから、arcwin01を9月5日のチェックポイントまで巻き戻します。Azure側は9日のまま、実機だけが4日前に戻る。**「古いバックアップから復元した」のと同じ状態**です。
+
+      戻したあと、何が自分で戻ってきて、何が戻ってこないのかを、このセッションの中で測ります。だいたい15分。ちょうど次の3枚を話し終わるころに答えが出るはずです。
+
+      【デモ②・実機・1分・ここが今日の山場】Hyper-V マネージャー（nested-lab-01）で arcwin01 を右クリック →［適用］→ T1-hccjp77。あるいはターミナルから Restore-VMSnapshot。**戻したら時計を口頭で宣言する**（「今14時35分、ここから測ります」）。ポータルの arcwin01 Overview のタブを開いたままにして、以降ときどき戻る。
+      **保険**: 巻き戻しが失敗したら、深追いせず「事前に同じことをやった記録があります」と言って、事前実測のスクリーンショットへ切り替える。復旧は T3-compliant-20260909 を適用すれば戻る。
+  - id: result-agent
+    title: ①エージェントは、どうなるのか
+    durationInFrames: 290
     notes: |-
-      バックアップの話もします。Microsoft純正でHyper-VのVMを丸ごと守るならMABSが必要です。そして復元先で扱いが変わります。元のVMインスタンスに戻すのは公式にworks as expected。別の場所に戻すと管理対象外のVMになり、Azure Local VMには変換できません。つまり元の場所に戻す設計にすれば、全部サポート内で回ります。
+      1つ目の問い、エージェントです。
 
-      【画面なし】口頭のみ。ここでブラウザを Resource Graph エクスプローラーのタブに切り替えておく（次の checklist で使う）。
-  - id: checklist
-    title: 持ち帰っていただきたい ─ 戻し方チェックリスト
-    durationInFrames: 270
+      いま巻き戻したばかりですが、ポータルを見てください。**Connected のままです**。Arcのリソースも、割り当ても、そのまま残っています。一方で実機は4日前に戻っていて、ローカルの構成も証明書も過去のものです。
+
+      なぜ気づかないかというと、ハートビートは5分ごとで、15分途切れて初めてDisconnectedになるからです。巻き戻しはその猶予に収まってしまう。さっきのL0/L1/L2の話に戻りますが、Azureから見えているのはL2だけで、巻き戻しはAzureの外側で起きているので、通知が飛ぶ経路がそもそもありません。
+
+      ですので、**ポータルの緑は、実機の中身を保証していません**。ここが今日いちばんの持ち帰りポイントです。
+
+      【要測定 ─ 検証後にスライドの数値を差し替える】Disconnectedになるか／何分で／自力復帰するか／出るエラー。既知の事実として、Azure側のリソースを消したケースでは22日間Disconnectedのままで「Unable to acquire token」を出し続け、復旧はコマンド2本・1〜2分だった。
+
+      【画面・40秒】ポータルの arcwin01 Overview（ステータス = Connected）を見せる。「今まさに巻き戻している最中ですが、この画面はこの色のままです」と言う。
+  - id: result-mc
+    title: ②マシン構成は、どうなるのか
+    durationInFrames: 300
     notes: |-
-      今日いちばん持ち帰っていただきたいのがこれです。復元や巻き戻しのあとに何を確認するか。Arcの接続状態、拡張機能が最新の設定で再適用されたか、構成ポリシーは手で是正が要るか、そしてパッチのコンプライアンス表示は再評価したか。この4つです。
+      2つ目、マシン構成です。ここは割り当てのモードで結論が変わります。
 
-      【デモ⑤・実機・1分】チェックリストの1〜2番目を、その場のクエリで確認して見せる。Resource Graph エクスプローラーに貼るクエリ（動作確認済み）:
-        resources | where type =~ 'microsoft.hybridcompute/machines' | project name, status=properties.status, agent=properties.agentVersion, lastSeen=properties.lastStatusChange
-      「復元したあと、この1本を流せば全台まとめて見られます」で締める。ここが今日いちばん持ち帰ってほしい実物。
+      左のApplyAndAutoCorrect。タイムゾーンとTLSの構成をこのモードで割り当てています。実機の設定は巻き戻りますが、**割り当てはAzure側にあるので消えません**。あとは、エージェントが自分で直しに来るのを待てるかどうかです。何分で戻るかは、今まさに測っている最中です。
+
+      右のAudit。Windowsのセキュリティベースラインで、373項目のうち278項目が非準拠です。これは今日直しません。というより、**Auditは直さない。教えてくれるだけ**です。巻き戻しても、非準拠が非準拠として報告され続けるだけで、何も起きません。
+
+      ここが大事なところで、割り当てモードを見ないまま「構成が効いていない」と言ってはいけない。Auditは最初から直す気がないんです。前回の私は、ここを含めて色々と誤解していました。
+
+      【要測定】ApplyAndAutoCorrect が巻き戻し後に何分で Compliant へ戻るか。SetWindowsTimeZone / SetSecureProtocol の2つで測る。
+
+      【デモ③・実機・1分】ポータル ＞ arcwin01 ＞［マシン構成］。割り当ての一覧と、それぞれの割り当ての種類（ApplyAndAutoCorrect / Audit）が並んでいるのを見せる。巻き戻し直後なので、まだ準拠のままか、非準拠に落ちているかを実況する。
+  - id: result-policy
+    title: ③Policyの「赤」は、9分前の話かもしれない
+    durationInFrames: 300
+    notes: |-
+      3つ目、Policyです。これは巻き戻しの前に見つけていた話から始めます。
+
+      今日の午前中、私はタイムゾーンの構成を直しました。10時33分に、マシン構成は準拠になりました。ところが同じ時刻、Azure Policyのコンプライアンスは非準拠のままでした。10分後に見ても、まだ非準拠でした。
+
+      **OSの中身はもう直っているのに、Policyはまだ赤い**。これは壊れているのではなくて、さっきの「時計が2つある」話そのものです。Policyの準拠評価は既定で24時間ごとなので、直した直後に見ても前の判定が残っています。
+
+      逆も起きます。壊れた直後に見れば、Policyはまだ緑です。つまり**復元直後のPolicyの表示は、どちらの向きにも信用できない**。見る前に再スキャンをかけてください。コマンドはこの1行です。
+
+      【要測定】巻き戻し後、Policy が非準拠に変わるまで何分か。trigger-scan で即座に追いつくか。
+
+      【デモ④・実機・1分】ターミナルで `az policy state trigger-scan --resource-group rg-hccjp76-arc` を打つ。**これは数分かかるので、打ってから次のスライドへ進み、recovery-runbook で結果を見に戻る**。ポータルの Policy コンプライアンス画面も一度見せる。
+  - id: timezone-trap
+    title: 【地雷】日本語Windowsでは、組み込みポリシーが原理的に動かない
+    durationInFrames: 310
+    notes: |-
+      待っている間に、今回いちばん驚いた話をさせてください。
+
+      タイムゾーンを東京にするだけの組み込みポリシーが、ApplyAndAutoCorrectで割り当てているのに、いつまでたっても直りませんでした。前回の私は、ここで「構成ポリシーは効かないことがある」と結論していました。今回、中身まで降りて調べたら、原因はこれでした。
+
+      組み込みのDSCリソースが、タイムゾーンをIdではなく**DisplayNameで照合**していたんです。実機の日本語WindowsのDisplayNameは「かっこUTCプラス9、大阪、札幌、東京」。ポリシー側の許容値は英語の「Osaka, Sapporo, Tokyo」。一致しないので変数がnullになって、Set-TimeZoneがnullを渡されて落ちる。
+
+      つまり**日本語のWindowsでは、この組み込みポリシーは原理的に動きません**。しかもApplyAndAutoCorrectなので、15分ごとに永久に失敗し続けます。回避策は、日本語の表示名を許容値にしたカスタム定義を作ることでした。
+
+      持ち帰っていただきたいのは、「Policyが効かない」の原因が、**Policyの外**にあることがある、ということです。1回の失敗から「この機能は使えない」と一般化する前に、中を見に行ってください。
+
+      【画面なし】スライドのまま。ここは笑いどころでもあるので、ゆっくり話す。
+  - id: recovery-runbook
+    title: 復元・巻き戻しのあとに回す、5つの手順
+    durationInFrames: 300
+    notes: |-
+      今日いちばん持ち帰っていただきたいのが、これです。復元や巻き戻しのあとに、この5つを順番に回してください。
+
+      1つ目、Arcの接続を戻す。Disconnectedになっていても現地に行く必要はありません。azcmagent disconnect --force-local-only、そして azcmagent connect。この2本で1〜2分です。2つ目、拡張機能は最新の設定で再適用されるのを待つ。3つ目、マシン構成はモードで仕分ける。ApplyAndAutoCorrectは待てば直りますが、**Auditは待っても直りません**。4つ目、Policyは再スキャンをかけてから見る。打つまで画面は前の判定のままです。5つ目、パッチのコンプライアンスも同じで、再評価してから判断する。
+
+      状態の確認はResource Graphの1本クエリで全台まとめて見られます。復元したあと、これを流せば全部わかります。
+
+      【デモ⑤・実機・2分・巻き戻しの答え合わせ】ここで experiment から約15分。(1) ポータルで arcwin01 のステータスを見る（Connected か Disconnected か）。(2)［マシン構成］で ApplyAndAutoCorrect の2つが準拠に戻っているかを見る。(3) さっき打った trigger-scan の結果を Policy コンプライアンスで見る。(4) Resource Graph エクスプローラーで1本クエリを流す。
+      クエリ: `resources | where type =~ 'microsoft.hybridcompute/machines' | project name, status=properties.status, agent=properties.agentVersion, lastSeen=properties.lastStatusChange`
+      **保険**: まだ戻っていなくても、それが結果。「15分では戻りませんでした」と言えばよい。事前実測の値をスライドに持っているので、そちらで補う。
+      **後始末（セッション後・忘れない）**: arcwin01 を T3-compliant-20260909 へ戻す。
+  - id: update-manager
+    title: だから、ガンガン当てていい
+    durationInFrames: 290
+    notes: |-
+      ここまでが今日の中身です。最後に、じゃあ何が嬉しいのかという話をします。
+
+      Azure Update Managerを使うと、WindowsもLinuxも、AzureのVMもオンプレのサーバーも、同じ1つの画面に並びます。メンテナンス時間を決めて定期適用もできるし、適用の前後に自分のスクリプトを挟むこともできる。オンプレ側はArcで繋ぐだけで、通信はアウトバウンドの443だけです。
+
+      課金は右のとおりです。Arcに繋ぐこと自体、拡張機能を配ること、Run Commandを流すことは全部無料。課金されるのはその上のサービスで、Update Managerが1台あたり月5ドル、マシン構成が月6ドル。どちらもAzure VMなら無料で、オンプレを混ぜた瞬間に有料になります。
+
+      そして下の行です。パッチを当てるのが怖いのは、壊れたときに戻せるか分からないからです。今日、**壊れても戻せる手順**ができました。だから先延ばしにしなくていい。当てないことのほうが、いまはリスクだと思います。
+
+      【画面・40秒】ポータル ＞ Azure Update Manager ＞［マシン］。**Azure VM とオンプレが同じ一覧に並ぶところ**が主役。開始前に流しておいた評価の結果も、ここで一緒に見せる。
+  - id: hotpatch
+    title: そもそも再起動を減らす、という手もあります
+    durationInFrames: 230
+    notes: |-
+      もう1つ、ぜひ知っていただきたいことがあります。2026年5月19日から、Windows Server 2025のHotpatchが、Arc接続マシンで追加費用ゼロになりました。GAした2025年7月時点ではコアあたり月1.5ドルの有償でしたが、per-coreのメーターごと廃止されています。
+
+      再起動を減らせる選択肢が、オンプレの資産にタダで降りてきています。戻し方を持ったうえに、そもそも止める回数も減らせる。
+
+      【画面・20秒】Microsoft Community Hub の該当記事を開いて、費用の記述を指すだけ。時間が押していたらスライドのまま口頭で。
+  - id: ai-covers
+    title: ここまで全部、AIにやらせています
+    durationInFrames: 300
+    notes: |-
+      最後にもう1つだけ。今日お話しした検証、実はほとんど私が手を動かしていません。
+
+      割り当てと準拠状態を横断で取ってくるのも、「効かない」の原因をDSCリソースの中身まで降りて特定したのも、カスタムのポリシー定義を書いて当てて準拠を確認したのも、そして今日お見せした5つの手順書に起こしたのも、AIエージェントです。最初のスライドで言った「Azure側の入口がazコマンドに統一されている」というのは、こういうことです。手が届く形になっているので、そのまま任せられる。
+
+      ただし、正直に申し上げておきたいことがあります。**今日いちばんの学びは、前回の私が間違っていたことでした**。そもそも適用できていない構成を見て、「この機能は使えない」と結論していたんです。AIも、私も、実機で測るまでは間違えます。だから測りに行く。それが今日やったことです。
+
+      【画面なし】スライドのまま。ここは正直に、ゆっくり。ここで信頼を作る。
   - id: conclusion
     title: だから、運用に入れていい
-    durationInFrames: 260
+    durationInFrames: 270
     notes: |-
-      まとめです。Arcは思ったより強い。拡張機能は自力で追いつきますし、Azure側のオブジェクトは巻き戻しでは消えません。ただし追いつくまでに時間差があり、その間ポータルは緑です。そして構成ポリシーのように追いついてこないものもある。だからこそ、戻し方を手元に持っておけば、Arcは安心して運用に入れられます。Update Managerも使っていきましょう。
+      まとめます。巻き戻しても、Azure側の割り当ては消えません。戻ってくるのは実機の側だけです。ただし時計が3つあります。エージェントの15分、マシン構成の15分、そしてPolicyの24時間。この3つがズレているので、画面を見た瞬間の色は当てになりません。
 
-      【画面なし】スライドのまま話す。ここで共有画面がポータルのままにならないよう注意。
+      そして5つの手順を手元に持っておけば、それだけで、怖さがただの作業に変わります。
+
+      Azure Update Manager、使っていきましょう。
+
+      【画面なし】スライドのまま話す。共有画面がポータルのままにならないよう注意。
   - id: next-session
     title: 続いて ─ Microsoft "Adaptive Cloud" 最新動向
     durationInFrames: 180
@@ -213,3 +258,4 @@ slides:
       本日はご参加ありがとうございました。次回は10月9日、第2金曜日の14時からです。またお会いしましょう。
 
       【画面】最後に hccjp.org（https://www.hccjp.org/）を開き、次回10月9日の枠と過去回アーカイブを見せてから配信を終える。
+      **配信終了後にやること**: arcwin01 を T3-compliant-20260909 へ戻す（巻き戻したままにしない）。
