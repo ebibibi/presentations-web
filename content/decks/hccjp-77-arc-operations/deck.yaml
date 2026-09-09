@@ -57,11 +57,31 @@ slides:
     notes: |-
       一覧で見せるだけでは意味がないので、実際に動かしました。Arc経由のコマンド実行は42秒で返ってきます。マネージドIDのトークンもゲストの中から取れました。拡張機能の配布も動きます。そしてSSH。NATの内側にいる10.10.0.41のサーバーに、ポートを1つも開けずにインターネット越しでログインできました。全部、インバウンドの穴なしです。
 
-      【デモ①・実機・2〜3分】Run Command をその場で流す。
-        az rest --method put --url "https://management.azure.com/subscriptions/$SUB/resourceGroups/rg-hccjp76-arc/providers/Microsoft.HybridCompute/machines/arclnx01/runCommands/hccjp77-live?api-version=2024-07-10" --body @runcmd.json
-        （返ってくるまで40秒ほど。待っている間に「インバウンドは1つも開けていません」と話す）
-        結果は az rest --method get で instanceView.output を表示。HOST=arclnx01 / OS=Ubuntu 24.04.4 LTS が出れば成功。
-      ※戻ってこないときは深追いしない。「前回の実測では42秒でした」とスライドの数字に戻す。
+      【デモ①・実機・2〜3分】Run Command をその場で流す。PowerShell（Windows Terminal）でそのまま貼れる形。
+        ポイント: PowerShell では `--body @runcmd.json` の `@` が splatting 演算子と解釈されて ParserError になる。必ず `"@runcmd.json"` とダブルクオートで囲む。
+        URL 内の `$expand` も同じ理由でシングルクオート側に置く（ダブルクオートだと空変数に展開されて消える）。
+
+        # ① 準備（開始前に1回だけ流しておく。runcmd.json をカレントに作る）
+        $SUB = az account show --query id -o tsv
+        $RG = "rg-hccjp76-arc"; $M = "arclnx01"
+        $body = '{"location":"japaneast","properties":{"source":{"script":"echo HOST=$(hostname); . /etc/os-release; echo OS=$PRETTY_NAME"},"asyncExecution":false,"timeoutInSeconds":90}}'
+        Set-Content -Path runcmd.json -Value $body -Encoding ascii
+
+        # ② 本番。実行のたびに名前を変える（同名を消して作り直すと Deleting で数分待たされる）
+        $RC = "hccjp77-" + (Get-Date -Format HHmmss)
+        $URL = "https://management.azure.com/subscriptions/$SUB/resourceGroups/$RG/providers/Microsoft.HybridCompute/machines/$M/runCommands/$RC" + "?api-version=2024-07-10"
+        az rest --method put --url $URL --body "@runcmd.json" -o none
+
+        # ③ 結果を取りに行く（Creating の間ポーリング。出たら output を表示）
+        $GET = $URL + '&$expand=instanceView'
+        foreach ($i in 1..40) { $r = az rest --method get --url $GET | ConvertFrom-Json; Write-Host "$($i*5)s $($r.properties.provisioningState)"; if ($r.properties.provisioningState -ne 'Creating') { break }; Start-Sleep 5 }
+        $r.properties.instanceView.output
+
+        HOST=arclnx01 / OS=Ubuntu 24.04.4 LTS が出れば成功。
+        タイミング: ②の PUT は1秒で返る（ここで「投げた瞬間に返ってきます」と言える）。結果が出るまでは実測で約80秒。
+        待っている80秒が話す時間。「インバウンドは1つも開けていません」「今このコマンドは Azure からエージェントに降りていっています」。
+        ゲスト内での実行時間そのものは1秒。残りは Azure とエージェントの往復。
+      ※戻ってこないときは深追いしない。スライドの数字に戻す。
   - id: update-manager
     title: Azure Update Manager ─ 同じ画面から、パッチを適用する
     durationInFrames: 230
