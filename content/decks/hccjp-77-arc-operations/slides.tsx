@@ -2,14 +2,16 @@
 import {
   Activity,
   ArrowRight,
+  Bot,
   Boxes,
   Check,
   Clock,
   Cloud,
+  FileCheck,
   Guitar,
   HardDrive,
   KeyRound,
-  Laptop,
+  Languages,
   ListChecks,
   MonitorCheck,
   RotateCcw,
@@ -30,22 +32,21 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <AgendaSlide {...props} /> },
   { render: (props) => <ProfileSlide {...props} /> },
   { render: (props) => <Recap76Slide {...props} /> },
-  { render: (props) => <TheWallSlide {...props} /> },
+  { render: (props) => <TheLabSlide {...props} /> },
   { render: (props) => <InventorySlide {...props} /> },
   { render: (props) => <ProofSlide {...props} /> },
-  { render: (props) => <UpdateManagerSlide {...props} /> },
-  { render: (props) => <AssessResultSlide {...props} /> },
-  { render: (props) => <BillingSlide {...props} /> },
-  { render: (props) => <HotpatchSlide {...props} /> },
+  { render: (props) => <ThreeQuestionsSlide {...props} /> },
+  { render: (props) => <McVsPolicySlide {...props} /> },
   { render: (props) => <TwoNetsSlide {...props} /> },
-  { render: (props) => <CheckpointDocSlide {...props} /> },
   { render: (props) => <ExperimentSlide {...props} /> },
-  { render: (props) => <ResultExtSlide {...props} /> },
-  { render: (props) => <ResultBlindSlide {...props} /> },
+  { render: (props) => <ResultAgentSlide {...props} /> },
   { render: (props) => <ResultMcSlide {...props} /> },
-  { render: (props) => <ByproductsSlide {...props} /> },
-  { render: (props) => <BackupLineSlide {...props} /> },
-  { render: (props) => <ChecklistSlide {...props} /> },
+  { render: (props) => <ResultPolicySlide {...props} /> },
+  { render: (props) => <TimezoneTrapSlide {...props} /> },
+  { render: (props) => <RecoveryRunbookSlide {...props} /> },
+  { render: (props) => <UpdateManagerSlide {...props} /> },
+  { render: (props) => <HotpatchSlide {...props} /> },
+  { render: (props) => <AiCoversSlide {...props} /> },
   { render: (props) => <ConclusionSlide {...props} /> },
   { render: (props) => <NextSessionSlide {...props} /> },
   { render: (props) => <QaSlide {...props} /> },
@@ -83,6 +84,14 @@ function LiveCue({ label }: { label: string }) {
   )
 }
 
+// Placeholder for a number the 2026-09-09 re-run has not produced yet. It is
+// deliberately loud: a blank that still looks like a slide is how you end up
+// reading "約 分" out loud on stage. Every one of these must be gone before
+// the deck goes from draft to ready.
+function TBM({ hint }: { hint: string }) {
+  return <span className="h77-tbm">要測定 ─ {hint}</span>
+}
+
 function Source({ href, label }: { href: string; label: string }) {
   return (
     <a className="h77-source" href={href} target="_blank" rel="noreferrer">
@@ -101,13 +110,13 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       <div className="h77-opening-copy" style={lift(entrance(frame, fps), 40)}>
         <span className="h77-kicker">HCCJP 第77回勉強会 ・ 2026.9.11</span>
         <h1>
-          Azure Arc、
+          サーバーが
           <br />
-          便利なのはわかった。
+          巻き戻ったとき、
           <br />
-          <em>で、壊れたら？</em>
+          <em>Azureはどうなる？</em>
         </h1>
-        <p>運用で気になることを、実機で試してみた</p>
+        <p>Azure Arc ─ エージェント・マシン構成・Policy を、実機で戻してみた</p>
       </div>
       <div className="h77-opening-visual" style={{ transform: `translateY(${drift}px)` }}>
         <div className="h77-orbit" style={lift(entrance(frame, fps, 24), 20)}>
@@ -128,7 +137,7 @@ function AgendaSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const rows = [
     ['14:00', '5分', 'オープニング', '胡田 昌彦'],
-    ['14:05', '45分', 'Azure Arc、便利なのはわかった。で、壊れたら？', '胡田 昌彦'],
+    ['14:05', '45分', 'サーバーが巻き戻ったとき、Azureはどうなる？', '胡田 昌彦'],
     ['14:50', '10分', 'Q&A', '胡田 昌彦'],
     ['15:00', '20分', 'Microsoft "Adaptive Cloud" 最新動向', '高添 修 氏'],
     ['15:20', '5分', 'Q&A', '高添 修 氏'],
@@ -226,33 +235,53 @@ function Recap76Slide({ frame }: SlideRenderContext) {
   )
 }
 
-function TheWallSlide({ frame }: SlideRenderContext) {
+function TheLabSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const items = [
-    'パッチを当てて壊れた。巻き戻したら Azure 側はどうなる？',
-    'バックアップから復元した。Arc の登録は残っている？',
-    'Azure が配った拡張機能や構成は、自動で戻ってくる？',
-    'ポータルの緑の「正常」は、実機の何を保証している？',
-    'エージェントが繋がらなくなったら、現地に行かずに直せる？'
+  const layers = [
+    {
+      tag: 'L0',
+      name: 'nestedhyperv',
+      body: '事務所の物理サーバー（Windows Server 2025）',
+      note: '一番外側。ここは今日は触らない'
+    },
+    {
+      tag: 'L1',
+      name: 'nested-lab-01',
+      body: 'ネストされた Hyper-V ホスト',
+      note: 'チェックポイントを持っているのは、この層'
+    },
+    {
+      tag: 'L2',
+      name: 'arcwin01 ／ arclnx01',
+      body: 'Windows Server 2025 ／ Ubuntu 24.04',
+      note: 'Arc に繋いである。今日巻き戻すのは、この2台'
+    }
   ]
   return (
-    <section className="remotion-slide h77-slide h77-wall">
+    <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="THE WALL" title="でも、本番に入れるとなると" frame={frame} />
-      <p className="h77-big-q" style={lift(entrance(frame, fps, 10), 20)}>
-        何かあったとき、どうなるのか。
-      </p>
-      <ul className="h77-qlist">
-        {items.map((text, index) => (
-          <li key={text} style={lift(entrance(frame, fps, 20 + index * 8), 16)}>
-            <TriangleAlert size={30} />
-            <span>{text}</span>
-          </li>
+      <Head kicker="THE LAB" title="今日の登場人物 ─ どこにいるサーバーなのか" frame={frame} />
+      <div className="h77-layers">
+        {layers.map((layer, index) => (
+          <div
+            className={`h77-layer${index === 2 ? ' h77-layer-target' : ''}`}
+            key={layer.tag}
+            style={lift(entrance(frame, fps, 12 + index * 10), 18)}
+          >
+            <span className="h77-layer-tag">{layer.tag}</span>
+            <div className="h77-layer-body">
+              <strong>{layer.name}</strong>
+              <p>{layer.body}</p>
+            </div>
+            <span className="h77-layer-note">{layer.note}</span>
+          </div>
         ))}
-      </ul>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 70), 14)}>
-        ここを潰しておけば、Arc は安心して運用に入れられるはず。
+      </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 48), 14)}>
+        <strong>戻す人と、戻される人は別の層にいる。</strong>
+        Azure から見えているのは L2 だけで、チェックポイントの操作は Azure の外側で起きる。
       </p>
+      <LiveCue label="Hyper-V マネージャー ─ nested-lab-01" />
     </section>
   )
 }
@@ -315,11 +344,11 @@ function InventorySlide({ frame }: SlideRenderContext) {
 function ProofSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const rows = [
-    { icon: <Terminal size={34} />, what: 'Arc経由のコマンド実行（Run Command）', got: '42秒で結果が返る', ok: true },
-    { icon: <KeyRound size={34} />, what: 'マネージドID でトークン取得', got: 'ゲスト内から取得成功・有効 24時間', ok: true },
-    { icon: <Boxes size={34} />, what: '拡張機能の配布・設定更新', got: '2分以内に実機へ反映', ok: true },
-    { icon: <MonitorCheck size={34} />, what: 'マシン構成（Guest Configuration）', got: '5分ごとに割当取得・15分ごとに評価', ok: true },
-    { icon: <KeyRound size={34} />, what: 'Arc 経由の SSH（az ssh arc）', got: 'NAT内側の 10.10.0.41 へ、穴なしで到達', ok: true }
+    { icon: <Terminal size={34} />, what: 'Arc経由のコマンド実行（Run Command）', got: '42秒で結果が返る' },
+    { icon: <KeyRound size={34} />, what: 'マネージドID でトークン取得', got: 'ゲスト内から取得成功・有効 24時間' },
+    { icon: <Boxes size={34} />, what: '拡張機能の配布・設定更新', got: '2分以内に実機へ反映' },
+    { icon: <MonitorCheck size={34} />, what: 'マシン構成（Guest Configuration）', got: '5分ごとに割当取得・15分ごとに評価' },
+    { icon: <KeyRound size={34} />, what: 'Arc 経由の SSH（az ssh arc）', got: 'NAT内側の 10.10.0.41 へ、穴なしで到達' }
   ]
   return (
     <section className="remotion-slide h77-slide">
@@ -343,131 +372,459 @@ function ProofSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function UpdateManagerSlide({ frame }: SlideRenderContext) {
+function ThreeQuestionsSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
+  const questions = [
+    {
+      no: '①',
+      icon: <Cloud size={38} />,
+      head: 'エージェントはどうなるのか',
+      body: 'Azure との繋がりは切れるのか。切れたら、現地に行かずに戻せるのか。'
+    },
+    {
+      no: '②',
+      icon: <MonitorCheck size={38} />,
+      head: 'マシン構成はどうなるのか',
+      body: '配ったOS設定は巻き戻る。Azure は気づいて、自分で直してくれるのか。'
+    },
+    {
+      no: '③',
+      icon: <FileCheck size={38} />,
+      head: 'Policy はどうなるのか',
+      body: '割り当ては残るのか。ポータルの準拠／非準拠は、いつ本当のことを言うのか。'
+    }
+  ]
   return (
-    <section className="remotion-slide h77-slide">
+    <section className="remotion-slide h77-slide h77-wall">
       <div className="h77-grid" />
-      <Head kicker="AZURE UPDATE MANAGER" title="同じ画面から、パッチを適用する" frame={frame} />
-      <div className="h77-two">
-        <div className="h77-card" style={lift(entrance(frame, fps, 12), 20)}>
-          <h2>評価する</h2>
-          <ul>
-            <li>Windows / Linux、Azure / オンプレを同じ画面で一覧</li>
-            <li>保留中の更新を分類（セキュリティ／重要／その他）で把握</li>
-            <li>定期評価をポリシーで一括有効化できる</li>
-          </ul>
-        </div>
-        <div className="h77-card" style={lift(entrance(frame, fps, 24), 20)}>
-          <h2>適用する</h2>
-          <ul>
-            <li>メンテナンス時間を決めて定期適用（動的スコープ）</li>
-            <li>その場で今すぐ適用も可能</li>
-            <li>適用の前後にスクリプトを挟める（pre / post イベント）</li>
-            <li>再起動の扱いも指定できる</li>
-          </ul>
-        </div>
-      </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 40), 14)}>
-        オンプレ側は Arc で繋ぐだけ。エージェントの通信はアウトバウンド443のみ。
+      <Head kicker="TODAY'S FOCUS" title="今日はっきりさせる、3つだけ" frame={frame} />
+      <p className="h77-big-q" style={lift(entrance(frame, fps, 8), 20)}>
+        パッチで壊れた。スナップショットで巻き戻した。バックアップから復元した。
       </p>
-      <LiveCue label="ポータル ─ Update Manager / マシン" />
+      <div className="h77-q3">
+        {questions.map((q, index) => (
+          <div className="h77-q3-item" key={q.no} style={lift(entrance(frame, fps, 18 + index * 10), 18)}>
+            <span className="h77-q3-no">{q.no}</span>
+            {q.icon}
+            <strong>{q.head}</strong>
+            <p>{q.body}</p>
+          </div>
+        ))}
+      </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
+        答えを<strong>手順書</strong>にして持ち帰っていただきます。機能の紹介は、ここまで。
+      </p>
     </section>
   )
 }
 
-function AssessResultSlide({ frame }: SlideRenderContext) {
+function McVsPolicySlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
+  const rows: Array<[string, string, string]> = [
+    ['何を見るか', 'Azure リソースの形', 'OS の中身'],
+    ['例', '「この Arc マシンに拡張機能が入っているか」', '「タイムゾーンが東京か」「TLS 1.2 が有効か」'],
+    ['どこで動くか', 'Azure の評価エンジン', '実機の中の拡張機能（Guest Configuration）'],
+    ['直せるか', '割り当て時に deploy はできる', 'ApplyAndAutoCorrect なら直す。Audit は直さない'],
+    ['準拠の更新', '既定は24時間ごと（手動再スキャン可）', '15分ごとに評価']
+  ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="MEASURED" title="評価してみた ─ 中身はいつもの仕組み" frame={frame} />
-      <table className="h77-table h77-assess">
+      <Head kicker="THE CONFUSION" title="「マシン構成」と「Azure Policy」は、別のもの" frame={frame} />
+      <table className="h77-table h77-compare">
         <thead>
           <tr style={lift(entrance(frame, fps, 8), 14)}>
             <th />
-            <th>arcwin01 ─ Windows Server 2025</th>
-            <th>arclnx01 ─ Ubuntu 24.04</th>
+            <th>
+              <FileCheck size={30} /> Azure Policy
+            </th>
+            <th>
+              <MonitorCheck size={30} /> マシン構成
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr style={lift(entrance(frame, fps, 14), 14)}>
-            <td className="h77-th">使われた仕組み</td>
-            <td>
-              <strong>Windows Update</strong>
-            </td>
-            <td>
-              <strong>APT</strong>
-            </td>
-          </tr>
-          <tr style={lift(entrance(frame, fps, 20), 14)}>
-            <td className="h77-th">評価の所要時間</td>
-            <td>約 2 分</td>
-            <td>約 4 分</td>
-          </tr>
-          <tr style={lift(entrance(frame, fps, 26), 14)}>
-            <td className="h77-th">保留中の更新</td>
-            <td>セキュリティ 2 ／ 定義 2 ／ ロールアップ 1 ／ その他 2</td>
-            <td>その他 40 ／ セキュリティ 0</td>
-          </tr>
-          <tr style={lift(entrance(frame, fps, 32), 14)}>
-            <td className="h77-th">再起動保留</td>
-            <td>なし</td>
-            <td>あり</td>
-          </tr>
+          {rows.map((row, index) => (
+            <tr key={row[0]} style={lift(entrance(frame, fps, 14 + index * 7), 14)}>
+              <td className="h77-th">{row[0]}</td>
+              <td>{row[1]}</td>
+              <td>{row[2]}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 52), 16)}>
         <TriangleAlert size={38} />
         <span>
-          Linux では <strong>3件が Ubuntu Pro を要求</strong>してエラー（<code>UA_ESM_Required</code>）。
+          Policy は<strong>マシン構成を配る入れ物</strong>にもなる。だから準拠状態が<strong>2か所に出る</strong>。
           <br />
-          評価はできる。でも当てられない ─ ハイブリッドの現実。
+          しかも、その2つは<strong>同じタイミングで更新されない</strong> ─ ここが今日の伏線です。
         </span>
       </p>
-      <LiveCue label="ポータル ─ 評価結果（開始前に実行済み）" />
     </section>
   )
 }
 
-function BillingSlide({ frame }: SlideRenderContext) {
+function TwoNetsSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const free = [
-    'Arc に接続する（エージェント導入・オンボード）',
-    'Azure のリソースとして見える・タグを付ける',
-    'RBAC で権限を切る',
-    'Resource Graph で横断検索する',
-    '拡張機能を配る・Run Command を流す・Arc 経由で SSH'
-  ]
-  const paid: Array<[string, string]> = [
-    ['Azure Update Manager', '$5 / 台 / 月（日割 $0.162）'],
-    ['マシン構成（Azure Policy）', '$6 / 台 / 月'],
-    ['Azure Monitor / Log Analytics', '取り込んだデータ量'],
-    ['Microsoft Defender for Servers', 'プランごとの単価'],
-    ['Microsoft Sentinel', '取り込んだデータ量'],
-    ['Change Tracking / Automation', '台数課金（マシン構成と使用権が相互に含まれる）']
+  const rows: Array<[string, string, string]> = [
+    ['置き場所', '同じホスト・同じストレージ', '別媒体・別サイト'],
+    ['ホストが死んだら', '一緒に消える', '残る'],
+    ['ランサムウェア', 'ほぼ無力', '対策になる'],
+    ['戻す速さ', '数分', '時間単位'],
+    ['復元先', '元のVMに戻るだけ', '元の場所ならサポート内／別ホストは管理対象外VMになる']
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="BILLING" title="何をすると、いくら課金されるのか" frame={frame} />
+      <Head kicker="SAFETY NETS" title="戻す手段は、二段構え" frame={frame} />
+      <table className="h77-table h77-compare">
+        <thead>
+          <tr style={lift(entrance(frame, fps, 8), 14)}>
+            <th />
+            <th>
+              <RotateCcw size={30} /> チェックポイント
+            </th>
+            <th>
+              <HardDrive size={30} /> バックアップ（MABS）
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={row[0]} style={lift(entrance(frame, fps, 14 + index * 7), 14)}>
+              <td className="h77-th">{row[0]}</td>
+              <td>{row[1]}</td>
+              <td>{row[2]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 52), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          公式は「更新を当てる前にチェックポイントを取るとよい」と書いている。
+          ダメなのは<strong>バックアップの代用にすること</strong>。
+          <br />
+          ただし ─ <strong>
+            <code>Get-VMSnapshot</code> の <code>SnapshotType</code> では、本番／標準を見分けられない
+          </strong>
+          （実測: <code>CheckpointType=ProductionOnly</code> でも <code>Standard</code> と表示）。
+          見るのは <code>Get-VM</code> の <code>CheckpointType</code>。
+        </span>
+      </p>
+      <Source
+        href="https://learn.microsoft.com/windows-server/virtualization/hyper-v/manage/choose-between-standard-or-production-checkpoints-in-hyper-v"
+        label="Microsoft Learn ─ Choose between standard or production checkpoints"
+      />
+    </section>
+  )
+}
+
+function ExperimentSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const steps = [
+    ['T1', '9/5 にチェックポイントを取ってある', 'ここへ戻る'],
+    ['T2', '9/9 まで Azure 側で構成を積む', '全部 Compliant にした'],
+    ['T3', '念のため、今の状態も保存', '実演の保険'],
+    ['NOW', 'ここで T1 へ巻き戻す', 'Azureは9/9・実機は9/5'],
+    ['+15分', '何が自分で戻り、何が戻らないかを測る', 'このセッション中に']
+  ]
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="EXPERIMENT" title="今ここで、4日前まで巻き戻します" frame={frame} />
+      <div className="h77-steps">
+        {steps.map((step, index) => (
+          <div
+            className={`h77-step${step[0] === 'NOW' ? ' h77-step-now' : ''}`}
+            key={step[0]}
+            style={lift(entrance(frame, fps, 10 + index * 8), 18)}
+          >
+            <span className="h77-step-no">{step[0]}</span>
+            <p>{step[1]}</p>
+            <small>{step[2]}</small>
+          </div>
+        ))}
+      </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 50), 14)}>
+        <strong>「古いバックアップから復元した」と同じ状態</strong>を作ります。
+        戻したあとの15分は、そのまま結果を見る時間になります。
+      </p>
+      <div className="h77-env" style={lift(entrance(frame, fps, 56), 16)}>
+        <Server size={30} /> arcwin01 ─ Windows Server 2025（Nested Hyper-V ラボ L2）
+      </div>
+      <LiveCue label="Hyper-V ─ arcwin01 を T1-hccjp77 へ復元" />
+    </section>
+  )
+}
+
+function ResultAgentSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide h77-blind">
+      <div className="h77-grid" />
+      <Head kicker="① AGENT" title="エージェントは、どうなるのか" frame={frame} />
+      <div className="h77-split">
+        <div className="h77-split-side" style={lift(entrance(frame, fps, 10), 20)}>
+          <span className="h77-side-label">Azure ポータル</span>
+          <div className="h77-status-ok">
+            <Check size={40} />
+            <strong>Connected</strong>
+          </div>
+          <p>Arc のリソースも、割り当ても、そのまま残っている</p>
+        </div>
+        <div className="h77-split-vs" style={lift(entrance(frame, fps, 20), 12)}>
+          <span>実機は</span>
+          <RotateCcw size={54} />
+          <span>4日前に戻っている</span>
+        </div>
+        <div className="h77-split-side h77-split-real" style={lift(entrance(frame, fps, 28), 20)}>
+          <span className="h77-side-label">実機</span>
+          <p>巻き戻し・再起動を実施</p>
+          <p>ローカルの構成・証明書も過去のもの</p>
+        </div>
+      </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 40), 14)}>
+        ハートビートは5分ごと・<strong>15分途切れて初めて Disconnected</strong>。巻き戻しはその猶予に収まる。
+        <br />
+        <strong>ポータルの緑は、実機の中身を保証していない。</strong>
+      </p>
+      <div className="h77-measure" style={lift(entrance(frame, fps, 48), 16)}>
+        <TBM hint="Disconnected になるか／何分で" />
+        <TBM hint="自力で復帰するか" />
+        <TBM hint="出るエラー" />
+      </div>
+      <LiveCue label="ポータル ─ arcwin01 概要（Connected のまま）" />
+    </section>
+  )
+}
+
+function ResultMcSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="② MACHINE CONFIG" title="マシン構成は、どうなるのか" frame={frame} />
       <div className="h77-two">
         <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 10), 20)}>
           <div className="h77-card-head">
-            <Check size={38} />
-            <h2>無料 ─ Arc のコントロールプレーン</h2>
+            <Check size={36} />
+            <h2>ApplyAndAutoCorrect</h2>
+          </div>
+          <p>SetWindowsTimeZone ／ SetSecureProtocol</p>
+          <p className="h77-metric">
+            <TBM hint="何分で Compliant に戻るか" />
+          </p>
+          <p>
+            実機の設定は巻き戻る。<strong>割り当ては Azure 側なので残る。</strong>
+            あとは、自分で直しに来るのを待てるかどうか。
+          </p>
+        </div>
+        <div className="h77-card h77-card-warn" style={lift(entrance(frame, fps, 24), 20)}>
+          <div className="h77-card-head">
+            <TriangleAlert size={36} />
+            <h2>Audit</h2>
+          </div>
+          <p>AzureWindowsBaseline（373項目）</p>
+          <p className="h77-metric h77-metric-bad">278項目が非準拠</p>
+          <p>
+            <strong>Audit は直さない。教えてくれるだけ。</strong>
+            巻き戻しても、非準拠が非準拠として報告され続ける。
+          </p>
+        </div>
+      </div>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          割り当てモードを見ないまま「構成が効いていない」と言ってはいけない。
+          <br />
+          <strong>Audit は、最初から直す気がない。</strong>
+        </span>
+      </p>
+      <LiveCue label="ポータル ─ arcwin01 / マシン構成" />
+    </section>
+  )
+}
+
+function ResultPolicySlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const timeline = [
+    ['10:24', 'Azure Policy: 非準拠', 'bad'],
+    ['10:33', 'マシン構成: 準拠 ✔', 'good'],
+    ['10:43', 'Azure Policy: まだ非準拠', 'bad']
+  ]
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="③ POLICY" title="Policyの「赤」は、9分前の話かもしれない" frame={frame} />
+      <div className="h77-tl3">
+        {timeline.map((item, index) => (
+          <div
+            className={`h77-tl3-item h77-tl3-${item[2]}`}
+            key={item[0]}
+            style={lift(entrance(frame, fps, 10 + index * 10), 18)}
+          >
+            <span className="h77-tl3-time">{item[0]}</span>
+            <strong>{item[1]}</strong>
+          </div>
+        ))}
+      </div>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 42), 14)}>
+        2026-09-09 の実測。<strong>OSの中身はもう直っているのに、Policy はまだ赤い。</strong>
+        <br />
+        Policy の準拠評価は既定で24時間ごと。マシン構成の15分とは、そもそも時計が違う。
+      </p>
+      <div className="h77-cmd" style={lift(entrance(frame, fps, 50), 16)}>
+        <Terminal size={30} />
+        <code>az policy state trigger-scan --resource-group rg-hccjp76-arc</code>
+      </div>
+      <div className="h77-measure" style={lift(entrance(frame, fps, 56), 16)}>
+        <TBM hint="巻き戻し後、Policy が赤くなるまで何分か" />
+        <TBM hint="再スキャンで即座に追いつくか" />
+      </div>
+      <LiveCue label="ポータル ─ Policy / コンプライアンス" />
+    </section>
+  )
+}
+
+function TimezoneTrapSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head
+        kicker="THE LANDMINE"
+        title={
+          <>
+            日本語Windowsでは、
+            <br />
+            組み込みポリシーが原理的に動かない
+          </>
+        }
+        frame={frame}
+      />
+      <div className="h77-code-quote" style={lift(entrance(frame, fps, 10), 20)}>
+        <code>
+          $timezoneId = Get-TimeZone -ListAvailable | % {'{'} if($_.<strong>DisplayName</strong> -ieq
+          $TimeZone) {'{'}$_.Id{'}'} {'}'}
+          <br />
+          Set-TimeZone -Id $timezoneId
+        </code>
+        <span className="h77-code-note">組み込み DSC リソースの中身</span>
+      </div>
+      <div className="h77-two h77-two-tight">
+        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 24), 18)}>
+          <div className="h77-card-head">
+            <Languages size={34} />
+            <h2>実機（日本語）の DisplayName</h2>
+          </div>
+          <p className="h77-mono">(UTC+09:00) 大阪、札幌、東京</p>
+        </div>
+        <div className="h77-card h77-card-quiet" style={lift(entrance(frame, fps, 32), 18)}>
+          <div className="h77-card-head">
+            <FileCheck size={34} />
+            <h2>ポリシーの許容値（英語）</h2>
+          </div>
+          <p className="h77-mono">(UTC+09:00) Osaka, Sapporo, Tokyo</p>
+        </div>
+      </div>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 42), 16)}>
+        <TriangleAlert size={38} />
+        <span>
+          一致しないので <code>$timezoneId</code> は null。<code>Set-TimeZone -Id $null</code> で落ちる。
+          <strong>ApplyAndAutoCorrect でも永久に直らない。</strong>
+          <br />
+          「Policyが効かない」の原因が、<strong>Policyの外</strong>にあった例。カスタム定義で回避しました。
+        </span>
+      </p>
+    </section>
+  )
+}
+
+function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const items: Array<[string, React.ReactNode]> = [
+    [
+      'Arc の接続を戻す',
+      <>
+        Disconnected なら現地に行かず2コマンド。
+        <code>azcmagent disconnect --force-local-only</code> →{' '}
+        <code>azcmagent connect</code>（1〜2分）
+      </>
+    ],
+    [
+      '拡張機能を待つ',
+      <>最新の設定で再適用されるまで待つ。急ぐなら設定を更新して配り直す</>
+    ],
+    [
+      'マシン構成は、割り当てモードで仕分ける',
+      <>
+        <strong>ApplyAndAutoCorrect は待てば直る。Audit は待っても直らない。</strong>
+      </>
+    ],
+    [
+      'Policy は再スキャンしてから見る',
+      <>
+        <code>az policy state trigger-scan</code> を打つまで、画面は前の判定のまま
+      </>
+    ],
+    [
+      'パッチは再評価してから判断',
+      <>Update Manager の表示も、復元直後は実機とズレている</>
+    ]
+  ]
+  return (
+    <section className="remotion-slide h77-slide h77-checklist">
+      <div className="h77-grid" />
+      <Head kicker="TAKE THIS HOME" title="復元・巻き戻しのあとに回す、5つの手順" frame={frame} />
+      <ol className="h77-check">
+        {items.map((item, index) => (
+          <li key={item[0]} style={lift(entrance(frame, fps, 10 + index * 8), 18)}>
+            <span className="h77-check-no">{index + 1}</span>
+            <div>
+              <strong>{item[0]}</strong>
+              <p>{item[1]}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
+        1〜4 の状態確認は、Resource Graph のクエリ1本で全台まとめて見られます。
+      </p>
+      <LiveCue label="巻き戻した arcwin01 が、戻ってきたか" />
+    </section>
+  )
+}
+
+function UpdateManagerSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const paid: Array<[string, string]> = [
+    ['Arc に繋ぐ・拡張機能・Run Command', '無料'],
+    ['Azure Update Manager', '$5 / 台 / 月'],
+    ['マシン構成（Azure Policy）', '$6 / 台 / 月']
+  ]
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="SO ─ PATCH AWAY" title="だから、ガンガン当てていい" frame={frame} />
+      <div className="h77-two">
+        <div className="h77-card" style={lift(entrance(frame, fps, 12), 20)}>
+          <div className="h77-card-head">
+            <Boxes size={38} />
+            <h2>Azure Update Manager</h2>
           </div>
           <ul>
-            {free.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
+            <li>Windows / Linux、Azure / オンプレを同じ画面で一覧</li>
+            <li>メンテナンス時間を決めて定期適用（動的スコープ）</li>
+            <li>適用の前後にスクリプトを挟める（pre / post イベント）</li>
+            <li>オンプレ側は Arc で繋ぐだけ。通信はアウトバウンド443のみ</li>
           </ul>
-          <p className="h77-note">繋ぐだけなら、1円もかからない。</p>
         </div>
         <div className="h77-card h77-card-accent" style={lift(entrance(frame, fps, 24), 20)}>
           <div className="h77-card-head">
             <Zap size={38} />
-            <h2>課金 ─ その上で使うサービス</h2>
+            <h2>いくらかかるのか</h2>
           </div>
           <table className="h77-mini">
             <tbody>
@@ -479,16 +836,19 @@ function BillingSlide({ frame }: SlideRenderContext) {
               ))}
             </tbody>
           </table>
+          <p className="h77-note">
+            いずれも <strong>Azure VM なら無料</strong>。オンプレを混ぜた瞬間に有料になる。
+          </p>
         </div>
       </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 42), 14)}>
-        いずれも <strong>Azure VM なら無料</strong>。オンプレを混ぜた瞬間に有料になる。
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
+        <Check size={40} />
+        <span>
+          <strong>壊れても戻せる手順がある</strong>から、当てるのを先延ばしにしなくていい。
+          当てないことのほうが、いまはリスクです。
+        </span>
       </p>
-      <Source
-        href="https://azure.microsoft.com/pricing/details/azure-arc/core-control-plane/"
-        label="Azure Arc 価格（コントロールプレーン）／ Azure Policy・Update Manager の価格ページ"
-      />
-      <LiveCue label="ポータル ─ コスト分析（日別）" />
+      <LiveCue label="ポータル ─ Update Manager / マシン" />
     </section>
   )
 }
@@ -498,7 +858,7 @@ function HotpatchSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide h77-hotpatch">
       <div className="h77-grid" />
-      <Head kicker="HOTPATCH" title="再起動しないパッチが、無料になっていました" frame={frame} />
+      <Head kicker="HOTPATCH" title="そもそも再起動を減らす、という手もあります" frame={frame} />
       <div className="h77-timeline2" style={lift(entrance(frame, fps, 12), 20)}>
         <div className="h77-tl-item">
           <span className="h77-tl-date">2025.7.16</span>
@@ -527,331 +887,50 @@ function HotpatchSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function TwoNetsSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const rows: Array<[string, string, string]> = [
-    ['置き場所', '同じホスト・同じストレージ', '別媒体・別サイト'],
-    ['ホストが死んだら', '一緒に消える', '残る'],
-    ['長期保持', '差分が伸びて性能劣化', '世代管理される'],
-    ['ランサムウェア', 'ほぼ無力', '対策になる'],
-    ['戻す速さ', '数分', '時間単位']
-  ]
-  return (
-    <section className="remotion-slide h77-slide">
-      <div className="h77-grid" />
-      <Head kicker="SAFETY NETS" title="戻す手段は、二段構え" frame={frame} />
-      <table className="h77-table h77-compare">
-        <thead>
-          <tr style={lift(entrance(frame, fps, 8), 14)}>
-            <th />
-            <th>
-              <RotateCcw size={30} /> チェックポイント
-            </th>
-            <th>
-              <HardDrive size={30} /> バックアップ
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr key={row[0]} style={lift(entrance(frame, fps, 14 + index * 7), 14)}>
-              <td className="h77-th">{row[0]}</td>
-              <td>{row[1]}</td>
-              <td>{row[2]}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 56), 14)}>
-        役割が違う。どちらか一方では足りない。
-      </p>
-    </section>
-  )
-}
-
-function CheckpointDocSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide h77-slide">
-      <div className="h77-grid" />
-      <Head kicker="MYTH" title="「スナップショットはダメ」は、半分だけ正しい" frame={frame} />
-      <blockquote className="h77-quote" style={lift(entrance(frame, fps, 10), 20)}>
-        You may want to create a virtual machine checkpoint before making software
-        configuration changes, <strong>applying a software update</strong>, or installing new
-        software.
-      </blockquote>
-      <div className="h77-two h77-two-tight">
-        <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 24), 18)}>
-          <h2>本番チェックポイント（既定）</h2>
-          <p>VSS ／ Linux は File System Freeze でデータ整合を取る。適用後は停止状態から起動。</p>
-        </div>
-        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 34), 18)}>
-          <h2>標準チェックポイント</h2>
-          <p>
-            メモリごと保存。公式に「AD のようにノード間で複製する仕組みでは
-            <strong>データ不整合を起こしうる</strong>」と明記。
-          </p>
-        </div>
-      </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 46), 14)}>
-        <code>Set-VM -CheckpointType ProductionOnly</code> ─ 明示しないと、失敗時に黙って標準へ落ちる。
-      </p>
-      <Source
-        href="https://learn.microsoft.com/windows-server/virtualization/hyper-v/manage/choose-between-standard-or-production-checkpoints-in-hyper-v"
-        label="Microsoft Learn ─ Using checkpoints"
-      />
-    </section>
-  )
-}
-
-function ExperimentSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const steps = [
-    ['T0', '拡張機能と構成ポリシーを配る', 'marker = T0'],
-    ['T1', 'チェックポイントを取る', '戻る先'],
-    ['T2', 'Azure 側から変更を進める', 'marker = T2 / 構成値も変更'],
-    ['T3', '巻き戻す', 'ローカルだけ過去へ'],
-    ['T4', '何分で何が戻るかを測る', '─']
-  ]
-  return (
-    <section className="remotion-slide h77-slide">
-      <div className="h77-grid" />
-      <Head kicker="EXPERIMENT" title="Azureが先へ進んだあとに、ローカルだけ巻き戻す" frame={frame} />
-      <div className="h77-steps">
-        {steps.map((step, index) => (
-          <div className="h77-step" key={step[0]} style={lift(entrance(frame, fps, 10 + index * 8), 18)}>
-            <span className="h77-step-no">{step[0]}</span>
-            <p>{step[1]}</p>
-            <small>{step[2]}</small>
-          </div>
-        ))}
-      </div>
-      <div className="h77-env" style={lift(entrance(frame, fps, 52), 16)}>
-        <Server size={30} /> arcwin01 ─ Windows Server 2025 ／ arclnx01 ─ Ubuntu 24.04（Nested Hyper-V ラボ）
-      </div>
-      <LiveCue label="Hyper-V マネージャー ─ T1-hccjp77" />
-    </section>
-  )
-}
-
-function ResultExtSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide h77-slide">
-      <div className="h77-grid" />
-      <Head kicker="RESULT 1" title="拡張機能は、自力で追いついた" frame={frame} />
-      <div className="h77-two">
-        <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 10), 20)}>
-          <div className="h77-card-head">
-            <Laptop size={38} />
-            <h2>Ubuntu 24.04</h2>
-          </div>
-          <p className="h77-metric">約 80 秒</p>
-          <p>
-            巻き戻し直後に <code>has new settings</code> を検知し、
-            Azure の最新設定でそのまま再実行。
-          </p>
-        </div>
-        <div className="h77-card h77-card-warn" style={lift(entrance(frame, fps, 24), 20)}>
-          <div className="h77-card-head">
-            <Server size={38} />
-            <h2>Windows Server 2025</h2>
-          </div>
-          <p className="h77-metric">約 9 分・2段階</p>
-          <p>
-            まず<strong>巻き戻した古い設定（Seq 0）で1回実行</strong>し、
-            その約8分後に最新（Seq 1）を取り直した。
-          </p>
-        </div>
-      </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 40), 14)}>
-        つまり Windows では、一時的に「古い状態」が復活する窓が開く。
-      </p>
-      <LiveCue label="実機の marker.txt" />
-    </section>
-  )
-}
-
-function ResultBlindSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide h77-slide h77-blind">
-      <div className="h77-grid" />
-      <Head kicker="RESULT 2" title="Azureは、巻き戻しに気づかない" frame={frame} />
-      <div className="h77-split">
-        <div className="h77-split-side" style={lift(entrance(frame, fps, 10), 20)}>
-          <span className="h77-side-label">Azure ポータル</span>
-          <div className="h77-status-ok">
-            <Check size={40} />
-            <strong>Connected</strong>
-          </div>
-          <div className="h77-status-ok">
-            <Check size={40} />
-            <strong>拡張機能: Succeeded</strong>
-          </div>
-        </div>
-        <div className="h77-split-vs" style={lift(entrance(frame, fps, 20), 12)}>
-          <span>実機は</span>
-          <RotateCcw size={54} />
-          <span>過去に戻っている</span>
-        </div>
-        <div className="h77-split-side h77-split-real" style={lift(entrance(frame, fps, 28), 20)}>
-          <span className="h77-side-label">実機</span>
-          <p>巻き戻し・再起動を実施</p>
-          <p>配布物の中身は古い状態</p>
-        </div>
-      </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 44), 14)}>
-        ハートビートは5分ごと・15分途切れて初めて Disconnected。その猶予に収まってしまう。
-      </p>
-      <LiveCue label="ポータル ─ Connected / Succeeded" />
-    </section>
-  )
-}
-
-function ResultMcSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide h77-slide">
-      <div className="h77-grid" />
-      <Head kicker="RESULT 3" title="構成ポリシーは ─ 直るものと、直らないものがあった" frame={frame} />
-      <div className="h77-two">
-        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 10), 20)}>
-          <div className="h77-card-head">
-            <X size={36} />
-            <h2>SetWindowsTimeZone</h2>
-          </div>
-          <p className="h77-metric h77-metric-bad">24時間+ 直らず</p>
-          <p>
-            <code>ApplyAndAutoCorrect</code> なのに実機は変わらず、
-            15分ごとに <code>NonCompliant</code> が記録され続けた。
-          </p>
-        </div>
-        <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 24), 20)}>
-          <div className="h77-card-head">
-            <Check size={36} />
-            <h2>SetSecureProtocol</h2>
-          </div>
-          <p className="h77-metric">16分で Compliant</p>
-          <p>
-            同じ Windows・同じモードで割り当て。
-            <strong>実機のレジストリに TLS 1.2 が作られた</strong>（適用前は存在しなかった）。
-          </p>
-        </div>
-      </div>
-      <p className="h77-punch-line" style={lift(entrance(frame, fps, 38), 16)}>
-        <TriangleAlert size={38} />
-        <span>
-          <strong>Windows だからダメ、ではなかった。</strong>
-          特定の構成パッケージだけが動いていない。
-          <br />
-          1つの失敗から「機能が使えない」と一般化するところだった ─ 切り分けが要る。
-        </span>
-      </p>
-      <LiveCue label="ポータル ─ arcwin01 / マシン構成" />
-    </section>
-  )
-}
-
-function ByproductsSlide({ frame }: SlideRenderContext) {
+function AiCoversSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const items = [
     {
-      head: 'Azure側を消すと、自力では戻れない',
-      body: 'RGを消して以後22日間、両OSとも Disconnected のまま「トークンが取得できない」を出し続けた。復旧はコマンド2つで1〜2分。'
+      head: '調べる',
+      body: '割り当て・準拠状態・拡張機能の状態を、ポータルを開かずに横断で取る'
     },
     {
-      head: 'Linux の本番チェックポイントが作れない',
-      body: 'ゲストに hv_vss_daemon が無いと失敗する。しかもパッケージは稼働カーネル版と一致していないと動かない。'
+      head: '切り分ける',
+      body: '「効かない」の原因を、DSC リソースの中身まで降りて特定する'
     },
     {
-      head: '同じ種類の拡張は1台に1つまで',
-      body: '同じ publisher / type の拡張を2つ入れようとすると HCRP409 で弾かれる。'
+      head: '直す',
+      body: 'Run Command とカスタムポリシー定義を書いて、当てて、準拠を確認する'
+    },
+    {
+      head: '手順書にする',
+      body: '今日お見せした5つの手順は、この検証からそのまま起こしたもの'
     }
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="BYPRODUCTS" title="ついでに分かったこと" frame={frame} />
-      <div className="h77-rows h77-rows-tall">
+      <Head kicker="AND ─ AI" title="ここまで全部、AIにやらせています" frame={frame} />
+      <div className="h77-quad">
         {items.map((item, index) => (
-          <div className="h77-row h77-row-block" key={item.head} style={lift(entrance(frame, fps, 12 + index * 10), 18)}>
-            <TriangleAlert size={34} />
-            <div>
-              <strong>{item.head}</strong>
-              <p>{item.body}</p>
+          <div className="h77-card" key={item.head} style={lift(entrance(frame, fps, 12 + index * 8), 18)}>
+            <div className="h77-card-head">
+              <Bot size={38} />
+              <h2>{item.head}</h2>
             </div>
+            <p>{item.body}</p>
           </div>
         ))}
       </div>
-    </section>
-  )
-}
-
-function BackupLineSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  return (
-    <section className="remotion-slide h77-slide">
-      <div className="h77-grid" />
-      <Head kicker="BACKUP / RESTORE" title="サポート内と、その外" frame={frame} />
-      <table className="h77-table h77-support">
-        <thead>
-          <tr style={lift(entrance(frame, fps, 8), 14)}>
-            <th>復元先</th>
-            <th>公式の扱い</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style={lift(entrance(frame, fps, 16), 14)}>
-            <td className="h77-th">元のVMインスタンス</td>
-            <td className="h77-ok">works as expected ─ サポート内。ここが本線</td>
-          </tr>
-          <tr style={lift(entrance(frame, fps, 24), 14)}>
-            <td className="h77-th">別ホスト（ALR）</td>
-            <td className="h77-ng">管理対象外のVMとして復元。Azure Local VM への変換は非サポート</td>
-          </tr>
-        </tbody>
-      </table>
-      <p className="h77-punch-line" style={lift(entrance(frame, fps, 34), 18)}>
-        <Check size={40} />
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 46), 16)}>
+        <TriangleAlert size={38} />
         <span>
-          <strong>「元の場所に戻す」設計にすれば、全部サポート内で回る。</strong>
+          ただし ─ <strong>今日いちばんの学びは、前回の私が間違っていたこと</strong>です。
+          そもそも適用できていない構成を見て「機能が使えない」と結論していました。
           <br />
-          パッチ失敗のロールバックは、まさにこのケース。
+          <strong>AIも人も、実機で測るまでは間違えます。</strong>だから測りに行く。
         </span>
       </p>
-      <Source
-        href="https://learn.microsoft.com/azure/backup/back-up-azure-stack-hyperconverged-infrastructure-virtual-machines"
-        label="Microsoft Learn ─ Back up Azure Local virtual machines with MABS"
-      />
-    </section>
-  )
-}
-
-function ChecklistSlide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const items = [
-    ['Arc の接続状態', 'ポータルで Connected か。Disconnected なら disconnect --force-local-only → connect'],
-    ['拡張機能', '最新の設定で再適用されたか。ログの Sequence Number を見る'],
-    ['構成ポリシー', '自動では直らないことがある。NonCompliant なら手で是正を回す'],
-    ['パッチのコンプライアンス', '表示は実機の真値とズレる。再評価をかけてから判断する']
-  ]
-  return (
-    <section className="remotion-slide h77-slide h77-checklist">
-      <div className="h77-grid" />
-      <Head kicker="TAKE THIS HOME" title="復元・巻き戻しのあとに確認する4つ" frame={frame} />
-      <ol className="h77-check">
-        {items.map((item, index) => (
-          <li key={item[0]} style={lift(entrance(frame, fps, 12 + index * 10), 18)}>
-            <span className="h77-check-no">{index + 1}</span>
-            <div>
-              <strong>{item[0]}</strong>
-              <p>{item[1]}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <LiveCue label="Resource Graph エクスプローラー" />
     </section>
   )
 }
@@ -866,20 +945,19 @@ function ConclusionSlide({ frame }: SlideRenderContext) {
         <div style={lift(entrance(frame, fps, 10), 20)}>
           <Check size={44} />
           <p>
-            Azure 側のオブジェクトは<strong>巻き戻しでは消えない</strong>。
-            拡張機能は自力で追いつく。
+            巻き戻しても、<strong>Azure側の割り当ては消えない</strong>。戻すのは実機の側だけ。
           </p>
         </div>
         <div style={lift(entrance(frame, fps, 22), 20)}>
           <Clock size={44} />
           <p>
-            ただし<strong>時間差がある</strong>。その間、ポータルは緑のまま。
+            ただし<strong>時計が3つある</strong>。エージェント15分・マシン構成15分・Policy 24時間。
           </p>
         </div>
         <div style={lift(entrance(frame, fps, 34), 20)}>
           <ListChecks size={44} />
           <p>
-            <strong>戻し方を手元に持つ</strong>。それだけで、怖さは運用手順に変わる。
+            <strong>5つの手順を手元に持つ</strong>。それだけで、怖さは作業に変わる。
           </p>
         </div>
       </div>
