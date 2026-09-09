@@ -12016,3 +12016,60 @@ main {
 .h77-slide .h77-punch-line {
   max-width: none;
 }
+
+/* Ghost-assignment timeline ---------------------------------- */
+
+.h77-tl5 {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.h77-tl5-row {
+  align-items: baseline;
+  background: rgba(255, 255, 255, 0.045);
+  border-radius: 12px;
+  display: grid;
+  font-size: 23px;
+  gap: 24px;
+  grid-template-columns: 210px 1fr;
+  padding: 12px 24px;
+}
+
+.h77-tl5-t {
+  color: var(--h77-cyan);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+}
+
+/* Two kinds of green ----------------------------------------- */
+
+.h77-cmp {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.h77-cmp-row {
+  border-radius: 12px;
+  display: grid;
+  font-size: 23px;
+  gap: 20px;
+  grid-template-columns: 1fr 130px 1fr;
+  padding: 14px 26px;
+}
+
+.h77-cmp-bad {
+  background: rgba(255, 122, 122, 0.12);
+  border: 1px solid var(--h77-red);
+}
+
+.h77-cmp-stale {
+  background: rgba(82, 215, 160, 0.1);
+  border: 1px dashed var(--h77-green);
+}
+
+.h77-slide .h77-cmp,
+.h77-slide .h77-tl5 {
+  flex: none;
+}
