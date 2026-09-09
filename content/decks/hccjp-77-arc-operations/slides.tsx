@@ -634,7 +634,7 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
           ただし、その4分30秒に辿り着くまで <strong>43分かかりました</strong>。
           最初はずっと非準拠のままで、「適用型も復元後は直らない」と結論しかけた。
           <br />
-          犯人は、この構成の外にいます ─ 次のスライド。
+          犯人は、この構成の外にいました ─ 次のスライド。
         </span>
       </p>
       <LiveCue label="ポータル ─ arcwin01 / マシン構成" />
@@ -645,9 +645,9 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
 function GhostSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const rows: Array<[string, string]> = [
-    ['21:13:05', 'ゴーストが評価キューを取る'],
+    ['21:13:05', '居残りの重い監査が、評価キューを取る'],
     ['21:18 / 21:28', '他の構成のタイマーは鳴る。でも順番が来ない'],
-    ['21:51:47', 'ゴーストの1周がやっと終わる ─ 2321秒（38分41秒）'],
+    ['21:51:47', 'その1周がやっと終わる ─ 2321秒（38分41秒）'],
     ['21:52:10', 'キューを空けてやる'],
     ['21:56:48', 'SetSecureProtocol が自力で準拠へ戻る']
   ]
@@ -656,16 +656,16 @@ function GhostSlide({ frame }: SlideRenderContext) {
       <div className="h77-grid" />
       <Head
         kicker="THE CULPRIT"
-        title="Azureで消したはずの割り当てが、復元で蘇る"
+        title="Azureの一覧と、実機が持っている割り当ては、ずれる"
         frame={frame}
       />
       <div className="h77-two h77-two-tight">
         <div className="h77-card h77-card-quiet" style={lift(entrance(frame, fps, 8), 18)}>
-          <h2>Azure が持っている割り当て</h2>
+          <h2>Azure（ポータル / API）</h2>
           <p className="h77-mono">4件</p>
         </div>
         <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 14), 18)}>
-          <h2>実機のローカルキャッシュ</h2>
+          <h2>実機が持っていた割り当て</h2>
           <p className="h77-mono">5件 ─ 消したはずの重い監査つき</p>
         </div>
       </div>
@@ -680,10 +680,10 @@ function GhostSlide({ frame }: SlideRenderContext) {
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 54), 16)}>
         <TriangleAlert size={38} />
         <span>
-          マシン構成の評価は<strong>1台につき1本ずつ順番待ち</strong>。
-          復元で蘇った重い監査が居座ると、<strong>他の構成は自己修復すらできない</strong>。
+          マシン構成の評価は<strong>1台につき1本ずつの順番待ち</strong>。
+          重い監査が1件居座るだけで、<strong>他の構成は自己修復すらできない</strong>。
           <br />
-          公式ドキュメントに記載なし。<strong>復元後は、実機側の割り当てを数えて掃除する。</strong>
+          <strong>直らないときは、実機が持っている割り当てを数える。</strong>Azureの一覧と一致するとは限らない。
         </span>
       </p>
     </section>
