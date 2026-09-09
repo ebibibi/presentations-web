@@ -23,7 +23,7 @@ slides:
 
       しかも今日は、このセッションの途中で実際に巻き戻します。戻したあとの15分を、そのまま結果を見る時間に使います。
 
-      【開始前の仕込み・13:45】(0) **L0（nestedhyperv 192.168.1.253）に RDP し、PowerShell を管理者で開いて `C:\hccjp77\1-status.ps1` を実行**。`T1-hccjp77` と `T6-demo-ready` が見えることを確認する（無いとデモが成立しない）。(1) Update Manager の評価を arcwin01 / arclnx01 にかけておく（2〜4分かかる）。(2) **Run Command を1回空打ちしておく** ─ 初回は約9分かかるので、温めないと本番で必ず待たされる。(3) ブラウザのタブを左から［Arc マシン一覧］［arcwin01 Overview］［arcwin01 マシン構成］［Policy コンプライアンス］［Update Manager］［Resource Graph エクスプローラー］［Hyper-V マネージャー（nested-lab-01 へRDP）］の順に固定。(4) ターミナル1枚・18pt以上、`export SUB=...` を通しておく。詳細は presentations リポジトリの HCCJP_77/run-of-show.md。
+      【開始前の仕込み・13:45】(0) **`mstsc /v:192.168.1.253:13389` で L1（nested-lab-01）に RDP し、Hyper-V マネージャーを開いたまま置いておく**。arcwin01 の［チェックポイント］に `T1-hccjp77` と `T6-demo-ready` が見えることを確認する（無いとデモが成立しない）。(1) Update Manager の評価を arcwin01 / arclnx01 にかけておく（2〜4分かかる）。(2) **Run Command を1回空打ちしておく** ─ 初回は約9分かかるので、温めないと本番で必ず待たされる。(3) ブラウザのタブを左から［Arc マシン一覧］［arcwin01 Overview］［arcwin01 マシン構成］［Policy コンプライアンス］［Update Manager］［Resource Graph エクスプローラー］［Hyper-V マネージャー（nested-lab-01 へRDP）］の順に固定。(4) ターミナル1枚・18pt以上、`export SUB=...` を通しておく。詳細は presentations リポジトリの HCCJP_77/run-of-show.md。
   - id: agenda
     title: 本日の流れ
     durationInFrames: 200
@@ -52,7 +52,7 @@ slides:
 
       ここで押さえていただきたいのは、**戻す人と戻される人が別の層にいる**ということです。チェックポイントを持っているのはL1で、Azureから見えているのはL2だけ。つまりAzureは、自分の管理下のサーバーが巻き戻されたことを、直接には知りようがない。この構造が、今日の結果のほとんどを説明します。
 
-      【画面・40秒】nested-lab-01 に RDP して Hyper-V マネージャーを開き、arcwin01 / arclnx01 と、そこに刺さっているチェックポイント（T1-hccjp77 と T3-compliant-20260909）を見せる。「この画面はAzureポータルではありません。Azureからは触れない場所です」と言う。
+      【画面・40秒】**すでに開いてある L1（nested-lab-01）の Hyper-V マネージャー**に切り替え、arcwin01 / arclnx01 と、そこに刺さっているチェックポイント（T1-hccjp77 / T6-demo-ready）を見せる。**この画面はAzureポータルではなく、Azureからは触れない場所**だと言う。あとでここに戻ってきて巻き戻す、と予告しておく。「この画面はAzureポータルではありません。Azureからは触れない場所です」と言う。
   - id: inventory
     title: まず棚卸し ─ Arc経由で何が手に入るのか
     durationInFrames: 250
@@ -113,11 +113,10 @@ slides:
 
       戻したあと、何が自分で戻ってきて、何が戻ってこないのかを、このセッションの中で測ります。だいたい15分。ちょうど次の3枚を話し終わるころに答えが出るはずです。
 
-      【デモ②・実機・1分・ここが今日の山場】**L0（nestedhyperv）の PowerShell で 1行だけ**:
-        C:\hccjp77\2-rollback.ps1
-      約12秒で終わる。**arcwin01 は L0 の Hyper-V マネージャーには出てこない**（持ち主は L1 の nested-lab-01）ので、GUI を探しに行かないこと。スクリプトが L1 越しに復元する。
-      終わったら**時刻を口で宣言する** ─ 「いま14時28分、ここから測ります」。以降ポータルの arcwin01 Overview タブへときどき戻る。
-      **保険**: 失敗したら深追いせず「事前に同じことをやった記録があります」と言って実測値のスライドで進める。環境の復旧は C:\hccjp77\9-restore.ps1（T6-demo-ready へ戻る）。
+      【デモ②・実機・1分・ここが今日の山場】**Hyper-V マネージャーで見せる**。開始前から開いておくこと。
+      接続は `mstsc /v:192.168.1.253:13389` で **L1（nested-lab-01）へ直接**（資格情報は事前保存）。**arcwin01 は L0 の Hyper-V マネージャーには出てこない** ─ 持ち主は L1 なので、L1 の画面を映す。
+      操作: (1) `arcwin01` を選ぶ (2) 下の［チェックポイント］で **`T1-hccjp77` を右クリック →［適用］** (3) ダイアログは **［適用］**（［チェックポイントの作成と適用］は選ばない） (4) **⚠️ VMが「オフ」になる** ─ 4つのチェックポイントは全て State=Off で保存されているため、適用しただけでは起動しない (5) **`arcwin01` を右クリック →［起動］** (6) 「実行中」を確認して**時刻を口で宣言**「いま14時28分、ここから測ります」。
+      **保険**: GUI が固まったら深追いせず、L0 で `C:\hccjp77\2-rollback.ps1` を流す（約12秒）。それも駄目なら実測値のスライドで進める。環境の復旧は `C:\hccjp77\9-restore.ps1`。
   - id: result-agent
     title: ①エージェントは ─ 落ちませんでした
     durationInFrames: 290
