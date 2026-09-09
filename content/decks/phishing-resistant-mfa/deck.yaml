@@ -1,10 +1,10 @@
 slug: phishing-resistant-mfa
 title: そのMFA、中継されて終わりです ─ フィッシング耐性とは何か
 summary: MFAには種類がある。ゲストも含めて。コードを読んで入力する方式は、中間者攻撃で利用者に代行させられて突破される。番号一致も中継される。なぜFIDO2やWindows Helloだけが耐えるのか、その仕組みと、公式の認証強度3段階を整理する。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-08-29"
-updatedAt: "2026-08-29"
+updatedAt: "2026-09-06"
 order: 109
 tags:
   - entra-id
@@ -13,6 +13,11 @@ tags:
   - passkey
   - fido2
   - security
+youtube:
+  id: bqJXcGue37Y
+  url: https://www.youtube.com/watch?v=bqJXcGue37Y
+  title: "mfa_fishing"
+  publishedAt: "2026-09-06"
 slides:
   - id: opening
     title: そのMFA、中継されて終わりです
