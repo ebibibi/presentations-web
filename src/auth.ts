@@ -50,9 +50,34 @@ declare global {
   }
 }
 
+// `/api/auth/*` is a Cloudflare Function, so it only exists on the deployed
+// site: the Vite dev server answers those paths with index.html and no one can
+// ever sign in here. Without an owner session the local server hides exactly
+// the decks it exists to edit (drafts), so a dev session is the owner by
+// default. Set `VITE_DEV_OWNER=false` to browse the dev server the way a public
+// visitor sees the site. `import.meta.env.DEV` is replaced at build time, so
+// this branch is dropped from the production bundle rather than shipped.
+const devOwner = import.meta.env.DEV && import.meta.env.VITE_DEV_OWNER !== 'false'
+
+function devOwnerState(): AuthState {
+  return {
+    loading: false,
+    // No auth backend to sign in or out of; the header renders a plain marker.
+    enabled: false,
+    googleClientId: '',
+    authenticated: true,
+    canRecord: true,
+    user: { email: 'local dev server', name: 'ローカル編集' }
+  }
+}
+
 let googleScriptPromise: Promise<void> | null = null
 
 export async function loadAuthState(): Promise<AuthState> {
+  if (devOwner) {
+    return devOwnerState()
+  }
+
   const config = await getAuthConfig()
   const session = config.enabled
     ? await getSession()
@@ -129,6 +154,10 @@ export async function loginWithCredential(credential: string): Promise<AuthState
 }
 
 export async function logout(): Promise<AuthState> {
+  if (devOwner) {
+    return devOwnerState()
+  }
+
   await fetch('/api/auth/logout', { method: 'POST' })
   window.google?.accounts.id.disableAutoSelect()
   const config = await getAuthConfig()

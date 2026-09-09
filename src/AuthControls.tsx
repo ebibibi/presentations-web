@@ -103,15 +103,20 @@ export function AuthControls({
           <Video size={16} aria-hidden />
           {auth.canRecord ? '撮影可' : '閲覧'}
         </span>
-        <button
-          type="button"
-          onClick={async () => {
-            onAuthChange(await logout())
-          }}
-          title="ログアウト"
-        >
-          <LogOut size={16} aria-hidden />
-        </button>
+        {/* The local dev server has no auth backend to sign out of: it is the
+            owner by construction, so offering a logout would only produce a
+            session that a reload undoes. */}
+        {auth.enabled ? (
+          <button
+            type="button"
+            onClick={async () => {
+              onAuthChange(await logout())
+            }}
+            title="ログアウト"
+          >
+            <LogOut size={16} aria-hidden />
+          </button>
+        ) : null}
       </div>
     )
   }

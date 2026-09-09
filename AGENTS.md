@@ -44,6 +44,10 @@ This repository is intended to be public. Use English for code comments, README 
   - `private` — owner-only hard access content served from `/api/private/decks` after session verification. Do not put private deck text in `content/decks` or any public bundle.
   - **To publish, change `status: draft` to `status: public` and merge — that one line is the switch.**
   - This is UI-level gating: a draft deck's content still ships in the static bundle, so it is not hard access control.
+  - The dev server has no Cloudflare Functions, so `/api/auth/*` never answers and nobody can sign
+    in there. It therefore runs as the owner (`devOwner` in `src/auth.ts`) and lists every deck.
+    Start it with `VITE_DEV_OWNER=false` to see the site as a public visitor. Keep that branch
+    behind `import.meta.env.DEV` so it is dropped from the production bundle.
 - `visibility` is descriptive metadata; route access is still gated on `status`.
 - Read [docs/ai-deck-authoring.md](docs/ai-deck-authoring.md) before creating or heavily editing a deck.
 
