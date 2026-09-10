@@ -405,7 +405,7 @@ function ThreeQuestionsSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
-        答えを<strong>あ</strong>
+        <strong>あ</strong>
       </p>
     </section>
   )
