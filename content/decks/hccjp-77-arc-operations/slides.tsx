@@ -188,6 +188,7 @@ function ProfileSlide({ frame }: SlideRenderContext) {
           <h2>HCCJP について</h2>
           <ul>
             <li>毎月第2金曜 14:00〜、7年以上続けているコミュニティ</li>
+            <li>毎月第2金曜 14:00〜、7年以上続けているコミュニティ</li>
             <li>Azure ／ ハイブリッドクラウド ／ 生成AI が柱</li>
             <li>企業・個人を問わず、どなたでも参加できます</li>
           </ul>
