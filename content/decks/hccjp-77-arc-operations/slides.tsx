@@ -1015,7 +1015,7 @@ function ConclusionSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <p className="h77-big-q h77-center" style={lift(entrance(frame, fps, 48), 16)}>
-        Azure Update Manager、使っていきましょう。
+        Azure Arc、Policy、Machine Configuration、Azure Update Manager、使っていきましょう。
       </p>
     </section>
   )
