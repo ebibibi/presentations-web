@@ -881,7 +881,7 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
         ))}
       </ol>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
-        <strong>4番と5番が今回の新発見です。</strong>ここを知らないと、正常な動作を故障だと思い込みます。
+        ここを知らないと、正常な動作を故障だと思い込みます。
       </p>
       <LiveCue label="巻き戻した arcwin01 が、戻ってきたか" />
     </section>
