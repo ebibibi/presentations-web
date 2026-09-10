@@ -158,6 +158,13 @@ function AgendaSlide({ frame }: SlideRenderContext) {
 
 function ProfileSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
+  // Recent uploads, picked so they land next to this session's own topics:
+  // patching, Active Directory, and letting an agent run unattended.
+  const videos: Array<[string, string]> = [
+    ['GdenW8z7DZA', 'SharePointの共有リンクが変わる'],
+    ['Pc7i03UdPgA', 'Windows Update で AD 認証が失敗する？'],
+    ['SZSH9NkdH64', 'Claude Code が4時間55分動きっぱなし']
+  ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
@@ -169,7 +176,6 @@ function ProfileSlide({ frame }: SlideRenderContext) {
           <ul>
             <li>Microsoft MVP ─ Cloud and Datacenter Management / Microsoft Azure（14年連続）</li>
             <li>ハイブリッドクラウド研究会（HCCJP）主幹事</li>
-            <li>YouTube で Azure・Microsoft 365・生成AI を解説</li>
           </ul>
         </div>
         <div className="h77-card h77-card-quiet" style={lift(entrance(frame, fps, 26), 20)}>
@@ -178,8 +184,21 @@ function ProfileSlide({ frame }: SlideRenderContext) {
             <li>毎月第2金曜 14:00〜、7年以上続けているコミュニティ</li>
             <li>Azure ／ ハイブリッドクラウド ／ 生成AI が柱</li>
             <li>企業・個人を問わず、どなたでも参加できます</li>
-            <li>事例共有・構成相談・ご登壇も歓迎です</li>
           </ul>
+        </div>
+      </div>
+      <div className="h77-yt">
+        <span className="h77-yt-lead">
+          YouTube で Azure・Microsoft 365・生成AI を解説しています ─ <strong>@ebibibi</strong>
+        </span>
+        <div className="h77-yt-row">
+          {videos.map(([id, title], index) => (
+            <div className="h77-yt-item" key={id} style={lift(entrance(frame, fps, 36 + index * 6), 16)}>
+              <img src={`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`} alt={title} />
+              <span>{title}</span>
+              <small>youtu.be/{id}</small>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -11996,3 +11996,54 @@ main {
 .h77-slide .h77-tl5 {
   flex: none;
 }
+
+/* Speaker slide: recent uploads. Thumbnails are pulled straight from YouTube so
+   the deck does not carry image copies that go stale when a thumbnail is
+   replaced. Needs the deck to be online, which it is when presenting. */
+.h77-yt {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.h77-yt-lead {
+  color: rgba(226, 240, 255, 0.72);
+  font-size: 21px;
+  text-align: center;
+}
+
+.h77-yt-lead strong { color: #7dd3fc; }
+
+.h77-yt-row {
+  display: flex;
+  gap: 20px;
+}
+
+.h77-yt-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.h77-yt-item img {
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  border-radius: 12px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.h77-yt-item span {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.h77-yt-item small {
+  color: #7dd3fc;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 17px;
+}
