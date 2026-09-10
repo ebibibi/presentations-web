@@ -6,7 +6,6 @@ visibility: private
 createdAt: "2026-09-05"
 updatedAt: "2026-09-09"
 canvas: wide
-order: 77
 tags:
   - azure-arc
   - hybrid-cloud

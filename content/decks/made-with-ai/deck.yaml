@@ -5,7 +5,6 @@ status: public
 visibility: public
 createdAt: "2026-06-27"
 updatedAt: "2026-06-27"
-order: 100
 tags:
   - ai
   - claude-code

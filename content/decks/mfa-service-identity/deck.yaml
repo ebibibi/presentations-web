@@ -5,7 +5,6 @@ status: public
 visibility: public
 createdAt: "2026-08-29"
 updatedAt: "2026-08-30"
-order: 108
 tags:
   - entra-id
   - mfa

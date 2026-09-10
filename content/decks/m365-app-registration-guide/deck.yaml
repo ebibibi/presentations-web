@@ -5,7 +5,6 @@ status: public
 visibility: public
 createdAt: "2026-08-06"
 updatedAt: "2026-08-08"
-order: 102
 tags:
   - microsoft-365
   - entra-id

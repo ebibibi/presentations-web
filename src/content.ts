@@ -1,4 +1,5 @@
 import YAML from 'yaml'
+import { compareDecksNewestFirst } from './deck-order'
 import { privateDeckDocumentSchema, toPrivateDeckBundle } from './private-decks'
 import { deckMetaSchema } from './schema'
 import type { DeckBundle, DeckMeta, SlideModule } from './types'
@@ -22,14 +23,7 @@ export function getDecks(): DeckBundle[] {
 
   cachedDecks = Object.entries(deckMetaFiles)
     .map(([path, raw]) => buildDeck(path, raw))
-    .sort((left, right) => {
-      const leftOrder = left.meta.order ?? Number.POSITIVE_INFINITY
-      const rightOrder = right.meta.order ?? Number.POSITIVE_INFINITY
-      if (leftOrder !== rightOrder) {
-        return leftOrder - rightOrder
-      }
-      return right.meta.createdAt.localeCompare(left.meta.createdAt)
-    })
+    .sort((left, right) => compareDecksNewestFirst(left.meta, right.meta))
 
   return cachedDecks
 }

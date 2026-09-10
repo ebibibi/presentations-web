@@ -5,7 +5,6 @@ status: public
 visibility: public
 createdAt: "2026-07-05"
 updatedAt: "2026-07-06"
-order: 101
 tags:
   - ai
   - youtube

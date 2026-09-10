@@ -5,7 +5,6 @@ status: public
 visibility: public
 createdAt: "2026-08-16"
 updatedAt: "2026-08-18"
-order: 105
 tags:
   - ai
   - dx

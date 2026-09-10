@@ -16,6 +16,7 @@ import {
   loadAuthState
 } from './auth'
 import { getDecks, loadPrivateDecks } from './content'
+import { deckTimelineDate, formatDeckDate } from './deck-order'
 import { isDeckAccessible, isDeckListed, isPublished } from './visibility'
 import type { DeckBundle } from './types'
 
@@ -282,27 +283,12 @@ function Home({
   return (
     <main>
       <section className="hero">
-        <div className="hero-copy">
-          <p className="eyebrow">Video-linked rich presentation archive</p>
-          <h1>動画の資料をあとから読む</h1>
-          <p>
-            YouTubeで扱ったテーマの資料を、ブラウザでそのまま閲覧できる形で公開します。
-          </p>
-        </div>
-        <div className="hero-panel audience-preview" aria-label="Presentation preview">
-          <div className="preview-window">
-            <div className="preview-window-bar">
-              <span />
-              <span />
-              <span />
-            </div>
-            <div className="preview-window-body">
-              <span className="preview-label">web deck</span>
-              <strong>動画と連動した<br />プレゼン資料</strong>
-              <p>スライド単位のURLで共有できます。</p>
-            </div>
-          </div>
-        </div>
+        <p className="eyebrow">Video-linked rich presentation archive</p>
+        <h1>動画の資料をあとから読む</h1>
+        <p className="hero-lead">
+          YouTubeで扱ったテーマの資料を、ブラウザでそのまま閲覧できる形で公開します。
+          新しい資料が上に並びます。
+        </p>
       </section>
 
       <section className="toolbar" aria-label="Archive tools">
@@ -314,7 +300,7 @@ function Home({
             placeholder="タイトル、タグ、動画で検索"
           />
         </label>
-        <span>{visibleDecks.length} decks</span>
+        <span className="deck-count">{visibleDecks.length} decks・新しい順</span>
         {isOwner && hiddenCount > 0 ? (
           <span className="owner-note">オーナー表示：非公開 {hiddenCount} 件を含む</span>
         ) : null}
@@ -358,10 +344,11 @@ function DeckCard({ deck, onOpen }: { deck: DeckBundle; onOpen: () => void }) {
       </div>
       <div className="deck-card-body">
         <div className="card-meta">
-          <span className={isPublished(deck.meta.status) ? undefined : 'card-status-hidden'}>
-            {deck.meta.status}
-          </span>
+          <span className="card-date">{formatDeckDate(deckTimelineDate(deck.meta))}</span>
           <span>{deck.meta.slides.length} slides</span>
+          {isPublished(deck.meta.status) ? null : (
+            <span className="card-status-hidden">{deck.meta.status}</span>
+          )}
         </div>
         <h2>{deck.meta.title}</h2>
         <p>{deck.meta.summary}</p>

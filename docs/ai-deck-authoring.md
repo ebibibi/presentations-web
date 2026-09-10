@@ -68,6 +68,9 @@ slides:
 Rules:
 
 - Use `status: draft` for new decks.
+- `createdAt` is the deck's place on the archive timeline (newest first). The archive
+  uses `youtube.publishedAt` instead once the deck is linked to a video, so an accurate
+  `createdAt` matters most for decks that have no video. There is no manual sort field.
 - Use `visibility: public` unless access control is implemented.
 - Use the private deck API, not `content/decks`, for material that must not ship in the public JavaScript bundle.
 - Keep `slides` in the same order as the rendered components in `slides.tsx`.
