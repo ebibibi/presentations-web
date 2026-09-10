@@ -17,6 +17,7 @@ import {
   removeTsxItems,
   removeYamlItems
 } from '../scripts/deck-text-core.mjs'
+import { readDeckSources, writeDeckSource } from '../scripts/deck-source.mjs'
 
 const NORMALIZE = (value) => value.replace(/\s+/g, ' ').trim()
 
@@ -202,6 +203,44 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
               return send(400, { error: '対象の文字列が空です' })
             }
             return send(200, { candidates: candidatesFor(repoRoot, body.slug, body.text) })
+          }
+
+          // The escape hatch: the copy editor can only reach strings it can
+          // resolve, so the whole file is also readable and writable.
+          if (request.url.startsWith('/source')) {
+            const slug = typeof body.slug === 'string' ? body.slug : ''
+            if (!listSlugs(repoRoot).includes(slug)) {
+              return send(400, { error: `不明なデッキです: ${slug || '(指定なし)'}` })
+            }
+
+            if (request.url.startsWith('/source-save')) {
+              if (typeof body.text !== 'string') {
+                return send(400, { error: '本文が指定されていません' })
+              }
+              const result = writeDeckSource(repoRoot, slug, body.name, body.text, body.hash)
+
+              if (!body.publish || !result.changed) {
+                return send(200, result)
+              }
+
+              // Same rule as a copy save: the file is already written, so a git
+              // failure is reported without pretending the edit was lost.
+              try {
+                const published = await publishFiles(
+                  repoRoot,
+                  [result.file],
+                  `fix(deck): edit ${body.name} source in ${slug}`
+                )
+                return send(200, { ...result, published })
+              } catch (error) {
+                return send(200, {
+                  ...result,
+                  publishError: error instanceof Error ? error.message : String(error)
+                })
+              }
+            }
+
+            return send(200, { files: readDeckSources(repoRoot, slug) })
           }
 
           if (request.url.startsWith('/patch')) {

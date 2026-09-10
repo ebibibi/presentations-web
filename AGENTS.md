@@ -29,6 +29,13 @@ This repository is intended to be public. Use English for code comments, README 
   unrelated work.
 - The extractor and rewriter are `scripts/deck-text-core.mjs`; changes there must keep
   `npm run check:text` passing (`-- --deep` before touching the deletion spans).
+- The editor must never be able to save copy it can no longer find: a save can shrink a
+  string, and a string the extractor skips is one nobody can click again. Single
+  Japanese characters are therefore copy (a lone punctuation mark is not, it repeats
+  everywhere). `npm run check:source` guards the rule and `npm run check:source-editor` drives the
+  panel in a browser; between them they cover the whole-file escape hatch
+  behind it (`scripts/deck-source.mjs`, dev-only endpoints `/__deck-text/source` and
+  `/source-save`), which validates syntax and the file hash before writing.
 - Deleting copy removes the construct around it. The span is computed from the AST at
   extraction time and published in the index, because the production Function has no
   compiler; it is re-found with `resolveSnippet` before the file is rewritten.
