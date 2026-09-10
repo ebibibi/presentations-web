@@ -73,8 +73,10 @@ Rules:
   `createdAt` matters most for decks that have no video. There is no manual sort field.
 - Use `visibility: public` unless access control is implemented.
 - Use the private deck API, not `content/decks`, for material that must not ship in the public JavaScript bundle.
-- Keep `slides` in the same order as the rendered components in `slides.tsx`.
-- The number of metadata slide entries must equal the number of rendered slide entries.
+- `deck.yaml` owns the running order. Every `slides` entry needs an `id`, and the
+  matching entry in `slides.tsx` repeats that same `id`; the deck is assembled by
+  pairing those ids, not by position.
+- Every metadata id must have exactly one rendered slide entry, and vice versa.
 - Put speaker notes in `notes`; studio mode can display them.
 
 ## Slide Module
@@ -86,9 +88,11 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 
 export const slides: SlideModule['slides'] = [
   {
+    id: 'opening',
     render: (props) => <OpeningSlide {...props} />
   },
   {
+    id: 'why-it-matters',
     render: (props) => <WhyItMattersSlide {...props} />
   }
 ]

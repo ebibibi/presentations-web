@@ -50,19 +50,33 @@ function buildDeck(path: string, raw: string): DeckBundle {
     throw new Error(`Slide module is missing for ${parsed.slug}`)
   }
 
-  if (slideModule.slides.length !== parsed.slides.length) {
+  // Pairing by id, not by position: reordering a deck means moving one entry in
+  // deck.yaml, and a slide whose component is missing fails loudly instead of
+  // silently borrowing the next slide's title and notes.
+  const componentsById = new Map(slideModule.slides.map((slide) => [slide.id, slide]))
+
+  if (componentsById.size !== slideModule.slides.length) {
+    throw new Error(`${parsed.slug} has duplicate slide ids in slides.tsx`)
+  }
+
+  const slides = parsed.slides.map((meta) => {
+    const component = componentsById.get(meta.id)
+
+    if (!component) {
+      throw new Error(`${parsed.slug} has no slide component with id "${meta.id}"`)
+    }
+
+    componentsById.delete(meta.id)
+    return { ...component, ...meta }
+  })
+
+  if (componentsById.size > 0) {
     throw new Error(
-      `${parsed.slug} has ${parsed.slides.length} slide metadata entries, but ${slideModule.slides.length} slide components`
+      `${parsed.slug} has slide components with no deck.yaml entry: ${[...componentsById.keys()].join(', ')}`
     )
   }
 
-  return {
-    meta: parsed,
-    slides: slideModule.slides.map((slide, index) => ({
-      ...slide,
-      ...parsed.slides[index]
-    }))
-  }
+  return { meta: parsed, slides }
 }
 
 async function safeJson(response: Response) {

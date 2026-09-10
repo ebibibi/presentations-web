@@ -29,18 +29,18 @@ import type { SlideModule } from '../../../src/types'
 import './styles.css'
 
 export const slides: SlideModule['slides'] = [
-  { render: () => <OpeningSlide /> },
-  { render: () => <WhyNowSlide /> },
-  { render: () => <MisunderstandingSlide /> },
-  { render: () => <PhasesSlide /> },
-  { render: () => <Phase3Slide /> },
-  { render: () => <TwoKnobsSlide /> },
-  { render: () => <BitsSlide /> },
-  { render: () => <WhoBreaksSlide /> },
-  { render: () => <IntermittentSlide /> },
-  { render: () => <InventorySlide /> },
-  { render: () => <RemediationSlide /> },
-  { render: () => <RecapSlide /> },
+  { id: 'opening', render: () => <OpeningSlide /> },
+  { id: 'why-now', render: () => <WhyNowSlide /> },
+  { id: 'misunderstanding', render: () => <MisunderstandingSlide /> },
+  { id: 'phases', render: () => <PhasesSlide /> },
+  { id: 'phase3', render: () => <Phase3Slide /> },
+  { id: 'two-knobs', render: () => <TwoKnobsSlide /> },
+  { id: 'bits', render: () => <BitsSlide /> },
+  { id: 'who-breaks', render: () => <WhoBreaksSlide /> },
+  { id: 'intermittent', render: () => <IntermittentSlide /> },
+  { id: 'inventory', render: () => <InventorySlide /> },
+  { id: 'remediation', render: () => <RemediationSlide /> },
+  { id: 'recap', render: () => <RecapSlide /> },
 ]
 
 const SOURCES = {

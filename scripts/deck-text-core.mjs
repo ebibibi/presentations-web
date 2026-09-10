@@ -32,6 +32,8 @@ const COPY_ATTRIBUTES = new Set(['alt', 'title', 'aria-label', 'label', 'caption
 
 /** Object keys that hold styling or configuration, never copy. */
 const NON_COPY_KEYS = new Set([
+  'id',
+  'slug',
   'style',
   'className',
   'config',
@@ -368,6 +370,56 @@ export function patchYamlSource(source, edits) {
     doc.setIn(edit.yamlPath, edit.text)
   }
   return doc.toString({ lineWidth: 0 })
+}
+
+/**
+ * The slide ids registered in a slides.tsx.
+ *
+ * Returns `{ exhaustive, ids }`. Some decks build their array from data
+ * (`visualSlides.map(...)`, `...QA.map(...)`), and those entries cannot be read
+ * statically: `exhaustive` is false there, and only the ids that are literally
+ * written in the file are returned. Returns null when there is no `slides`
+ * array at all.
+ */
+export function collectTsxSlideIds(filePath, source = readFileSync(filePath, 'utf8')) {
+  const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
+  let declaration = null
+
+  const visit = (node) => {
+    if (declaration === null && ts.isVariableDeclaration(node) && node.name.getText() === 'slides') {
+      declaration = node
+    }
+    ts.forEachChild(node, visit)
+  }
+
+  visit(sourceFile)
+  if (!declaration) return null
+
+  const initializer = declaration.initializer
+  if (!initializer || !ts.isArrayLiteralExpression(initializer)) {
+    return { exhaustive: false, ids: [] }
+  }
+
+  const ids = []
+  let exhaustive = true
+
+  for (const element of initializer.elements) {
+    if (!ts.isObjectLiteralExpression(element)) {
+      exhaustive = false
+      continue
+    }
+
+    const property = element.properties.find((item) => item.name?.getText() === 'id')
+    const value = property && ts.isPropertyAssignment(property) ? property.initializer : null
+
+    if (value && (ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value))) {
+      ids.push(value.text)
+    } else {
+      exhaustive = false
+    }
+  }
+
+  return { exhaustive, ids }
 }
 
 /** Syntax errors in a tsx source, used to prove a rewrite stayed valid. */

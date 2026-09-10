@@ -4,6 +4,7 @@
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { parse } from 'yaml'
+import { collectTsxSlideIds } from './deck-text-core.mjs'
 
 const decksDir = join(process.cwd(), 'content', 'decks')
 const required = ['slug', 'title', 'summary', 'status', 'createdAt', 'slides']
@@ -61,6 +62,41 @@ for (const entry of entries) {
     const duplicates = ids.filter((id, index) => id && ids.indexOf(id) !== index)
     if (duplicates.length) {
       problems.push(`${entry.name} has duplicate slide ids: ${[...new Set(duplicates)].join(', ')}`)
+    }
+
+    // slides.tsx and deck.yaml are paired by id at runtime, so a missing or
+    // stale id is a blank deck in the browser. Catch it here instead.
+    const registered = collectTsxSlideIds(join(decksDir, entry.name, 'slides.tsx'))
+
+    if (registered === null) {
+      problems.push(`${entry.name}/slides.tsx has no exported "slides" array`)
+    } else {
+      const stale = registered.ids.filter((id) => !ids.includes(id))
+      if (stale.length) {
+        problems.push(`${entry.name}/slides.tsx registers ids with no deck.yaml entry: ${stale.join(', ')}`)
+      }
+
+      const duplicated = registered.ids.filter((id, index) => registered.ids.indexOf(id) !== index)
+      if (duplicated.length) {
+        problems.push(`${entry.name}/slides.tsx registers duplicate ids: ${[...new Set(duplicated)].join(', ')}`)
+      }
+
+      // Decks that generate slides from data cannot be counted statically; the
+      // runtime pairing still catches those, so only check the ones we can see.
+      if (registered.exhaustive) {
+        if (registered.ids.length !== deck.slides.length) {
+          problems.push(
+            `${entry.name} has ${deck.slides.length} slide metadata entries, but ${registered.ids.length} slide components`
+          )
+        }
+
+        const orphaned = ids.filter((id) => !registered.ids.includes(id))
+        if (orphaned.length) {
+          problems.push(
+            `${entry.name}/deck.yaml has ids with no slide component: ${orphaned.slice(0, 5).join(', ')}`
+          )
+        }
+      }
     }
   }
 }

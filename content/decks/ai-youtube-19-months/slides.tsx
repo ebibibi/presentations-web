@@ -385,6 +385,27 @@ const visualSlides: DataDrivenSlideSpec[] = [
   }
 ]
 
-export const slides: SlideModule['slides'] = visualSlides.map((spec) => ({
+// This deck's visuals are generated from data, so the ids that pair each slide
+// with its deck.yaml entry are listed here in the same order.
+const slideIds = [
+  'opening',
+  'subscribe-opening',
+  'what-built',
+  'scale',
+  'timeline',
+  'revenue',
+  'peak-and-crash',
+  'dilemma',
+  'recommendation',
+  'pdca',
+  'limits',
+  'incidents',
+  'cost',
+  'closing',
+  'subscribe-closing',
+]
+
+export const slides: SlideModule['slides'] = visualSlides.map((spec, index) => ({
+  id: slideIds[index],
   render: (props) => <DataDrivenSlide spec={spec} {...props} />
 }))

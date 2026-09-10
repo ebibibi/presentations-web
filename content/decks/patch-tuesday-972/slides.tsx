@@ -7,12 +7,12 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import './styles.css'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <YearChartSlide {...props} /> },
-  { render: (props) => <MonthChartSlide {...props} /> },
-  { render: (props) => <WhySlide {...props} /> },
-  { render: (props) => <TriageSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'chart-year', render: (props) => <YearChartSlide {...props} /> },
+  { id: 'chart-month', render: (props) => <MonthChartSlide {...props} /> },
+  { id: 'why', render: (props) => <WhySlide {...props} /> },
+  { id: 'triage', render: (props) => <TriageSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
 ]
 
 const SOURCES = {

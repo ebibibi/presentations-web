@@ -4,20 +4,20 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <NumbersSlide {...props} /> },
-  { render: (props) => <SectionSlide {...props} {...PRODUCTS_SECTION} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.presentations} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.debate} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.shogi} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.hyperv} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.bridge} /> },
-  { render: (props) => <SectionSlide {...props} {...MECHANISMS_SECTION} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.secondBrain} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.issueDriven} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.parallel} /> },
-  { render: (props) => <TopicSlide {...props} {...TOPICS.keyless} /> },
-  { render: (props) => <RecapSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'by-the-numbers', render: (props) => <NumbersSlide {...props} /> },
+  { id: 'section-products', render: (props) => <SectionSlide {...props} {...PRODUCTS_SECTION} /> },
+  { id: 'product-presentations', render: (props) => <TopicSlide {...props} {...TOPICS.presentations} /> },
+  { id: 'product-debate', render: (props) => <TopicSlide {...props} {...TOPICS.debate} /> },
+  { id: 'product-shogi', render: (props) => <TopicSlide {...props} {...TOPICS.shogi} /> },
+  { id: 'product-hyperv', render: (props) => <TopicSlide {...props} {...TOPICS.hyperv} /> },
+  { id: 'product-ccdb', render: (props) => <TopicSlide {...props} {...TOPICS.bridge} /> },
+  { id: 'section-mechanisms', render: (props) => <SectionSlide {...props} {...MECHANISMS_SECTION} /> },
+  { id: 'mech-second-brain', render: (props) => <TopicSlide {...props} {...TOPICS.secondBrain} /> },
+  { id: 'mech-issue-driven', render: (props) => <TopicSlide {...props} {...TOPICS.issueDriven} /> },
+  { id: 'mech-parallel', render: (props) => <TopicSlide {...props} {...TOPICS.parallel} /> },
+  { id: 'mech-keyless', render: (props) => <TopicSlide {...props} {...TOPICS.keyless} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

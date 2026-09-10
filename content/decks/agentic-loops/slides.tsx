@@ -4,24 +4,24 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <WhyNowSlide {...props} /> },
-  { render: (props) => <DefinitionSlide {...props} /> },
-  { render: (props) => <FourTypesSlide {...props} /> },
-  { render: (props) => <TurnBasedSlide {...props} /> },
-  { render: (props) => <VerificationLoopsSlide {...props} /> },
-  { render: (props) => <GoalBasedSlide {...props} /> },
-  { render: (props) => <TimeBasedSlide {...props} /> },
-  { render: (props) => <ProactiveSlide {...props} /> },
-  { render: (props) => <QualitySlide {...props} /> },
-  { render: (props) => <TokenControlSlide {...props} /> },
-  { render: (props) => <ModelEffortSlide {...props} /> },
-  { render: (props) => <ChooseLoopSlide {...props} /> },
-  { render: (props) => <DemoSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <SourcesSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
+  { id: 'why-now', render: (props) => <WhyNowSlide {...props} /> },
+  { id: 'definition', render: (props) => <DefinitionSlide {...props} /> },
+  { id: 'four-types', render: (props) => <FourTypesSlide {...props} /> },
+  { id: 'turn-based', render: (props) => <TurnBasedSlide {...props} /> },
+  { id: 'verification-loops', render: (props) => <VerificationLoopsSlide {...props} /> },
+  { id: 'goal-based', render: (props) => <GoalBasedSlide {...props} /> },
+  { id: 'time-based', render: (props) => <TimeBasedSlide {...props} /> },
+  { id: 'proactive', render: (props) => <ProactiveSlide {...props} /> },
+  { id: 'quality', render: (props) => <QualitySlide {...props} /> },
+  { id: 'token-control', render: (props) => <TokenControlSlide {...props} /> },
+  { id: 'model-effort', render: (props) => <ModelEffortSlide {...props} /> },
+  { id: 'choose-loop', render: (props) => <ChooseLoopSlide {...props} /> },
+  { id: 'demo', render: (props) => <DemoSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
+  { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
 function entrance(frame: number, fps: number, delay = 0) {
