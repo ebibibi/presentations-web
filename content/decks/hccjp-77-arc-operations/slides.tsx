@@ -585,7 +585,7 @@ function ResultAgentSlide({ frame }: SlideRenderContext) {
       </p>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 50), 14)}>
         ハートビートは5分ごと・15分途切れて初めて Disconnected。巻き戻しはその猶予に収まる。
-        <code>lastStatusChange</code> だけが9分後に動いたが、状態は Connected のまま。
+        <code>lastStatusChange</code> だけが変化するが、状態は Connected のまま。
       </p>
       <LiveCue label="ポータル ─ arcwin01 概要（Connected のまま）" />
     </section>
