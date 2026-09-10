@@ -39,16 +39,20 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <McVsPolicySlide {...props} /> },
   { render: (props) => <TwoNetsSlide {...props} /> },
   { render: (props) => <ExperimentSlide {...props} /> },
+  { render: (props) => <PretestBreakSlide {...props} /> },
   { render: (props) => <ResultAgentSlide {...props} /> },
   { render: (props) => <ResultMcSlide {...props} /> },
   { render: (props) => <GhostSlide {...props} /> },
   { render: (props) => <ResultPolicySlide {...props} /> },
   { render: (props) => <TimezoneTrapSlide {...props} /> },
+  { render: (props) => <TimezoneFixSlide {...props} /> },
   { render: (props) => <RecoveryRunbookSlide {...props} /> },
   { render: (props) => <UpdateManagerSlide {...props} /> },
   { render: (props) => <HotpatchSlide {...props} /> },
   { render: (props) => <AiCoversSlide {...props} /> },
+  { render: (props) => <WhereItIsRecordedSlide {...props} /> },
   { render: (props) => <ConclusionSlide {...props} /> },
+  { render: (props) => <SessionEndSlide {...props} /> },
   { render: (props) => <NextSessionSlide {...props} /> },
   { render: (props) => <QaSlide {...props} /> },
   { render: (props) => <Promo1003Slide {...props} /> },
@@ -234,14 +238,15 @@ function Recap76Slide({ frame }: SlideRenderContext) {
           </div>
           <p className="h77-note">
             誰もそのサーバーにログインしないまま、調査から復旧まで Azure 経由で完結しました。
+            Azure 側の入口が <code>az</code> に統一されている ＝ AIエージェントがそのまま運用の手を持てる。
           </p>
         </div>
-        <div className="h77-recap-side" style={lift(entrance(frame, fps, 26), 20)}>
-          <Terminal size={44} />
+        <div className="h77-recap-side h77-recap-video" style={lift(entrance(frame, fps, 26), 20)}>
+          <img src="https://i.ytimg.com/vi/uPc6T-wL8-0/maxresdefault.jpg" alt="HCCJP 第76回 アーカイブ" />
           <p>
-            Azure 側の入口が <code>az</code> に統一されている
+            第76回「オンプレのサーバー壊します。直すのはAIです。」
             <br />
-            ＝ AIエージェントがそのまま運用の手を持てる
+            <strong>youtu.be/uPc6T-wL8-0</strong>
           </p>
         </div>
       </div>
@@ -357,17 +362,24 @@ function InventorySlide({ frame }: SlideRenderContext) {
 
 function ProofSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
+  // Only capabilities that are included in the Arc control plane. Machine
+  // configuration used to be on this list, but it is billed ($6/server/month),
+  // so it belongs on the pricing slide instead.
   const rows = [
-    { icon: <Terminal size={34} />, what: 'Arc経由のコマンド実行（Run Command）', got: '42秒で結果が返る' },
+    {
+      icon: <Terminal size={34} />,
+      what: 'Arc経由のコマンド実行（Run Command）',
+      got: '2回目以降は42秒／初回は約9分'
+    },
+    { icon: <KeyRound size={34} />, what: 'Arc 経由の SSH（az ssh arc）', got: 'NAT内側の 10.10.0.41 へ、穴なしで到達' },
     { icon: <KeyRound size={34} />, what: 'マネージドID でトークン取得', got: 'ゲスト内から取得成功・有効 24時間' },
     { icon: <Boxes size={34} />, what: '拡張機能の配布・設定更新', got: '2分以内に実機へ反映' },
-    { icon: <MonitorCheck size={34} />, what: 'マシン構成（Guest Configuration）', got: '5分ごとに割当取得・15分ごとに評価' },
-    { icon: <KeyRound size={34} />, what: 'Arc 経由の SSH（az ssh arc）', got: 'NAT内側の 10.10.0.41 へ、穴なしで到達' }
+    { icon: <Activity size={34} />, what: 'Resource Graph で全台まとめて照会', got: '接続状態・エージェント版数が1クエリで' }
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="PROOF" title="実際に動かして確かめた" frame={frame} />
+      <Head kicker="PROOF" title="無料の範囲で、どこまで・どのくらいの速さでできるか" frame={frame} />
       <div className="h77-rows">
         {rows.map((row, index) => (
           <div className="h77-row" key={row.what} style={lift(entrance(frame, fps, 12 + index * 8), 16)}>
@@ -378,8 +390,17 @@ function ProofSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 52), 14)}>
-        すべて、インバウンドのポートを1つも開けずに。ここまで課金はゼロ。
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 52), 16)}>
+        <Clock size={38} />
+        <span>
+          <strong>Run Command の初回だけは遅い</strong> ─ 実測で PUT から Succeeded まで約9分。
+          初回セットアップが走るためで、2回目からは数十秒。<strong>本番前に1回空打ちしておく</strong>。
+        </span>
+      </p>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 58), 14)}>
+        ここまでインバウンドのポートは1つも開けず、<strong>追加課金もゼロ</strong>。
+        <br />
+        課金が始まるのは<strong>マシン構成（$6/台/月）と Update Manager（$5/台/月）</strong>から。
       </p>
       <LiveCue label="" />
     </section>
@@ -436,7 +457,11 @@ function McVsPolicySlide({ frame }: SlideRenderContext) {
     ['例', '「この Arc マシンに拡張機能が入っているか」', '「タイムゾーンが東京か」「TLS 1.2 が有効か」'],
     ['どこで動くか', 'Azure Policy の評価エンジン', 'Arcエージェント内蔵の Machine Configuration agent'],
     ['直せるか', 'Modify / DeployIfNotExists で修復可能', 'ApplyAndAutoCorrect なら直す。Audit は直さない'],
-    ['準拠の更新', '標準評価は24時間ごと ＋ 変更時トリガー・手動スキャン', '割当取得5分 ／ OS内の評価15分（実測: 監査型は60分）']
+    [
+      '準拠の更新',
+      '標準の再評価は24時間ごと。ほかに割り当て変更（約5分）・リソース変更（約15分）・手動スキャンでも回る',
+      '割当取得5分 ／ OS内の評価は適用型15分・監査型60分。結果は評価が終わり次第 Policy 側へ届く'
+    ]
   ]
   return (
     <section className="remotion-slide h77-slide">
@@ -465,8 +490,11 @@ function McVsPolicySlide({ frame }: SlideRenderContext) {
         </tbody>
       </table>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 48), 14)}>
-        Azure VM では拡張機能が要るが、<strong>Arc では Connected Machine agent に内蔵</strong>されている
-        ─ 実測でも arcwin01 の拡張機能一覧に Guest Configuration は無い。
+        <strong>OS の中を見に行くのは誰か</strong> ─ Azure VM では Guest Configuration 拡張機能が必要。
+        <br />
+        <strong>Arc では Connected Machine agent に最初から入っている</strong>（サービス <code>gcarcservice</code>）。
+        <br />
+        だから arcwin01 の［拡張機能］一覧に Guest Configuration は出てこない。
       </p>
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 54), 16)}>
         <TriangleAlert size={38} />
@@ -475,6 +503,8 @@ function McVsPolicySlide({ frame }: SlideRenderContext) {
           <strong>Policy から配って、結果を Policy が読み取る</strong>。
           <br />
           だから準拠状態は<strong>両方に出る</strong>。しかも<strong>同じタイミングでは更新されない</strong> ─ ここが今日の伏線です。
+          <br />
+          （マシン構成の結果は評価が終わり次第 Policy に反映される。24時間待つのは、それ以外のルールの再評価）
         </span>
       </p>
     </section>
@@ -533,18 +563,21 @@ function TwoNetsSlide({ frame }: SlideRenderContext) {
 
 function ExperimentSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
+  // Numbers are the demo scripts themselves (C:\hccjp77\demo\D*.ps1), so the
+  // slide, the notes and the console prompts all say the same thing.
   const steps = [
     ['D1', 'いまの姿を見る', 'OSの実値と、割り当ての一覧'],
-    ['D2', 'Hyper-V で巻き戻す', 'チェックポイントを適用 → 起動'],
+    ['D2', 'Hyper-V で巻き戻す', 'チェックポイントを適用 → 起動 → 計測開始'],
     ['D3', 'ここが山場', 'Azureは緑。OSはもう壊れている'],
-    ['D4〜D6', '中で何が起きているか', 'エージェントのログと、評価の順番'],
+    ['D4〜D6', '中で何が起きているか', '割り当て・エージェントのログ・評価の順番待ち'],
+    ['D7', '詰まりを解消する', 'エージェント再起動 ─ ただし対症療法'],
     ['D8', '戻ったか', 'OSの値が書き戻される']
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
       <Head kicker="LIVE DEMO" title="これから、この順番で見ます" frame={frame} />
-      <div className="h77-steps">
+      <div className="h77-steps h77-steps-6">
         {steps.map((step, index) => (
           <div
             className={`h77-step${step[0] === 'D3' ? ' h77-step-now' : ''}`}
@@ -559,12 +592,27 @@ function ExperimentSlide({ frame }: SlideRenderContext) {
       </div>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 50), 14)}>
         <strong>「バックアップから復元した」と同じ状態</strong>を、いま作ります。
+        <br />
         戻りきるまで待てなくても大丈夫 ─ <strong>実測した数字は、このあとのスライドに全部あります</strong>。
       </p>
       <div className="h77-env" style={lift(entrance(frame, fps, 56), 16)}>
         <Server size={30} /> arcwin01 ─ Windows Server 2025（Nested Hyper-V ラボ L2）
       </div>
       <LiveCue label="Hyper-V ─ arcwin01 をチェックポイントへ復元" />
+    </section>
+  )
+}
+
+function PretestBreakSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide h77-section-break">
+      <div className="h77-grid" />
+      <div className="h77-break-body" style={lift(entrance(frame, fps), 26)}>
+        <span className="h77-kicker">RESULTS</span>
+        <h1>事前テスト時の記録</h1>
+        <p>ここから先は、9月5日〜9日に同じ手順で測った結果です</p>
+      </div>
     </section>
   )
 }
@@ -784,47 +832,124 @@ function TimezoneTrapSlide({ frame }: SlideRenderContext) {
       <div className="h77-grid" />
       <Head
         kicker="THE LANDMINE"
-        title={
-          <>
-            日本語Windowsでは、
-            <br />
-            組み込みポリシーが原理的に動かない
-          </>
-        }
+        title="日本語Windowsでは、この組み込みポリシーが準拠にならない"
         frame={frame}
       />
-      <div className="h77-code-quote" style={lift(entrance(frame, fps, 10), 20)}>
+      <div className="h77-two h77-two-tight">
+        <div className="h77-card" style={lift(entrance(frame, fps, 10), 18)}>
+          <div className="h77-card-head">
+            <FileCheck size={34} />
+            <h2>どのポリシーか</h2>
+          </div>
+          <ul>
+            <li>
+              組み込み定義 <strong>Configure time zone on Windows machines</strong>
+              <br />
+              <span className="h77-mono">6141c932-9384-44c6-a395-59e4c057d7c9</span>
+            </li>
+            <li>
+              中身はマシン構成 <strong>SetWindowsTimeZone</strong> ─ ApplyAndAutoCorrect で割り当て
+            </li>
+            <li>
+              実機は<strong>24時間たってもタイムゾーンが変わらず</strong>、ずっと NonCompliant
+            </li>
+          </ul>
+        </div>
+        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 20), 18)}>
+          <div className="h77-card-head">
+            <TriangleAlert size={34} />
+            <h2>レポートに出続けた理由</h2>
+          </div>
+          <p className="h77-mono">
+            Cannot bind argument to parameter &apos;Id&apos; because it is null.
+          </p>
+          <p>
+            <strong>[WindowsTimeZone]WindowsTimeZone1</strong> の Set-TargetResource が毎回落ちている
+          </p>
+        </div>
+      </div>
+      <div className="h77-code-quote" style={lift(entrance(frame, fps, 30), 20)}>
         <code>
           $timezoneId = Get-TimeZone -ListAvailable | % {'{'} if($_.<strong>DisplayName</strong> -ieq
           $TimeZone) {'{'}$_.Id{'}'} {'}'}
           <br />
           Set-TimeZone -Id $timezoneId
         </code>
-        <span className="h77-code-note">組み込み DSC リソースの中身</span>
+        <span className="h77-code-note">
+          配られた DSC リソース本体（GuestConfig\Configuration\SetWindowsTimeZone\Modules\…\WindowsTimeZone.psm1）
+        </span>
       </div>
-      <div className="h77-two h77-two-tight">
-        <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 24), 18)}>
-          <div className="h77-card-head">
-            <Languages size={34} />
-            <h2>実機（日本語）の DisplayName</h2>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
+        <Languages size={38} />
+        <span>
+          照合しているのは Id ではなく <strong>DisplayName</strong>。DisplayName は<strong>OSの表示言語でローカライズされる</strong>。
+          実機（日本語）は <span className="h77-mono">(UTC+09:00) 大阪、札幌、東京</span>、
+          ポリシーの allowedValues は英語だけ <span className="h77-mono">(UTC+09:00) Osaka, Sapporo, Tokyo</span>。
+          <br />
+          一致しないので <code>$timezoneId</code> は null ─ Test も同じ比較なので、
+          <strong>ApplyAndAutoCorrect でも永久に直らない。</strong>
+        </span>
+      </p>
+    </section>
+  )
+}
+
+function TimezoneFixSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const fixes = [
+    {
+      head: 'パラメータに実機の表示名を渡す',
+      body: 'マシン構成を直接割り当てるなら、組み込みのままでよい。configurationParameter の値に (Get-TimeZone).DisplayName の実値を渡す。Id を渡してはいけない',
+      tone: 'h77-card'
+    },
+    {
+      head: 'Policy から配るならコピーして1か所だけ直す',
+      body: '組み込み定義をコピーし、TimeZone の allowedValues を外したカスタム定義にする。DeployIfNotExists なのでマネージドIDと Guest Configuration Resource Contributor が要る',
+      tone: 'h77-card'
+    },
+    {
+      head: '新規構築なら OS を英語UIで揃える',
+      body: 'ロケール依存の照合を踏まないのがいちばん安い。日本語UIが要件なら上の2つで回避する',
+      tone: 'h77-card h77-card-quiet'
+    }
+  ]
+  const steps: Array<[string, string]> = [
+    ['① 理由を読む', '割り当ての reports を GET して reasons[].phrase を見る。「効かない」ではなく具体的な失敗理由が出る'],
+    ['② ログで Test / Set を見る', 'gc_worker.log に LCM の [Test] / [Set] と所要秒が出る。Set まで来ているのか、Test で落ちているのかが分かれる'],
+    ['③ 配られた実体を読む', '配られた DSC モジュールは実機のディスクにある（GuestConfig の Configuration 配下の .psm1）。中身を読めば照合方法まで分かる']
+  ]
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="SO ─ WHAT DO WE DO" title="全部を自作する必要はない ─ 回避は3通り" frame={frame} />
+      <div className="h77-q3">
+        {fixes.map((fix, index) => (
+          <div className={fix.tone} key={fix.head} style={lift(entrance(frame, fps, 10 + index * 8), 18)}>
+            <div className="h77-card-head">
+              <Check size={32} />
+              <h2>{fix.head}</h2>
+            </div>
+            <p>{fix.body}</p>
           </div>
-          <p className="h77-mono">(UTC+09:00) 大阪、札幌、東京</p>
-        </div>
-        <div className="h77-card h77-card-quiet" style={lift(entrance(frame, fps, 32), 18)}>
-          <div className="h77-card-head">
-            <FileCheck size={34} />
-            <h2>ポリシーの許容値（英語）</h2>
-          </div>
-          <p className="h77-mono">(UTC+09:00) Osaka, Sapporo, Tokyo</p>
-        </div>
+        ))}
       </div>
-      <p className="h77-punch-line" style={lift(entrance(frame, fps, 42), 16)}>
+      <div className="h77-rows" style={lift(entrance(frame, fps, 36), 16)}>
+        {steps.map((step) => (
+          <div className="h77-row" key={step[0]}>
+            <div className="h77-row-ic">
+              <ListChecks size={30} />
+            </div>
+            <div className="h77-row-what">{step[0]}</div>
+            <ArrowRight size={26} className="h77-row-arrow" />
+            <div className="h77-row-got">{step[1]}</div>
+          </div>
+        ))}
+      </div>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 50), 16)}>
         <TriangleAlert size={38} />
         <span>
-          一致しないので <code>$timezoneId</code> は null。<code>Set-TimeZone -Id $null</code> で落ちる。
-          <strong>ApplyAndAutoCorrect でも永久に直らない。</strong>
-          <br />
-          「Policyが効かない」の原因が、<strong>Policyの外</strong>にあった例。カスタム定義で回避しました。
+          <strong>組み込みが効かないときは「ロケール依存の文字列照合」を疑う</strong> ─
+          タイムゾーン・地域名・言語名は、日本語OSで名前が変わります。
         </span>
       </p>
     </section>
@@ -1026,6 +1151,90 @@ function AiCoversSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function WhereItIsRecordedSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const services: Array<[string, string]> = [
+    ['himds', 'Azure Hybrid Instance Metadata Service ─ Arc 本体。ハートビートとトークンはここ'],
+    ['gcarcservice', 'Guest Configuration Arc Service ─ マシン構成を評価するのはこのサービス'],
+    ['ExtensionService', 'Guest Configuration Extension Service ─ 拡張機能の配布と実行']
+  ]
+  const files: Array<[string, string]> = [
+    ['C:\\ProgramData\\GuestConfig\\Configuration\\', '割り当ての実体。<名>.metaconfig.json にモードと評価間隔（適用型15分／監査型60分／取得5分）が書いてある'],
+    ['…\\arc_policy_logs\\gc_agent.log', 'タイマー発火と評価の開始・完了。順番待ちが見えるのはここ'],
+    ['…\\arc_policy_logs\\gc_worker.log', 'Test だけか Set まで走ったか、1件あたり何秒か'],
+    ['C:\\ProgramData\\AzureConnectedMachineAgent\\Log\\', 'himds.log / azcmagent.log ─ 接続とハートビートの記録']
+  ]
+  return (
+    <section className="remotion-slide h77-slide">
+      <div className="h77-grid" />
+      <Head kicker="WHERE IT LIVES" title="どこに何が記録され、何が動いているのか" frame={frame} />
+      <div className="h77-two h77-two-tight">
+        <div className="h77-card" style={lift(entrance(frame, fps, 10), 18)}>
+          <div className="h77-card-head">
+            <Activity size={34} />
+            <h2>実機で動いている3つのサービス</h2>
+          </div>
+          <table className="h77-mini h77-paths">
+            <tbody>
+              {services.map((row) => (
+                <tr key={row[0]}>
+                  <td className="h77-mono">{row[0]}</td>
+                  <td>{row[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="h77-card h77-card-quiet" style={lift(entrance(frame, fps, 22), 18)}>
+          <div className="h77-card-head">
+            <HardDrive size={34} />
+            <h2>記録されるファイル（Windows）</h2>
+          </div>
+          <table className="h77-mini h77-paths">
+            <tbody>
+              {files.map((row) => (
+                <tr key={row[0]}>
+                  <td className="h77-mono">{row[0]}</td>
+                  <td>{row[1]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 34), 16)}>
+        <Terminal size={38} />
+        <span>
+          今日叩いたスクリプトは、Hyper-V ホスト（L1）の <span className="h77-mono">C:\hccjp77\demo\</span> にある
+          <strong>D0〜D8 と restart.ps1</strong>。すべて PowerShell Direct で arcwin01 の中を読んでいるだけで、
+          <strong>特別なエージェントは入れていません</strong>。
+        </span>
+      </p>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 44), 14)}>
+        スクリプトは公開しています ─ <strong>github.com/ebibibi/presentations/tree/main/HCCJP_77/scripts</strong>
+      </p>
+      <Source
+        href="https://github.com/ebibibi/presentations/tree/main/HCCJP_77/scripts"
+        label="GitHub ─ HCCJP_77 / scripts（今日のデモスクリプト一式）"
+      />
+    </section>
+  )
+}
+
+function SessionEndSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide h77-section-break">
+      <div className="h77-grid" />
+      <LogoMark className="h77-logo" />
+      <div className="h77-break-body" style={lift(entrance(frame, fps), 26)}>
+        <h1>ありがとうございました</h1>
+        <p>胡田 昌彦 ─ サーバーが巻き戻ったとき、Azureはどうなる？</p>
+      </div>
+    </section>
+  )
+}
+
 function ConclusionSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
@@ -1042,17 +1251,17 @@ function ConclusionSlide({ frame }: SlideRenderContext) {
         <div style={lift(entrance(frame, fps, 22), 20)}>
           <Clock size={44} />
           <p>
-            ただし<strong>時計が3つある</strong>。エージェント15分・マシン構成15分・Policy 24時間。
+            ただし<strong>時計が3つある</strong>。エージェント15分・マシン構成15分・Policy の再評価24時間。
           </p>
         </div>
         <div style={lift(entrance(frame, fps, 34), 20)}>
           <ListChecks size={44} />
           <p>
-            <strong>5つのステップを理解する。</strong>。それだけで、安心できる。
+            <strong>5つのステップを理解する。</strong>それだけで、安心できる。
           </p>
         </div>
       </div>
-      <p className="h77-big-q h77-center" style={lift(entrance(frame, fps, 48), 16)}>
+      <p className="h77-big-q h77-center h77-oneline" style={lift(entrance(frame, fps, 48), 16)}>
         Azure Arc、Policy、Machine Configuration、Azure Update Manager、使っていきましょう。
       </p>
     </section>

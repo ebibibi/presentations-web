@@ -1,10 +1,10 @@
 slug: hccjp-77-arc-operations
 title: サーバーが巻き戻ったとき、Azureはどうなる？ ─ Arcのエージェント・マシン構成・Policyを実機で戻してみた
 summary: バックアップから復元した、スナップショットで巻き戻した。そのとき Azure Arc のエージェント、マシン構成、Azure Policy はどうなるのか。実機（Windows Server 2025）をセッション中に4日前へ巻き戻し、何が自力で戻り、何が戻らないかを測ります。持ち帰りは「復元・巻き戻しのあとに回す5つの手順」。戻し方が確立していれば、Azure Update Manager でパッチを当てるのは怖くない、というところまで。HCCJP 第77回勉強会（2026-09-11）の進行スライド。
-status: draft
-visibility: private
+status: public
+visibility: public
 createdAt: "2026-09-05"
-updatedAt: "2026-09-09"
+updatedAt: "2026-09-10"
 canvas: wide
 tags:
   - azure-arc
@@ -60,10 +60,16 @@ slides:
 
       【画面・40秒】ポータルの arcwin01 のページを開き、左メニューを上から下へゆっくりスクロールして指す。「このスライドの4分類は、実はこの左メニューそのものです」— 拡張機能／更新／マシン構成／インサイト／SSH が並んでいるのを見せる。スライドに戻る。
   - id: proof
-    title: 実際に動かして確かめた
+    title: 無料の範囲で、どこまで・どのくらいの速さでできるか
     durationInFrames: 240
     notes: |-
-      一覧で見せるだけでは意味がないので、実際に動かしました。Arc経由のコマンド実行は42秒で返ってきます。マネージドIDのトークンもゲストの中から取れました。拡張機能の配布も動きます。そしてSSH。NATの内側にいる10.10.0.41のサーバーに、ポートを1つも開けずにインターネット越しでログインできました。全部、インバウンドの穴なしです。
+      一覧で見せるだけでは意味がないので、実際に動かして時間を測りました。ここに並べたのは全部、**Arc に繋いだだけで使える（追加課金のない）機能**です。
+
+      Arc経由のコマンド実行は42秒で返ってきます。ただし**初回だけは別で、実測で約9分かかりました**。初回セットアップが走るためで、2回目からは数十秒です。デモや障害対応で使うなら、**先に1回空打ちして温めておく**のが正解です。
+
+      SSHは、NATの内側にいる10.10.0.41のサーバーに、ポートを1つも開けずに到達できました。マネージドIDのトークンもゲストの中から取れます。拡張機能の配布も2分以内。Resource Graphなら全台まとめて1クエリです。全部、インバウンドの穴なしです。
+
+      なお、**マシン構成をこの一覧から外しました**。マシン構成はArc接続マシンだと1台あたり月6ドルの有料機能なので、「ここまで課金ゼロ」の枠には入りません。課金の線引きはあとのスライドでまとめて話します。
 
       【デモ①・実機・2〜3分】Run Command をその場で流す（**開始前に空打ちで温めてあること**）。コマンドは run-of-show.md のデモ①から。待っている間に「インバウンドのポートは1つも開けていません。エージェントが外向き443だけで取りに来ています」と話す。
       **保険**: 40秒で返らなければ深追いしない。既存の実行結果（runCommands/hccjp77-check）を GET して見せるか、スライドの「42秒」に戻す。
@@ -133,6 +139,13 @@ slides:
       **ただしこれは、重い監査を一時的に無効にしてあるから素直に効いている。**無効にする前に同じことをやったら41分かかった（キューは空くが、空いたあとの順番までは制御できない）。**「だから外せ」という話ではない**ので、そこは ghost と recovery-runbook のスライドで丁寧に言う。
 
       **戻りきるまで待てなくても構いません。** このあとのスライドは全部、事前に実測した結果です。時間が押していたら D7 まで見せて、数字はスライドで話す。**保険**: GUI が固まったら L0 の `C:\hccjp77\2-rollback.ps1`（約12秒）。環境の復旧は `C:\hccjp77\9-restore.ps1`。
+  - id: pretest-break
+    title: 事前テスト時の記録
+    durationInFrames: 150
+    notes: |-
+      ここから先のスライドは、**事前テスト（9月5日〜9日）で同じ手順を回したときの実測**です。いま巻き戻したばかりの実機は、まだ結果が出そろっていません。走らせたまま、先に答えを見ていきます。
+
+      【画面なし】区切りの1枚。10秒で抜ける。
   - id: result-agent
     title: ①エージェントは ─ 落ちませんでした
     durationInFrames: 290
@@ -204,18 +217,33 @@ slides:
 
       【デモ④・実機・1分】ポータルのマシン構成一覧で「最終評価」の列を指す。ターミナルで `az policy state trigger-scan --resource-group rg-hccjp76-arc` を打っておく。
   - id: timezone-trap
-    title: 【地雷】日本語Windowsでは、組み込みポリシーが原理的に動かない
-    durationInFrames: 310
+    title: 【地雷】日本語Windowsでは、この組み込みポリシーが準拠にならない
+    durationInFrames: 330
     notes: |-
-      待っている間に、今回いちばん驚いた話をさせてください。
+      待っている間に、今回いちばん驚いた話をさせてください。**どのポリシーで、何が起きて、なぜなのか**を具体的に話します。
 
-      タイムゾーンを東京にするだけの組み込みポリシーが、ApplyAndAutoCorrectで割り当てているのに、いつまでたっても直りませんでした。前回の私は、ここで「構成ポリシーは効かないことがある」と結論していました。今回、中身まで降りて調べたら、原因はこれでした。
+      使ったのは組み込み定義「**Configure time zone on Windows machines**」、定義ID は 6141c932-9384-44c6-a395-59e4c057d7c9 です。中身はマシン構成の `SetWindowsTimeZone` で、ApplyAndAutoCorrect で割り当てました。ところが**24時間たっても実機のタイムゾーンは変わらず**、ずっと NonCompliant のまま。割り当てのレポートには毎回「Cannot bind argument to parameter 'Id' because it is null」が出ていました。
 
-      組み込みのDSCリソースが、タイムゾーンをIdではなく**DisplayNameで照合**していたんです。実機の日本語WindowsのDisplayNameは「かっこUTCプラス9、大阪、札幌、東京」。ポリシー側の許容値は英語の「Osaka, Sapporo, Tokyo」。一致しないので変数がnullになって、Set-TimeZoneがnullを渡されて落ちる。
+      原因は、配られたDSCリソースの中身にありました。タイムゾーンを**IdではなくDisplayNameで照合**しているんです。実機（日本語Windows）のDisplayNameは「(UTC+09:00) 大阪、札幌、東京」。一方、組み込みポリシーの許容値（allowedValues）は英語の「(UTC+09:00) Osaka, Sapporo, Tokyo」しか持っていません。一致しないので変数がnullになり、`Set-TimeZone -Id $null` がパラメータ束縛で落ちる。**Testも同じ比較なので、評価も永久に非準拠**です。
 
-      つまり**日本語のWindowsでは、この組み込みポリシーは原理的に動きません**。しかもApplyAndAutoCorrectなので、15分ごとに永久に失敗し続けます。回避策は、日本語の表示名を許容値にしたカスタム定義を作ることでした。
+      つまり**日本語UIのWindowsでは、この組み込みポリシーは設定だけではどうやっても準拠にできません**。しかもApplyAndAutoCorrectなので、15分ごとに永久に失敗し続けます。
 
-      持ち帰っていただきたいのは、「Policyが効かない」の原因が、**Policyの外**にあることがある、ということです。1回の失敗から「この機能は使えない」と一般化する前に、中を見に行ってください。
+      【画面なし】スライドのまま。次のスライドで回避策を3つ話す。
+  - id: timezone-fix
+    title: 全部を自作する必要はない ─ 回避は3通り
+    durationInFrames: 320
+    notes: |-
+      「じゃあ組み込みは使えないのか、全部自作なのか」というと、そんなことはありません。回避は3通りあります。
+
+      1つ目。**マシン構成を直接割り当てるなら、組み込みのままでいい**。configurationParameter の値に、実機の表示名 ─ `(Get-TimeZone).DisplayName` で出てくる「(UTC+09:00) 大阪、札幌、東京」 ─ をそのまま渡すだけで通ります。**Idを渡してはいけません**、ここが引っかかりどころです。
+
+      2つ目。**Azure Policy から配る場合**は、ポータルの許容値に日本語表示名がないので選べません。この場合だけ、組み込み定義をコピーして `TimeZone` の allowedValues を外したカスタム定義を作ります。DeployIfNotExists なので、マネージドIDと Guest Configuration Resource Contributor ロールが必要です。**直すのは1か所だけで、ロジックを書き直すわけではありません**。
+
+      3つ目。**新規構築なら、そもそもOSを英語UIで揃える**。ロケール依存の照合を踏まないのがいちばん安く済みます。日本語UIが要件なら1つ目か2つ目で回避します。
+
+      トラブルシュートの順番も持ち帰ってください。①割り当てのレポート（reports API）の reasons を読む ─ 「効かない」ではなく具体的な失敗理由が出ます。②実機の `gc_worker.log` で Test か Set か、何秒かかったかを見る。③配られたDSCモジュール本体（`C:\ProgramData\GuestConfig\Configuration\<割り当て名>\Modules\...psm1`）を読む。**実体は全部、実機のディスクにあります**。
+
+      一般化すると、**組み込みが効かないときは「ロケール依存の文字列照合」を疑ってください**。タイムゾーン、地域名、言語名、組み込みグループ名は日本語OSで名前が変わります。「Policyが効かない」の原因が、Policyの外にあることがある、という話です。
 
       【画面なし】スライドのまま。ここは笑いどころでもあるので、ゆっくり話す。
   - id: recovery-runbook
@@ -277,6 +305,19 @@ slides:
       ただし、正直に申し上げておきたいことがあります。**今日いちばんの学びは、前回の私が間違っていたことでした**。そもそも適用できていない構成を見て、「この機能は使えない」と結論していたんです。AIも、私も、実機で測るまでは間違えます。だから測りに行く。それが今日やったことです。
 
       【画面なし】スライドのまま。ここは正直に、ゆっくり。ここで信頼を作る。
+  - id: records
+    title: どこに何が記録され、何が動いているのか
+    durationInFrames: 300
+    notes: |-
+      今日の話を自分の環境で再現できるように、**どこを見ればいいのか**をまとめておきます。
+
+      実機で動いているサービスは3つです。`himds`（Azure Hybrid Instance Metadata Service）がArc本体で、ハートビートとトークンを担当します。`gcarcservice`（Guest Configuration Arc Service）が**マシン構成を評価しているサービス**、そして `ExtensionService`（Guest Configuration Extension Service）が拡張機能の配布と実行です。今日「エージェントを再起動する」と言っていたのは、真ん中の `gcarcservice` のことです。
+
+      ファイルはこうです。割り当ての実体は `C:\ProgramData\GuestConfig\Configuration\<割り当て名>\` にあって、同じ場所の `<名>.metaconfig.json` にモードと評価間隔が**設定値として**書いてあります。推定ではありません。ログは `arc_policy_logs\gc_agent.log` に評価の発火と開始・完了 ─ 順番待ちが見えるのはここ ─ 、`gc_worker.log` に Test か Set か、1件あたり何秒かかったかが出ます。Arcエージェント自身のログは `C:\ProgramData\AzureConnectedMachineAgent\Log\` の `himds.log` と `azcmagent.log` です。
+
+      今日叩いていたスクリプトは、Hyper-Vホスト（L1）の `C:\hccjp77\demo\` にある D0 から D8 と restart.ps1 です。PowerShell Direct で arcwin01 の中を読んでいるだけで、**特別なエージェントは何も入れていません**。スクリプトは GitHub に置いてあるので、そのまま持って行ってください ─ github.com/ebibibi/presentations/tree/main/HCCJP_77/scripts です。
+
+      【画面なし】スライドのまま。GitHubのURLは口で1回言えば十分。
   - id: conclusion
     title: だから、運用に入れていい
     durationInFrames: 270
@@ -288,6 +329,13 @@ slides:
       Azure Update Manager、使っていきましょう。
 
       【画面なし】スライドのまま話す。共有画面がポータルのままにならないよう注意。
+  - id: session-end
+    title: ありがとうございました（胡田セッション終了）
+    durationInFrames: 150
+    notes: |-
+      私のセッションはここまでです。ありがとうございました。質疑はこのあとまとめて受けます。
+
+      【画面なし】区切りの1枚。ここで一度息を継いで、高添さんへ渡す準備をする。
   - id: next-session
     title: 続いて ─ Microsoft "Adaptive Cloud" 最新動向
     durationInFrames: 180
