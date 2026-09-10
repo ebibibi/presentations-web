@@ -108,3 +108,9 @@ When changing the header or the auth controls, run:
 ```bash
 npm run check:mobile-header
 ```
+
+When changing keyboard handling or the click-to-edit overlay, run:
+
+```bash
+npm run check:text-edit-keys
+```

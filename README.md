@@ -161,6 +161,7 @@ npm run build
 npm run check:recording
 npm run check:mobile-header
 npm run check:owner-editor-link
+npm run check:text-edit-keys
 ```
 
 ## Deployment
@@ -230,6 +231,12 @@ Run `npm run check:mobile-header` to assert, from `1280px` down to `320px`, that
 The published site is static, so the owner edits the copy on the machine running `npm run dev`. Signed in as the owner, the site shows a `✏️ ローカルで編集` pill that carries the current path to `http://moviegen:5173`. It appears and disappears with the sign-in state, without a reload.
 
 Run `npm run check:owner-editor-link` to assert that a signed-out visitor never sees the pill and that signing in reveals it in place.
+
+## Editing slide copy
+
+Click any string on a slide to retype it. The viewer's own arrow keys move between slides, so the editor's textarea has to win the keystroke while it has focus — otherwise moving the caret sends the deck to another slide and leaves the panel anchored to copy that is off screen.
+
+Run `npm run check:text-edit-keys` to assert that the arrows still navigate with nothing focused, and that inside the editor they move the caret instead.
 
 ## Future Work
 
