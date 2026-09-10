@@ -978,7 +978,7 @@ function AiCoversSlide({ frame }: SlideRenderContext) {
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 46), 16)}>
         <TriangleAlert size={38} />
         <span>
-          ただし ─ <strong>今日いちばんの学びは、前回の私が間違っていたこと</strong>です。
+          ただし ─ <strong>今回はAIもかなり「早とちり」しました。</strong>です。
           そもそも適用できていない構成を見て「機能が使えない」と結論していました。
           <br />
           <strong>AIも人も、実機で測るまでは間違えます。</strong>だから測りに行く。
