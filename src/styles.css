@@ -12103,3 +12103,62 @@ main {
   line-height: 1.2;
   text-align: center;
 }
+
+/* h77: additions for the published cut of the deck ------------- */
+
+/* The archive link for the previous session. The thumbnail is the recognisable
+   part, so it leads and the caption sits under it. */
+.h77-recap-video img {
+  border: 1px solid rgba(110, 220, 255, 0.24);
+  border-radius: 12px;
+  width: 100%;
+}
+
+.h77-recap-video p {
+  font-size: 20px;
+  line-height: 1.45;
+}
+
+.h77-recap-video strong {
+  color: #7dd3fc;
+}
+
+/* Paths and service names are long, so the second column has to wrap and read
+   as body copy - unlike the price tables this class otherwise shares. */
+.h77-paths td {
+  vertical-align: top;
+}
+
+.h77-paths td.h77-mono {
+  font-size: 19px;
+  white-space: nowrap;
+  width: 1%;
+  padding-right: 14px;
+}
+
+.h77-paths td:last-child {
+  color: rgba(234, 243, 255, 0.78);
+  font-size: 19px;
+  text-align: left;
+  white-space: normal;
+}
+
+/* Centred copy was breaking into a short orphan line with the wrap landing
+   mid-phrase. Balancing the lines and capping the measure keeps it readable. */
+.h77-slide .h77-note.h77-center {
+  margin-inline: auto;
+  max-width: 1280px;
+  text-wrap: balance;
+}
+
+/* The closing call to action is one sentence and must stay on one line. */
+.h77-slide .h77-big-q.h77-oneline {
+  font-size: 34px;
+  white-space: nowrap;
+}
+
+/* The demo sequence grew from 5 steps to 6, which left a single card alone on a
+   second row. Three columns split it evenly instead. */
+.h77-steps-6 {
+  grid-template-columns: repeat(3, 1fr);
+}
