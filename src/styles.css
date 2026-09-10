@@ -12047,3 +12047,40 @@ main {
   font-family: 'SFMono-Regular', Consolas, monospace;
   font-size: 17px;
 }
+
+/* Reconnect commands on the agent slide. Two commands plus a caption, stacked,
+   so the whole recovery fits on one line each at presentation size. */
+.h77-recon {
+  background: rgba(0, 0, 0, 0.32);
+  border-left: 4px solid var(--h77-cyan);
+  border-radius: 12px;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 16px 24px;
+}
+
+.h77-recon-head {
+  color: var(--h77-cyan);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.h77-recon > code {
+  color: #fff;
+  font-size: 23px;
+  line-height: 1.35;
+}
+
+.h77-recon-note {
+  color: rgba(226, 240, 255, 0.62);
+  font-size: 18px;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.h77-recon-note code {
+  font-size: 17px;
+}

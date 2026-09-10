@@ -603,10 +603,24 @@ function ResultAgentSlide({ frame }: SlideRenderContext) {
           再接続が必要になるのは <strong>Azure側のリソースを消したとき</strong>。
         </span>
       </p>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 50), 14)}>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 48), 14)}>
         ハートビートは5分ごと・15分途切れて初めて Disconnected。巻き戻しはその猶予に収まる。
-        <code>lastStatusChange</code> だけが変化するが、状態は Connected のまま。
       </p>
+      <div className="h77-recon" style={lift(entrance(frame, fps, 54), 16)}>
+        <span className="h77-recon-head">
+          Azure 側のリソースを消したときだけ、この2行で戻します（実測1〜2分）
+        </span>
+        <code>azcmagent disconnect --force-local-only</code>
+        <code>
+          azcmagent connect --resource-group &lt;RG&gt; --subscription-id &lt;SUB&gt; --location
+          &lt;LOCATION&gt;
+        </code>
+        <span className="h77-recon-note">
+          目印は <code>Unable to acquire token: please disconnect and reconnect</code>。
+          Azure が消えているので <strong>先にローカルを片付ける</strong> ─ それが{' '}
+          <code>--force-local-only</code>
+        </span>
+      </div>
       <LiveCue label="ポータル ─ arcwin01 概要（Connected のまま）" />
     </section>
   )
