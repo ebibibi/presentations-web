@@ -981,7 +981,7 @@ function AiCoversSlide({ frame }: SlideRenderContext) {
           ただし ─ <strong>今回はAIもかなり「早とちり」しました。</strong>です。
           そもそも適用できていない構成を見て「機能が使えない」と結論していました。
           <br />
-          <strong>AIも人も、実機で測るまでは間違えます。</strong>だから測りに行く。
+          <strong>AIも人も、勘違いをします。仮説と検証が大切です。</strong>だから測りに行く。
         </span>
       </p>
     </section>
