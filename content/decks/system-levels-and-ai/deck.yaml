@@ -4,7 +4,7 @@ summary: 業務がどのレベルで回っているかを見極めないまま�
 status: public
 visibility: public
 createdAt: "2026-08-16"
-updatedAt: "2026-08-18"
+updatedAt: "2026-09-10"
 tags:
   - ai
   - dx
@@ -14,8 +14,8 @@ tags:
 youtube:
   id: RuJlkElGcyk
   url: https://www.youtube.com/watch?v=RuJlkElGcyk
-  title: "AI導入以前にやるべきこと"
-  publishedAt: "2026-08-18"
+  title: "AI導入の前に見るべきもの ─ 経営者のための業務レベル論"
+  publishedAt: "2026-08-25"
 slides:
   - id: opening
     title: AIの前に、見るべきものがある

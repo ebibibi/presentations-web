@@ -4,7 +4,7 @@ summary: CVE-2026-20833に対応する3段階のKDC変更で、Active Directory�
 status: public
 visibility: public
 createdAt: "2026-08-28"
-updatedAt: "2026-08-28"
+updatedAt: "2026-09-10"
 tags:
   - active-directory
   - kerberos
@@ -14,8 +14,8 @@ tags:
 youtube:
   id: Pc7i03UdPgA
   url: https://www.youtube.com/watch?v=Pc7i03UdPgA
-  title: "rc4"
-  publishedAt: "2026-08-28"
+  title: "Windows Updateを当てるとAD認証が失敗する？ Active DirectoryのRC4が既定で無効に"
+  publishedAt: "2026-08-29"
 slides:
   - id: opening
     title: ADのRC4が「既定で」使えなくなった

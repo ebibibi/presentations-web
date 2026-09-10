@@ -4,7 +4,7 @@ summary: OutlookとTeamsを普段使うだけの一般ユーザーが、AIで作
 status: public
 visibility: public
 createdAt: "2026-08-06"
-updatedAt: "2026-08-08"
+updatedAt: "2026-09-10"
 tags:
   - microsoft-365
   - entra-id
@@ -14,8 +14,8 @@ tags:
 youtube:
   id: n2RodbBpzeo
   url: https://www.youtube.com/watch?v=n2RodbBpzeo
-  title: "なぜアプリにもIDが必要？"
-  publishedAt: "2026-08-08"
+  title: "M365アプリ登録入門｜なぜアプリにもIDが必要なのか"
+  publishedAt: "2026-08-09"
 slides:
   - id: opening
     title: なぜアプリにもIDが必要？

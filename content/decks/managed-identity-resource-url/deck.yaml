@@ -4,7 +4,7 @@ summary: 「誰がAPIを使うのか？」を扱ったM365アプリ登録入門�
 status: public
 visibility: public
 createdAt: "2026-08-11"
-updatedAt: "2026-08-11"
+updatedAt: "2026-09-10"
 tags:
   - azure
   - managed-identity
@@ -14,8 +14,8 @@ tags:
 youtube:
   id: SkqRmdStxnQ
   url: https://www.youtube.com/watch?v=SkqRmdStxnQ
-  title: "entraid_token_audience"
-  publishedAt: "2026-08-11"
+  title: "Microsoft Entra ID「リソースURL」の正体"
+  publishedAt: "2026-08-17"
 slides:
   - id: opening
     title: どのAPIをたたくのか？

@@ -4,7 +4,7 @@ summary: MFAを全社へ展開すると、最後に「人がいないから承�
 status: public
 visibility: public
 createdAt: "2026-08-29"
-updatedAt: "2026-08-30"
+updatedAt: "2026-09-10"
 tags:
   - entra-id
   - mfa
@@ -15,8 +15,8 @@ tags:
 youtube:
   id: abOB7LaXDIg
   url: https://www.youtube.com/watch?v=abOB7LaXDIg
-  title: "mfa"
-  publishedAt: "2026-08-30"
+  title: "MFAをかけられないIDをどうするか｜除外グループを作る前に"
+  publishedAt: "2026-09-05"
 slides:
   - id: opening
     title: MFAをかけられないIDをどうするか
