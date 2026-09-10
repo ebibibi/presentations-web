@@ -1120,7 +1120,7 @@ function AiCoversSlide({ frame }: SlideRenderContext) {
     },
     {
       head: '手順書にする',
-      body: '今日お見せした5つの手順は、この検証からそのまま起こしたもの'
+      body: '今日お見せした様々なものは、この検証からそのまま起こしたもの'
     }
   ]
   return (
