@@ -52,7 +52,8 @@ export const slides: SlideModule['slides'] = [
   { render: (props) => <NextSessionSlide {...props} /> },
   { render: (props) => <QaSlide {...props} /> },
   { render: (props) => <Promo1003Slide {...props} /> },
-  { render: (props) => <ClosingSlide {...props} /> }
+  { render: (props) => <ClosingSlide {...props} /> },
+  { render: (props) => <ThanksSlide {...props} /> }
 ]
 
 function entrance(frame: number, fps: number, delay = 0) {
@@ -1146,6 +1147,17 @@ function ClosingSlide({ frame }: SlideRenderContext) {
           <span>YouTube: @hccjp</span>
         </div>
       </div>
+    </section>
+  )
+}
+
+function ThanksSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide h77-slide h77-thanks">
+      <div className="h77-grid" />
+      <LogoMark className="h77-logo" />
+      <h1 style={lift(entrance(frame, fps), 30)}>ありがとうございました！</h1>
     </section>
   )
 }
