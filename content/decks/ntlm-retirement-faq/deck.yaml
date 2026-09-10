@@ -1,0 +1,141 @@
+slug: ntlm-retirement-faq
+title: NTLM廃止 公式FAQを1問1枚で読む
+summary: Microsoftが公開したNTLM廃止のFAQを、日本語で1つの質問につき1スライドに整理しました。いつ既定で無効になるのか、何が壊れるのか、IAKerbとLocalKDCは何を解決するのか、そして今日から何を始めるべきかを、原文の28問そのままの順で追えます。
+status: draft
+visibility: public
+createdAt: "2026-09-10"
+updatedAt: "2026-09-10"
+order: 110
+canvas: standard
+tags:
+  - ntlm
+  - kerberos
+  - windows-server
+  - active-directory
+  - security
+  - microsoft
+slides:
+  - id: opening
+    title: "NTLMは既定で無効になる"
+    durationInFrames: 240
+    notes: "Microsoft公式FAQの内容を、1つの質問につき1枚で読み切れる形に並べ直したデッキです。まず結論を1文で言い切ります。"
+  - id: map
+    title: "このFAQの地図（28問）"
+    durationInFrames: 240
+    notes: "6つの節に28問。どこに何があるかを先に見せて、必要なところから読めるようにします。"
+  - id: what-is-ntlmless
+    title: "「NTLMless」とは何ですか？"
+    durationInFrames: 240
+    notes: "Q1。答えは「機能ではなく方針」。既定のフォールバック先からNTLMを外し、Kerberosの守備範囲を広げていく多段階の取り組みです。"
+  - id: why-now
+    title: "なぜ今なのですか？"
+    durationInFrames: 240
+    notes: "Q2。答えは「実被害が続いている」。NTLMは非推奨で新機能開発も止まっており、いまも侵害の主要経路であり続けているからです。"
+  - id: removed-or-disabled
+    title: "NTLMは削除されるのですか、無効化されるだけですか？"
+    durationInFrames: 240
+    notes: "Q3。答えは「まずは無効化」。既定で無効になるだけで、コード自体は当面Windowsに残ります。"
+  - id: when-disabled
+    title: "既定で無効になるのはいつですか？"
+    durationInFrames: 240
+    notes: "Q4。答えは「次期メジャー」。現時点の目標は、サーバーとクライアントの次期メジャーリリースです（変更の可能性あり）。"
+  - id: existing-windows
+    title: "手元のWindows Server 2019/2022/2025やWindows 10/11でNTLMは止まりますか？"
+    durationInFrames: 240
+    notes: "Q5。答えは「いいえ」。既定無効化は将来のリリース系列の話で、市場に出ている版はNTLMをサポートし続けます。"
+  - id: re-enable
+    title: "既定で無効になった後、再有効化できますか？"
+    durationInFrames: 240
+    notes: "Q6。答えは「当面は可能」。少なくとも当初は、グループポリシーまたはレジストリで戻せます。"
+  - id: iakerb
+    title: "IAKerbとは何ですか？"
+    durationInFrames: 240
+    notes: "Q7。答えは「DCが見えなくてもKerberos」。接続先サーバーが仲介役になり、DCへ直接到達できないクライアントでもKerberos認証を成立させる拡張です。"
+  - id: localkdc
+    title: "LocalKDCとは何ですか？"
+    durationInFrames: 240
+    notes: "Q8。答えは「ローカル用の小さなKDC」。ローカルアカウント向けにKerberosチケットを発行する、Windows組み込みの軽量KDCです。"
+  - id: ga-timing
+    title: "IAKerbとLocalKDCはいつ一般提供されますか？"
+    durationInFrames: 240
+    notes: "Q9。答えは「数か月のうち」。現在はWindows Insiderプレビュー。今後数か月でWindows Server 2025とWindows 11向けにGA予定です。"
+  - id: spn-ip-crossdomain
+    title: "SPN・IPアドレス・クロスドメインなど、Kerberosが従来こけていた場面はどうなりますか？"
+    durationInFrames: 240
+    notes: "Q10。答えは「半分は自分の仕事」。プラットフォームが直すものと、自分の環境でしか直せないものに分かれます。"
+  - id: blocking-policies
+    title: "新しいNTLMブロックポリシーとは何ですか？"
+    durationInFrames: 240
+    notes: "Q11。答えは「中央集権化」。散らばっていたNTLMブロックの設定を、ポリシー駆動の中央エンジンへ統合します。"
+  - id: what-breaks
+    title: "NTLMを無効にすると、どのシナリオが壊れますか？"
+    durationInFrames: 240
+    notes: "Q12。答えは「4種類」。よくある失敗は大きく4つのパターンに分かれます。"
+  - id: windows-only
+    title: "NTLMを使うのはWindows端末だけですか？"
+    durationInFrames: 240
+    notes: "Q13。答えは「主にはそう」。NTLMはWindowsの認証プロトコルですが、非Windowsクライアントも接続先がWindowsならNTLMを使います。"
+  - id: trustless-crossdomain
+    title: "信頼関係のないクロスドメイン認証はどうなりますか？"
+    durationInFrames: 240
+    notes: "Q14。答えは「同じリリースで対応」。今日はNTLMが必要なシナリオですが、既定無効化と同じWindowsリリースで手当てされます。"
+  - id: ip-auth
+    title: "IPアドレスでの認証はどうなりますか？"
+    durationInFrames: 240
+    notes: "Q15。答えは「待つな」。KerberosはIPアドレスを解さないためNTLMに落ちます。プラットフォームの修正を待たず、今から潰すべき領域です。"
+  - id: ms-apps
+    title: "無効化後も、MicrosoftのアプリはNTLMを使い続けますか？"
+    durationInFrames: 240
+    notes: "Q16。答えは「いいえ」。Windows純正コンポーネントからハードコードNTLMを洗い出して外す全社的な取り組みが進行中です。"
+  - id: ms-app-list
+    title: "NTLMに依存しているMicrosoftアプリの一覧は公開されますか？"
+    durationInFrames: 240
+    notes: "Q17。答えは「出ない」。公開の予定はありません。Microsoft側の依存はプラットフォーム作業として直す、というのが約束です。"
+  - id: find-ntlm
+    title: "自分の環境のどこでNTLMが使われているか、どう調べますか？"
+    durationInFrames: 240
+    notes: "Q18。答えは「強化監査から」。強化されたNTLM監査が出発点です。従来のNTLMイベントログの大幅な拡張版にあたります。"
+  - id: audit-versions
+    title: "強化されたNTLM監査はどのWindowsバージョンで使えますか？"
+    durationInFrames: 240
+    notes: "Q19。答えは「24H2以降」。Windows 11 バージョン25H2および24H2と、Windows Server 2025で利用できます。"
+  - id: ntlmv1
+    title: "NTLMv1について、何か変わりますか？"
+    durationInFrames: 240
+    notes: "Q20。答えは「すでに変わった」。Windows Server 2025とWindows 11 バージョン24H2で、NTLMv1はブロックされ機能しなくなっています。"
+  - id: my-code
+    title: "自分のコードがNTLMを使っているか、どうすれば分かりますか？"
+    durationInFrames: 240
+    notes: "Q21。答えは「静的＋実行時」。コードに何と書いてあるかと、実行時に何が起きているかの両方を見ます。NTLMの多くは意図せず継承されるからです。"
+  - id: where-to-start
+    title: "どこから始めればいいですか？"
+    durationInFrames: 240
+    notes: "Q22。答えは「5段階」。早期に取り組んだ組織が実際に回した、現実的な段階アプローチがあります。"
+  - id: wait-for-ga
+    title: "IAKerbとLocalKDCのGAを待つべきですか？"
+    durationInFrames: 240
+    notes: "Q23。答えは「いいえ」。今の市場版Windowsで、監査と是正は今日から始められます。"
+  - id: blockers
+    title: "他の組織が挙げている、いちばん多い詰まりどころは何ですか？"
+    durationInFrames: 240
+    notes: "Q24。答えは「上位6つ」。準備状況調査と顧客支援の現場から挙がった、代表的な阻害要因です。"
+  - id: success-stories
+    title: "すでにNTLMを減らした、あるいは無くした組織はありますか？"
+    durationInFrames: 240
+    notes: "Q25。答えは「ある」。90%超の削減を報告した企業が複数あり、完全にブロックした例も少数あります。"
+  - id: feedback
+    title: "NTLM関連の質問やフィードバックはどこへ送りますか？"
+    durationInFrames: 240
+    notes: "Q26。答えは「専用アドレス」。ntlm@microsoft.com へ。製品チームがこのエイリアスを監視しています。"
+  - id: product-bug
+    title: "製品の不具合に見えるKerberos／NTLMの問題に当たったら？"
+    durationInFrames: 240
+    notes: "Q27。答えは「ケースを起票」。通常のサポート窓口からMicrosoftサポートケースを開いてください。"
+  - id: stay-informed
+    title: "今後のNTLM関連の変更を、どう追いかければいいですか？"
+    durationInFrames: 240
+    notes: "Q28。答えは「2つの窓口」。Windowsメッセージセンターと、M365管理センターのメッセージセンターを押さえます。"
+  - id: closing
+    title: "今日から始める3つ"
+    durationInFrames: 240
+    notes: "待たずに今日できることに絞って締めます。監査、IP直打ちの排除、SPNの衛生管理の3つ。"
