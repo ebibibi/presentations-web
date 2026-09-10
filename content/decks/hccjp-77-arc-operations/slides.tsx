@@ -577,10 +577,10 @@ function ResultAgentSlide({ frame }: SlideRenderContext) {
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
         <TriangleAlert size={38} />
         <span>
-          <strong>「巻き戻すとエージェントが死ぬ」は誤りでした。</strong>
+          <strong>巻き戻してもエージェントはそのまま動作し続けます。</strong>
           再接続コマンドの出番はありません。
           <br />
-          死ぬのは <strong>Azure側のリソースを消したとき</strong>（実測22日間 Disconnected）。巻き戻しでは起きない。
+          再接続が必要になるのは <strong>Azure側のリソースを消したとき</strong>。
         </span>
       </p>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 50), 14)}>
