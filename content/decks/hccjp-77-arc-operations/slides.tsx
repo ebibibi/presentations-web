@@ -868,7 +868,7 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide h77-checklist">
       <div className="h77-grid" />
-      <Head kicker="TAKE THIS HOME" title="復元・巻き戻しのあとに回す、5つの手順" frame={frame} />
+      <Head kicker="TAKE THIS HOME" title="復元・巻き戻しのあとの5つのチェックポイント" frame={frame} />
       <ol className="h77-check">
         {items.map((item, index) => (
           <li key={item[0]} style={lift(entrance(frame, fps, 10 + index * 8), 18)}>
