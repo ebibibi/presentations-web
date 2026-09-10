@@ -500,12 +500,6 @@ function TwoNetsSlide({ frame }: SlideRenderContext) {
         <span>
           公式は「更新を当てる前にチェックポイントを取るとよい」と書いている。
           ダメなのは<strong>バックアップの代用にすること</strong>。
-          <br />
-           <strong>
-            <code>Get-VMSnapshot</code> の <code>SnapshotType</code> では、本番／標準を見分けられない
-          </strong>
-          （実測: <code>CheckpointType=ProductionOnly</code> でも <code>Standard</code> と表示）。
-          見るのは <code>Get-VM</code> の <code>CheckpointType</code>。
         </span>
       </p>
       <Source
