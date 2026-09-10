@@ -490,6 +490,98 @@ export function collectTsxSlideIds(filePath, source = readFileSync(filePath, 'ut
   return { exhaustive, ids }
 }
 
+/**
+ * Everything a slide-level edit needs to know about a slides.tsx, without a
+ * compiler at the other end: for each registered slide, the source range of its
+ * registration entry and of the component function it renders.
+ *
+ * The component is only reported when the deck can be edited structurally:
+ * the render has to be the plain `(props) => <XSlide {...props} />` shape and
+ * the component must be used by this slide alone. A shared or parameterised
+ * component is still listed, with `component: null`, so the caller can say why
+ * it refuses rather than producing a broken file.
+ */
+export function collectSlideStructure(filePath, source = readFileSync(filePath, 'utf8')) {
+  const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
+
+  let array = null
+  const functions = new Map()
+  const identifierCounts = new Map()
+
+  const visit = (node) => {
+    if (
+      array === null &&
+      ts.isVariableDeclaration(node) &&
+      node.name.getText() === 'slides' &&
+      node.initializer &&
+      ts.isArrayLiteralExpression(node.initializer)
+    ) {
+      array = node.initializer
+    }
+    if (ts.isFunctionDeclaration(node) && node.name && node.parent === sourceFile) {
+      functions.set(node.name.text, node)
+    }
+    if (ts.isIdentifier(node)) {
+      identifierCounts.set(node.text, (identifierCounts.get(node.text) ?? 0) + 1)
+    }
+    ts.forEachChild(node, visit)
+  }
+
+  visit(sourceFile)
+  if (!array) return null
+
+  /** The component a `render` calls, when it does nothing but render it. */
+  const renderedComponent = (element) => {
+    const property = element.properties.find((item) => item.name?.getText() === 'render')
+    if (!property || !ts.isPropertyAssignment(property)) return null
+    const arrow = property.initializer
+    if (!ts.isArrowFunction(arrow) || ts.isBlock(arrow.body)) return null
+
+    const jsx = arrow.body
+    if (!ts.isJsxSelfClosingElement(jsx)) return null
+    if (!ts.isIdentifier(jsx.tagName)) return null
+    // Anything beyond `{...props}` means the component is parameterised by the
+    // registration itself, so a copy of it would not be an independent slide.
+    const onlySpread = jsx.attributes.properties.every((attribute) =>
+      ts.isJsxSpreadAttribute(attribute)
+    )
+    return onlySpread ? jsx.tagName.text : null
+  }
+
+  const slides = array.elements.map((element) => {
+    if (!ts.isObjectLiteralExpression(element)) return null
+
+    const idProperty = element.properties.find((item) => item.name?.getText() === 'id')
+    const idValue = idProperty && ts.isPropertyAssignment(idProperty) ? idProperty.initializer : null
+    if (!idValue || !(ts.isStringLiteral(idValue) || ts.isNoSubstitutionTemplateLiteral(idValue))) {
+      return null
+    }
+
+    const start = element.getStart(sourceFile)
+    const end = element.getEnd()
+    const comma = source.slice(end).match(/^[^\S\n]*,/)
+    const entry = { start, end: comma ? end + comma[0].length : end }
+
+    const name = renderedComponent(element)
+    const declaration = name ? functions.get(name) : null
+    // Two references: the declaration's own name and the render's use of it.
+    const exclusive = name && identifierCounts.get(name) === 2
+
+    return {
+      id: idValue.text,
+      entry: withSnippet(source, entry),
+      // Only the name travels: the range is worked out from the source by
+      // findComponentSpan, whose agreement with the compiler is checked here.
+      component:
+        declaration && exclusive
+          ? { name, start: declaration.getStart(sourceFile), end: declaration.getEnd() }
+          : null
+    }
+  })
+
+  return slides.every(Boolean) ? slides : null
+}
+
 /** Syntax errors in a tsx source, used to prove a rewrite stayed valid. */
 export function tsxSyntaxErrors(filePath, source) {
   const sourceFile = ts.createSourceFile(filePath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)

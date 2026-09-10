@@ -9,6 +9,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { publishFiles } from './deck-git.mjs'
 import {
+  collectSlideStructure,
   collectTsxStrings,
   collectYamlStrings,
   deckPaths,
@@ -19,6 +20,15 @@ import {
   removeYamlItems
 } from '../scripts/deck-text-core.mjs'
 import { readDeckSources, writeDeckSource } from '../scripts/deck-source.mjs'
+import {
+  deleteSlideFromTsx,
+  deleteSlideFromYaml,
+  duplicateSlideInTsx,
+  duplicateSlideInYaml,
+  moveSlideInYaml,
+  nextSlideId,
+  slideIdsInYaml
+} from '../shared/deck-slides.mjs'
 
 const NORMALIZE = (value) => value.replace(/\s+/g, ' ').trim()
 
@@ -152,6 +162,83 @@ function applyPatch(repoRoot, targets, text, remove = false, duplicate = false) 
   return { files: written }
 }
 
+/**
+ * The slides in running order, which is deck.yaml's order - not the order the
+ * components happen to be registered in. Reordering only rewrites deck.yaml, so
+ * a list built from slides.tsx would point the editor at the wrong slide the
+ * moment anything moves.
+ */
+function orderedSlides(structure, yamlIds) {
+  const byId = new Map(structure.map((slide) => [slide.id, slide]))
+  return yamlIds
+    .filter((id) => byId.has(id))
+    .map((id) => ({ id, canDuplicate: Boolean(byId.get(id).component) }))
+}
+
+/** A component name that is free in this file: `opening-2` → `Opening2Slide`. */
+function componentNameFor(source, id) {
+  const stem = id
+    .split(/[^A-Za-z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join('')
+  const base = `${stem || 'Copy'}Slide`
+  let name = base
+
+  for (let suffix = 2; new RegExp(`\\b${name}\\b`).test(source); suffix += 1) {
+    name = `${base}${suffix}`
+  }
+
+  return name
+}
+
+/**
+ * Slide-level edits. Reordering is a deck.yaml edit alone - the deck is
+ * assembled by pairing ids - while duplicating and deleting rewrite both files
+ * in one write so the two can never be left disagreeing.
+ */
+function applySlideAction(repoRoot, slug, id, action, offset) {
+  const paths = deckPaths(repoRoot, slug)
+  const tsxSource = readFileSync(paths.tsx, 'utf8')
+  const yamlSource = readFileSync(paths.yaml, 'utf8')
+
+  if (action === 'move') {
+    writeFileSync(paths.yaml, moveSlideInYaml(yamlSource, id, offset), 'utf8')
+    return { files: [path.relative(repoRoot, paths.yaml)] }
+  }
+
+  const structure = collectSlideStructure(paths.tsx, tsxSource)
+  if (!structure) {
+    throw new Error('このデッキはスライドをデータから生成しているので、この操作はできません')
+  }
+
+  const slide = structure.find((entry) => entry.id === id)
+  if (!slide) {
+    throw new Error(`slides.tsx に "${id}" の登録がありません`)
+  }
+
+  if (action === 'delete') {
+    writeFileSync(paths.tsx, deleteSlideFromTsx(tsxSource, slide), 'utf8')
+    writeFileSync(paths.yaml, deleteSlideFromYaml(yamlSource, id), 'utf8')
+  } else {
+    const newId = nextSlideId(slideIdsInYaml(yamlSource), id)
+    const component = componentNameFor(tsxSource, newId)
+    writeFileSync(paths.tsx, duplicateSlideInTsx(tsxSource, slide, newId, component), 'utf8')
+    writeFileSync(paths.yaml, duplicateSlideInYaml(yamlSource, id, newId), 'utf8')
+  }
+
+  return {
+    files: [path.relative(repoRoot, paths.tsx), path.relative(repoRoot, paths.yaml)]
+  }
+}
+
+/** One shared wording for both the dev server and the production Function. */
+function slideCommitMessage(action, id, slug) {
+  if (action === 'duplicate') return `feat(deck): duplicate slide ${id} in ${slug}`
+  if (action === 'delete') return `fix(deck): remove slide ${id} from ${slug}`
+  return `chore(deck): reorder slide ${id} in ${slug}`
+}
+
 function readJson(request) {
   return new Promise((resolve, reject) => {
     let body = ''
@@ -248,6 +335,52 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
             }
 
             return send(200, { files: readDeckSources(repoRoot, slug) })
+          }
+
+          if (request.url.startsWith('/slides')) {
+            const slug = typeof body.slug === 'string' ? body.slug : ''
+            if (!listSlugs(repoRoot).includes(slug)) {
+              return send(400, { error: `不明なデッキです: ${slug || '(指定なし)'}` })
+            }
+            const paths = deckPaths(repoRoot, slug)
+            const structure = collectSlideStructure(paths.tsx)
+            return send(200, {
+              slides: structure
+                ? orderedSlides(structure, slideIdsInYaml(readFileSync(paths.yaml, 'utf8')))
+                : null
+            })
+          }
+
+          if (request.url.startsWith('/slide')) {
+            const slug = typeof body.slug === 'string' ? body.slug : ''
+            if (!listSlugs(repoRoot).includes(slug)) {
+              return send(400, { error: `不明なデッキです: ${slug || '(指定なし)'}` })
+            }
+            if (typeof body.id !== 'string' || !body.id) {
+              return send(400, { error: 'スライドが指定されていません' })
+            }
+            if (!['duplicate', 'delete', 'move'].includes(body.action)) {
+              return send(400, { error: `不明な操作です: ${body.action}` })
+            }
+            if (body.action === 'move' && body.offset !== -1 && body.offset !== 1) {
+              return send(400, { error: '移動は前後1枚ずつです' })
+            }
+
+            const result = applySlideAction(repoRoot, slug, body.id, body.action, body.offset)
+
+            if (!body.publish) {
+              return send(200, result)
+            }
+
+            try {
+              const published = await publishFiles(repoRoot, result.files, slideCommitMessage(body.action, body.id, slug))
+              return send(200, { ...result, published })
+            } catch (error) {
+              return send(200, {
+                ...result,
+                publishError: error instanceof Error ? error.message : String(error)
+              })
+            }
           }
 
           if (request.url.startsWith('/patch')) {

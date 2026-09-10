@@ -16,7 +16,10 @@
  * sheet.
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { createBackend, type Candidate, type DeckSource } from './backend'
+import { createBackend, type Candidate, type DeckSource,
+  type SlideAction,
+  type SlideEntry
+} from './backend'
 
 type Target = { rect: DOMRect; candidates: Candidate[] }
 
@@ -28,6 +31,16 @@ type Target = { rect: DOMRect; candidates: Candidate[] }
 type Status = { tone: 'info' | 'error'; message: string; sourceHint?: string }
 
 const PANEL_WIDTH = 460
+const slideButton: CSSProperties = {
+  padding: '4px 9px',
+  borderRadius: 7,
+  border: '1px solid rgba(255,255,255,0.25)',
+  background: 'transparent',
+  color: '#e8ecff',
+  fontSize: 13,
+  cursor: 'pointer'
+}
+
 const secondaryButton: CSSProperties = {
   padding: '8px 14px',
   borderRadius: 999,
@@ -43,6 +56,12 @@ const STATUS_KEY = 'deck-text-status'
 
 function currentSlug(): string | undefined {
   return window.location.pathname.match(/\/decks\/([^/]+)/)?.[1]
+}
+
+/** The 1-based slide number the viewer keeps in the URL hash. */
+function currentSlideNumber(): number {
+  const parsed = Number.parseInt(window.location.hash.replace('#', ''), 10)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
 }
 
 /** The slide currently on screen, ignoring the offscreen recording surface. */
@@ -155,6 +174,10 @@ export function TextEditOverlay() {
   const [hover, setHover] = useState<DOMRect | null>(null)
   const [list, setList] = useState<Text[] | null>(null)
   const [isNarrow, setIsNarrow] = useState(() => window.innerWidth < 700)
+  // Slide-level editing: the deck's slides in running order, and which one the
+  // viewer is on. The hash is the slide number the viewer keeps in the URL.
+  const [slides, setSlides] = useState<SlideEntry[] | null | undefined>(undefined)
+  const [slideNumber, setSlideNumber] = useState(() => currentSlideNumber())
   const [publishOnSave, setPublishOnSave] = useState(
     () => window.localStorage.getItem(PUBLISH_KEY) !== 'off'
   )
@@ -343,6 +366,49 @@ export function TextEditOverlay() {
     }
   }
 
+  useEffect(() => {
+    const onHashChange = () => setSlideNumber(currentSlideNumber())
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  useEffect(() => {
+    const slug = currentSlug()
+    if (!isActive || slides !== undefined || !slug) return
+    void backend
+      .listSlides(slug)
+      .then(setSlides)
+      .catch(() => setSlides(null))
+  }, [backend, isActive, slides])
+
+  const currentSlide = slides?.[slideNumber - 1] ?? null
+
+  const editSlide = async (action: SlideAction, offset?: -1 | 1) => {
+    const slug = currentSlug()
+    if (!slug || !currentSlide || isSaving) return
+    if (
+      action === 'delete' &&
+      !window.confirm(`スライド ${slideNumber}「${currentSlide.id}」を削除します。よろしいですか？`)
+    ) {
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const outcome = await backend.editSlide(slug, currentSlide.id, action, {
+        offset,
+        publish: publishOnSave
+      })
+      setStatus(outcome)
+      // The deck's shape changed, so the list this panel was built from is stale.
+      setSlides(undefined)
+    } catch (error) {
+      setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const sourceFile = sourceFiles?.[sourceIndex] ?? null
   const isSourceDirty = Boolean(sourceFile && sourceFile.text !== sourceDraft)
 
@@ -467,6 +533,64 @@ export function TextEditOverlay() {
           >
             ☰ このスライドの文言
           </button>
+          {currentSlide && (
+            <div
+              data-deck-text-ui="slide-actions"
+              style={{
+                display: 'flex',
+                gap: 6,
+                alignItems: 'center',
+                padding: '4px 8px',
+                borderRadius: 10,
+                background: 'rgba(20,26,48,0.9)',
+                border: '1px solid rgba(124,245,196,0.35)'
+              }}
+            >
+              <span style={{ fontSize: 12, opacity: 0.8, color: '#e8ecff' }}>
+                {slideNumber}/{slides?.length} {currentSlide.id}
+              </span>
+              <button
+                data-deck-text-ui="slide-up"
+                onClick={() => void editSlide('move', -1)}
+                disabled={isSaving || slideNumber <= 1}
+                title="1つ前へ移動"
+                style={slideButton}
+              >
+                ←
+              </button>
+              <button
+                data-deck-text-ui="slide-down"
+                onClick={() => void editSlide('move', 1)}
+                disabled={isSaving || slideNumber >= (slides?.length ?? 0)}
+                title="1つ後ろへ移動"
+                style={slideButton}
+              >
+                →
+              </button>
+              <button
+                data-deck-text-ui="slide-duplicate"
+                onClick={() => void editSlide('duplicate')}
+                disabled={isSaving || !currentSlide.canDuplicate}
+                title={
+                  currentSlide.canDuplicate
+                    ? 'このスライドをすぐ後ろに複製します'
+                    : 'このスライドは共通の部品を描画しているので複製できません'
+                }
+                style={slideButton}
+              >
+                複製
+              </button>
+              <button
+                data-deck-text-ui="slide-delete"
+                onClick={() => void editSlide('delete')}
+                disabled={isSaving || (slides?.length ?? 0) <= 1}
+                title="このスライドを削除します"
+                style={{ ...slideButton, color: '#ffb4a8', borderColor: 'rgba(255,180,168,0.5)' }}
+              >
+                削除
+              </button>
+            </div>
+          )}
           {backend.source && (
             <button
               data-deck-text-ui="open-source"

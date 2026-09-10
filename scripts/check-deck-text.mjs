@@ -10,6 +10,8 @@ import { readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
+  collectSlideStructure,
+  collectTsxSlideIds,
   collectTsxStrings,
   duplicateTsxItems,
   collectYamlStrings,
@@ -24,6 +26,17 @@ import {
   tsxSyntaxErrors
 } from './deck-text-core.mjs'
 
+import {
+  deleteSlideFromTsx,
+  deleteSlideFromYaml,
+  duplicateSlideInTsx,
+  duplicateSlideInYaml,
+  findComponentSpan,
+  moveSlideInYaml,
+  nextSlideId,
+  slideIdsInYaml
+} from '../shared/deck-slides.mjs'
+
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const slugs = readdirSync(path.join(repoRoot, 'content', 'decks'), { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
@@ -37,11 +50,13 @@ const slugs = readdirSync(path.join(repoRoot, 'content', 'decks'), { withFileTyp
 const deep = process.argv.includes('--deep')
 const DELETION_SAMPLE = 8
 const DUPLICATION_SAMPLE = 8
+const SLIDE_OP_SAMPLE = 4
 
 const failures = []
 let stringCount = 0
 let deletionCount = 0
 let duplicationCount = 0
+let slideOpCount = 0
 
 /** Spread a fixed number of picks across the file, not the first few strings. */
 function spread(items, limit) {
@@ -135,6 +150,80 @@ for (const slug of slugs) {
     if (!span || span.start !== item.remove.start || span.end !== item.remove.end) {
       failures.push(`${slug}/slides.tsx: L${item.line} の削除範囲が索引から復元できません`)
       break
+    }
+  }
+
+  // Slide-level edits (duplicate / delete / reorder) work from the deck index,
+  // which carries a component's name but not its body: production finds the
+  // function textually. That rule has to agree with the compiler exactly, or a
+  // deletion would cut the wrong lines out of a file nobody is watching.
+  const yamlText = readFileSync(paths.yaml, 'utf8')
+  const structure = collectSlideStructure(paths.tsx, tsxSource)
+
+  if (structure) {
+    for (const slide of structure) {
+      if (!slide.component) continue
+      const span = findComponentSpan(tsxSource, slide.component.name)
+      if (!span || span.start !== slide.component.start || span.end !== slide.component.end) {
+        failures.push(
+          `${slug}/slides.tsx: ${slide.component.name} の範囲を本文から特定できません（コンパイラの範囲と不一致）`
+        )
+        break
+      }
+    }
+
+    const yamlIds = slideIdsInYaml(yamlText)
+
+    for (const slide of sample(structure, SLIDE_OP_SAMPLE)) {
+      slideOpCount += 1
+
+      // Every operation has to leave the two files agreeing on the same ids,
+      // because that pairing is what assembles the deck.
+      const pairs = []
+
+      if (slide.component) {
+        const newId = nextSlideId(yamlIds, slide.id)
+        pairs.push({
+          what: '複製',
+          tsx: duplicateSlideInTsx(tsxSource, slide, newId, `Check${slideOpCount}Slide`),
+          yaml: duplicateSlideInYaml(yamlText, slide.id, newId)
+        })
+      }
+
+      pairs.push({
+        what: '削除',
+        tsx: deleteSlideFromTsx(tsxSource, slide),
+        yaml: deleteSlideFromYaml(yamlText, slide.id)
+      })
+
+      const index = yamlIds.indexOf(slide.id)
+      const offset = index === 0 ? 1 : -1
+      pairs.push({ what: '移動', tsx: tsxSource, yaml: moveSlideInYaml(yamlText, slide.id, offset) })
+
+      for (const pair of pairs) {
+        const errors = tsxSyntaxErrors(paths.tsx, pair.tsx)
+        if (errors.length) {
+          failures.push(`${slug}: ${slide.id} の${pair.what}で slides.tsx が壊れます (${errors[0]})`)
+          break
+        }
+
+        const registered = [...collectTsxSlideIds(paths.tsx, pair.tsx).ids].sort()
+        const listed = [...slideIdsInYaml(pair.yaml)].sort()
+        if (JSON.stringify(registered) !== JSON.stringify(listed)) {
+          failures.push(
+            `${slug}: ${slide.id} の${pair.what}で id が食い違います (tsx ${registered.length} / yaml ${listed.length})`
+          )
+          break
+        }
+      }
+    }
+
+    // Reordering must not lose or invent a slide, only change the order.
+    if (yamlIds.length > 1) {
+      const moved = slideIdsInYaml(moveSlideInYaml(yamlText, yamlIds[0], 1))
+      if (moved[0] !== yamlIds[1] || moved[1] !== yamlIds[0] || moved.length !== yamlIds.length) {
+        failures.push(`${slug}/deck.yaml: 先頭スライドの移動が入れ替えになっていません`)
+      }
     }
   }
 
@@ -266,5 +355,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Deck text round-trip passed (${slugs.length} decks, ${stringCount} strings, ${deletionCount} deletions, ${duplicationCount} duplications${deep ? '' : ' sampled'}).`
+  `Deck text round-trip passed (${slugs.length} decks, ${stringCount} strings, ${deletionCount} deletions, ${duplicationCount} duplications, ${slideOpCount} slide edits${deep ? '' : ' sampled'}).`
 )

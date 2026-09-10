@@ -66,6 +66,15 @@ the string: clicking a cell of a fixed-shape row repeats the row, because adding
 a cell would silently change the row's length. Duplicating works from the
 published index in production too.
 
+**Slide-level edits.** With the editor on, a small bar shows which slide you
+are on (`4/30 conclusion`) and offers `←` `→` `複製` `削除`. Reordering rewrites
+`deck.yaml` alone — the deck is assembled by pairing ids, so the running order
+lives there — while duplicating and deleting rewrite both files in one go:
+duplicating copies the component under a new name and registers it beside the
+original, and deleting takes the registration entry, the metadata and the
+component with it. A deck that generates its slides from data, or a slide that
+renders a shared component, says so instead of producing a broken file.
+
 **When the editor cannot find the string (dev server only).** The click-to-edit
 layer only reaches copy it can resolve back to a source range, so a string that
 is generated, or that an earlier edit shrank into something the extractor skips,

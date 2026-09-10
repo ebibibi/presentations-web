@@ -23,6 +23,11 @@ export type Candidate = {
 
 export type SaveRequest = { text: string; publish: boolean; remove: boolean; duplicate?: boolean }
 
+/** One slide as the structural editor sees it. */
+export type SlideEntry = { id: string; canDuplicate: boolean }
+
+export type SlideAction = 'duplicate' | 'delete' | 'move'
+
 type DevRef = { mode: 'dev'; slug: string; source: 'tsx' | 'yaml'; index: number }
 type ProductionRef = { mode: 'production'; slug: string; id: string }
 
@@ -37,6 +42,18 @@ export type EditorBackend = {
   /** How many source strings match each rendered string, in the same order. */
   countMatches: (texts: string[], slug?: string) => Promise<number[]>
   save: (candidates: Candidate[], request: SaveRequest) => Promise<SaveOutcome>
+  /**
+   * The deck's slides in running order, or null when the deck builds them from
+   * data and cannot be edited a slide at a time.
+   */
+  listSlides: (slug: string) => Promise<SlideEntry[] | null>
+  /** Duplicates, deletes or reorders one slide, rewriting deck.yaml and slides.tsx. */
+  editSlide: (
+    slug: string,
+    id: string,
+    action: SlideAction,
+    options: { offset?: -1 | 1; publish: boolean }
+  ) => Promise<SaveOutcome>
   /**
    * Whole-file editing, or null where there is no checkout behind the page.
    *
@@ -56,6 +73,9 @@ export type EditorBackend = {
 }
 
 const normalize = (value: string) => value.replace(/\s+/g, ' ').trim()
+
+const slideVerb = (action: SlideAction) =>
+  action === 'duplicate' ? '複製' : action === 'delete' ? '削除' : '移動'
 
 async function postJson<T>(url: string, body: unknown, headers: Record<string, string> = {}): Promise<T> {
   const response = await fetch(url, {
@@ -153,6 +173,33 @@ function devBackend(): EditorBackend {
         message: `${duplicate ? '複製' : remove ? '削除' : '保存'}しました: ${result.files.join(', ')}`
       }
     },
+    async listSlides(slug) {
+      const { slides } = await postJson<{ slides: SlideEntry[] | null }>(
+        '/__deck-text/slides',
+        { slug },
+        headers
+      )
+      return slides
+    },
+    async editSlide(slug, id, action, { offset, publish }) {
+      const result = await postJson<{
+        files: string[]
+        published?: { branch: string; commit?: string; pushed: boolean }
+        publishError?: string
+      }>('/__deck-text/slide', { slug, id, action, offset, publish }, headers)
+
+      if (result.publishError) {
+        return { tone: 'error', message: `保存はできましたが公開に失敗しました: ${result.publishError}` }
+      }
+      if (result.published?.pushed) {
+        const deploying = result.published.branch === 'main' ? '（1〜2分で本番に反映）' : ''
+        return {
+          tone: 'info',
+          message: `${slideVerb(action)}しました: ${result.published.branch} ${result.published.commit}${deploying}`
+        }
+      }
+      return { tone: 'info', message: `${slideVerb(action)}しました: ${result.files.join(', ')}` }
+    },
     source: {
       async read(slug) {
         const { files } = await postJson<{ files: DeckSource[] }>('/__deck-text/source', { slug }, headers)
@@ -192,6 +239,11 @@ function devBackend(): EditorBackend {
   }
 }
 
+type DeckIndex = {
+  items?: IndexItem[]
+  slides?: Array<{ id: string; component: { name: string } | null }> | null
+}
+
 type IndexItem = {
   id: string
   file: string
@@ -203,20 +255,22 @@ type IndexItem = {
 }
 
 function productionBackend(): EditorBackend {
-  const indexes = new Map<string, Promise<IndexItem[]>>()
+  const indexes = new Map<string, Promise<DeckIndex>>()
 
-  const loadIndex = (slug: string) => {
+  const loadDeckIndex = (slug: string) => {
     if (!indexes.has(slug)) {
       indexes.set(
         slug,
         fetch(`/deck-text/${slug}.json`)
-          .then((response) => (response.ok ? response.json() : { items: [] }))
-          .then((index: { items?: IndexItem[] }) => index.items ?? [])
-          .catch(() => [])
+          .then((response) => (response.ok ? response.json() : {}))
+          .then((index: DeckIndex) => index ?? {})
+          .catch(() => ({}) as DeckIndex)
       )
     }
     return indexes.get(slug)!
   }
+
+  const loadIndex = async (slug: string) => (await loadDeckIndex(slug)).items ?? []
 
   const matchesIn = async (text: string, slug: string) => {
     const target = normalize(text)
@@ -258,6 +312,21 @@ function productionBackend(): EditorBackend {
       return {
         tone: 'info',
         message: `${duplicate ? '複製' : remove ? '削除' : '公開'}しました: ${result.commit.shortSha}（1〜2分で反映されます）`
+      }
+    },
+    async listSlides(slug) {
+      const index = await loadDeckIndex(slug)
+      if (!index?.slides) return null
+      return index.slides.map((slide) => ({ id: slide.id, canDuplicate: Boolean(slide.component) }))
+    },
+    async editSlide(slug, id, action, { offset }) {
+      const result = await postJson<{ commit: { shortSha: string; branch: string } }>(
+        '/api/deck-slide/edit',
+        { slug, id, action, offset }
+      )
+      return {
+        tone: 'info',
+        message: `${slideVerb(action)}しました: ${result.commit.shortSha}（1〜2分で反映されます）`
       }
     },
     // Production commits through GitHub and has no checkout to open, so the
