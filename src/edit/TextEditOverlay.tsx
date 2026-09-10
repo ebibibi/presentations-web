@@ -227,15 +227,27 @@ export function TextEditOverlay() {
     return () => document.removeEventListener('keydown', onKey)
   }, [target, close])
 
-  const save = async () => {
+  // Slide headings are often duplicated in deck.yaml (timeline titles), so the
+  // default is to move every occurrence together and keep them in sync.
+  const selected = target ? (editAll ? target.candidates : [target.candidates[chosen]]) : []
+  // Deleting the copy means deleting what holds it — an empty <p> still takes
+  // its own margin and decoration with it. Only offered when every selected
+  // occurrence sits in something that can go.
+  const removeLabel = selected.length && selected.every((candidate) => candidate.removeLabel)
+    ? selected[0].removeLabel
+    : null
+  const isRequired = selected.some((candidate) => candidate.required)
+  const isBlank = !draft.trim()
+
+  const save = async (remove = false) => {
     if (!target || isSaving) return
-    // Slide headings are often duplicated in deck.yaml (timeline titles), so the
-    // default is to move every occurrence together and keep them in sync.
-    const candidates = editAll ? target.candidates : [target.candidates[chosen]]
+    if (remove && selected.length > 1 && !window.confirm(`${selected.length} 箇所をまとめて削除します。よろしいですか？`)) {
+      return
+    }
 
     setIsSaving(true)
     try {
-      setStatus(await backend.save(candidates, draft, publishOnSave))
+      setStatus(await backend.save(selected, { text: draft, publish: publishOnSave, remove }))
       close()
     } catch (error) {
       setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
@@ -485,7 +497,9 @@ export function TextEditOverlay() {
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={(event) => {
-              if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) void save()
+              if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+                void save(isBlank && Boolean(removeLabel))
+              }
             }}
             rows={Math.min(8, Math.max(2, Math.ceil(draft.length / 40)))}
             style={{
@@ -500,6 +514,14 @@ export function TextEditOverlay() {
               resize: 'vertical'
             }}
           />
+
+          <div data-deck-text-ui="hint" style={{ marginTop: 8, fontSize: 12, opacity: 0.75 }}>
+            {removeLabel
+              ? `文字を全部消して保存すると、${removeLabel} ごと削除します`
+              : isRequired
+                ? 'この項目は必須なので、空にも削除にもできません'
+                : 'この文字は要素ごと削除できません（空にすると枠だけ残ります）'}
+          </div>
 
           {backend.mode === 'dev' && (
           <label
@@ -526,20 +548,45 @@ export function TextEditOverlay() {
 
           <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
             <button
-              onClick={() => void save()}
-              disabled={isSaving || !draft.trim()}
+              data-deck-text-ui="save"
+              onClick={() => void save(isBlank && Boolean(removeLabel))}
+              disabled={isSaving || (isBlank && isRequired)}
               style={{
                 padding: '7px 16px',
                 borderRadius: 8,
                 border: 'none',
                 fontWeight: 700,
                 cursor: 'pointer',
-                background: '#7cf5c4',
+                background: isBlank && removeLabel ? '#ffb4a8' : '#7cf5c4',
                 color: '#0b1020'
               }}
             >
-              {isSaving ? (publishOnSave ? '公開中…' : '保存中…') : publishOnSave ? '保存して公開' : '保存 (⌘/Ctrl+Enter)'}
+              {isSaving
+                ? (publishOnSave ? '公開中…' : '保存中…')
+                : isBlank && removeLabel
+                  ? '削除 (⌘/Ctrl+Enter)'
+                  : publishOnSave
+                    ? '保存して公開'
+                    : '保存 (⌘/Ctrl+Enter)'}
             </button>
+            {removeLabel && !isBlank && (
+              <button
+                data-deck-text-ui="delete"
+                onClick={() => void save(true)}
+                disabled={isSaving}
+                title={`${removeLabel} ごと削除します`}
+                style={{
+                  padding: '7px 12px',
+                  borderRadius: 8,
+                  border: '1px solid rgba(255,180,168,0.6)',
+                  background: 'transparent',
+                  color: '#ffb4a8',
+                  cursor: 'pointer'
+                }}
+              >
+                削除
+              </button>
+            )}
             <button
               onClick={() => {
                 close()

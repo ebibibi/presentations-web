@@ -13,7 +13,13 @@ export type Candidate = {
   ref: DevRef | ProductionRef
   label: string
   text: string
+  /** What deleting this copy would take out, or null when only the text can go. */
+  removeLabel: string | null
+  /** deck.yaml keys the schema requires: editable, but never empty and never gone. */
+  required: boolean
 }
+
+export type SaveRequest = { text: string; publish: boolean; remove: boolean }
 
 type DevRef = { mode: 'dev'; slug: string; source: 'tsx' | 'yaml'; index: number }
 type ProductionRef = { mode: 'production'; slug: string; id: string }
@@ -25,7 +31,7 @@ export type EditorBackend = {
   find: (text: string, slug?: string) => Promise<Candidate[]>
   /** How many source strings match each rendered string, in the same order. */
   countMatches: (texts: string[], slug?: string) => Promise<number[]>
-  save: (candidates: Candidate[], text: string, publish: boolean) => Promise<SaveOutcome>
+  save: (candidates: Candidate[], request: SaveRequest) => Promise<SaveOutcome>
 }
 
 const normalize = (value: string) => value.replace(/\s+/g, ' ').trim()
@@ -48,6 +54,8 @@ type DevCandidate = {
   component: string
   line: number | null
   text: string
+  removeLabel: string | null
+  required?: boolean
 }
 
 function devBackend(): EditorBackend {
@@ -59,7 +67,9 @@ function devBackend(): EditorBackend {
     label: `${candidate.source === 'yaml' ? 'deck.yaml' : 'slides.tsx'} · ${candidate.component}${
       candidate.line ? ` · L${candidate.line}` : ''
     }`,
-    text: candidate.text
+    text: candidate.text,
+    removeLabel: candidate.removeLabel ?? null,
+    required: Boolean(candidate.required)
   })
 
   return {
@@ -80,7 +90,7 @@ function devBackend(): EditorBackend {
       )
       return matches
     },
-    async save(candidates, text, publish) {
+    async save(candidates, { text, publish, remove }) {
       const result = await postJson<{
         files: string[]
         published?: { branch: string; commit?: string; pushed: boolean }
@@ -90,6 +100,7 @@ function devBackend(): EditorBackend {
         {
           text,
           publish,
+          remove,
           targets: candidates.map((candidate) => {
             const ref = candidate.ref as DevRef
             return {
@@ -113,7 +124,10 @@ function devBackend(): EditorBackend {
           message: `公開しました: ${result.published.branch} ${result.published.commit}${deploying}`
         }
       }
-      return { tone: 'info', message: `保存しました: ${result.files.join(', ')}` }
+      return {
+        tone: 'info',
+        message: `${remove ? '削除' : '保存'}しました: ${result.files.join(', ')}`
+      }
     }
   }
 }
@@ -123,6 +137,7 @@ type IndexItem = {
   file: string
   component: string
   text: string
+  remove?: { label: string } | null
 }
 
 function productionBackend(): EditorBackend {
@@ -153,7 +168,9 @@ function productionBackend(): EditorBackend {
       return (await matchesIn(text, slug)).map((item) => ({
         ref: { mode: 'production', slug, id: item.id },
         label: `${item.file.endsWith('.yaml') ? 'deck.yaml' : 'slides.tsx'} · ${item.component}`,
-        text: item.text
+        text: item.text,
+        removeLabel: item.remove?.label ?? null,
+        required: item.file.endsWith('.yaml') && !item.remove
       }))
     },
     async countMatches(texts, slug) {
@@ -162,19 +179,20 @@ function productionBackend(): EditorBackend {
       const known = new Set(items.map((item) => normalize(item.text)))
       return texts.map((text) => (known.has(normalize(text)) ? 1 : 0))
     },
-    async save(candidates, text) {
+    async save(candidates, { text, remove }) {
       const slug = (candidates[0].ref as ProductionRef).slug
       const result = await postJson<{ commit: { shortSha: string; branch: string } }>(
         '/api/deck-text/patch',
         {
           slug,
           text,
+          remove,
           ids: candidates.map((candidate) => (candidate.ref as ProductionRef).id)
         }
       )
       return {
         tone: 'info',
-        message: `公開しました: ${result.commit.shortSha}（1〜2分で反映されます）`
+        message: `${remove ? '削除' : '公開'}しました: ${result.commit.shortSha}（1〜2分で反映されます）`
       }
     }
   }

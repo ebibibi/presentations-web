@@ -142,7 +142,10 @@ dump was written, `text:apply` refuses rather than clobbering that change
 `npm run check:text` (part of `npm run build`) proves the rewriter is lossless: for
 every deck it re-encodes all strings and verifies that a no-op rewrite is byte
 identical, that quote characters survive re-parsing, and that copy containing JSX
-syntax still produces a parsable file.
+syntax still produces a parsable file. It also deletes a sample of the copy in every
+deck and requires each deletion to leave a file that still parses, shrinks, and does
+not reach into a neighbouring string; `npm run check:text -- --deep` does that for
+every deletable string instead of a sample (about 40 seconds).
 
 ## Local Development
 
@@ -162,6 +165,7 @@ npm run check:recording
 npm run check:mobile-header
 npm run check:owner-editor-link
 npm run check:text-edit-keys
+npm run check:text-edit-delete
 ```
 
 ## Deployment
@@ -236,7 +240,14 @@ Run `npm run check:owner-editor-link` to assert that a signed-out visitor never 
 
 Click any string on a slide to retype it. The viewer's own arrow keys move between slides, so the editor's textarea has to win the keystroke while it has focus — otherwise moving the caret sends the deck to another slide and leaves the panel anchored to copy that is off screen.
 
-Run `npm run check:text-edit-keys` to assert that the arrows still navigate with nothing focused, and that inside the editor they move the caret instead.
+Clearing the box deletes rather than saving an empty string. An empty `<p>` still takes its margin, and an empty bullet still shows its marker, so the editor removes the construct the copy sits in — the list item, or the element whose whole content it is (`<li><span>text</span></li>` takes the list item). The panel names what will go before it goes, and offers a `削除` button for deleting without emptying the box first.
+
+Two shapes are deliberately not deletable, and the panel says so instead of offering it:
+
+- an object property (`answer`, `verdict`): the slide component and its type both require the key, so dropping it would break the build rather than the slide. The text can still be emptied.
+- `title` and `summary` in `deck.yaml`: the deck schema requires them, so they can be edited but never emptied or removed.
+
+Run `npm run check:text-edit-keys` to assert that the arrows still navigate with nothing focused, and that inside the editor they move the caret instead. Run `npm run check:text-edit-delete` to assert that clearing the box asks for a delete rather than an empty save.
 
 ## Future Work
 

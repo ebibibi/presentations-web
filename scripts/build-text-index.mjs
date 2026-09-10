@@ -24,6 +24,13 @@ const slugs = readdirSync(path.join(repoRoot, 'content', 'decks'), { withFileTyp
 rmSync(outputDir, { recursive: true, force: true })
 mkdirSync(outputDir, { recursive: true })
 
+/** `core` only exists for the round-trip guard, so it stays out of the index. */
+function publishedRemoval(removal) {
+  if (!removal) return null
+  const { core, ...published } = removal
+  return published
+}
+
 let total = 0
 
 for (const slug of slugs) {
@@ -42,7 +49,10 @@ for (const slug of slugs) {
       end: item.end,
       quote: item.quote,
       text: item.text,
-      component: item.component
+      component: item.component,
+      // What "delete this" would take out, resolved here because the Function
+      // has no compiler to work it out for itself.
+      remove: publishedRemoval(item.remove)
     })),
     ...collectYamlStrings(paths.yaml, yamlSource).map((item, index) => ({
       id: `y${index}`,
@@ -50,7 +60,8 @@ for (const slug of slugs) {
       kind: 'yaml',
       yamlPath: item.yamlPath,
       text: item.text,
-      component: item.component
+      component: item.component,
+      remove: publishedRemoval(item.remove)
     }))
   ]
 
