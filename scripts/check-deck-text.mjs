@@ -11,6 +11,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   collectTsxStrings,
+  duplicateTsxItems,
   collectYamlStrings,
   deckPaths,
   patchTsxSource,
@@ -35,10 +36,12 @@ const slugs = readdirSync(path.join(repoRoot, 'content', 'decks'), { withFileTyp
 // lot (a few decks' worth of copy is thousands of deletions).
 const deep = process.argv.includes('--deep')
 const DELETION_SAMPLE = 8
+const DUPLICATION_SAMPLE = 8
 
 const failures = []
 let stringCount = 0
 let deletionCount = 0
+let duplicationCount = 0
 
 /** Spread a fixed number of picks across the file, not the first few strings. */
 function spread(items, limit) {
@@ -131,6 +134,38 @@ for (const slug of slugs) {
     const span = resolveSnippet(tsxSource, item.remove)
     if (!span || span.start !== item.remove.start || span.end !== item.remove.end) {
       failures.push(`${slug}/slides.tsx: L${item.line} の削除範囲が索引から復元できません`)
+      break
+    }
+  }
+
+  // Duplication: the file has to stay parseable, grow, and gain exactly one
+  // more copy of the string that was clicked. A span that stopped short of a
+  // closing tag would still parse in some shapes, so the count is checked too.
+  for (const item of sample(tsxItems.filter((entry) => entry.duplicate), DUPLICATION_SAMPLE)) {
+    duplicationCount += 1
+    const grown = duplicateTsxItems(tsxSource, [item])
+    const errors = tsxSyntaxErrors(paths.tsx, grown)
+
+    if (errors.length) {
+      failures.push(`${slug}/slides.tsx: L${item.line} を複製するとファイルが壊れます (${errors[0]})`)
+      break
+    }
+    if (grown.length <= tsxSource.length) {
+      failures.push(`${slug}/slides.tsx: L${item.line} を複製してもファイルが大きくなりません`)
+      break
+    }
+
+    // An entry can hold the clicked string more than once (a card whose title
+    // repeats in its body), so the file gains one copy of everything inside the
+    // entry - not one string.
+    const inside = tsxItems.filter(
+      (entry) => entry.start >= item.duplicate.start && entry.end <= item.duplicate.end
+    ).length
+    const after = collectTsxStrings(paths.tsx, grown).length
+    if (after !== tsxItems.length + inside) {
+      failures.push(
+        `${slug}/slides.tsx: L${item.line} の複製で増えた項目数が違います (${tsxItems.length} + ${inside} -> ${after})`
+      )
       break
     }
   }
@@ -231,5 +266,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Deck text round-trip passed (${slugs.length} decks, ${stringCount} strings, ${deletionCount} deletions${deep ? '' : ' sampled'}).`
+  `Deck text round-trip passed (${slugs.length} decks, ${stringCount} strings, ${deletionCount} deletions, ${duplicationCount} duplications${deep ? '' : ' sampled'}).`
 )

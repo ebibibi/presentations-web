@@ -11,6 +11,7 @@ import { readSession } from '../../../shared/session.mjs'
 import { createGitHubClient } from '../../../shared/github.mjs'
 import {
   patchTsxSource,
+  duplicateTsxItems,
   removeRanges,
   resolveRange,
   resolveSnippet
@@ -42,10 +43,11 @@ export async function onRequestPost(context) {
 
   const { slug, ids, text } = body ?? {}
   const remove = body?.remove === true
+  const duplicate = body?.duplicate === true
   if (typeof slug !== 'string' || !Array.isArray(ids) || !ids.length) {
     return json({ error: 'slug / ids が必要です' }, 400)
   }
-  if (!remove && typeof text !== 'string') {
+  if (!remove && !duplicate && typeof text !== 'string') {
     return json({ error: '本文が指定されていません' }, 400)
   }
 
@@ -80,6 +82,12 @@ export async function onRequestPost(context) {
       const forFile = items.filter((item) => item.file === filePath)
       const yaml = filePath.endsWith('.yaml')
 
+      if (duplicate) {
+        if (yaml) throw new Error('deck.yaml の項目は複製できません')
+        updated[filePath] = duplicateTsx(sources[filePath], forFile)
+        continue
+      }
+
       if (remove) {
         updated[filePath] = yaml
           ? deleteYaml(sources[filePath], forFile)
@@ -94,9 +102,11 @@ export async function onRequestPost(context) {
 
     const commit = await github.commitFiles(
       updated,
-      remove
-        ? `fix(copy): remove slide text in ${slug}`
-        : `fix(copy): update slide text in ${slug}`
+      duplicate
+        ? `feat(copy): duplicate slide element in ${slug}`
+        : remove
+          ? `fix(copy): remove slide text in ${slug}`
+          : `fix(copy): update slide text in ${slug}`
     )
 
     return json({ files: paths, commit })
@@ -118,6 +128,20 @@ function applyTsx(source, items, text) {
 }
 
 /** Cuts each item's construct out of a tsx source. */
+/**
+ * Repeats each item's list entry in place. The index publishes `duplicate: 1`
+ * when the span is the removal span byte for byte, so expand that first.
+ */
+function duplicateTsx(source, items) {
+  return duplicateTsxItems(
+    source,
+    items.map((item) => ({
+      ...item,
+      duplicate: item.duplicate === 1 ? item.remove : item.duplicate
+    }))
+  )
+}
+
 function deleteTsx(source, items) {
   const spans = items.map((item) => {
     if (!item.remove) {

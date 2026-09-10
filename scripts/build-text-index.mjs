@@ -31,6 +31,21 @@ function publishedRemoval(removal) {
   return published
 }
 
+/**
+ * The duplication anchor, or `1` when the removal span already carries it byte
+ * for byte — true for every JSX element, which is most of them. Repeating the
+ * snippet for every string would roughly double the index the browser
+ * downloads. The shorthand only applies when nothing else has to travel with
+ * it, so an entry that needs a comma separator is always published in full.
+ */
+function publishedDuplication(duplication, removal) {
+  if (!duplication) return null
+  const { core, ...published } = duplication
+  const sameSpan = removal && published.start === removal.start && published.end === removal.end
+  if (sameSpan && !published.separator) return 1
+  return published
+}
+
 let total = 0
 
 for (const slug of slugs) {
@@ -52,7 +67,8 @@ for (const slug of slugs) {
       component: item.component,
       // What "delete this" would take out, resolved here because the Function
       // has no compiler to work it out for itself.
-      remove: publishedRemoval(item.remove)
+      remove: publishedRemoval(item.remove),
+      duplicate: publishedDuplication(item.duplicate, item.remove)
     })),
     ...collectYamlStrings(paths.yaml, yamlSource).map((item, index) => ({
       id: `y${index}`,

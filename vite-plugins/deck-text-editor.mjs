@@ -14,6 +14,7 @@ import {
   deckPaths,
   patchTsxSource,
   patchYamlSource,
+  duplicateTsxItems,
   removeTsxItems,
   removeYamlItems
 } from '../scripts/deck-text-core.mjs'
@@ -70,7 +71,8 @@ function candidatesFor(repoRoot, slug, text) {
           component: item.component,
           line: item.line,
           text: item.text,
-          removeLabel: item.remove?.label ?? null
+          removeLabel: item.remove?.label ?? null,
+          duplicateLabel: item.duplicate?.label ?? null
         })
       }
     })
@@ -99,7 +101,7 @@ function candidatesFor(repoRoot, slug, text) {
  * construct each occurrence sits in. Edits for the same file are computed from
  * a single read so batch indexes cannot shift mid-write.
  */
-function applyPatch(repoRoot, targets, text, remove = false) {
+function applyPatch(repoRoot, targets, text, remove = false, duplicate = false) {
   const byFile = new Map()
 
   for (const target of targets) {
@@ -126,8 +128,11 @@ function applyPatch(repoRoot, targets, text, remove = false) {
       if (NORMALIZE(item.text) !== NORMALIZE(target.original)) {
         throw new Error('ソースが変更されています。ページを再読み込みしてください。')
       }
+      if (duplicate && entry.source === 'yaml') {
+        throw new Error('deck.yaml の項目は複製できません')
+      }
       // deck.yaml の必須項目は空でも schema 検証に落ちるので、編集だけを許す。
-      if (!remove && !text.trim() && item.required) {
+      if (!remove && !duplicate && !text.trim() && item.required) {
         throw new Error(`${item.component} は必須項目なので空にできません`)
       }
       edits.push({ ...item, text })
@@ -138,7 +143,9 @@ function applyPatch(repoRoot, targets, text, remove = false) {
     const cut = () =>
       entry.source === 'yaml' ? removeYamlItems(contents, edits) : removeTsxItems(contents, edits)
 
-    writeFileSync(file, remove ? cut() : rewrite(), 'utf8')
+    const grow = () => duplicateTsxItems(contents, edits)
+
+    writeFileSync(file, duplicate ? grow() : remove ? cut() : rewrite(), 'utf8')
     written.push(path.relative(repoRoot, file))
   }
 
@@ -245,7 +252,8 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
 
           if (request.url.startsWith('/patch')) {
             const remove = body.remove === true
-            if (!remove && typeof body.text !== 'string') {
+            const duplicate = body.duplicate === true
+            if (!remove && !duplicate && typeof body.text !== 'string') {
               return send(400, { error: '本文が指定されていません' })
             }
             const targets = Array.isArray(body.targets) ? body.targets : []
@@ -257,7 +265,13 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
             if (unknown) {
               return send(400, { error: `不明なデッキです: ${unknown.slug}` })
             }
-            const result = applyPatch(repoRoot, targets, remove ? '' : body.text, remove)
+            const result = applyPatch(
+              repoRoot,
+              targets,
+              remove || duplicate ? '' : body.text,
+              remove,
+              duplicate
+            )
 
             if (!body.publish) {
               return send(200, result)
@@ -270,9 +284,11 @@ export function deckTextEditor({ repoRoot = process.cwd() } = {}) {
               const published = await publishFiles(
                 repoRoot,
                 result.files,
-                remove
-                  ? `fix(copy): remove slide text in ${slugs}`
-                  : `fix(copy): update slide text in ${slugs}`
+                duplicate
+                  ? `feat(copy): duplicate slide element in ${slugs}`
+                  : remove
+                    ? `fix(copy): remove slide text in ${slugs}`
+                    : `fix(copy): update slide text in ${slugs}`
               )
               return send(200, { ...result, published })
             } catch (error) {

@@ -158,3 +158,56 @@ function resolveJsxText(source, item) {
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
+
+/**
+ * Repeats the given items in place: each list entry is copied and the copy is
+ * inserted immediately after the original, so a list grows by one entry that
+ * already has the right shape and indentation for the user to edit.
+ *
+ * The anchor span covers the entry and the comma that already follows it (if
+ * any), so the copy always goes at the anchor's end. What goes in is derived
+ * from the anchor itself:
+ *
+ * - an entry that ends with a comma is repeated as `\n<indent><entry>,`
+ * - an entry without one - the last or only entry of a list - needs the comma
+ *   put in front of the copy instead, or the two entries run together
+ * - an entry sharing its line with siblings is repeated inline, after a space
+ */
+export function duplicateTsxItems(source, items) {
+  const insertions = items.map((item) => {
+    if (!item.duplicate) {
+      throw new Error(`「${item.text.slice(0, 20)}」は複製できません（リストの項目や行だけ複製できます）`)
+    }
+
+    const range = resolveSnippet(source, item.duplicate)
+    if (!range) {
+      throw new Error(`「${item.text.slice(0, 20)}」の位置を特定できませんでした。ページを再読み込みしてください`)
+    }
+
+    const anchor = source.slice(range.start, range.end)
+    const separator = item.duplicate.separator ?? ''
+    const trailingComma = anchor.endsWith(',')
+    const entry = trailingComma ? anchor.slice(0, -1).trimEnd() : anchor
+
+    const lineStart = source.lastIndexOf('\n', range.start - 1) + 1
+    const indent = source.slice(lineStart, range.start)
+    const ownsLine = !indent.trim()
+    const gap = ownsLine ? `\n${indent}` : ' '
+
+    const text = trailingComma
+      ? `${gap}${entry},`
+      : `${separator}${gap}${entry}`
+
+    return { at: range.end, text }
+  })
+
+  // Later insertions first, so the offsets of the earlier ones still hold.
+  const ordered = [...insertions].sort((left, right) => right.at - left.at)
+  let result = source
+
+  for (const insertion of ordered) {
+    result = result.slice(0, insertion.at) + insertion.text + result.slice(insertion.at)
+  }
+
+  return result
+}
