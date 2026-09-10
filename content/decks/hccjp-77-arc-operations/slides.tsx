@@ -158,12 +158,13 @@ function AgendaSlide({ frame }: SlideRenderContext) {
 
 function ProfileSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  // Recent uploads, picked so they land next to this session's own topics:
-  // patching, Active Directory, and letting an agent run unattended.
+  // Full-length uploads only - shorts do not read well at this size - picked so
+  // they land next to this session's own topics: a change every M365 admin hits,
+  // patching that breaks Active Directory, and what agents do to our job.
   const videos: Array<[string, string]> = [
     ['GdenW8z7DZA', 'SharePointの共有リンクが変わる'],
     ['Pc7i03UdPgA', 'Windows Update で AD 認証が失敗する？'],
-    ['SZSH9NkdH64', 'Claude Code が4時間55分動きっぱなし']
+    ['oo8ME5TV3wo', 'インフラエンジニア、AIエージェントに技術力で負けてた話']
   ]
   return (
     <section className="remotion-slide h77-slide">
