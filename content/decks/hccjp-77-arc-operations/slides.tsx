@@ -845,7 +845,8 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
     [
       'それでも直らないなら、順番待ち',
       <>
-        評価は1台に1本ずつ。<strong>重い監査が居座ると再起動も効かない</strong>ので、先に外す
+        評価は<strong>1台に1本ずつ</strong>。重い監査が走っていると、
+        <strong>その1周（実測38分）が終わるまで順番が来ない</strong>
       </>
     ]
   ]
