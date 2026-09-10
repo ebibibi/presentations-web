@@ -390,7 +390,7 @@ function ThreeQuestionsSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide h77-wall">
       <div className="h77-grid" />
-      <Head kicker="TODAY'S FOCUS" title="今日はっきりさせる、3つだけ" frame={frame} />
+      <Head kicker="TODAY'S FOCUS" title="今日確認する3つのこと" frame={frame} />
       <p className="h77-big-q" style={lift(entrance(frame, fps, 8), 20)}>
         パッチで壊れた。スナップショットで巻き戻した。バックアップから復元した。
       </p>
