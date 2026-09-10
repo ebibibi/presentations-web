@@ -26,12 +26,31 @@ type ProductionRef = { mode: 'production'; slug: string; id: string }
 
 export type SaveOutcome = { tone: 'info' | 'error'; message: string }
 
+/** One whole source file of a deck, as the dev server holds it on disk. */
+export type DeckSource = { name: string; path: string; text: string; hash: string }
+
 export type EditorBackend = {
   mode: 'dev' | 'production'
   find: (text: string, slug?: string) => Promise<Candidate[]>
   /** How many source strings match each rendered string, in the same order. */
   countMatches: (texts: string[], slug?: string) => Promise<number[]>
   save: (candidates: Candidate[], request: SaveRequest) => Promise<SaveOutcome>
+  /**
+   * Whole-file editing, or null where there is no checkout behind the page.
+   *
+   * The copy editor can only reach strings it resolves back to a source range,
+   * so anything it cannot resolve needs a way out that does not depend on
+   * resolving anything. Only the dev server has one.
+   */
+  source: {
+    read: (slug: string) => Promise<DeckSource[]>
+    save: (
+      slug: string,
+      file: DeckSource,
+      text: string,
+      publish: boolean
+    ) => Promise<{ outcome: SaveOutcome; hash: string }>
+  } | null
 }
 
 const normalize = (value: string) => value.replace(/\s+/g, ' ').trim()
@@ -128,6 +147,42 @@ function devBackend(): EditorBackend {
         tone: 'info',
         message: `${remove ? '削除' : '保存'}しました: ${result.files.join(', ')}`
       }
+    },
+    source: {
+      async read(slug) {
+        const { files } = await postJson<{ files: DeckSource[] }>('/__deck-text/source', { slug }, headers)
+        return files
+      },
+      async save(slug, file, text, publish) {
+        const result = await postJson<{
+          file: string
+          changed: boolean
+          hash: string
+          published?: { branch: string; commit?: string; pushed: boolean }
+          publishError?: string
+        }>('/__deck-text/source-save', { slug, name: file.name, text, hash: file.hash, publish }, headers)
+
+        if (result.publishError) {
+          return {
+            hash: result.hash,
+            outcome: { tone: 'error', message: `保存はできましたが公開に失敗しました: ${result.publishError}` }
+          }
+        }
+        if (!result.changed) {
+          return { hash: result.hash, outcome: { tone: 'info', message: '変更はありませんでした' } }
+        }
+        if (result.published?.pushed) {
+          const deploying = result.published.branch === 'main' ? '（1〜2分で本番に反映）' : ''
+          return {
+            hash: result.hash,
+            outcome: {
+              tone: 'info',
+              message: `公開しました: ${result.published.branch} ${result.published.commit}${deploying}`
+            }
+          }
+        }
+        return { hash: result.hash, outcome: { tone: 'info', message: `保存しました: ${result.file}` } }
+      }
     }
   }
 }
@@ -194,7 +249,10 @@ function productionBackend(): EditorBackend {
         tone: 'info',
         message: `${remove ? '削除' : '公開'}しました: ${result.commit.shortSha}（1〜2分で反映されます）`
       }
-    }
+    },
+    // Production commits through GitHub and has no checkout to open, so the
+    // escape hatch is the local editor link, not a textarea over the repo.
+    source: null
   }
 }
 

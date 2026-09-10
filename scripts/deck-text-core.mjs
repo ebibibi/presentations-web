@@ -49,6 +49,8 @@ const NON_COPY_KEYS = new Set([
 
 const CSS_LIKE = /(^|\s)(-?\d*\.?\d+(px|rem|em|vh|vw|%|deg|s|ms)\b)|rgba?\(|var\(--|linear-gradient|translate|#[0-9a-fA-F]{3,8}\b/
 const CJK = /[　-〿぀-ヿ㐀-䶿一-鿿＀-￯]/
+/** Japanese punctuation and brackets: copy is never a single one of these. */
+const CJK_PUNCTUATION = /^[、。，．・：；！？「」『』（）〔〕【】〈〉《》…‥ー―－～＝＋／＼｜"'　]$/
 
 export function fileHash(source) {
   return createHash('sha256').update(source).digest('hex').slice(0, 16)
@@ -61,7 +63,12 @@ function normalizeJsxText(raw) {
 
 function looksLikeCopy(value) {
   const text = value.trim()
-  if (text.length < 2) return false
+  if (!text) return false
+  // A single Japanese character is real copy — the editor itself can produce
+  // one, and a string it refuses to extract is a string nobody can click again.
+  // A lone punctuation mark is not: it is the tail of copy split by an inline
+  // tag, it repeats all over a slide, and clicking it can only be a mistake.
+  if (text.length === 1) return CJK.test(text) && !CJK_PUNCTUATION.test(text)
   if (CJK.test(text)) return true
   if (CSS_LIKE.test(text)) return false
   if (!/[A-Za-z]/.test(text)) return false

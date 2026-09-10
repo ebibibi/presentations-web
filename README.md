@@ -55,6 +55,18 @@ editor offers to change every occurrence at once so the timeline title cannot dr
 away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
 the production bundle.
 
+**When the editor cannot find the string (dev server only).** The click-to-edit
+layer only reaches copy it can resolve back to a source range, so a string that
+is generated, or that an earlier edit shrank into something the extractor skips,
+comes back as 「…はソースの文字列として見つかりませんでした」. That message now
+carries a `</> ソースを開く` button, and the same panel is available from
+`</> ソースを直接編集`: `slides.tsx` and `deck.yaml` in a textarea, opened
+scrolled to the offending string. A save is refused unless the file still parses
+and unless the copy on disk is still the one the panel was opened on, so a stale
+tab reports a conflict instead of reverting someone else's edit. There is no
+checkout behind the published site, so this panel is dev-only — from production,
+follow the `✏️ ローカルで編集` link first.
+
 **Keeping the editor up.** The local server runs as a system unit so it survives
 reboots, the same shape as the machine's other always-on services
 (`scheduler.service`, `discord-bot.service`) — a system unit under

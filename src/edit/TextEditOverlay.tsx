@@ -16,11 +16,28 @@
  * sheet.
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { createBackend, type Candidate } from './backend'
+import { createBackend, type Candidate, type DeckSource } from './backend'
 
 type Target = { rect: DOMRect; candidates: Candidate[] }
 
+/**
+ * `sourceHint` is the string the editor could not resolve. It rides along with
+ * the message so the way out of a dead end is one click away, and it survives
+ * the reload a publish can trigger because it is only ever text.
+ */
+type Status = { tone: 'info' | 'error'; message: string; sourceHint?: string }
+
 const PANEL_WIDTH = 460
+const secondaryButton: CSSProperties = {
+  padding: '8px 14px',
+  borderRadius: 999,
+  border: '1px solid rgba(255,255,255,0.25)',
+  cursor: 'pointer',
+  fontSize: 13,
+  fontWeight: 700,
+  color: '#e8ecff',
+  background: 'rgba(20,26,48,0.9)'
+}
 const PUBLISH_KEY = 'deck-text-publish'
 const STATUS_KEY = 'deck-text-status'
 
@@ -124,10 +141,10 @@ export function TextEditOverlay() {
   const [draft, setDraft] = useState('')
   // Publishing can pull in remote changes, which makes Vite reload the page and
   // would otherwise take the result of the save with it.
-  const [status, setStatus] = useState<{ tone: 'info' | 'error'; message: string } | null>(() => {
+  const [status, setStatus] = useState<Status | null>(() => {
     const stored = window.sessionStorage.getItem(STATUS_KEY)
     window.sessionStorage.removeItem(STATUS_KEY)
-    return stored ? (JSON.parse(stored) as { tone: 'info' | 'error'; message: string }) : null
+    return stored ? (JSON.parse(stored) as Status) : null
   })
 
   useEffect(() => {
@@ -142,6 +159,11 @@ export function TextEditOverlay() {
     () => window.localStorage.getItem(PUBLISH_KEY) !== 'off'
   )
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const [sourceFiles, setSourceFiles] = useState<DeckSource[] | null>(null)
+  const [sourceIndex, setSourceIndex] = useState(0)
+  const [sourceDraft, setSourceDraft] = useState('')
+  const [isSavingSource, setIsSavingSource] = useState(false)
+  const sourceRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     const onResize = () => setIsNarrow(window.innerWidth < 700)
@@ -154,6 +176,59 @@ export function TextEditOverlay() {
     setHover(null)
   }, [])
 
+  const closeSource = useCallback(() => {
+    setSourceFiles(null)
+    setSourceDraft('')
+  }, [])
+
+  /**
+   * Opens the raw source of the current deck, scrolled to `focus` when the
+   * caller knows which string sent the human here. This is the way out when the
+   * copy editor cannot resolve what is on screen — a leftover character between
+   * two inline tags has no clickable owner, but it is still right there in the
+   * file.
+   */
+  const openSource = useCallback(
+    async (focus?: string) => {
+      const slug = currentSlug()
+      if (!backend.source || !slug) return
+
+      try {
+        const files = await backend.source.read(slug)
+        if (!files.length) return
+
+        const needle = focus?.trim() ?? ''
+        const found = needle ? files.findIndex((file) => file.text.includes(needle)) : -1
+        const index = found >= 0 ? found : 0
+
+        close()
+        setList(null)
+        setStatus(null)
+        setSourceFiles(files)
+        setSourceIndex(index)
+        setSourceDraft(files[index].text)
+
+        if (found >= 0) {
+          // Selecting the string is the point: the human sees where the stray
+          // text lives before deciding what to cut.
+          const at = files[index].text.indexOf(needle)
+          requestAnimationFrame(() => {
+            const box = sourceRef.current
+            if (!box) return
+            box.focus()
+            box.setSelectionRange(at, at + needle.length)
+            const line = files[index].text.slice(0, at).split('\n').length
+            const lineHeight = Number.parseFloat(getComputedStyle(box).lineHeight) || 18
+            box.scrollTop = Math.max(0, (line - 4) * lineHeight)
+          })
+        }
+      } catch (error) {
+        setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
+      }
+    },
+    [backend, close]
+  )
+
   /** Resolves a rendered text node back to source and opens the editor on it. */
   const openFor = useCallback(async (node: Text) => {
     const text = node.textContent ?? ''
@@ -164,7 +239,8 @@ export function TextEditOverlay() {
       if (!candidates.length) {
         setStatus({
           tone: 'error',
-          message: `「${text.trim().slice(0, 24)}」はソースの文字列として見つかりませんでした（共通部品や自動生成かもしれません）`
+          message: `「${text.trim().slice(0, 24)}」はソースの文字列として見つかりませんでした（共通部品や自動生成かもしれません）`,
+          sourceHint: backend.source ? text : undefined
         })
         return
       }
@@ -182,7 +258,7 @@ export function TextEditOverlay() {
   // Pick a string by clicking it. Capture phase + preventDefault keeps the
   // click from reaching the deck viewer's own navigation handlers.
   useEffect(() => {
-    if (!isActive || target || list) return
+    if (!isActive || target || list || sourceFiles) return
 
     const onMove = (event: MouseEvent) => {
       const node = textNodeAt(event)
@@ -205,7 +281,7 @@ export function TextEditOverlay() {
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('click', onClick, true)
     }
-  }, [isActive, target, list, openFor])
+  }, [isActive, target, list, sourceFiles, openFor])
 
   useEffect(() => {
     if (target) inputRef.current?.focus()
@@ -213,6 +289,10 @@ export function TextEditOverlay() {
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (sourceFiles) {
+        if (event.key === 'Escape') closeSource()
+        return
+      }
       if (!target) return
       if (event.key === 'Escape') {
         close()
@@ -225,7 +305,7 @@ export function TextEditOverlay() {
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [target, close])
+  }, [target, close, sourceFiles, closeSource])
 
   // Slide headings are often duplicated in deck.yaml (timeline titles), so the
   // default is to move every occurrence together and keep them in sync.
@@ -254,6 +334,36 @@ export function TextEditOverlay() {
     } finally {
       setIsSaving(false)
     }
+  }
+
+  const sourceFile = sourceFiles?.[sourceIndex] ?? null
+  const isSourceDirty = Boolean(sourceFile && sourceFile.text !== sourceDraft)
+
+  const saveSource = async () => {
+    const slug = currentSlug()
+    if (!sourceFiles || !sourceFile || !backend.source || !slug || isSavingSource) return
+
+    setIsSavingSource(true)
+    try {
+      const { outcome, hash } = await backend.source.save(slug, sourceFile, sourceDraft, publishOnSave)
+      setSourceFiles(
+        sourceFiles.map((file, index) =>
+          index === sourceIndex ? { ...file, text: sourceDraft, hash } : file
+        )
+      )
+      setStatus(outcome)
+    } catch (error) {
+      setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
+    } finally {
+      setIsSavingSource(false)
+    }
+  }
+
+  const showSourceFile = (index: number) => {
+    if (!sourceFiles) return
+    if (isSourceDirty && !window.confirm('保存していない変更は失われます。切り替えますか？')) return
+    setSourceIndex(index)
+    setSourceDraft(sourceFiles[index].text)
   }
 
   const panelWidth = Math.min(PANEL_WIDTH, window.innerWidth - 24)
@@ -289,7 +399,11 @@ export function TextEditOverlay() {
     setStatus(
       editable.length
         ? null
-        : { tone: 'error', message: 'このスライドに編集できる文言が見つかりませんでした' }
+        : {
+            tone: 'error',
+            message: 'このスライドに編集できる文言が見つかりませんでした',
+            sourceHint: backend.source ? '' : undefined
+          }
     )
   }
 
@@ -301,6 +415,7 @@ export function TextEditOverlay() {
           const next = !isActive
           setIsActive(next)
           close()
+          closeSource()
           setList(null)
           setStatus(null)
           // Tapping an exact word is not realistic at phone scale.
@@ -325,27 +440,37 @@ export function TextEditOverlay() {
         {isActive ? '✏️ 文字編集: ON' : '✏️ 文字編集'}
       </button>
 
-      {isActive && !target && !list && (
-        <button
-          data-deck-text-ui="open-list"
-          onClick={() => void openList()}
+      {isActive && !target && !list && !sourceFiles && (
+        <div
+          data-deck-text-ui="actions"
           style={{
             position: 'fixed',
             left: 16,
             bottom: 60,
             zIndex: 2147483000,
-            padding: '8px 14px',
-            borderRadius: 999,
-            border: '1px solid rgba(255,255,255,0.25)',
-            cursor: 'pointer',
-            fontSize: 13,
-            fontWeight: 700,
-            color: '#e8ecff',
-            background: 'rgba(20,26,48,0.9)'
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 8
           }}
         >
-          ☰ このスライドの文言
-        </button>
+          <button
+            data-deck-text-ui="open-list"
+            onClick={() => void openList()}
+            style={secondaryButton}
+          >
+            ☰ このスライドの文言
+          </button>
+          {backend.source && (
+            <button
+              data-deck-text-ui="open-source"
+              onClick={() => void openSource()}
+              title="スライドのソースをそのまま編集します"
+              style={secondaryButton}
+            >
+              {'</> ソースを直接編集'}
+            </button>
+          )}
+        </div>
       )}
 
       {list && (
@@ -426,11 +551,10 @@ export function TextEditOverlay() {
       {status && (
         <div
           data-deck-text-ui="status"
-          onClick={() => setStatus(null)}
           style={{
             position: 'fixed',
             left: 16,
-            bottom: 64,
+            bottom: 108,
             maxWidth: 420,
             zIndex: 2147483000,
             padding: '10px 14px',
@@ -442,7 +566,153 @@ export function TextEditOverlay() {
             background: status.tone === 'error' ? '#ffb4a8' : '#7cf5c4'
           }}
         >
-          {status.message}
+          <div>{status.message}</div>
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            {status.sourceHint !== undefined && (
+              <button
+                data-deck-text-ui="status-source"
+                onClick={() => void openSource(status.sourceHint)}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: 8,
+                  border: '1px solid rgba(11,16,32,0.4)',
+                  background: 'rgba(11,16,32,0.12)',
+                  color: '#0b1020',
+                  fontWeight: 700,
+                  fontSize: 12,
+                  cursor: 'pointer'
+                }}
+              >
+                {'</> ソースを開く'}
+              </button>
+            )}
+            <button
+              onClick={() => setStatus(null)}
+              style={{
+                padding: '5px 10px',
+                borderRadius: 8,
+                border: 'none',
+                background: 'transparent',
+                color: '#0b1020',
+                fontSize: 12,
+                cursor: 'pointer'
+              }}
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
+
+      {sourceFiles && sourceFile && (
+        <div
+          data-deck-text-ui="source"
+          style={{
+            position: 'fixed',
+            inset: 12,
+            zIndex: 2147483000,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 14,
+            borderRadius: 12,
+            background: 'rgba(8,11,24,0.98)',
+            border: '1px solid rgba(124,245,196,0.4)',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.6)',
+            color: '#e8ecff',
+            fontSize: 13
+          }}
+        >
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
+            {sourceFiles.map((file, index) => (
+              <button
+                key={file.name}
+                onClick={() => showSourceFile(index)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: 8,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  color: index === sourceIndex ? '#0b1020' : '#e8ecff',
+                  background: index === sourceIndex ? '#7cf5c4' : 'transparent'
+                }}
+              >
+                {file.name}
+              </button>
+            ))}
+            <span style={{ opacity: 0.6, marginLeft: 4 }}>
+              {sourceFile.path}
+              {isSourceDirty ? '（未保存）' : ''}
+            </span>
+            <button
+              onClick={closeSource}
+              style={{
+                marginLeft: 'auto',
+                border: 'none',
+                background: 'transparent',
+                color: '#e8ecff',
+                fontSize: 18,
+                cursor: 'pointer'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          <textarea
+            ref={sourceRef}
+            value={sourceDraft}
+            onChange={(event) => setSourceDraft(event.target.value)}
+            spellCheck={false}
+            style={{
+              flex: 1,
+              width: '100%',
+              padding: 12,
+              borderRadius: 8,
+              border: '1px solid rgba(255,255,255,0.2)',
+              background: 'rgba(0,0,0,0.5)',
+              color: '#e8ecff',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+              fontSize: 13,
+              lineHeight: 1.6,
+              whiteSpace: 'pre',
+              resize: 'none'
+            }}
+          />
+
+          <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
+            <button
+              data-deck-text-ui="save-source"
+              onClick={() => void saveSource()}
+              disabled={isSavingSource || !isSourceDirty}
+              style={{
+                padding: '7px 16px',
+                borderRadius: 8,
+                border: 'none',
+                fontWeight: 700,
+                cursor: isSourceDirty ? 'pointer' : 'default',
+                opacity: isSourceDirty ? 1 : 0.5,
+                background: '#7cf5c4',
+                color: '#0b1020'
+              }}
+            >
+              {isSavingSource ? (publishOnSave ? '公開中…' : '保存中…') : publishOnSave ? '保存して公開' : '保存'}
+            </button>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', cursor: 'pointer', opacity: 0.85 }}>
+              <input
+                type="checkbox"
+                checked={publishOnSave}
+                onChange={(event) => {
+                  setPublishOnSave(event.target.checked)
+                  window.localStorage.setItem(PUBLISH_KEY, event.target.checked ? 'on' : 'off')
+                }}
+              />
+              保存したら公開（commit &amp; push）
+            </label>
+            <span style={{ marginLeft: 'auto', opacity: 0.6 }}>
+              構文が壊れていると保存しません（Esc で閉じる）
+            </span>
+          </div>
         </div>
       )}
 
