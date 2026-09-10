@@ -909,7 +909,7 @@ function TimezoneFixSlide({ frame }: SlideRenderContext) {
     },
     {
       head: '新規構築なら OS を英語UIで揃える',
-      body: 'ロケール依存の照合を踏まないのがいちばん安い。日本語UIが要件なら上の2つで回避する',
+      body: 'ロケール依存の照合を踏まないのがいちばん簡単。日本語UIが要件なら左の2つで回避する',
       tone: 'h77-card h77-card-quiet'
     }
   ]
