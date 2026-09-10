@@ -4,23 +4,23 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <SkillVsCommandSlide {...props} /> },
-  { render: (props) => <SkillCreateSlide {...props} /> },
-  { render: (props) => <SkillStructureSlide {...props} /> },
-  { render: (props) => <SkillMdExampleSlide {...props} /> },
-  { render: (props) => <SkillEcosystemSlide {...props} /> },
-  { render: (props) => <SkillDesignSlide {...props} /> },
-  { render: (props) => <SkillModeSlide {...props} /> },
-  { render: (props) => <ContextViewSlide {...props} /> },
-  { render: (props) => <ContextEatersSlide {...props} /> },
-  { render: (props) => <ContextDietSlide {...props} /> },
-  { render: (props) => <BalanceSlide {...props} /> },
-  { render: (props) => <DemoSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <NextSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
+  { id: 'skill-vs-command', render: (props) => <SkillVsCommandSlide {...props} /> },
+  { id: 'skill-create', render: (props) => <SkillCreateSlide {...props} /> },
+  { id: 'skill-structure', render: (props) => <SkillStructureSlide {...props} /> },
+  { id: 'skillmd-example', render: (props) => <SkillMdExampleSlide {...props} /> },
+  { id: 'skill-ecosystem', render: (props) => <SkillEcosystemSlide {...props} /> },
+  { id: 'skill-design', render: (props) => <SkillDesignSlide {...props} /> },
+  { id: 'skill-mode', render: (props) => <SkillModeSlide {...props} /> },
+  { id: 'context-view', render: (props) => <ContextViewSlide {...props} /> },
+  { id: 'context-eaters', render: (props) => <ContextEatersSlide {...props} /> },
+  { id: 'context-diet', render: (props) => <ContextDietSlide {...props} /> },
+  { id: 'balance', render: (props) => <BalanceSlide {...props} /> },
+  { id: 'demo', render: (props) => <DemoSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'next', render: (props) => <NextSlide {...props} /> },
+  { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

@@ -4,22 +4,22 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <ForEngineersSlide {...props} /> },
-  { render: (props) => <InstructVsVerifySlide {...props} /> },
-  { render: (props) => <WhatIsATestSlide {...props} /> },
-  { render: (props) => <TddLoopSlide {...props} /> },
-  { render: (props) => <ScreenshotCheckSlide {...props} /> },
-  { render: (props) => <BridgeToHooksSlide {...props} /> },
-  { render: (props) => <TypecheckHookSlide {...props} /> },
-  { render: (props) => <ClaudeReviewsClaudeSlide {...props} /> },
-  { render: (props) => <CommonHooksSlide {...props} /> },
-  { render: (props) => <PhilosophySlide {...props} /> },
-  { render: (props) => <DemoSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <NextSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
+  { id: 'for-engineers', render: (props) => <ForEngineersSlide {...props} /> },
+  { id: 'instruct-vs-verify', render: (props) => <InstructVsVerifySlide {...props} /> },
+  { id: 'what-is-a-test', render: (props) => <WhatIsATestSlide {...props} /> },
+  { id: 'tdd-loop', render: (props) => <TddLoopSlide {...props} /> },
+  { id: 'screenshot-check', render: (props) => <ScreenshotCheckSlide {...props} /> },
+  { id: 'bridge-to-hooks', render: (props) => <BridgeToHooksSlide {...props} /> },
+  { id: 'typecheck-hook', render: (props) => <TypecheckHookSlide {...props} /> },
+  { id: 'claude-reviews-claude', render: (props) => <ClaudeReviewsClaudeSlide {...props} /> },
+  { id: 'common-hooks', render: (props) => <CommonHooksSlide {...props} /> },
+  { id: 'philosophy', render: (props) => <PhilosophySlide {...props} /> },
+  { id: 'demo', render: (props) => <DemoSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'next', render: (props) => <NextSlide {...props} /> },
+  { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

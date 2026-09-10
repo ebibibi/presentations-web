@@ -46,7 +46,7 @@ This repository is intended to be public. Use English for code comments, README 
 
 - Deck metadata lives in `content/decks/*/deck.yaml`.
 - Deck visuals live in `content/decks/*/slides.tsx`.
-- Keep metadata and slide component counts in sync.
+- Pair metadata and slide components by `id`: every `deck.yaml` slide id appears once in the `slides.tsx` registration, and `deck.yaml` owns the running order.
 - `status` drives visibility (see `src/visibility.ts`):
   - `public` — listed in the archive and openable by anyone.
   - `unlisted` — openable by direct URL, hidden from the archive list.
@@ -92,7 +92,7 @@ When asked to create a new deck:
 2. Create `content/decks/{slug}/deck.yaml`.
 3. Create `content/decks/{slug}/slides.tsx`.
 4. Write metadata first: title, summary, status, visibility, dates, tags, optional YouTube data, and slide entries.
-5. Implement exactly one rendered slide component per slide metadata entry.
+5. Implement exactly one rendered slide component per slide metadata entry, registered with the same `id`.
 6. Keep the first version focused. Prefer 5-12 strong slides over many text-heavy slides.
 7. Use Remotion only where timing or animation improves the presentation.
 8. Verify desktop and mobile layouts before finishing.

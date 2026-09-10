@@ -7,23 +7,23 @@ import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 const EBI_WORKSPACE_URL = 'https://note.com/ebibibi/n/n300772aeac93'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <MemoryLimitSlide {...props} /> },
-  { render: (props) => <SecondBrainSlide {...props} /> },
-  { render: (props) => <AutoMemorySlide {...props} /> },
-  { render: (props) => <AutoMemoryStorageSlide {...props} /> },
-  { render: (props) => <NotebookSlide {...props} /> },
-  { render: (props) => <ChooseBrainSlide {...props} /> },
-  { render: (props) => <MyVaultSlide {...props} /> },
-  { render: (props) => <GoodmorningSlide {...props} /> },
-  { render: (props) => <RecallSlide {...props} /> },
-  { render: (props) => <GoodnightSlide {...props} /> },
-  { render: (props) => <CulminationSlide {...props} /> },
-  { render: (props) => <DemoSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <NextSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
+  { id: 'memory-limit', render: (props) => <MemoryLimitSlide {...props} /> },
+  { id: 'second-brain', render: (props) => <SecondBrainSlide {...props} /> },
+  { id: 'auto-memory', render: (props) => <AutoMemorySlide {...props} /> },
+  { id: 'auto-memory-storage', render: (props) => <AutoMemoryStorageSlide {...props} /> },
+  { id: 'notebook', render: (props) => <NotebookSlide {...props} /> },
+  { id: 'choose-brain', render: (props) => <ChooseBrainSlide {...props} /> },
+  { id: 'my-vault', render: (props) => <MyVaultSlide {...props} /> },
+  { id: 'goodmorning', render: (props) => <GoodmorningSlide {...props} /> },
+  { id: 'recall', render: (props) => <RecallSlide {...props} /> },
+  { id: 'goodnight', render: (props) => <GoodnightSlide {...props} /> },
+  { id: 'culmination', render: (props) => <CulminationSlide {...props} /> },
+  { id: 'demo', render: (props) => <DemoSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'next', render: (props) => <NextSlide {...props} /> },
+  { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

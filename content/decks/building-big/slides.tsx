@@ -5,23 +5,23 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <DumpProblemSlide {...props} /> },
-  { render: (props) => <SpecFirstSlide {...props} /> },
-  { render: (props) => <WhoDecidesSlide {...props} /> },
-  { render: (props) => <WriterReviewerSlide {...props} /> },
-  { render: (props) => <ParallelSlide {...props} /> },
-  { render: (props) => <GithubSlide {...props} /> },
-  { render: (props) => <ClaudePSlide {...props} /> },
-  { render: (props) => <SdkSlide {...props} /> },
-  { render: (props) => <PipelineSlide {...props} /> },
-  { render: (props) => <DemoInterviewSlide {...props} /> },
-  { render: (props) => <DemoBuildSlide {...props} /> },
-  { render: (props) => <DemoPipelineSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <NextSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
+  { id: 'dump-problem', render: (props) => <DumpProblemSlide {...props} /> },
+  { id: 'spec-first', render: (props) => <SpecFirstSlide {...props} /> },
+  { id: 'who-decides', render: (props) => <WhoDecidesSlide {...props} /> },
+  { id: 'writer-reviewer', render: (props) => <WriterReviewerSlide {...props} /> },
+  { id: 'parallel', render: (props) => <ParallelSlide {...props} /> },
+  { id: 'github', render: (props) => <GithubSlide {...props} /> },
+  { id: 'claude-p', render: (props) => <ClaudePSlide {...props} /> },
+  { id: 'sdk', render: (props) => <SdkSlide {...props} /> },
+  { id: 'pipeline', render: (props) => <PipelineSlide {...props} /> },
+  { id: 'demo-interview', render: (props) => <DemoInterviewSlide {...props} /> },
+  { id: 'demo-build', render: (props) => <DemoBuildSlide {...props} /> },
+  { id: 'demo-pipeline', render: (props) => <DemoPipelineSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'next', render: (props) => <NextSlide {...props} /> },
+  { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

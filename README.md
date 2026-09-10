@@ -37,7 +37,10 @@ content/decks/my-deck/
 - `youtube`
 - `slides`
 
-`slides.tsx` owns the visual implementation. The number of slide components must match the number of slide metadata entries.
+`slides.tsx` owns the visual implementation. Each registered slide carries the
+`id` of its `deck.yaml` entry, and the two are paired by that id — `deck.yaml`
+owns the running order, so reordering a deck means moving one entry there. The
+build fails on an id that exists on only one side.
 
 ## Editing Slide Copy
 

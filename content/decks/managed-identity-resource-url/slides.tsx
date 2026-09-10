@@ -20,14 +20,14 @@ import { LogoMark } from '../../../src/deck-shared'
 import type { SlideModule, SlideRenderContext } from '../../../src/types'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <ViewerQuestionSlide {...props} /> },
-  { render: (props) => <AcquisitionInterfacesSlide {...props} /> },
-  { render: (props) => <GraphBridgeSlide {...props} /> },
-  { render: (props) => <IdentifierEndpointSlide {...props} /> },
-  { render: (props) => <ServiceMapSlide {...props} /> },
-  { render: (props) => <EndToEndFlowSlide {...props} /> },
-  { render: (props) => <PromoSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'viewer-question', render: (props) => <ViewerQuestionSlide {...props} /> },
+  { id: 'acquisition-interfaces', render: (props) => <AcquisitionInterfacesSlide {...props} /> },
+  { id: 'graph-bridge', render: (props) => <GraphBridgeSlide {...props} /> },
+  { id: 'identifier-endpoint', render: (props) => <IdentifierEndpointSlide {...props} /> },
+  { id: 'service-map', render: (props) => <ServiceMapSlide {...props} /> },
+  { id: 'end-to-end-flow', render: (props) => <EndToEndFlowSlide {...props} /> },
+  { id: 'promotion', render: (props) => <PromoSlide {...props} /> }
 ]
 
 const SOURCES = {

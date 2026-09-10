@@ -4,21 +4,21 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <WhyConnectSlide {...props} /> },
-  { render: (props) => <WhatIsMcpSlide {...props} /> },
-  { render: (props) => <McpHowSlide {...props} /> },
-  { render: (props) => <DirectApiSlide {...props} /> },
-  { render: (props) => <TradeoffContextSlide {...props} /> },
-  { render: (props) => <TradeoffControlSlide {...props} /> },
-  { render: (props) => <ConfessionSlide {...props} /> },
-  { render: (props) => <WhenMcpSlide {...props} /> },
-  { render: (props) => <HowToChooseSlide {...props} /> },
-  { render: (props) => <DemoSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <NextSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
+  { id: 'why-connect', render: (props) => <WhyConnectSlide {...props} /> },
+  { id: 'what-is-mcp', render: (props) => <WhatIsMcpSlide {...props} /> },
+  { id: 'mcp-how', render: (props) => <McpHowSlide {...props} /> },
+  { id: 'direct-api', render: (props) => <DirectApiSlide {...props} /> },
+  { id: 'tradeoff-context', render: (props) => <TradeoffContextSlide {...props} /> },
+  { id: 'tradeoff-control', render: (props) => <TradeoffControlSlide {...props} /> },
+  { id: 'confession', render: (props) => <ConfessionSlide {...props} /> },
+  { id: 'when-mcp', render: (props) => <WhenMcpSlide {...props} /> },
+  { id: 'how-to-choose', render: (props) => <HowToChooseSlide {...props} /> },
+  { id: 'demo', render: (props) => <DemoSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'next', render: (props) => <NextSlide {...props} /> },
+  { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

@@ -449,10 +449,11 @@ const QA: QaItem[] = [
 ]
 
 export const slides: SlideModule['slides'] = [
-  { render: () => <OpeningSlide /> },
-  { render: () => <MapSlide /> },
-  ...QA.map((item, index) => ({ render: () => <QaSlide index={index} item={item} /> })),
-  { render: () => <ClosingSlide /> },
+  { id: 'opening', render: () => <OpeningSlide /> },
+  { id: 'map', render: () => <MapSlide /> },
+  // Each QA item's id is the same id its deck.yaml entry uses.
+  ...QA.map((item, index) => ({ id: item.id, render: () => <QaSlide index={index} item={item} /> })),
+  { id: 'closing', render: () => <ClosingSlide /> },
 ]
 
 function Src({ href, children }: { href: string; children: ReactNode }) {

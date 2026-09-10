@@ -18,7 +18,7 @@ export type SlideComponent = {
 }
 
 export type SlideModule = {
-  slides: Array<Pick<SlideComponent, 'render'>>
+  slides: Array<Pick<SlideComponent, 'id' | 'render'>>
 }
 
 export type DeckBundle = {

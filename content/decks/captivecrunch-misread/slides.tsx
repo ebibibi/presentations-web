@@ -4,18 +4,18 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <HeadlinesSlide {...props} /> },
-  { render: (props) => <OriginalTextSlide {...props} /> },
-  { render: (props) => <NotWifiSlide {...props} /> },
-  { render: (props) => <ThreePathsSlide {...props} /> },
-  { render: (props) => <DeviceCodeSlide {...props} /> },
-  { render: (props) => <VpnGapSlide {...props} /> },
-  { render: (props) => <RealPrioritySlide {...props} /> },
-  { render: (props) => <DetectionSlide {...props} /> },
-  { render: (props) => <TwoMessagesSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <SourcesSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'headlines', render: (props) => <HeadlinesSlide {...props} /> },
+  { id: 'original-text', render: (props) => <OriginalTextSlide {...props} /> },
+  { id: 'not-wifi', render: (props) => <NotWifiSlide {...props} /> },
+  { id: 'three-paths', render: (props) => <ThreePathsSlide {...props} /> },
+  { id: 'device-code', render: (props) => <DeviceCodeSlide {...props} /> },
+  { id: 'vpn-gap', render: (props) => <VpnGapSlide {...props} /> },
+  { id: 'real-priority', render: (props) => <RealPrioritySlide {...props} /> },
+  { id: 'detection', render: (props) => <DetectionSlide {...props} /> },
+  { id: 'two-messages', render: (props) => <TwoMessagesSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'sources', render: (props) => <SourcesSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

@@ -4,23 +4,23 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { CtaSlide, LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> },
-  { render: (props) => <NativeOptionsSlide {...props} /> },
-  { render: (props) => <RemoteControlSlide {...props} /> },
-  { render: (props) => <OfficialChannelsSlide {...props} /> },
-  { render: (props) => <CcdbSlide {...props} /> },
-  { render: (props) => <DiscordDemoSlide {...props} /> },
-  { render: (props) => <FromPhoneSlide {...props} /> },
-  { render: (props) => <AnytimeSlide {...props} /> },
-  { render: (props) => <BackboneSlide {...props} /> },
-  { render: (props) => <JourneySlide {...props} /> },
-  { render: (props) => <ContextCoreSlide {...props} /> },
-  { render: (props) => <YourWaySlide {...props} /> },
-  { render: (props) => <DemoSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <FinaleSlide {...props} /> },
-  { render: (props) => <CtaSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
+  { id: 'native-options', render: (props) => <NativeOptionsSlide {...props} /> },
+  { id: 'remote-control', render: (props) => <RemoteControlSlide {...props} /> },
+  { id: 'official-channels', render: (props) => <OfficialChannelsSlide {...props} /> },
+  { id: 'ccdb', render: (props) => <CcdbSlide {...props} /> },
+  { id: 'discord-demo', render: (props) => <DiscordDemoSlide {...props} /> },
+  { id: 'from-phone', render: (props) => <FromPhoneSlide {...props} /> },
+  { id: 'anytime', render: (props) => <AnytimeSlide {...props} /> },
+  { id: 'backbone', render: (props) => <BackboneSlide {...props} /> },
+  { id: 'journey', render: (props) => <JourneySlide {...props} /> },
+  { id: 'context-core', render: (props) => <ContextCoreSlide {...props} /> },
+  { id: 'your-way', render: (props) => <YourWaySlide {...props} /> },
+  { id: 'demo', render: (props) => <DemoSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'finale', render: (props) => <FinaleSlide {...props} /> },
+  { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
 // Pure helper (not a hook): spring-based entrance value for staggered items.

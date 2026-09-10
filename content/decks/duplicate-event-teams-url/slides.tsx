@@ -28,24 +28,24 @@ import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import { LogoMark } from '../../../src/deck-shared'
 
 export const slides: SlideModule['slides'] = [
-  { render: (props) => <OpeningSlide {...props} /> },
-  { render: (props) => <ProfileSlide {...props} /> },
-  { render: (props) => <QuestionSlide {...props} /> },
-  { render: (props) => <SectionWhatSlide {...props} /> },
-  { render: (props) => <WhatIsItSlide {...props} /> },
-  { render: (props) => <NotCopyPasteSlide {...props} /> },
-  { render: (props) => <SupportedSlide {...props} /> },
-  { render: (props) => <SectionCautionSlide {...props} /> },
-  { render: (props) => <UrlInheritedSlide {...props} /> },
-  { render: (props) => <UrlIsNotALinkSlide {...props} /> },
-  { render: (props) => <ScenarioSlide {...props} /> },
-  { render: (props) => <ConsequencesSlide {...props} /> },
-  { render: (props) => <SectionUseSlide {...props} /> },
-  { render: (props) => <GoodCasesSlide {...props} /> },
-  { render: (props) => <RuleSlide {...props} /> },
-  { render: (props) => <RecapSlide {...props} /> },
-  { render: (props) => <SourcesSlide {...props} /> },
-  { render: (props) => <ThanksSlide {...props} /> }
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'profile', render: (props) => <ProfileSlide {...props} /> },
+  { id: 'question', render: (props) => <QuestionSlide {...props} /> },
+  { id: 'section-what', render: (props) => <SectionWhatSlide {...props} /> },
+  { id: 'what-is-it', render: (props) => <WhatIsItSlide {...props} /> },
+  { id: 'not-copy-paste', render: (props) => <NotCopyPasteSlide {...props} /> },
+  { id: 'supported', render: (props) => <SupportedSlide {...props} /> },
+  { id: 'section-caution', render: (props) => <SectionCautionSlide {...props} /> },
+  { id: 'url-inherited', render: (props) => <UrlInheritedSlide {...props} /> },
+  { id: 'url-is-not-a-link', render: (props) => <UrlIsNotALinkSlide {...props} /> },
+  { id: 'scenario', render: (props) => <ScenarioSlide {...props} /> },
+  { id: 'consequences', render: (props) => <ConsequencesSlide {...props} /> },
+  { id: 'section-use', render: (props) => <SectionUseSlide {...props} /> },
+  { id: 'good-cases', render: (props) => <GoodCasesSlide {...props} /> },
+  { id: 'rule', render: (props) => <RuleSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
+  { id: 'thanks', render: (props) => <ThanksSlide {...props} /> }
 ]
 
 const SOURCE_URL = 'https://jpmessaging.github.io/blog/duplicate-event-considerations/'
