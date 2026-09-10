@@ -1,12 +1,15 @@
 import { createReadStream } from 'node:fs'
-import { mkdir, readFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile } from 'node:fs/promises'
 import http from 'node:http'
 import { extname, join, normalize } from 'node:path'
 import { chromium } from '@playwright/test'
+import { parse } from 'yaml'
 
 const port = 5182
 const baseUrl = `http://127.0.0.1:${port}`
-const deckSlug = process.env.DECK_SLUG || process.argv[2] || 'platform-introduction'
+// Defaulting to a named deck leaves this check pointing at a deck that can be
+// deleted. Take whatever deck is currently newest instead.
+const deckSlug = process.env.DECK_SLUG || process.argv[2] || (await newestPublicDeck())
 const deckPath = `/decks/${deckSlug}/studio`
 const outputPath = `tmp/recording-surface-${deckSlug}.png`
 const slideOutputPrefix = `tmp/recording-surface-${deckSlug}-slide`
@@ -236,4 +239,25 @@ async function getTotalSlides(page) {
   const text = await page.locator('.viewer-footer span').textContent()
   const total = Number.parseInt(text?.split('/').at(1)?.trim() || '', 10)
   return Number.isFinite(total) ? total : 1
+}
+
+
+async function newestPublicDeck() {
+  const decksDir = join(process.cwd(), 'content', 'decks')
+  const entries = await readdir(decksDir, { withFileTypes: true })
+  const decks = []
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue
+    const deck = parse(await readFile(join(decksDir, entry.name, 'deck.yaml'), 'utf8'))
+    if (deck?.status !== 'public') continue
+    decks.push({ slug: deck.slug, date: deck.youtube?.publishedAt ?? deck.createdAt })
+  }
+
+  if (!decks.length) {
+    throw new Error('No public deck to record; pass a slug explicitly.')
+  }
+
+  decks.sort((left, right) => String(right.date).localeCompare(String(left.date)))
+  return decks[0].slug
 }

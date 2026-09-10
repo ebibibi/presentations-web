@@ -4,12 +4,17 @@ summary: スキルで「仕事のやり方」を覚えさせ、/contextでコン
 status: public
 visibility: members
 createdAt: "2026-06-26"
-updatedAt: "2026-07-26"
+updatedAt: "2026-09-10"
 tags:
   - claude-code
   - skills
   - context
   - course
+youtube:
+  id: T6wrHQHpcR8
+  url: https://www.youtube.com/watch?v=T6wrHQHpcR8
+  title: "【第13回】スキルで“仕事のやり方”を覚えさせる ─ /contextでコンテキスト最適化｜Claude Codeの使い方を全部教えるシリーズ"
+  publishedAt: "2026-06-28"
 slides:
   - id: opening
     title: スキル & コンテキスト最適化
