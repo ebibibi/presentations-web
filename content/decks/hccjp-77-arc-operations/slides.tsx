@@ -522,20 +522,20 @@ function TwoNetsSlide({ frame }: SlideRenderContext) {
 function ExperimentSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const steps = [
-    ['T1', '9/5 のベースラインを取ってある', 'T1-hccjp77 ─ ここへ戻る'],
-    ['T3 / T5', 'そこから 9/9 に Compliant な状態まで積み上げた', 'compliant-20260909 → -full'],
-    ['T6', 'いまの状態も保存してある', 'T6-demo-ready ─ 実演の保険'],
-    ['NOW', 'この T6 から T1-hccjp77 へ巻き戻す', 'Azureは9/9・実機は9/5'],
-    ['+15分', '何が自分で戻り、何が戻らないかを測る', 'このセッション中に']
+    ['D1', 'いまの姿を見る', 'OSの実値と、5つの割り当て'],
+    ['D2', 'Hyper-V で巻き戻す', 'T7-demo-start を適用 → 起動'],
+    ['D3', 'ここが山場', 'Azureは緑。OSはもう壊れている'],
+    ['D5 / D6', '赤くなる。でも直らない', '10〜20分後。ログで順番待ちを見る'],
+    ['D7', '詰まりを解消する', 'エージェントを再起動する']
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="EXPERIMENT" title="今ここで、4日前まで巻き戻します" frame={frame} />
+      <Head kicker="LIVE DEMO" title="これから、この順番で見ます" frame={frame} />
       <div className="h77-steps">
         {steps.map((step, index) => (
           <div
-            className={`h77-step${step[0] === 'NOW' ? ' h77-step-now' : ''}`}
+            className={`h77-step${step[0] === 'D3' ? ' h77-step-now' : ''}`}
             key={step[0]}
             style={lift(entrance(frame, fps, 10 + index * 8), 18)}
           >
@@ -546,13 +546,13 @@ function ExperimentSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 50), 14)}>
-        <strong>「古いバックアップから復元した」と同じ状態</strong>を作ります。
-        戻したあとの15分は、そのまま結果を見る時間になります。
+        <strong>「バックアップから復元した」と同じ状態</strong>を、いま作ります。
+        戻りきるまで待てなくても大丈夫 ─ <strong>実測した数字は、このあとのスライドに全部あります</strong>。
       </p>
       <div className="h77-env" style={lift(entrance(frame, fps, 56), 16)}>
         <Server size={30} /> arcwin01 ─ Windows Server 2025（Nested Hyper-V ラボ L2）
       </div>
-      <LiveCue label="Hyper-V ─ arcwin01 を T1-hccjp77 へ復元" />
+      <LiveCue label="Hyper-V ─ arcwin01 を T7-demo-start へ復元" />
     </section>
   )
 }
@@ -562,7 +562,7 @@ function ResultAgentSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide h77-blind">
       <div className="h77-grid" />
-      <Head kicker="① AGENT" title="エージェントは ─ 落ちませんでした" frame={frame} />
+      <Head kicker="事前テスト ① AGENT" title="エージェントは ─ 落ちませんでした" frame={frame} />
       <div className="h77-split">
         <div className="h77-split-side" style={lift(entrance(frame, fps, 10), 20)}>
           <span className="h77-side-label">Azure ポータル</span>
@@ -606,7 +606,7 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="② MACHINE CONFIG" title="適用型は直る。監査型は、直さない" frame={frame} />
+      <Head kicker="事前テスト ② MACHINE CONFIG" title="適用型は直る。監査型は、直さない" frame={frame} />
       <div className="h77-two">
         <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 10), 20)}>
           <div className="h77-card-head">
@@ -614,7 +614,7 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
             <h2>ApplyAndAutoCorrect</h2>
           </div>
           <p>SetSecureProtocol ／ SetWindowsTimeZone</p>
-          <p className="h77-metric">4分30秒で復旧</p>
+          <p className="h77-metric">再起動後 4〜6分で復旧</p>
           <p>
             実機のレジストリに <strong>TLS 1.2 が書き戻された</strong>（Enabled=1）。
             表示が戻っただけではなく、<strong>本当に直っている</strong>。
@@ -636,7 +636,7 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
         <TriangleAlert size={38} />
         <span>
-          ただし、その4分30秒に辿り着くまで <strong>43分かかりました</strong>。
+          ただし、その数分に辿り着くまで <strong>40分以上かかりました</strong>。
           最初はずっと非準拠のままで、「適用型も復元後は直らない」と結論しかけた。
           <br />
           犯人は、この構成の外にいました ─ 次のスライド。
@@ -649,46 +649,51 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
 
 function GhostSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
-  const rows: Array<[string, string]> = [
-    ['21:13:05', '居残りの重い監査が、評価キューを取る'],
-    ['21:18 / 21:28', '他の構成のタイマーは鳴る。でも順番が来ない'],
-    ['21:51:47', 'その1周がやっと終わる ─ 2321秒（38分41秒）'],
-    ['21:52:10', 'キューを空けてやる'],
-    ['21:56:48', 'SetSecureProtocol が自力で準拠へ戻る']
+  const rows: Array<[string, string, string]> = [
+    ['AzureWindowsBaseline', '★ 実行中', '1周 2321秒（38分41秒）'],
+    ['SetSecureProtocol', '順番待ち', 'タイマーは鳴っている'],
+    ['SetWindowsTimeZone', '順番待ち', 'タイマーは鳴っている'],
+    ['AuditSecureProtocol', '順番待ち', 'タイマーは鳴っている']
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
       <Head
-        kicker="THE CULPRIT"
-        title="Azureの一覧と、実機が持っている割り当ては、ずれる"
+        kicker="事前テスト ─ THE CULPRIT"
+        title="5つ目の割り当ては、自分で入れたものではない"
         frame={frame}
       />
       <div className="h77-two h77-two-tight">
         <div className="h77-card h77-card-quiet" style={lift(entrance(frame, fps, 8), 18)}>
-          <h2>Azure（ポータル / API）</h2>
-          <p className="h77-mono">4件</p>
+          <h2>自分で入れた割り当て</h2>
+          <p className="h77-metric">4件</p>
         </div>
         <div className="h77-card h77-card-bad" style={lift(entrance(frame, fps, 14), 18)}>
-          <h2>実機が持っていた割り当て</h2>
-          <p className="h77-mono">5件 ─ 消したはずの重い監査つき</p>
+          <h2>Azure が既定で入れていた割り当て</h2>
+          <p className="h77-metric h77-metric-bad">＋1件</p>
+          <p>重いベースライン監査</p>
         </div>
       </div>
-      <div className="h77-tl5">
+      <div className="h77-cmp" style={lift(entrance(frame, fps, 24), 16)}>
         {rows.map((row, index) => (
-          <div className="h77-tl5-row" key={row[0]} style={lift(entrance(frame, fps, 22 + index * 6), 14)}>
-            <span className="h77-tl5-t">{row[0]}</span>
+          <div
+            className={`h77-cmp-row${index === 0 ? ' h77-cmp-bad' : ' h77-cmp-stale'}`}
+            key={row[0]}
+          >
+            <span>{row[0]}</span>
             <span>{row[1]}</span>
+            <span>{row[2]}</span>
           </div>
         ))}
       </div>
-      <p className="h77-punch-line" style={lift(entrance(frame, fps, 54), 16)}>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 46), 16)}>
         <TriangleAlert size={38} />
         <span>
           マシン構成の評価は<strong>1台につき1本ずつの順番待ち</strong>。
           重い監査が1件居座るだけで、<strong>他の構成は自己修復すらできない</strong>。
           <br />
-          <strong>直らないときは、実機が持っている割り当てを数える。</strong>Azureの一覧と一致するとは限らない。
+          出どころは <strong>Tenant Root Group の「Azure セキュリティ ベンチマーク」</strong>。
+          テナントに既定で入っていて、<strong>割り当てを消しても作り直されます</strong>。
         </span>
       </p>
     </section>
@@ -700,7 +705,7 @@ function ResultPolicySlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="③ POLICY / 準拠表示" title="緑には、2種類あります" frame={frame} />
+      <Head kicker="事前テスト ③ POLICY" title="緑には、2種類あります" frame={frame} />
       <div className="h77-two">
         <div className="h77-card h77-card-good" style={lift(entrance(frame, fps, 10), 20)}>
           <div className="h77-card-head">
@@ -721,15 +726,15 @@ function ResultPolicySlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <div className="h77-cmp" style={lift(entrance(frame, fps, 34), 16)}>
-        <div className="h77-cmp-row h77-cmp-bad">
-          <span>WindowsDefenderExploitGuard</span>
-          <span>非準拠</span>
-          <span>最終評価 41分前</span>
-        </div>
         <div className="h77-cmp-row h77-cmp-stale">
-          <span>SetWindowsTimeZone</span>
-          <span>準拠</span>
-          <span>最終評価 72分前 ← 巻き戻し前のまま</span>
+          <span>起動から 10〜20分</span>
+          <span>4つとも「準拠」</span>
+          <span>復元後まだ一度も評価されていない</span>
+        </div>
+        <div className="h77-cmp-row h77-cmp-bad">
+          <span>最初の非準拠まで</span>
+          <span>9分 ／ 17分 ／ 18分</span>
+          <span>3回やって、毎回ちがう</span>
         </div>
       </div>
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 46), 16)}>
@@ -808,26 +813,27 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
       <>巻き戻しでは切れなかった。切れるのは Azure 側を消したとき ─ そのときだけ再接続2コマンド</>
     ],
     [
-      '実機の割り当てを「数える」',
+      '緑を見ずに「最終評価時刻」を見る',
       <>
-        <strong>Azure の件数と一致しない</strong>なら、復元で蘇ったゴーストがいる。消すまで他が直らない
+        復元後<strong>10〜20分は、壊れていても全部グリーン</strong>。時計は3つ ─ 15分／60分／24時間
       </>
     ],
     [
       '割り当てモードで期待値を分ける',
       <>
-        <strong>適用型は待てば直る。監査型は待っても直らない</strong>ので手当ては別途
+        <strong>適用型は直る。監査型は直さない。</strong>どちらかは実機の設定ファイルに書いてある
       </>
     ],
     [
-      '緑を見ずに「最終評価時刻」を見る',
-      <>復元前の判定が残る。適用型15分・監査型60分・Policy は既定24時間と、時計が3つある</>
+      '直らないなら、順番待ちを疑う',
+      <>
+        評価は<strong>1台に1本ずつ</strong>。詰まっていたら
+        <strong>エージェントを再起動</strong>する
+      </>
     ],
     [
       'Policy とパッチは再評価してから判断',
-      <>
-        <code>az policy state trigger-scan</code> と Update Manager の再評価を先に打つ
-      </>
+      <>再評価を先に打ってから判断する ─ <code>az policy state trigger-scan</code></>
     ]
   ]
   return (
@@ -846,7 +852,7 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
         ))}
       </ol>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
-        2番だけが今回の新発見です。ここを飛ばすと、1〜5を全部やっても直りません。
+        <strong>4番だけが今回の新発見です。</strong>ここを飛ばすと、1〜5を全部やっても直りません。
       </p>
       <LiveCue label="巻き戻した arcwin01 が、戻ってきたか" />
     </section>

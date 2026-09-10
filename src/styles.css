@@ -11439,6 +11439,15 @@ main {
   margin-bottom: 4px;
 }
 
+/* The rule above styles the step title, which is a bare <strong> in the li.
+   Emphasis inside the step body must stay inline, or every <strong> in a
+   sentence breaks it into three lines and pushes the slide past its frame. */
+.h77-check p strong {
+  display: inline;
+  font-size: inherit;
+  margin-bottom: 0;
+}
+
 .h77-check p {
   color: rgba(234, 243, 255, 0.75);
   font-size: 23px;
