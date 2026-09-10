@@ -80,7 +80,7 @@ function LiveCue({ label }: { label: string }) {
   return (
     <span className="h77-live">
       <span className="h77-live-dot" />
-      LIVE ─ {label}
+      LIVE {label}
     </span>
   )
 }
