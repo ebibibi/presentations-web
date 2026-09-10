@@ -15,7 +15,17 @@ import path from 'node:path'
 import ts from 'typescript'
 import YAML from 'yaml'
 
-export { patchTsxSource, encodeForKind, resolveRange } from '../shared/deck-text-rewrite.mjs'
+export {
+  patchTsxSource,
+  encodeForKind,
+  resolveRange,
+  resolveSnippet,
+  removeRanges
+} from '../shared/deck-text-rewrite.mjs'
+import { removeRanges, resolveSnippet } from '../shared/deck-text-rewrite.mjs'
+
+/** deck.yaml keys the schema requires; emptying or dropping one breaks the deck. */
+const REQUIRED_YAML_KEYS = new Set(['title', 'summary'])
 
 /** JSX attributes whose value is copy shown to (or read by) a human. */
 const COPY_ATTRIBUTES = new Set(['alt', 'title', 'aria-label', 'label', 'caption', 'placeholder'])
@@ -115,6 +125,141 @@ function enclosingComponent(node) {
   return 'module'
 }
 
+/** JSX text that is only indentation between two tags, not copy. */
+function isJsxWhitespace(node) {
+  return ts.isJsxText(node) && !node.text.trim()
+}
+
+/**
+ * The JSX element a piece of copy is the entire content of.
+ *
+ * Emptying `<p>text</p>` leaves a `<p>` that still takes its padding, margin
+ * and any decoration with it, so "delete this" means the element. The climb
+ * continues while the element remains its parent's only content — copy wrapped
+ * as `<li><span>text</span></li>` should take the list item — but never reaches
+ * the outermost element, because removing that would leave the component with
+ * nothing to return.
+ */
+function jsxOwner(node) {
+  let current = node
+  // `<p>{'text'}</p>` wraps the literal in an expression container.
+  while (current.parent && ts.isJsxExpression(current.parent)) current = current.parent
+
+  let owner = null
+  while (
+    current.parent &&
+    ts.isJsxElement(current.parent) &&
+    current.parent.children.filter((child) => !isJsxWhitespace(child)).length === 1 &&
+    (ts.isJsxElement(current.parent.parent) || ts.isJsxFragment(current.parent.parent))
+  ) {
+    owner = current.parent
+    current = current.parent
+  }
+
+  return owner
+}
+
+/**
+ * Grows a removal span so the file reads as if the item had never been there:
+ * the comma that separated it goes too, and an item that owned its line takes
+ * the line with it instead of leaving a blank one.
+ */
+function tidySpan(source, start, end) {
+  const trailingComma = source.slice(end).match(/^[^\S\n]*,/)
+  let from = start
+  let to = end
+
+  if (trailingComma) {
+    to += trailingComma[0].length
+  } else {
+    // The last item of a list keeps the comma in front of it instead.
+    const leadingComma = source.slice(0, start).match(/,\s*$/)
+    if (leadingComma) from -= leadingComma[0].length
+  }
+
+  const lineStart = source.lastIndexOf('\n', from - 1) + 1
+  const newline = source.indexOf('\n', to)
+  const lineEnd = newline === -1 ? source.length : newline
+
+  if (!source.slice(lineStart, from).trim() && !source.slice(to, lineEnd).trim()) {
+    return { start: lineStart, end: newline === -1 ? source.length : newline + 1 }
+  }
+
+  const spaces = source.slice(to).match(/^[^\S\n]+/)
+  return { start: from, end: spaces ? to + spaces[0].length : to }
+}
+
+/**
+ * The construct this copy can be deleted with, or null when only the text
+ * itself can go.
+ *
+ * Two shapes cover the decks: a string in an array (one bullet of a list) and
+ * a JSX element whose whole content is the string. A property value — `answer`,
+ * `verdict` — is deliberately not removable: the slide component and its type
+ * both expect the key to exist, so dropping it would break the build rather
+ * than the slide.
+ */
+function removableSpan(node, source, sourceFile) {
+  const owner = jsxOwner(node)
+  const target = owner ?? node
+  const label = owner
+    ? `<${owner.openingElement.tagName.getText()}> 要素`
+    : target.parent && ts.isArrayLiteralExpression(target.parent)
+      ? 'リストの1項目'
+      : null
+
+  if (!label) return null
+
+  // `core` is the node itself; the span around it also takes the separator and
+  // the blank line it would leave behind. Keeping both lets the round-trip
+  // guard prove the tidying only ever swallowed punctuation.
+  const core = { start: target.getStart(sourceFile), end: target.getEnd() }
+  return { ...tidySpan(source, core.start, core.end), core, label }
+}
+
+/**
+ * Carries the exact source the span covers today. A production save works from
+ * an index built at deploy time and has no compiler to recompute the span, so
+ * it re-finds this snippet in the file it is about to rewrite.
+ */
+function withSnippet(source, span) {
+  if (!span) return null
+  return { ...span, snippet: source.slice(span.start, span.end) }
+}
+
+/** Cuts the given items out of a tsx source, spans re-verified against it. */
+export function removeTsxItems(source, items) {
+  const spans = items.map((item) => {
+    if (!item.remove) {
+      throw new Error(`「${item.text.slice(0, 20)}」は要素ごと削除できません（文字だけ消せます）`)
+    }
+    const range = resolveSnippet(source, item.remove)
+    if (!range) {
+      throw new Error(`「${item.text.slice(0, 20)}」の位置を特定できませんでした。ページを再読み込みしてください`)
+    }
+    return range
+  })
+
+  return removeRanges(source, spans)
+}
+
+/** Drops the given keys from a deck.yaml source. */
+export function removeYamlItems(source, items) {
+  const doc = YAML.parseDocument(source)
+
+  for (const item of items) {
+    if (!item.remove) {
+      throw new Error(`${item.component} は必須項目なので削除できません`)
+    }
+    if (doc.getIn(item.yamlPath) !== item.original) {
+      throw new Error(`deck.yaml の ${item.component} が変更されています。ページを再読み込みしてください`)
+    }
+    doc.deleteIn(item.yamlPath)
+  }
+
+  return doc.toString({ lineWidth: 0 })
+}
+
 /**
  * Extracts every editable string from a slides.tsx file, in source order.
  * Each item carries the exact byte range so edits can be spliced back without
@@ -141,7 +286,8 @@ export function collectTsxStrings(filePath, source = readFileSync(filePath, 'utf
           text,
           original: text,
           component: enclosingComponent(node),
-          line: sourceFile.getLineAndCharacterOfPosition(node.pos + leading.length).line + 1
+          line: sourceFile.getLineAndCharacterOfPosition(node.pos + leading.length).line + 1,
+          remove: withSnippet(source, removableSpan(node, source, sourceFile))
         })
       }
     } else if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
@@ -159,7 +305,8 @@ export function collectTsxStrings(filePath, source = readFileSync(filePath, 'utf
           original: node.text,
           quote: source[node.getStart(sourceFile)],
           component: enclosingComponent(node),
-          line: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1
+          line: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1,
+          remove: withSnippet(source, removableSpan(node, source, sourceFile))
         })
       }
     }
@@ -179,7 +326,18 @@ export function collectYamlStrings(filePath, source = readFileSync(filePath, 'ut
   const push = (yamlPath, label) => {
     const value = doc.getIn(yamlPath)
     if (typeof value === 'string' && value.trim()) {
-      items.push({ kind: 'yaml', yamlPath, text: value, original: value, component: label })
+      // A required key cannot be dropped or blanked without failing the deck
+      // schema, so those strings are edit-only.
+      const key = yamlPath[yamlPath.length - 1]
+      items.push({
+        kind: 'yaml',
+        yamlPath,
+        text: value,
+        original: value,
+        component: label,
+        required: REQUIRED_YAML_KEYS.has(key),
+        remove: REQUIRED_YAML_KEYS.has(key) ? null : { yamlPath, label: `deck.yaml の ${key}` }
+      })
     }
   }
 

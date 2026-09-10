@@ -96,6 +96,46 @@ export function resolveRange(source, item) {
   return { start: first, end: first + encoded.length }
 }
 
+/**
+ * Confirms a removable span still holds the exact source it was indexed with,
+ * and relocates it when the file has moved on. Same rule as `resolveRange`:
+ * the recorded position first, then a unique match anywhere in the file, and
+ * nothing at all when the snippet is gone or appears more than once.
+ */
+export function resolveSnippet(source, span) {
+  if (source.slice(span.start, span.end) === span.snippet) {
+    return { start: span.start, end: span.end }
+  }
+
+  const first = source.indexOf(span.snippet)
+  if (first === -1) return null
+  if (source.indexOf(span.snippet, first + 1) !== -1) return null
+
+  return { start: first, end: first + span.snippet.length }
+}
+
+/**
+ * Cuts spans out of a source file, back to front so the earlier offsets still
+ * hold. Overlapping spans are refused rather than spliced: deleting every
+ * occurrence of a string can pick a nested pair, and cutting one out of the
+ * other would leave a broken file behind.
+ */
+export function removeRanges(source, ranges) {
+  const ordered = [...ranges].sort((left, right) => right.start - left.start)
+  let next = source
+  let lowestRemoved = Number.POSITIVE_INFINITY
+
+  for (const range of ordered) {
+    if (range.end > lowestRemoved) {
+      throw new Error('削除する範囲が重なっています。1件ずつ削除してください。')
+    }
+    lowestRemoved = range.start
+    next = next.slice(0, range.start) + next.slice(range.end)
+  }
+
+  return next
+}
+
 const collapse = (value) => value.replace(/\s+/g, ' ').trim()
 
 function resolveJsxText(source, item) {

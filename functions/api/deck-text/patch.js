@@ -9,7 +9,12 @@
 import YAML from 'yaml'
 import { readSession } from '../../../shared/session.mjs'
 import { createGitHubClient } from '../../../shared/github.mjs'
-import { patchTsxSource, resolveRange } from '../../../shared/deck-text-rewrite.mjs'
+import {
+  patchTsxSource,
+  removeRanges,
+  resolveRange,
+  resolveSnippet
+} from '../../../shared/deck-text-rewrite.mjs'
 
 /** Whether production editing is wired up at all (owner only). */
 export async function onRequestGet({ request, env }) {
@@ -36,11 +41,12 @@ export async function onRequestPost(context) {
   }
 
   const { slug, ids, text } = body ?? {}
-  if (typeof slug !== 'string' || !Array.isArray(ids) || !ids.length || typeof text !== 'string') {
-    return json({ error: 'slug / ids / text が必要です' }, 400)
+  const remove = body?.remove === true
+  if (typeof slug !== 'string' || !Array.isArray(ids) || !ids.length) {
+    return json({ error: 'slug / ids が必要です' }, 400)
   }
-  if (!text.trim()) {
-    return json({ error: '空文字には変更できません' }, 400)
+  if (!remove && typeof text !== 'string') {
+    return json({ error: '本文が指定されていません' }, 400)
   }
 
   const index = await loadIndex(context, slug)
@@ -72,14 +78,25 @@ export async function onRequestPost(context) {
 
     for (const filePath of paths) {
       const forFile = items.filter((item) => item.file === filePath)
-      updated[filePath] = filePath.endsWith('.yaml')
+      const yaml = filePath.endsWith('.yaml')
+
+      if (remove) {
+        updated[filePath] = yaml
+          ? deleteYaml(sources[filePath], forFile)
+          : deleteTsx(sources[filePath], forFile)
+        continue
+      }
+
+      updated[filePath] = yaml
         ? applyYaml(sources[filePath], forFile, text)
         : applyTsx(sources[filePath], forFile, text)
     }
 
     const commit = await github.commitFiles(
       updated,
-      `fix(copy): update slide text in ${slug}`
+      remove
+        ? `fix(copy): remove slide text in ${slug}`
+        : `fix(copy): update slide text in ${slug}`
     )
 
     return json({ files: paths, commit })
@@ -100,12 +117,49 @@ function applyTsx(source, items, text) {
   return patchTsxSource(source, edits)
 }
 
+/** Cuts each item's construct out of a tsx source. */
+function deleteTsx(source, items) {
+  const spans = items.map((item) => {
+    if (!item.remove) {
+      throw new Error(`「${item.text.slice(0, 20)}」は要素ごと削除できません（文字だけ消せます）`)
+    }
+    const range = resolveSnippet(source, item.remove)
+    if (!range) {
+      throw new Error(`「${item.text.slice(0, 20)}」が今のソースで特定できません。デプロイ直後かもしれません`)
+    }
+    return range
+  })
+
+  return removeRanges(source, spans)
+}
+
+/** Drops each item's key from deck.yaml. */
+function deleteYaml(source, items) {
+  const document = YAML.parseDocument(source)
+
+  for (const item of items) {
+    if (!item.remove) {
+      throw new Error(`${item.component} は必須項目なので削除できません`)
+    }
+    if (document.getIn(item.yamlPath) !== item.text) {
+      throw new Error(`deck.yaml の ${item.component} が変更されています。ページを再読み込みしてください`)
+    }
+    document.deleteIn(item.yamlPath)
+  }
+
+  return document.toString({ lineWidth: 0 })
+}
+
 function applyYaml(source, items, text) {
   const document = YAML.parseDocument(source)
 
   for (const item of items) {
     if (document.getIn(item.yamlPath) !== item.text) {
       throw new Error(`deck.yaml の ${item.component} が変更されています。ページを再読み込みしてください`)
+    }
+    // A deck without a title or a summary fails the schema and the build.
+    if (!text.trim() && !item.remove) {
+      throw new Error(`${item.component} は必須項目なので空にできません`)
     }
     document.setIn(item.yamlPath, text)
   }

@@ -28,7 +28,10 @@ This repository is intended to be public. Use English for code comments, README 
   Keep git calls path-scoped to the files a save wrote: the checkout may hold
   unrelated work.
 - The extractor and rewriter are `scripts/deck-text-core.mjs`; changes there must keep
-  `npm run check:text` passing.
+  `npm run check:text` passing (`-- --deep` before touching the deletion spans).
+- Deleting copy removes the construct around it. The span is computed from the AST at
+  extraction time and published in the index, because the production Function has no
+  compiler; it is re-found with `resolveSnippet` before the file is rewritten.
 - Script and build output is English; anything rendered in the browser UI is Japanese,
   matching the rest of the app.
 
@@ -113,4 +116,5 @@ When changing keyboard handling or the click-to-edit overlay, run:
 
 ```bash
 npm run check:text-edit-keys
+npm run check:text-edit-delete
 ```
