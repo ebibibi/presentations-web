@@ -513,11 +513,11 @@ function TwoNetsSlide({ frame }: SlideRenderContext) {
 function ExperimentSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const steps = [
-    ['D1', 'いまの姿を見る', 'OSの実値と、5つの割り当て'],
-    ['D2', 'Hyper-V で巻き戻す', 'T7-demo-start を適用 → 起動'],
+    ['D1', 'いまの姿を見る', 'OSの実値と、割り当ての一覧'],
+    ['D2', 'Hyper-V で巻き戻す', 'チェックポイントを適用 → 起動'],
     ['D3', 'ここが山場', 'Azureは緑。OSはもう壊れている'],
-    ['D5 / D6', '赤くなる。でも直らない', '10〜20分後。ログで順番待ちを見る'],
-    ['D7', '詰まりを解消する', 'エージェントを再起動する']
+    ['D4〜D6', '中で何が起きているか', 'エージェントのログと、評価の順番'],
+    ['D8', '戻ったか', 'OSの値が書き戻される']
   ]
   return (
     <section className="remotion-slide h77-slide">
@@ -543,7 +543,7 @@ function ExperimentSlide({ frame }: SlideRenderContext) {
       <div className="h77-env" style={lift(entrance(frame, fps, 56), 16)}>
         <Server size={30} /> arcwin01 ─ Windows Server 2025（Nested Hyper-V ラボ L2）
       </div>
-      <LiveCue label="Hyper-V ─ arcwin01 を T7-demo-start へ復元" />
+      <LiveCue label="Hyper-V ─ arcwin01 をチェックポイントへ復元" />
     </section>
   )
 }
@@ -627,7 +627,7 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 40), 16)}>
         <TriangleAlert size={38} />
         <span>
-          ただし、その数分に辿り着くまで <strong>40分以上かかりました</strong>。
+          ただし、その数分の<strong>順番が回ってくるまで 40分以上かかりました</strong>。
           最初はずっと非準拠のままで、「適用型も復元後は直らない」と結論しかけた。
           <br />
           犯人は、この構成の外にいました ─ 次のスライド。
@@ -684,7 +684,7 @@ function GhostSlide({ frame }: SlideRenderContext) {
           重い監査が1件居座るだけで、<strong>他の構成は自己修復すらできない</strong>。
           <br />
           出どころは <strong>Tenant Root Group の「Azure セキュリティ ベンチマーク」</strong>。
-          テナントに既定で入っていて、<strong>割り当てを消しても作り直されます</strong>。
+          テナントに既定で入っている ─ <strong>入れた覚えがなくても、そこにいます</strong>。
         </span>
       </p>
     </section>
@@ -818,8 +818,8 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
     [
       '直らないなら、順番待ちを疑う',
       <>
-        評価は<strong>1台に1本ずつ</strong>。詰まっていたら
-        <strong>エージェントを再起動</strong>する
+        評価は<strong>1台に1本ずつ</strong>。
+        <strong>再起動しても順番は運任せ</strong>。重い監査を除外スコープで外す
       </>
     ],
     [
@@ -978,7 +978,7 @@ function AiCoversSlide({ frame }: SlideRenderContext) {
       <p className="h77-punch-line" style={lift(entrance(frame, fps, 46), 16)}>
         <TriangleAlert size={38} />
         <span>
-          ただし ─ <strong>今回はAIもかなり「早とちり」しました。</strong>です。
+          ただし ─ <strong>今回はAIもかなり「早とちり」しました。</strong>
           そもそも適用できていない構成を見て「機能が使えない」と結論していました。
           <br />
           <strong>AIも人も、勘違いをします。仮説と検証が大切です。</strong>
