@@ -312,6 +312,14 @@ export function DeckViewer({
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
+      // While the click-to-edit panel (or any other field) has focus, the arrow
+      // keys belong to the caret, and space is a space. Sending the deck to
+      // another slide there would also strand the panel on copy that is no
+      // longer on screen.
+      if (isEditableTarget(event.target)) {
+        return
+      }
+
       if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
         event.preventDefault()
         goRelative(1)
