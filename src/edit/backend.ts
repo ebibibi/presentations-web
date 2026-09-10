@@ -15,11 +15,13 @@ export type Candidate = {
   text: string
   /** What deleting this copy would take out, or null when only the text can go. */
   removeLabel: string | null
+  /** The list entry duplicating this copy would repeat, or null when there is none. */
+  duplicateLabel: string | null
   /** deck.yaml keys the schema requires: editable, but never empty and never gone. */
   required: boolean
 }
 
-export type SaveRequest = { text: string; publish: boolean; remove: boolean }
+export type SaveRequest = { text: string; publish: boolean; remove: boolean; duplicate?: boolean }
 
 type DevRef = { mode: 'dev'; slug: string; source: 'tsx' | 'yaml'; index: number }
 type ProductionRef = { mode: 'production'; slug: string; id: string }
@@ -74,6 +76,7 @@ type DevCandidate = {
   line: number | null
   text: string
   removeLabel: string | null
+  duplicateLabel?: string | null
   required?: boolean
 }
 
@@ -88,6 +91,7 @@ function devBackend(): EditorBackend {
     }`,
     text: candidate.text,
     removeLabel: candidate.removeLabel ?? null,
+    duplicateLabel: candidate.duplicateLabel ?? null,
     required: Boolean(candidate.required)
   })
 
@@ -109,7 +113,7 @@ function devBackend(): EditorBackend {
       )
       return matches
     },
-    async save(candidates, { text, publish, remove }) {
+    async save(candidates, { text, publish, remove, duplicate }) {
       const result = await postJson<{
         files: string[]
         published?: { branch: string; commit?: string; pushed: boolean }
@@ -120,6 +124,7 @@ function devBackend(): EditorBackend {
           text,
           publish,
           remove,
+          duplicate,
           targets: candidates.map((candidate) => {
             const ref = candidate.ref as DevRef
             return {
@@ -145,7 +150,7 @@ function devBackend(): EditorBackend {
       }
       return {
         tone: 'info',
-        message: `${remove ? '削除' : '保存'}しました: ${result.files.join(', ')}`
+        message: `${duplicate ? '複製' : remove ? '削除' : '保存'}しました: ${result.files.join(', ')}`
       }
     },
     source: {
@@ -193,6 +198,8 @@ type IndexItem = {
   component: string
   text: string
   remove?: { label: string } | null
+  /** `1` means "the same span as remove", which is how the index keeps its size down. */
+  duplicate?: { label: string } | 1 | null
 }
 
 function productionBackend(): EditorBackend {
@@ -225,6 +232,8 @@ function productionBackend(): EditorBackend {
         label: `${item.file.endsWith('.yaml') ? 'deck.yaml' : 'slides.tsx'} · ${item.component}`,
         text: item.text,
         removeLabel: item.remove?.label ?? null,
+        duplicateLabel:
+          item.duplicate === 1 ? (item.remove?.label ?? null) : (item.duplicate?.label ?? null),
         required: item.file.endsWith('.yaml') && !item.remove
       }))
     },
@@ -234,7 +243,7 @@ function productionBackend(): EditorBackend {
       const known = new Set(items.map((item) => normalize(item.text)))
       return texts.map((text) => (known.has(normalize(text)) ? 1 : 0))
     },
-    async save(candidates, { text, remove }) {
+    async save(candidates, { text, remove, duplicate }) {
       const slug = (candidates[0].ref as ProductionRef).slug
       const result = await postJson<{ commit: { shortSha: string; branch: string } }>(
         '/api/deck-text/patch',
@@ -242,12 +251,13 @@ function productionBackend(): EditorBackend {
           slug,
           text,
           remove,
+          duplicate,
           ids: candidates.map((candidate) => (candidate.ref as ProductionRef).id)
         }
       )
       return {
         tone: 'info',
-        message: `${remove ? '削除' : '公開'}しました: ${result.commit.shortSha}（1〜2分で反映されます）`
+        message: `${duplicate ? '複製' : remove ? '削除' : '公開'}しました: ${result.commit.shortSha}（1〜2分で反映されます）`
       }
     },
     // Production commits through GitHub and has no checkout to open, so the

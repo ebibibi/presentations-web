@@ -58,6 +58,14 @@ editor offers to change every occurrence at once so the timeline title cannot dr
 away from the slide. The editor is behind `import.meta.env.DEV` and is not part of
 the production bundle.
 
+**Growing a list.** A string that sits in a repeatable entry — one `<li>` of a
+list, one bullet of a `points: [...]` array, one row of a table array — gets an
+`増やす` button next to `削除`. It copies that whole entry in place, so the list
+gains an identical entry the editor can then rewrite. The unit is the entry, not
+the string: clicking a cell of a fixed-shape row repeats the row, because adding
+a cell would silently change the row's length. Duplicating works from the
+published index in production too.
+
 **When the editor cannot find the string (dev server only).** The click-to-edit
 layer only reaches copy it can resolve back to a source range, so a string that
 is generated, or that an earlier edit shrank into something the extractor skips,

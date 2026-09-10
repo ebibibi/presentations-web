@@ -22,7 +22,9 @@ export {
   resolveSnippet,
   removeRanges
 } from '../shared/deck-text-rewrite.mjs'
-import { removeRanges, resolveSnippet } from '../shared/deck-text-rewrite.mjs'
+import { duplicateTsxItems, removeRanges, resolveSnippet } from '../shared/deck-text-rewrite.mjs'
+
+export { duplicateTsxItems }
 
 /** deck.yaml keys the schema requires; emptying or dropping one breaks the deck. */
 const REQUIRED_YAML_KEYS = new Set(['title', 'summary'])
@@ -208,6 +210,70 @@ function tidySpan(source, start, end) {
  * both expect the key to exist, so dropping it would break the build rather
  * than the slide.
  */
+/**
+ * The repeatable unit this copy belongs to, or null when there is nothing to
+ * repeat.
+ *
+ * Deleting and duplicating want different units. Deleting takes the smallest
+ * thing that can go; duplicating has to take a whole *entry* of a list, or the
+ * copy lands in the middle of a fixed-shape row and quietly changes its length:
+ * duplicating `'5分'` inside `['14:00', '5分', 'オープニング', '胡田']` would give
+ * that row five cells and one column of the table would shift.
+ *
+ * Two shapes qualify:
+ * - an element of an array literal (a bullet, a card, a row). When the array is
+ *   itself inside another array, the row is the unit, not the cell.
+ * - a JSX element that has siblings (one `<li>` of a list). A lone child is not
+ *   a repeatable unit — it is the content of its parent.
+ */
+function duplicableSpan(node, source, sourceFile) {
+  let current = node
+  let unit = null
+  let label = null
+  let separator = ''
+
+  while (current.parent) {
+    const parent = current.parent
+
+    if (ts.isArrayLiteralExpression(parent) && parent.elements.includes(current)) {
+      const matrix = parent.parent && ts.isArrayLiteralExpression(parent.parent)
+      unit = matrix ? parent : current
+      label = matrix ? '表の1行' : 'リストの1項目'
+      separator = ','
+      break
+    }
+
+    if (
+      ts.isJsxElement(current) &&
+      (ts.isJsxElement(parent) || ts.isJsxFragment(parent)) &&
+      parent.children.filter((child) => !isJsxWhitespace(child)).length > 1
+    ) {
+      unit = current
+      label = `<${current.openingElement.tagName.getText()}> 要素`
+      break
+    }
+
+    current = parent
+  }
+
+  if (!unit) return null
+
+  const start = unit.getStart(sourceFile)
+  const end = unit.getEnd()
+  // The anchor swallows the comma that already follows the entry, so the copy
+  // is always inserted at the anchor's end - one insertion point for a list
+  // whose last entry has no comma and one whose entries all do.
+  const comma = source.slice(end).match(/^[^\S\n]*,/)
+
+  return {
+    start,
+    end: comma ? end + comma[0].length : end,
+    core: { start, end },
+    label,
+    separator
+  }
+}
+
 function removableSpan(node, source, sourceFile) {
   const owner = jsxOwner(node)
   const target = owner ?? node
@@ -296,7 +362,8 @@ export function collectTsxStrings(filePath, source = readFileSync(filePath, 'utf
           original: text,
           component: enclosingComponent(node),
           line: sourceFile.getLineAndCharacterOfPosition(node.pos + leading.length).line + 1,
-          remove: withSnippet(source, removableSpan(node, source, sourceFile))
+          remove: withSnippet(source, removableSpan(node, source, sourceFile)),
+          duplicate: withSnippet(source, duplicableSpan(node, source, sourceFile))
         })
       }
     } else if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
@@ -315,7 +382,8 @@ export function collectTsxStrings(filePath, source = readFileSync(filePath, 'utf
           quote: source[node.getStart(sourceFile)],
           component: enclosingComponent(node),
           line: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1,
-          remove: withSnippet(source, removableSpan(node, source, sourceFile))
+          remove: withSnippet(source, removableSpan(node, source, sourceFile)),
+          duplicate: withSnippet(source, duplicableSpan(node, source, sourceFile))
         })
       }
     }

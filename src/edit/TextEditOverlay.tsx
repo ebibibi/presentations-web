@@ -316,10 +316,15 @@ export function TextEditOverlay() {
   const removeLabel = selected.length && selected.every((candidate) => candidate.removeLabel)
     ? selected[0].removeLabel
     : null
+  // Duplicating repeats a whole list entry, so it only makes sense for one
+  // occurrence at a time: "every place this sentence appears" is a set of
+  // unrelated lists.
+  const duplicateLabel =
+    selected.length === 1 ? (selected[0].duplicateLabel ?? null) : null
   const isRequired = selected.some((candidate) => candidate.required)
   const isBlank = !draft.trim()
 
-  const save = async (remove = false) => {
+  const save = async (remove = false, duplicate = false) => {
     if (!target || isSaving) return
     if (remove && selected.length > 1 && !window.confirm(`${selected.length} 箇所をまとめて削除します。よろしいですか？`)) {
       return
@@ -327,7 +332,9 @@ export function TextEditOverlay() {
 
     setIsSaving(true)
     try {
-      setStatus(await backend.save(selected, { text: draft, publish: publishOnSave, remove }))
+      setStatus(
+        await backend.save(selected, { text: draft, publish: publishOnSave, remove, duplicate })
+      )
       close()
     } catch (error) {
       setStatus({ tone: 'error', message: error instanceof Error ? error.message : String(error) })
@@ -791,6 +798,7 @@ export function TextEditOverlay() {
               : isRequired
                 ? 'この項目は必須なので、空にも削除にもできません'
                 : 'この文字は要素ごと削除できません（空にすると枠だけ残ります）'}
+            {duplicateLabel && `／「増やす」で${duplicateLabel}をもう1つ足せます`}
           </div>
 
           {backend.mode === 'dev' && (
@@ -839,6 +847,24 @@ export function TextEditOverlay() {
                     ? '保存して公開'
                     : '保存 (⌘/Ctrl+Enter)'}
             </button>
+            {duplicateLabel && !isBlank && (
+              <button
+                data-deck-text-ui="duplicate"
+                onClick={() => void save(false, true)}
+                disabled={isSaving}
+                title={`${duplicateLabel}をこの直後にもう1つ足します（中身は同じなので、そのあと書き換えます）`}
+                style={{
+                  padding: '7px 12px',
+                  borderRadius: 8,
+                  border: '1px solid rgba(124,245,196,0.6)',
+                  background: 'transparent',
+                  color: '#7cf5c4',
+                  cursor: 'pointer'
+                }}
+              >
+                増やす
+              </button>
+            )}
             {removeLabel && !isBlank && (
               <button
                 data-deck-text-ui="delete"
