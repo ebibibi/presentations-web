@@ -881,7 +881,7 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
         ))}
       </ol>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
-        ここを知らないと、正常な動作を故障だと思い込みます。
+        復元後も時間がたてばきちんと期待した状態まで自動復旧されます。ログを見ながら待ちましょう。
       </p>
       <LiveCue label="巻き戻した arcwin01 が、戻ってきたか" />
     </section>
