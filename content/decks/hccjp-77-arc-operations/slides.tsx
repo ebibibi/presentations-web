@@ -836,15 +836,17 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
       </>
     ],
     [
-      '直らないなら、順番待ちを疑う',
+      '赤くなっても、1回目は「気づいただけ」',
       <>
-        評価は<strong>1台に1本ずつ</strong>。
-        <strong>再起動しても順番は運任せ</strong>。重い監査を除外スコープで外す
+        <strong>直すのは次の評価。</strong>急ぐなら
+        <strong>エージェント再起動で次を呼べる</strong>（実測3分）
       </>
     ],
     [
-      'Policy とパッチは再評価してから判断',
-      <>再評価を先に打ってから判断する ─ <code>az policy state trigger-scan</code></>
+      'それでも直らないなら、順番待ち',
+      <>
+        評価は1台に1本ずつ。<strong>重い監査が居座ると再起動も効かない</strong>ので、先に外す
+      </>
     ]
   ]
   return (
@@ -863,7 +865,7 @@ function RecoveryRunbookSlide({ frame }: SlideRenderContext) {
         ))}
       </ol>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
-        <strong>4番だけが今回の新発見です。</strong>ここを飛ばすと、1〜5を全部やっても直りません。
+        <strong>4番と5番が今回の新発見です。</strong>ここを知らないと、正常な動作を故障だと思い込みます。
       </p>
       <LiveCue label="巻き戻した arcwin01 が、戻ってきたか" />
     </section>
