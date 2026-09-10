@@ -212,7 +212,7 @@ function Recap76Slide({ frame }: SlideRenderContext) {
             </span>
           </div>
           <p className="h77-note">
-            誰もそのサーバーにログインしないまま、調査から復旧まで Azure 越しに通りました。
+            誰もそのサーバーにログインしないまま、調査から復旧まで Azure 経由で完結しました。
           </p>
         </div>
         <div className="h77-recap-side" style={lift(entrance(frame, fps, 26), 20)}>
