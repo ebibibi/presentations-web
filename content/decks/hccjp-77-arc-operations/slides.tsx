@@ -1048,7 +1048,7 @@ function ConclusionSlide({ frame }: SlideRenderContext) {
         <div style={lift(entrance(frame, fps, 34), 20)}>
           <ListChecks size={44} />
           <p>
-            <strong>5つの手順を手元に持つ</strong>。それだけで、怖さは作業に変わる。
+            <strong>5つの手順を手元に持つ</strong>。それだけで、安心できる。
           </p>
         </div>
       </div>
