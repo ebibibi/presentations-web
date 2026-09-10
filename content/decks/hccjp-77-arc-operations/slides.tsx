@@ -1021,7 +1021,7 @@ function ConclusionSlide({ frame }: SlideRenderContext) {
         <div style={lift(entrance(frame, fps, 10), 20)}>
           <Check size={44} />
           <p>
-            巻き戻しても、<strong>Azure側の割り当ては消えない</strong>。戻すのは実機の側だけ。
+            巻き戻しても、<strong>Azure側の割り当ては消えない</strong>。実機もPolicy, Machine Configurationで構成していれば時間がたてば勝手に正しい状態に戻るので安心。
           </p>
         </div>
         <div style={lift(entrance(frame, fps, 22), 20)}>
