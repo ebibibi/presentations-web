@@ -46,6 +46,7 @@ This repository is intended to be public. Use English for code comments, README 
 
 - Deck metadata lives in `content/decks/*/deck.yaml`.
 - Deck visuals live in `content/decks/*/slides.tsx`.
+- Slides can be duplicated, deleted and reordered from the browser editor; reordering is a `deck.yaml`-only change.
 - Pair metadata and slide components by `id`: every `deck.yaml` slide id appears once in the `slides.tsx` registration, and `deck.yaml` owns the running order.
 - `status` drives visibility (see `src/visibility.ts`):
   - `public` — listed in the archive and openable by anyone.

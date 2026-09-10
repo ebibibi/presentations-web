@@ -11,7 +11,14 @@
 import { mkdirSync, readFileSync, readdirSync, writeFileSync, rmSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { collectTsxStrings, collectYamlStrings, deckPaths, fileHash } from './deck-text-core.mjs'
+import {
+  collectSlideStructure,
+  collectTsxStrings,
+  collectYamlStrings,
+  deckPaths,
+  fileHash
+} from './deck-text-core.mjs'
+import { slideIdsInYaml } from '../shared/deck-slides.mjs'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outputDir = path.join(repoRoot, 'public', 'deck-text')
@@ -44,6 +51,28 @@ function publishedDuplication(duplication, removal) {
   const sameSpan = removal && published.start === removal.start && published.end === removal.end
   if (sameSpan && !published.separator) return 1
   return published
+}
+
+/**
+ * Drops the compiler-only offsets - the name is what production works from -
+ * and puts the slides in running order. That order is deck.yaml's, not the
+ * order the components are registered in: reordering rewrites deck.yaml alone,
+ * so a list built from slides.tsx would drift from the deck the moment
+ * something moves.
+ */
+function publishedSlides(slides, yamlIds) {
+  if (!slides) return null
+  const byId = new Map(slides.map((slide) => [slide.id, slide]))
+  return yamlIds
+    .filter((id) => byId.has(id))
+    .map((id) => {
+      const slide = byId.get(id)
+      return {
+        id,
+        entry: slide.entry,
+        component: slide.component ? { name: slide.component.name } : null
+      }
+    })
 }
 
 let total = 0
@@ -87,6 +116,11 @@ for (const slug of slugs) {
     JSON.stringify({
       slug,
       files: { [tsxFile]: fileHash(tsxSource), [yamlFile]: fileHash(yamlSource) },
+      // Slide-level edits need the registration entry and the name of the
+      // component behind it; the component's range is found from the source at
+      // apply time. Null for a deck that generates its slides, which is what
+      // the Function reports back instead of guessing.
+      slides: publishedSlides(collectSlideStructure(paths.tsx, tsxSource), slideIdsInYaml(yamlSource)),
       items
     }),
     'utf8'
