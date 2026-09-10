@@ -392,7 +392,7 @@ function ThreeQuestionsSlide({ frame }: SlideRenderContext) {
       <div className="h77-grid" />
       <Head kicker="TODAY'S FOCUS" title="今日確認する3つのこと" frame={frame} />
       <p className="h77-big-q" style={lift(entrance(frame, fps, 8), 20)}>
-        パッチで壊れた。スナップショットで巻き戻した。バックアップから復元した。
+        スナップショットで巻き戻した。バックアップから復元した。Azure Arcで接続されたサーバーはどうなる？
       </p>
       <div className="h77-q3">
         {questions.map((q, index) => (
