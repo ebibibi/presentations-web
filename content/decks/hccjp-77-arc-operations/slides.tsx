@@ -605,7 +605,7 @@ function ResultMcSlide({ frame }: SlideRenderContext) {
             <h2>ApplyAndAutoCorrect</h2>
           </div>
           <p>SetSecureProtocol ／ SetWindowsTimeZone</p>
-          <p className="h77-metric">再起動後 4〜6分で復旧</p>
+          <p className="h77-metric">該当ポリシーの処理後数分で復旧</p>
           <p>
             実機のレジストリに <strong>TLS 1.2 が書き戻された</strong>（Enabled=1）。
             表示が戻っただけではなく、<strong>本当に直っている</strong>。
