@@ -416,14 +416,14 @@ function McVsPolicySlide({ frame }: SlideRenderContext) {
   const rows: Array<[string, string, string]> = [
     ['何を見るか', 'Azure リソースの形', 'OS の中身'],
     ['例', '「この Arc マシンに拡張機能が入っているか」', '「タイムゾーンが東京か」「TLS 1.2 が有効か」'],
-    ['どこで動くか', 'Azure の評価エンジン', '実機の中の拡張機能（Guest Configuration）'],
-    ['直せるか', '割り当て時に deploy はできる', 'ApplyAndAutoCorrect なら直す。Audit は直さない'],
-    ['準拠の更新', '既定は24時間ごと（手動再スキャン可）', '15分ごとに評価']
+    ['どこで動くか', 'Azure Policy の評価エンジン', 'Arcエージェント内蔵の Machine Configuration agent'],
+    ['直せるか', 'Modify / DeployIfNotExists で修復可能', 'ApplyAndAutoCorrect なら直す。Audit は直さない'],
+    ['準拠の更新', '標準評価は24時間ごと ＋ 変更時トリガー・手動スキャン', '割当取得5分 ／ OS内の評価15分（実測: 監査型は60分）']
   ]
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="THE CONFUSION" title="「マシン構成」と「Azure Policy」は、別のもの" frame={frame} />
+      <Head kicker="THE CONFUSION" title="「Azure Policy」と「マシン構成」は、評価するレイヤーが違う" frame={frame} />
       <table className="h77-table h77-compare">
         <thead>
           <tr style={lift(entrance(frame, fps, 8), 14)}>
@@ -446,12 +446,17 @@ function McVsPolicySlide({ frame }: SlideRenderContext) {
           ))}
         </tbody>
       </table>
-      <p className="h77-punch-line" style={lift(entrance(frame, fps, 52), 16)}>
+      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 48), 14)}>
+        Azure VM では拡張機能が要るが、<strong>Arc では Connected Machine agent に内蔵</strong>されている
+        ─ 実測でも arcwin01 の拡張機能一覧に Guest Configuration は無い。
+      </p>
+      <p className="h77-punch-line" style={lift(entrance(frame, fps, 54), 16)}>
         <TriangleAlert size={38} />
         <span>
-          Policy は<strong>マシン構成を配る入れ物</strong>にもなる。だから準拠状態が<strong>2か所に出る</strong>。
+          マシン構成は旧称 <strong>Azure Policy Guest Configuration</strong>。別サービスではなく、
+          <strong>Policy から配って、結果を Policy が読み取る</strong>。
           <br />
-          しかも、その2つは<strong>同じタイミングで更新されない</strong> ─ ここが今日の伏線です。
+          だから準拠状態は<strong>両方に出る</strong>。しかも<strong>同じタイミングでは更新されない</strong> ─ ここが今日の伏線です。
         </span>
       </p>
     </section>
