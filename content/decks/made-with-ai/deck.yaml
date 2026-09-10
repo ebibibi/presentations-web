@@ -4,12 +4,17 @@ summary: この1ヶ月、ほぼ全ての作業をAIと一緒に進めた。そ�
 status: public
 visibility: public
 createdAt: "2026-06-27"
-updatedAt: "2026-06-27"
+updatedAt: "2026-09-10"
 tags:
   - ai
   - claude-code
   - showcase
   - automation
+youtube:
+  id: a6lt1QKee8s
+  url: https://www.youtube.com/watch?v=a6lt1QKee8s
+  title: "【生放送】最近AIと一緒に作ったもの、全部見せます"
+  publishedAt: "2026-06-27"
 slides:
   - id: opening
     title: 最近AIと一緒に作ったもの、全部見せます

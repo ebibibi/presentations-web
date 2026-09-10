@@ -4,12 +4,17 @@ summary: Claude Codeを外の世界とつなぐ2つの道、MCPと直接APIを�
 status: public
 visibility: members
 createdAt: "2026-06-26"
-updatedAt: "2026-07-26"
+updatedAt: "2026-09-10"
 tags:
   - claude-code
   - mcp
   - api
   - course
+youtube:
+  id: XQAVfYVe5FI
+  url: https://www.youtube.com/watch?v=XQAVfYVe5FI
+  title: "Claude Codeの外部連携｜MCPか直接APIか【第14回】"
+  publishedAt: "2026-07-26"
 slides:
   - id: opening
     title: 外部連携の全て

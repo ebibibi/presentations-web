@@ -4,12 +4,17 @@ summary: 19ヶ月・4,807本のAI YouTube運営実験を、収益・失敗要因
 status: public
 visibility: public
 createdAt: "2026-07-05"
-updatedAt: "2026-07-06"
+updatedAt: "2026-09-10"
 tags:
   - ai
   - youtube
   - automation
   - language-learning
+youtube:
+  id: SUrvvcDkvD4
+  url: https://www.youtube.com/watch?v=SUrvvcDkvD4
+  title: "AIにYouTubeを19ヶ月任せた結果！"
+  publishedAt: "2026-07-10"
 slides:
   - id: opening
     title: Opening
