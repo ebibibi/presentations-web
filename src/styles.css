@@ -10783,8 +10783,13 @@ main {
 
 .h77-source {
   bottom: 34px;
-  color: rgba(234, 243, 255, 0.45);
+  /* Was a flat grey, which read as a caption rather than something clickable.
+     Tinted and underlined so the audience can tell there is a source to open. */
+  color: rgba(125, 211, 252, 0.78);
   font-size: 18px;
+  text-decoration: underline;
+  text-decoration-color: rgba(125, 211, 252, 0.38);
+  text-underline-offset: 4px;
   left: 84px;
   position: absolute;
   text-decoration: none;
@@ -12083,4 +12088,18 @@ main {
 
 .h77-recon-note code {
   font-size: 17px;
+}
+
+/* Final slide: nothing but the thank-you, as large as the frame allows. */
+.h77-thanks {
+  align-items: center;
+  justify-content: center;
+}
+
+.h77-thanks h1 {
+  font-size: 108px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-align: center;
 }
