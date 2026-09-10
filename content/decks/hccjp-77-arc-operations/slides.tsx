@@ -522,10 +522,10 @@ function TwoNetsSlide({ frame }: SlideRenderContext) {
 function ExperimentSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const steps = [
-    ['T1', '9/5 にチェックポイントを取ってある', 'ここへ戻る'],
-    ['T2', '9/9 まで Azure 側で構成を積む', '全部 Compliant にした'],
-    ['T3', '念のため、今の状態も保存', '実演の保険'],
-    ['NOW', 'ここで T1 へ巻き戻す', 'Azureは9/9・実機は9/5'],
+    ['T1', '9/5 のベースラインを取ってある', 'T1-hccjp77 ─ ここへ戻る'],
+    ['T3 / T5', 'そこから 9/9 に Compliant な状態まで積み上げた', 'compliant-20260909 → -full'],
+    ['T6', 'いまの状態も保存してある', 'T6-demo-ready ─ 実演の保険'],
+    ['NOW', 'この T6 から T1-hccjp77 へ巻き戻す', 'Azureは9/9・実機は9/5'],
     ['+15分', '何が自分で戻り、何が戻らないかを測る', 'このセッション中に']
   ]
   return (
