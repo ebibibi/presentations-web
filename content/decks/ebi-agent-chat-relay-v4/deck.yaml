@@ -5,7 +5,6 @@ status: draft
 visibility: public
 createdAt: "2026-08-11"
 updatedAt: "2026-08-11"
-order: 104
 tags:
   - ai-agent
   - microsoft-teams

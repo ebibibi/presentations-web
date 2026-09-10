@@ -5,7 +5,6 @@ status: draft
 visibility: public
 createdAt: "2026-08-03"
 updatedAt: "2026-08-03"
-order: 101
 tags:
   - security
   - microsoft

@@ -5,7 +5,6 @@ status: draft
 visibility: public
 createdAt: "2026-08-31"
 updatedAt: "2026-08-31"
-order: 111
 tags:
   - entra-id
   - mfa

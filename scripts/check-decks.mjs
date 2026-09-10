@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import { parse } from 'yaml'
 
 const decksDir = join(process.cwd(), 'content', 'decks')
-const required = ['slug', 'title', 'summary', 'status', 'order', 'slides']
+const required = ['slug', 'title', 'summary', 'status', 'createdAt', 'slides']
 const problems = []
 
 const entries = await readdir(decksDir, { withFileTypes: true })
@@ -33,6 +33,19 @@ for (const entry of entries) {
     if (deck?.[key] === undefined) {
       problems.push(`${entry.name}/deck.yaml is missing "${key}"`)
     }
+  }
+
+  // The archive is ordered by these dates, so a malformed one does not throw an
+  // error: it silently sorts the deck to the bottom where nobody looks.
+  const isDate = (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)
+
+  if (deck?.createdAt !== undefined && !isDate(deck.createdAt)) {
+    problems.push(`${entry.name}/deck.yaml has a non-date "createdAt": ${deck.createdAt}`)
+  }
+
+  const publishedAt = deck?.youtube?.publishedAt
+  if (publishedAt !== undefined && !isDate(publishedAt)) {
+    problems.push(`${entry.name}/deck.yaml has a non-date "youtube.publishedAt": ${publishedAt}`)
   }
 
   if (Array.isArray(deck?.slides)) {

@@ -5,7 +5,6 @@ status: public
 visibility: members
 createdAt: "2026-06-26"
 updatedAt: "2026-07-29"
-order: 18
 tags:
   - claude-code
   - course

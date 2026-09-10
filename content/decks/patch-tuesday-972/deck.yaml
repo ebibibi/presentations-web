@@ -5,7 +5,6 @@ status: draft
 visibility: public
 createdAt: "2026-09-09"
 updatedAt: "2026-09-09"
-order: 108
 canvas: standard
 tags:
   - security

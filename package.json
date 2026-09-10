@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "check:recording": "npm run build && node scripts/check-recording-surface.mjs",
     "check:mobile-header": "npm run build && node scripts/check-mobile-header.mjs",
+    "check:first-view": "npm run build && node scripts/check-first-view.mjs",
     "check:owner-editor-link": "npm run build && node scripts/check-owner-editor-link.mjs",
     "check:text-edit-keys": "npm run build && node scripts/check-text-edit-keys.mjs",
     "check:text-edit-delete": "npm run build && node scripts/check-text-edit-delete.mjs",

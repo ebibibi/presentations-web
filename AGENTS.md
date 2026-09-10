@@ -52,6 +52,13 @@ This repository is intended to be public. Use English for code comments, README 
     Start it with `VITE_DEV_OWNER=false` to see the site as a public visitor. Keep that branch
     behind `import.meta.env.DEV` so it is dropped from the production bundle.
 - `visibility` is descriptive metadata; route access is still gated on `status`.
+- The archive list is ordered newest-first from `youtube.publishedAt ?? createdAt`
+  (`src/deck-order.ts`). There is no manual `order` field: hand ordering drifted every
+  time a deck was added, and visitors read the list as a timeline.
+- `yt_autopublish` (in the scheduler repo) keeps `status` and the `youtube` block in
+  sync with reality: it publishes a draft deck once the linked video is actually
+  playable for a signed-out viewer. Do not flip `status` by hand for a deck whose video
+  is still members-only.
 - Read [docs/ai-deck-authoring.md](docs/ai-deck-authoring.md) before creating or heavily editing a deck.
 
 ## Implementation Rules
@@ -110,6 +117,12 @@ When changing the header or the auth controls, run:
 
 ```bash
 npm run check:mobile-header
+```
+
+When changing the home page, the hero, or the deck cards, run:
+
+```bash
+npm run check:first-view
 ```
 
 When changing keyboard handling or the click-to-edit overlay, run:

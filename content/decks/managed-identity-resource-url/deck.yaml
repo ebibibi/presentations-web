@@ -5,7 +5,6 @@ status: public
 visibility: public
 createdAt: "2026-08-11"
 updatedAt: "2026-08-11"
-order: 103
 tags:
   - azure
   - managed-identity

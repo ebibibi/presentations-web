@@ -5,7 +5,6 @@ status: public
 visibility: public
 createdAt: "2026-08-28"
 updatedAt: "2026-08-28"
-order: 107
 tags:
   - active-directory
   - kerberos
