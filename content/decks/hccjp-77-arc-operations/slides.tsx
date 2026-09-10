@@ -360,7 +360,7 @@ function ProofSlide({ frame }: SlideRenderContext) {
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 52), 14)}>
         すべて、インバウンドのポートを1つも開けずに。ここまで課金はゼロ。
       </p>
-      <LiveCue label="Run Command を実行" />
+      <LiveCue label="" />
     </section>
   )
 }
