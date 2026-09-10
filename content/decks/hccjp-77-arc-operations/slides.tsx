@@ -404,9 +404,6 @@ function ThreeQuestionsSlide({ frame }: SlideRenderContext) {
           </div>
         ))}
       </div>
-      <p className="h77-note h77-center" style={lift(entrance(frame, fps, 54), 14)}>
-        答えを<strong>手順書</strong>にして持ち帰っていただきます。機能の紹介は、ここまで。
-      </p>
     </section>
   )
 }
