@@ -400,7 +400,7 @@ function ProofSlide({ frame }: SlideRenderContext) {
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 58), 14)}>
         ここまでインバウンドのポートは1つも開けず、<strong>追加課金もゼロ</strong>。
         <br />
-        課金が始まるのはから。
+        ほかにも無料で使える機能は多数
       </p>
       <LiveCue label="" />
     </section>
