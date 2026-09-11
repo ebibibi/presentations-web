@@ -113,7 +113,7 @@ slides:
 
       【画面・20秒】必要なら Microsoft Learn のチェックポイントのページを開いて「applying a software update」の一文を指す。時間が押していたら開かずに口頭だけでよい。
   - id: experiment
-    title: これから、この順番で見ます
+    title: 実際にチェックポイントに戻して挙動を確認しましょう
     durationInFrames: 300
     notes: |-
       では、やります。ここから先はライブです。手順は D1 から D8 まで番号を振ってあるので、番号順にコマンドを打つだけです。

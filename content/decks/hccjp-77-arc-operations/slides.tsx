@@ -576,7 +576,7 @@ function ExperimentSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide h77-slide">
       <div className="h77-grid" />
-      <Head kicker="LIVE DEMO" title="これから、この順番で見ます" frame={frame} />
+      <Head kicker="LIVE DEMO" title="実際にチェックポイントに戻して挙動を確認しましょう" frame={frame} />
       <div className="h77-steps h77-steps-6">
         {steps.map((step, index) => (
           <div
