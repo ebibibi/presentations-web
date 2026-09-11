@@ -349,7 +349,7 @@ function InventorySlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 52), 14)}>
-        エージェント1本入れるだけで、この全部が使えるようになる。
+        エージェント1つ入れるだけで、この全部が使えるようになる。
       </p>
       <Source
         href="https://learn.microsoft.com/azure/azure-arc/servers/overview"
