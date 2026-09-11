@@ -108,11 +108,10 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       <div className="h77-opening-copy" style={lift(entrance(frame, fps), 40)}>
         <span className="h77-kicker">HCCJP 第77回勉強会 ・ 2026.9.11</span>
         <h1>
-          サーバーが
+          「Azure Arc、便利なのはわかった。で、壊れたら？」
           <br />
-          巻き戻ったとき、
+          運用で気になることを試してみた
           <br />
-          <em>Azureはどうなる？</em>
         </h1>
         <p>Azure Arc ─ エージェント・マシン構成・Policy を、実機で戻してみた</p>
       </div>
