@@ -4,7 +4,7 @@ summary: 2026年9月のMicrosoft月例更新は新規CVE 972件という過去�
 status: public
 visibility: public
 createdAt: "2026-09-09"
-updatedAt: "2026-09-09"
+updatedAt: "2026-09-11"
 canvas: standard
 tags:
   - security
@@ -15,8 +15,8 @@ tags:
 youtube:
   id: 8cfS16j9ju8
   url: https://www.youtube.com/watch?v=8cfS16j9ju8
-  title: "manyCVE"
-  publishedAt: "2026-09-09"
+  title: "Windows Updateによる修正件数が月972件｜これまでの適用ルールはもう通用しない"
+  publishedAt: "2026-09-11"
 slides:
   - id: opening
     title: 1か月で972件
