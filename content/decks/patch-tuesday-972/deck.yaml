@@ -1,7 +1,7 @@
 slug: patch-tuesday-972
 title: 1か月で972件 — Microsoftの月例更新が「新しい普通」に入った
 summary: 2026年9月のMicrosoft月例更新は新規CVE 972件という過去最多になりました。MSRCの公開データを自分で集計したグラフで件数の跳ね上がりを確認し、全部読めない量のパッチにどう優先順位を付けるかを6枚で整理します。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-09-09"
 updatedAt: "2026-09-09"
@@ -12,6 +12,11 @@ tags:
   - patch-tuesday
   - vulnerability
   - ai
+youtube:
+  id: 8cfS16j9ju8
+  url: https://www.youtube.com/watch?v=8cfS16j9ju8
+  title: "manyCVE"
+  publishedAt: "2026-09-09"
 slides:
   - id: opening
     title: 1か月で972件
