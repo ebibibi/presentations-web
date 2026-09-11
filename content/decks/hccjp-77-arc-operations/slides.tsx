@@ -400,7 +400,7 @@ function ProofSlide({ frame }: SlideRenderContext) {
       <p className="h77-note h77-center" style={lift(entrance(frame, fps, 58), 14)}>
         ここまでインバウンドのポートは1つも開けず、<strong>追加課金もゼロ</strong>。
         <br />
-        課金が始まるのは<strong>マシン構成（$6/台/月）と Update Manager（$5/台/月）</strong>から。
+        課金が始まるのはから。
       </p>
       <LiveCue label="" />
     </section>
