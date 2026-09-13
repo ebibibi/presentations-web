@@ -72,6 +72,9 @@ Rules:
   uses `youtube.publishedAt` instead once the deck is linked to a video, so an accurate
   `createdAt` matters most for decks that have no video. There is no manual sort field.
 - Use `visibility: public` unless access control is implemented.
+- The archive card image comes from the linked video. A deck with no video of its
+  own needs `thumbnail: /thumbs/<slug>.png` pointing at a 16:9 image committed under
+  `public/thumbs/`; it also overrides the video image when both are present.
 - Use the private deck API, not `content/decks`, for material that must not ship in the public JavaScript bundle.
 - `deck.yaml` owns the running order. Every `slides` entry needs an `id`, and the
   matching entry in `slides.tsx` repeats that same `id`; the deck is assembled by

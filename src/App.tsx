@@ -324,16 +324,17 @@ function Home({
 
 function DeckCard({ deck, onOpen }: { deck: DeckBundle; onOpen: () => void }) {
   const youtube = deck.meta.youtube
+  // An explicit thumbnail wins: a deck can be linked to someone else's stream
+  // and still want its own card image.
+  const thumbnail =
+    deck.meta.thumbnail ??
+    (youtube?.id ? `https://img.youtube.com/vi/${youtube.id}/hqdefault.jpg` : null)
 
   return (
     <article className="deck-card">
       <div className="deck-thumb">
-        {youtube?.id ? (
-          <img
-            src={`https://img.youtube.com/vi/${youtube.id}/hqdefault.jpg`}
-            alt=""
-            loading="lazy"
-          />
+        {thumbnail ? (
+          <img src={thumbnail} alt="" loading="lazy" />
         ) : (
           <div className="deck-thumb-fallback">
             <Presentation size={34} aria-hidden />
