@@ -4,7 +4,7 @@ summary: Microsoftが公開したNTLM廃止のFAQを、日本語で1つの質問
 status: draft
 visibility: public
 createdAt: "2026-09-10"
-updatedAt: "2026-09-10"
+updatedAt: "2026-09-13"
 canvas: standard
 tags:
   - ntlm
@@ -18,6 +18,14 @@ slides:
     title: "NTLMは既定で無効になる"
     durationInFrames: 240
     notes: "Microsoft公式FAQの内容を、1つの質問につき1枚で読み切れる形に並べ直したデッキです。まず結論を1文で言い切ります。"
+  - id: ntlm-101
+    title: "そもそもNTLMって何？"
+    durationInFrames: 240
+    notes: "FAQに入る前の前提そろえ。NTLMは「パスワードそのものを送らずに、知っている証拠だけを見せ合う」チャレンジ／レスポンス方式のログインの仕組み。弱点は片側認証・ハッシュの使い回し・リレー。そして今も動いている理由は、Kerberosが使えない場面でWindowsが黙って落ちてくるから。"
+  - id: source-article
+    title: "元記事：Microsoft公式FAQ"
+    durationInFrames: 240
+    notes: "出典の紹介。Windows IT Pro Blogの「Retiring NTLM: Frequently asked questions」。このデッキは原文の並び順のまま1問1枚に置き換えたもので、日付・数値は原文準拠。正確な表現が要るときは原文を見てもらう。"
   - id: map
     title: "このFAQの地図（28問）"
     durationInFrames: 240

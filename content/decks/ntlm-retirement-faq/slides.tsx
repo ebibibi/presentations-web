@@ -1,6 +1,18 @@
 /* eslint-disable react-refresh/only-export-components */
 import type { ReactNode } from 'react'
-import { CalendarClock, Network, ScanSearch, ShieldAlert, ShieldCheck, Wrench } from 'lucide-react'
+import {
+  BookOpen,
+  CalendarClock,
+  ExternalLink,
+  KeyRound,
+  Network,
+  ScanSearch,
+  ShieldAlert,
+  ShieldCheck,
+  ShieldOff,
+  Ticket,
+  Wrench,
+} from 'lucide-react'
 import { LogoMark } from '../../../src/deck-shared'
 import type { SlideModule } from '../../../src/types'
 import './styles.css'
@@ -450,6 +462,8 @@ const QA: QaItem[] = [
 
 export const slides: SlideModule['slides'] = [
   { id: 'opening', render: () => <OpeningSlide /> },
+  { id: 'ntlm-101', render: () => <Ntlm101Slide /> },
+  { id: 'source-article', render: () => <SourceSlide /> },
   { id: 'map', render: () => <MapSlide /> },
   // Each QA item's id is the same id its deck.yaml entry uses.
   ...QA.map((item, index) => ({ id: item.id, render: () => <QaSlide index={index} item={item} /> })),
@@ -584,6 +598,131 @@ function MapSlide() {
             </ul>
           </article>
         ))}
+      </div>
+      <footer className="ntlm-foot">
+        <span>NTLM廃止 公式FAQ</span>
+        <Src href={SOURCES.post.href}>{SOURCES.post.label}</Src>
+      </footer>
+    </section>
+  )
+}
+
+function Ntlm101Slide() {
+  const steps = [
+    { n: '1', title: 'サーバーが「お題」を出す', body: 'ログインしようとすると、サーバーが毎回違うランダムな文字列（チャレンジ）を投げ返す。' },
+    { n: '2', title: 'クライアントがパスワードで答える', body: 'パスワードから作ったハッシュでお題を暗号化し、結果だけを返す。パスワードそのものは流れない。' },
+    { n: '3', title: 'サーバー（かDC）が答え合わせ', body: '同じ計算をして一致すれば本人と認める。ここまでで認証は完了する。' },
+  ]
+  return (
+    <section className="remotion-slide ntlm-slide ntlm-101">
+      <div className="ntlm-grid" />
+      <LogoMark className="ntlm-logo" />
+      <header className="ntlm-map-head">
+        <span>その前に</span>
+        <h1>
+          そもそも<em>NTLM</em>って何？
+        </h1>
+        <p className="ntlm-101-lede">
+          Windowsが1993年から使ってきた<strong>「合言葉のやり取りで本人確認をする」ログインの仕組み</strong>です。
+          パスワードを送らずに、パスワードを知っている証拠だけを見せ合います。
+        </p>
+      </header>
+      <div className="ntlm-101-flow">
+        {steps.map((step) => (
+          <article key={step.n}>
+            <span className="ntlm-101-num">{step.n}</span>
+            <strong>{step.title}</strong>
+            <small>{step.body}</small>
+          </article>
+        ))}
+      </div>
+      <div className="ntlm-101-compare">
+        <article className="is-bad">
+          <ShieldOff />
+          <div>
+            <strong>NTLMの弱点</strong>
+            <p>
+              相手のサーバーが本物かは確認しない（片側だけの認証）。答えに使うハッシュは盗めば使い回せる（pass-the-hash）。
+              中継されても気づけない（リレー攻撃）。
+            </p>
+          </div>
+        </article>
+        <article className="is-good">
+          <Ticket />
+          <div>
+            <strong>Kerberosとの違い</strong>
+            <p>
+              Kerberosは「信頼できる発行元（DC）が出した有効期限つきのチケット」を見せ合う方式。
+              サーバー側も身元を証明するので、なりすましと使い回しに強い。
+            </p>
+          </div>
+        </article>
+      </div>
+      <div className="ntlm-closing-note">
+        <KeyRound />
+        <p>
+          では<em>なぜ今もNTLMが動くのか</em>。IPアドレスで直接つなぐ、DCに届かない、ドメインに入っていない——
+          Kerberosが使えない場面でWindowsが<strong>黙ってNTLMに落ちる（フォールバック）</strong>からです。この既定値を止める、というのがこのFAQの話。
+        </p>
+      </div>
+      <footer className="ntlm-foot">
+        <span>NTLM廃止 公式FAQ</span>
+        <Src href={SOURCES.post.href}>{SOURCES.post.label}</Src>
+      </footer>
+    </section>
+  )
+}
+
+function SourceSlide() {
+  const extras = ['roadmap', 'insider', 'auditing'].map((key) => SOURCES[key])
+  const inside = [
+    { title: '方針と時期', body: '既定で無効になるのは次期メジャー。削除ではなく無効化で、当面は戻せる（Q1〜Q6）' },
+    { title: '置き換えの中身', body: 'IAKerbとLocalKDCが、DCに届かない場面とローカルアカウントを引き取る（Q7〜Q11）' },
+    { title: '壊れる場所と始め方', body: 'IP直打ち・SPN不備など4類型と、強化された監査から始める5段階（Q12〜Q28）' },
+  ]
+  return (
+    <section className="remotion-slide ntlm-slide ntlm-source">
+      <div className="ntlm-grid" />
+      <LogoMark className="ntlm-logo" />
+      <header className="ntlm-map-head">
+        <span>元記事</span>
+        <h1>
+          出典は<em>Microsoft公式FAQ</em>です
+        </h1>
+      </header>
+      <div className="ntlm-source-main">
+        <BookOpen />
+        <div>
+          <small>Windows IT Pro Blog（Microsoft Tech Community）</small>
+          <strong>Retiring NTLM: Frequently asked questions</strong>
+          <Src href={SOURCES.post.href}>
+            <span className="ntlm-source-url">{SOURCES.post.href}</span>
+          </Src>
+          <p>
+            NTLM廃止についてMicrosoftに寄せられた質問を、製品チームが28問のQ&amp;Aとして公開したものです。
+            このデッキは<strong>原文の並び順のまま1問1枚</strong>に置き換えたもので、日付・数値・結論は原文に従っています。
+            正確な表現が必要なときは、必ず原文を当たってください。
+          </p>
+        </div>
+      </div>
+      <div className="ntlm-source-inside">
+        {inside.map((item) => (
+          <article key={item.title}>
+            <strong>{item.title}</strong>
+            <small>{item.body}</small>
+          </article>
+        ))}
+      </div>
+      <div className="ntlm-source-extra">
+        <span>あわせて読む</span>
+        <ul>
+          {extras.map((source) => (
+            <li key={source.href}>
+              <ExternalLink />
+              <Src href={source.href}>{source.label}</Src>
+            </li>
+          ))}
+        </ul>
       </div>
       <footer className="ntlm-foot">
         <span>NTLM廃止 公式FAQ</span>
