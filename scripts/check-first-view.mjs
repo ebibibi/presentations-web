@@ -18,6 +18,9 @@ const viewports = [
   { width: 390, height: 844, minCardsInView: 1 }
 ]
 // The grid has to start inside the first screen with room to read a card.
+// The archive opens in the compact list view, so the check switches to the
+// cards first: this guard is about the space above the deck list, and that is
+// what a hero or a toolbar change eats into.
 const minimumGridHeadroom = 140
 const contentTypes = new Map([
   ['.html', 'text/html; charset=utf-8'],
@@ -78,16 +81,19 @@ try {
 
     const page = await context.newPage()
     await page.goto(baseUrl)
+    await page.locator('.deck-row').first().waitFor({ state: 'visible', timeout: 10000 })
+    await page.locator('.view-switch button[data-view="cards"]').click()
     await page.locator('.deck-card').first().waitFor({ state: 'visible', timeout: 10000 })
 
     const measured = await page.evaluate(() => {
       const grid = document.querySelector('.deck-grid')
+      const heading = document.querySelector('.month-heading')
       const cards = [...document.querySelectorAll('.deck-card')]
-      const titles = cards.map((card) => card.querySelector('h2')?.textContent ?? '')
+      const titles = cards.map((card) => card.querySelector('h3')?.textContent ?? '')
       const dates = cards.map((card) => card.querySelector('.card-date')?.textContent ?? '')
 
       return {
-        gridTop: Math.round(grid.getBoundingClientRect().top),
+        gridTop: Math.round((heading ?? grid).getBoundingClientRect().top),
         cardsInView: cards.filter((card) => card.getBoundingClientRect().top < window.innerHeight)
           .length,
         firstTitle: titles[0],
