@@ -19,6 +19,15 @@ export function compareDecksNewestFirst(left: DeckMeta, right: DeckMeta): number
   return byDate !== 0 ? byDate : left.slug.localeCompare(right.slug)
 }
 
+/**
+ * Newest first. Every list of decks goes through here: the public decks are
+ * bundled at build time and the owner's private decks arrive from an API later,
+ * and concatenating the two is not an order.
+ */
+export function sortDecksNewestFirst<T extends { meta: DeckMeta }>(decks: readonly T[]): T[] {
+  return [...decks].sort((left, right) => compareDecksNewestFirst(left.meta, right.meta))
+}
+
 /** `2026-09-10` → `2026.09.10`. Anything unparsed is shown as written. */
 export function formatDeckDate(value: string): string {
   const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/)

@@ -10,6 +10,23 @@ const viewport = { width: 1512, height: 860 }
 // The list view exists to answer "what is here?" without scrolling.
 const minimumRowsInView = 8
 
+// Dated inside the archive, not at either end: appending it to the list would
+// be visible, and so would sorting only one half of it.
+const privateDeckFixture = {
+  meta: {
+    slug: 'order-check-private-deck',
+    title: 'Order check private deck',
+    summary: 'Fixture deck used by the archive order check.',
+    status: 'private',
+    visibility: 'private',
+    createdAt: '2026-08-20',
+    updatedAt: '2026-08-20',
+    tags: ['security'],
+    slides: [{ id: 'opening', title: 'Order check' }]
+  },
+  visualSlides: [{ layout: 'title', title: 'Order check' }]
+}
+
 const site = await startStaticSite({ port, clientId: 'local-archive-browse-check' })
 
 try {
@@ -107,6 +124,50 @@ try {
   console.log(JSON.stringify({ listed, rowsInView, months, perCategory }, null, 2))
 } finally {
   site.close()
+}
+
+// The owner sees private decks too, and those arrive from an API after the page
+// has rendered. They used to be appended to the end of the already-sorted public
+// decks, which put an old deck under a repeated month heading at the bottom of
+// the list: "newest first" has to hold for the merged timeline.
+const ownerSite = await startStaticSite({
+  port: port + 1,
+  clientId: 'local-archive-browse-owner-check',
+  session: { authenticated: true, canRecord: true, email: 'owner@example.test' },
+  privateDecks: [privateDeckFixture]
+})
+
+try {
+  const browser = await chromium.launch()
+  const context = await browser.newContext({ viewport })
+  await context.route('https://accounts.google.com/**', (route) => route.abort())
+
+  const page = await context.newPage()
+  await page.goto(ownerSite.baseUrl)
+  await page.locator(`.row-title:text-is("${privateDeckFixture.meta.title}")`).waitFor({
+    state: 'attached',
+    timeout: 10000
+  })
+
+  const dates = await page.locator('.row-date').allTextContents()
+  assert(
+    dates.join('|') === [...dates].sort().reverse().join('|'),
+    `the owner's decks are not newest-first: ${dates.join(', ')}`
+  )
+
+  const ownerMonths = await page.locator('.month-heading span:first-child').allTextContents()
+  assert(
+    new Set(ownerMonths).size === ownerMonths.length,
+    `a month heading is repeated for the owner: ${ownerMonths.join(', ')}`
+  )
+
+  await context.close()
+  await browser.close()
+
+  console.log('Archive owner order check passed.')
+  console.log(JSON.stringify({ decks: dates.length, months: ownerMonths }, null, 2))
+} finally {
+  ownerSite.close()
 }
 
 function toMonthKey(label) {
