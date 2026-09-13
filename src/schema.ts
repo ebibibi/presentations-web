@@ -27,6 +27,10 @@ export const deckMetaSchema = z.object({
   // projected as-is at an event.
   canvas: z.enum(['standard', 'wide']).default('standard'),
   tags: z.array(z.string()).default([]),
+  // Archive card image. Decks linked to a video take their card image from
+  // YouTube; a deck with no video of its own needs one supplied here as a
+  // site-absolute path under public/ (16:9).
+  thumbnail: z.string().startsWith('/').optional(),
   youtube: youtubeSchema.optional(),
   slides: z.array(slideMetaSchema).min(1)
 })
