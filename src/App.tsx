@@ -9,6 +9,7 @@ import {
   loadAuthState
 } from './auth'
 import { getDecks, loadPrivateDecks } from './content'
+import { sortDecksNewestFirst } from './deck-order'
 import { Home } from './Home'
 import { isDeckAccessible } from './visibility'
 import type { DeckBundle } from './types'
@@ -49,8 +50,10 @@ export function App() {
     loading: boolean
     error?: string
   }>({ loading: false })
+  // The owner's private decks are fetched after the page renders, so they have
+  // to be merged into the timeline rather than appended to the end of it.
   const decks = useMemo(
-    () => [...publicDecks, ...privateDecks],
+    () => sortDecksNewestFirst([...publicDecks, ...privateDecks]),
     [privateDecks, publicDecks]
   )
   const handleAuthChange = useCallback((nextAuth: AuthState) => {

@@ -1,5 +1,5 @@
 import YAML from 'yaml'
-import { compareDecksNewestFirst } from './deck-order'
+import { sortDecksNewestFirst } from './deck-order'
 import { privateDeckDocumentSchema, toPrivateDeckBundle } from './private-decks'
 import { deckMetaSchema } from './schema'
 import type { DeckBundle, DeckMeta, SlideModule } from './types'
@@ -21,9 +21,9 @@ export function getDecks(): DeckBundle[] {
     return cachedDecks
   }
 
-  cachedDecks = Object.entries(deckMetaFiles)
-    .map(([path, raw]) => buildDeck(path, raw))
-    .sort((left, right) => compareDecksNewestFirst(left.meta, right.meta))
+  cachedDecks = sortDecksNewestFirst(
+    Object.entries(deckMetaFiles).map(([path, raw]) => buildDeck(path, raw))
+  )
 
   return cachedDecks
 }

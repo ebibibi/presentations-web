@@ -16,7 +16,7 @@ const contentTypes = new Map([
   ['.jpg', 'image/jpeg']
 ])
 
-export async function startStaticSite({ port, clientId }) {
+export async function startStaticSite({ port, clientId, session, privateDecks }) {
   const baseUrl = `http://127.0.0.1:${port}`
   const root = join(process.cwd(), 'dist')
 
@@ -34,7 +34,14 @@ export async function startStaticSite({ port, clientId }) {
     }
 
     if (url.pathname === '/api/auth/session') {
-      sendJson(response, { authenticated: false, canRecord: false })
+      sendJson(response, session ?? { authenticated: false, canRecord: false })
+      return
+    }
+
+    // Owner-only decks arrive from this API after the page has rendered, which
+    // is exactly what makes their placement in the list worth checking.
+    if (url.pathname === '/api/private/decks') {
+      sendJson(response, { decks: privateDecks ?? [] })
       return
     }
 
