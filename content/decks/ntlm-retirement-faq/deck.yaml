@@ -1,7 +1,7 @@
 slug: ntlm-retirement-faq
 title: NTLM廃止 公式FAQを1問1枚で読む
 summary: Microsoftが公開したNTLM廃止のFAQを、日本語で1つの質問につき1スライドに整理しました。いつ既定で無効になるのか、何が壊れるのか、IAKerbとLocalKDCは何を解決するのか、そして今日から何を始めるべきかを、原文の28問そのままの順で追えます。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-09-10"
 updatedAt: "2026-09-13"
@@ -13,6 +13,11 @@ tags:
   - active-directory
   - security
   - microsoft
+youtube:
+  id: 0JP3hU-K7B0
+  url: https://www.youtube.com/watch?v=0JP3hU-K7B0
+  title: "NTLM廃止｜次期Windowsで既定無効、全組織が今すぐやること"
+  publishedAt: "2026-09-13"
 slides:
   - id: opening
     title: "NTLMは既定で無効になる"
