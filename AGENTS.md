@@ -60,6 +60,14 @@ This repository is intended to be public. Use English for code comments, README 
     Start it with `VITE_DEV_OWNER=false` to see the site as a public visitor. Keep that branch
     behind `import.meta.env.DEV` so it is dropped from the production bundle.
 - `visibility` is descriptive metadata; route access is still gated on `status`.
+- The archive opens as a compact list grouped by month, with a card view one click
+  away (`src/Home.tsx`; the choice is remembered in `localStorage`). `npm run
+  check:archive-browse` measures both, so keep the `.deck-row` / `.deck-card` and
+  `.view-switch` hooks.
+- Archive categories are derived from a deck's `tags` (`src/deck-category.ts`): a deck
+  is filed under the category matching the most of its tags. There is no `category`
+  field — tag a new deck the way the existing ones are tagged and it files itself; fix
+  the filing in that one table, not per deck.
 - The archive list is ordered newest-first from `youtube.publishedAt ?? createdAt`
   (`src/deck-order.ts`). There is no manual `order` field: hand ordering drifted every
   time a deck was added, and visitors read the list as a timeline.

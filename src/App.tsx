@@ -1,11 +1,4 @@
-import {
-  ArrowLeft,
-  ExternalLink,
-  LayoutPanelLeft,
-  Play,
-  Presentation,
-  Search
-} from 'lucide-react'
+import { ArrowLeft, LayoutPanelLeft, Presentation } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AuthControls } from './AuthControls'
 import { announceOwner } from './edit/owner-signal'
@@ -16,8 +9,8 @@ import {
   loadAuthState
 } from './auth'
 import { getDecks, loadPrivateDecks } from './content'
-import { deckTimelineDate, formatDeckDate } from './deck-order'
-import { isDeckAccessible, isDeckListed, isPublished } from './visibility'
+import { Home } from './Home'
+import { isDeckAccessible } from './visibility'
 import type { DeckBundle } from './types'
 
 initializeAnalytics()
@@ -250,128 +243,6 @@ function Shell({
       </header>
       {children}
     </>
-  )
-}
-
-function Home({
-  decks,
-  isOwner,
-  privateDecksError,
-  onOpenDeck
-}: {
-  decks: DeckBundle[]
-  isOwner: boolean
-  privateDecksError?: string
-  onOpenDeck: (slug: string) => void
-}) {
-  const [query, setQuery] = useState('')
-  const listedDecks = decks.filter((deck) => isDeckListed(deck.meta.status, isOwner))
-  const hiddenCount = listedDecks.filter((deck) => !isPublished(deck.meta.status)).length
-  const visibleDecks = listedDecks.filter((deck) => {
-    const text = [
-      deck.meta.title,
-      deck.meta.summary,
-      deck.meta.youtube?.title,
-      ...deck.meta.tags
-    ]
-      .join(' ')
-      .toLowerCase()
-
-    return text.includes(query.trim().toLowerCase())
-  })
-
-  return (
-    <main>
-      <section className="hero">
-        <p className="eyebrow">Video-linked rich presentation archive</p>
-        <h1>動画の資料をあとから読む</h1>
-        <p className="hero-lead">
-          YouTubeで扱ったテーマの資料を、ブラウザでそのまま閲覧できる形で公開します。
-          新しい資料が上に並びます。
-        </p>
-      </section>
-
-      <section className="toolbar" aria-label="Archive tools">
-        <label className="search">
-          <Search size={18} aria-hidden />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="タイトル、タグ、動画で検索"
-          />
-        </label>
-        <span className="deck-count">{visibleDecks.length} decks・新しい順</span>
-        {isOwner && hiddenCount > 0 ? (
-          <span className="owner-note">オーナー表示：非公開 {hiddenCount} 件を含む</span>
-        ) : null}
-        {isOwner && privateDecksError ? (
-          <span className="owner-note">非公開資料の取得失敗: {privateDecksError}</span>
-        ) : null}
-      </section>
-
-      <section className="deck-grid" aria-label="Presentation archive">
-        {visibleDecks.map((deck) => (
-          <DeckCard
-            key={deck.meta.slug}
-            deck={deck}
-            onOpen={() => onOpenDeck(deck.meta.slug)}
-          />
-        ))}
-      </section>
-    </main>
-  )
-}
-
-function DeckCard({ deck, onOpen }: { deck: DeckBundle; onOpen: () => void }) {
-  const youtube = deck.meta.youtube
-  // An explicit thumbnail wins: a deck can be linked to someone else's stream
-  // and still want its own card image.
-  const thumbnail =
-    deck.meta.thumbnail ??
-    (youtube?.id ? `https://img.youtube.com/vi/${youtube.id}/hqdefault.jpg` : null)
-
-  return (
-    <article className="deck-card">
-      <div className="deck-thumb">
-        {thumbnail ? (
-          <img src={thumbnail} alt="" loading="lazy" />
-        ) : (
-          <div className="deck-thumb-fallback">
-            <Presentation size={34} aria-hidden />
-            <strong>{deck.meta.title}</strong>
-            <span>1280 x 1080 web deck</span>
-          </div>
-        )}
-      </div>
-      <div className="deck-card-body">
-        <div className="card-meta">
-          <span className="card-date">{formatDeckDate(deckTimelineDate(deck.meta))}</span>
-          <span>{deck.meta.slides.length} slides</span>
-          {isPublished(deck.meta.status) ? null : (
-            <span className="card-status-hidden">{deck.meta.status}</span>
-          )}
-        </div>
-        <h2>{deck.meta.title}</h2>
-        <p>{deck.meta.summary}</p>
-        <div className="tag-row">
-          {deck.meta.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-      </div>
-      <div className="card-actions">
-        <button type="button" onClick={onOpen}>
-          <Play size={17} aria-hidden />
-          開く
-        </button>
-        {youtube?.url ? (
-          <a href={youtube.url} target="_blank" rel="noreferrer">
-            <ExternalLink size={17} aria-hidden />
-            YouTube
-          </a>
-        ) : null}
-      </div>
-    </article>
   )
 }
 
