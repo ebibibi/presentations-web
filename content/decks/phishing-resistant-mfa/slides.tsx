@@ -908,7 +908,7 @@ function EbiStudySlide({ frame }: SlideRenderContext) {
           <a
             key={course.path}
             className="phr-course-card"
-            href={`https://study.ebisuda.net/${course.path}/`}
+            href={`https://ebistudy.net/${course.path}/`}
             target="_blank"
             rel="noreferrer"
             style={lift(entrance(frame, fps, 18 + i * 12), 22)}
@@ -920,7 +920,7 @@ function EbiStudySlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <Punch frame={frame} delay={64}>
-        <b>study.ebisuda.net</b> ─ Microsoft資格・Windows Server・Azure・Claude Code。月額990円。
+        <b>ebistudy.net</b> ─ Microsoft資格・Windows Server・Azure・Claude Code。月額990円。
       </Punch>
     </section>
   )

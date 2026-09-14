@@ -237,7 +237,7 @@ function Shell({
           <span>Ebisuda Presentations</span>
         </button>
         <nav aria-label="Primary">
-          <a href="https://study.ebisuda.net/" target="_blank" rel="noreferrer">
+          <a href="https://ebistudy.net/" target="_blank" rel="noreferrer">
             Ebi Study
           </a>
           <a href="https://ebisuda.net/">ebisuda.net</a>
