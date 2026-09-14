@@ -128,7 +128,7 @@ slides:
   - id: ebistudy
     title: 体系的に、順番に学びたい方へ
     durationInFrames: 190
-    notes: 続けて体系的に学びたい方向けに、Ebi StudyでMicrosoft資格、Windows Server、Azure、Claude Codeの動画講座を提供しています。月額990円です。詳しくはstudy.ebisuda.netをご覧ください。
+    notes: 続けて体系的に学びたい方向けに、Ebi StudyでMicrosoft資格、Windows Server、Azure、Claude Codeの動画講座を提供しています。月額990円です。詳しくはebistudy.netをご覧ください。
   - id: sources
     title: Microsoft公式ドキュメント
     durationInFrames: 195

@@ -217,8 +217,8 @@ function PromoSlide({ frame }: SlideRenderContext) {
         <p>難しいITを、迷わず進められる動画講座に。</p>
       </div>
       <div className="mi-promo-actions">
-        <a href="https://study.ebisuda.net" target="_blank" rel="noreferrer" style={lift(entrance(frame, fps, 30), 24)}>
-          <BookOpen /><span><small>VIDEO COURSES</small><strong>Ebi Study</strong><b>study.ebisuda.net</b></span><ChevronRight />
+        <a href="https://ebistudy.net" target="_blank" rel="noreferrer" style={lift(entrance(frame, fps, 30), 24)}>
+          <BookOpen /><span><small>VIDEO COURSES</small><strong>Ebi Study</strong><b>ebistudy.net</b></span><ChevronRight />
         </a>
         <div style={lift(entrance(frame, fps, 44), 24)}>
           <Bell /><span><small>YOUTUBE</small><strong>チャンネル登録</strong><b>次の解説もお見逃しなく！</b></span>

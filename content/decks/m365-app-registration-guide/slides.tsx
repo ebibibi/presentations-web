@@ -508,7 +508,7 @@ function EbiStudySlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide m365-slide m365-ebistudy-slide">
-      <div className="m365-ebistudy-copy" style={lift(entrance(frame, fps, 12), 34)}><span>Ebi Study</span><h1>体系的に、<br />順番に学びたい方へ。</h1><p>Microsoft資格・Windows Server・Azure・Claude Codeを<br />迷わず進められる動画講座にまとめています。</p><a href="https://study.ebisuda.net" target="_blank" rel="noreferrer">study.ebisuda.net <ChevronRight size={30} /></a></div>
+      <div className="m365-ebistudy-copy" style={lift(entrance(frame, fps, 12), 34)}><span>Ebi Study</span><h1>体系的に、<br />順番に学びたい方へ。</h1><p>Microsoft資格・Windows Server・Azure・Claude Codeを<br />迷わず進められる動画講座にまとめています。</p><a href="https://ebistudy.net" target="_blank" rel="noreferrer">ebistudy.net <ChevronRight size={30} /></a></div>
       <div className="m365-ebistudy-badge" style={lift(entrance(frame, fps, 34), 24)}><LogoMark /><strong>月額<br /><em>990円</em></strong></div>
     </section>
   )

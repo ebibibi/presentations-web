@@ -8,7 +8,7 @@ import type { DeckMeta } from './types'
 // hand-built closing slides.
 
 const CHANNEL_URL = 'https://www.youtube.com/@ebibibi'
-const EBI_STUDY_URL = 'https://study.ebisuda.net'
+const EBI_STUDY_URL = 'https://ebistudy.net'
 
 export function DeckOutro({ meta }: { meta: DeckMeta }) {
   const youtube = meta.youtube
@@ -36,7 +36,7 @@ export function DeckOutro({ meta }: { meta: DeckMeta }) {
           <strong>Ebi Study</strong>
           <p>Microsoft資格・Windows Server・Azure・Claude Codeを、順番に進められる動画講座にまとめています。</p>
           <span className="outro-link-text">
-            study.ebisuda.net
+            ebistudy.net
             <ChevronRight size={16} aria-hidden />
           </span>
         </a>
