@@ -4,7 +4,7 @@ summary: Microsoftが公開したNTLM廃止のFAQを、日本語で1つの質問
 status: public
 visibility: public
 createdAt: "2026-09-10"
-updatedAt: "2026-09-13"
+updatedAt: "2026-09-14"
 canvas: standard
 tags:
   - ntlm
@@ -17,7 +17,7 @@ youtube:
   id: 0JP3hU-K7B0
   url: https://www.youtube.com/watch?v=0JP3hU-K7B0
   title: "NTLM廃止｜次期Windowsで既定無効、全組織が今すぐやること"
-  publishedAt: "2026-09-13"
+  publishedAt: "2026-09-14"
 slides:
   - id: opening
     title: "NTLMは既定で無効になる"
