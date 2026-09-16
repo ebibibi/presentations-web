@@ -12386,3 +12386,345 @@ main {
 .h77-steps-6 {
   grid-template-columns: repeat(3, 1fr);
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Deck: gpt-image-2-5 (Azure image model comparison, wide 1920x1080)  */
+/* Sizes are tuned for the 1920x1080 canvas: the slide centres its     */
+/* content vertically so a short slide does not leave a void below.    */
+/* ------------------------------------------------------------------ */
+
+.gi25-slide {
+  --gi25-ink: #f8fafc;
+  --gi25-muted: #9db0c6;
+  --gi25-accent: #22d3ee;
+  --gi25-warm: #fb923c;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: 88px 104px;
+  background: radial-gradient(120% 90% at 82% 8%, #123a5e 0%, #0a1628 62%);
+  color: var(--gi25-ink);
+  text-align: left;
+}
+
+.gi25-slide h1 {
+  margin: 0;
+  font-size: 86px;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+.gi25-slide .slide-kicker {
+  font-size: 30px;
+  letter-spacing: 0.12em;
+}
+
+.gi25-accent {
+  color: var(--gi25-accent);
+}
+
+.gi25-note {
+  margin: 0;
+  color: var(--gi25-muted);
+  font-size: 36px;
+}
+
+/* Opening ---------------------------------------------------------- */
+
+.gi25-opening {
+  gap: 48px;
+}
+
+.gi25-opening h1 {
+  font-size: 128px;
+  line-height: 1.14;
+}
+
+.gi25-strike {
+  position: relative;
+  color: var(--gi25-muted);
+}
+
+.gi25-strike::after {
+  content: '';
+  position: absolute;
+  inset-inline: -8px;
+  top: 52%;
+  height: 8px;
+  background: var(--gi25-warm);
+  border-radius: 4px;
+}
+
+.gi25-opening-lead {
+  margin: 0;
+  max-width: 1400px;
+  color: var(--gi25-muted);
+  font-size: 42px;
+  line-height: 1.5;
+}
+
+/* Model cards ------------------------------------------------------ */
+
+.gi25-models {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.gi25-model {
+  padding: 48px 40px;
+  border: 1px solid rgba(157, 176, 198, 0.28);
+  border-radius: 24px;
+  background: rgba(15, 32, 54, 0.66);
+}
+
+.gi25-model-new {
+  border-color: rgba(34, 211, 238, 0.5);
+}
+
+.gi25-model h2 {
+  margin: 20px 0 12px;
+  font-size: 46px;
+  word-break: break-all;
+}
+
+.gi25-model p {
+  margin: 0;
+  color: var(--gi25-muted);
+  font-size: 32px;
+}
+
+.gi25-model-role {
+  display: inline-block;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.16);
+  color: var(--gi25-accent);
+  font-size: 30px;
+}
+
+.gi25-model-old .gi25-model-role {
+  background: rgba(157, 176, 198, 0.18);
+  color: var(--gi25-muted);
+}
+
+/* Comparison strip ------------------------------------------------- */
+/* The generated images are the evidence, so they get the vertical     */
+/* space: the heading block stays compact above them.                  */
+
+.gi25-gallery {
+  gap: 32px;
+}
+
+.gi25-gallery h1 {
+  font-size: 76px;
+}
+
+.gi25-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.gi25-shot {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gi25-shot img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(157, 176, 198, 0.3);
+}
+
+.gi25-shot figcaption {
+  font-size: 34px;
+}
+
+.gi25-shot-caption {
+  color: var(--gi25-accent);
+}
+
+.gi25-verdict {
+  margin: 0;
+  font-size: 44px;
+  color: var(--gi25-muted);
+}
+
+.gi25-verdict strong {
+  color: var(--gi25-ink);
+}
+
+/* Speed bars ------------------------------------------------------- */
+
+.gi25-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.gi25-bar-row {
+  display: grid;
+  grid-template-columns: 520px 1fr 300px 240px;
+  align-items: center;
+  gap: 32px;
+}
+
+.gi25-bar-name {
+  font-size: 42px;
+}
+
+.gi25-bar-track {
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(157, 176, 198, 0.16);
+  overflow: hidden;
+}
+
+.gi25-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: rgba(157, 176, 198, 0.7);
+}
+
+.gi25-bar-new .gi25-bar-fill {
+  background: var(--gi25-accent);
+}
+
+.gi25-bar-fast .gi25-bar-fill {
+  background: var(--gi25-warm);
+}
+
+.gi25-bar-value {
+  color: var(--gi25-muted);
+  font-size: 36px;
+}
+
+.gi25-bar-ratio {
+  font-size: 40px;
+}
+
+.gi25-bar-new .gi25-bar-ratio {
+  color: var(--gi25-accent);
+}
+
+.gi25-bar-fast .gi25-bar-ratio {
+  color: var(--gi25-warm);
+}
+
+/* Price steps ------------------------------------------------------ */
+
+.gi25-steps,
+.gi25-takeaway,
+.gi25-reasons {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.gi25-steps li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: baseline;
+  gap: 28px;
+}
+
+.gi25-step-index {
+  color: var(--gi25-accent);
+  font-size: 44px;
+}
+
+.gi25-steps h2 {
+  margin: 0 0 8px;
+  font-size: 44px;
+}
+
+.gi25-steps p {
+  margin: 0;
+  color: var(--gi25-muted);
+  font-size: 34px;
+}
+
+.gi25-price-result {
+  display: flex;
+  align-items: baseline;
+  gap: 32px;
+  padding: 32px 44px;
+  border-radius: 24px;
+  background: rgba(34, 211, 238, 0.12);
+  font-size: 40px;
+  color: var(--gi25-muted);
+}
+
+.gi25-price-old {
+  color: var(--gi25-muted);
+  font-size: 56px;
+}
+
+.gi25-price-new {
+  color: var(--gi25-accent);
+  font-size: 72px;
+}
+
+.gi25-price-arrow {
+  font-size: 56px;
+}
+
+/* The price slide carries four steps plus the result band, so it runs
+   a tighter rhythm than the other slides to stay inside the canvas. */
+
+.gi25-price {
+  gap: 32px;
+}
+
+.gi25-price .gi25-steps {
+  gap: 22px;
+}
+
+.gi25-price .gi25-steps h2 {
+  font-size: 40px;
+}
+
+.gi25-price .gi25-steps p {
+  font-size: 32px;
+}
+
+/* Reasons and takeaway --------------------------------------------- */
+
+.gi25-reasons li,
+.gi25-takeaway li {
+  position: relative;
+  padding-left: 60px;
+  font-size: 44px;
+  line-height: 1.45;
+}
+
+.gi25-reasons li::before,
+.gi25-takeaway li::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 24px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gi25-accent);
+}
+
+.gi25-closing {
+  margin: 0;
+  font-size: 48px;
+  color: var(--gi25-muted);
+}
+
+.gi25-closing strong {
+  color: var(--gi25-accent);
+}
