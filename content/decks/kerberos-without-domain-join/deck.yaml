@@ -1,0 +1,66 @@
+slug: kerberos-without-domain-join
+title: Active Directory｜ドメイン参加してないPCでKerberos認証、できる？できない？
+summary: ワークグループのクライアントからドメインの共有へアクセスしたとき、認証はKerberosになるのかNTLMに落ちるのか。実機のログで確かめます。
+status: draft
+visibility: public
+createdAt: "2026-09-16"
+updatedAt: "2026-09-16"
+tags:
+  - active-directory
+  - kerberos
+  - ntlm
+  - windows-server
+  - identity
+slides:
+  - id: opening
+    title: クイズ
+    durationInFrames: 180
+    notes: 答えを言わずに問いだけ出す。考える時間を取る。
+  - id: conditions
+    title: 条件
+    durationInFrames: 200
+    notes: 仕込みが無いことを強調する。違いは「参加していない」だけ。
+  - id: why-no
+    title: 「できない」と言われる理由
+    durationInFrames: 220
+    notes: 実際にそう書かれた回答がある。知っている人ほど間違えやすい。
+  - id: lab
+    title: 検証環境
+    durationInFrames: 200
+    notes: 3台構成。全部コードで再現できる。
+  - id: demo-access
+    title: デモ｜アクセスしてみる
+    durationInFrames: 220
+    notes: ここで実機に切り替える。共有が開けるところまで。
+  - id: demo-klist
+    title: デモ｜klist で確かめる
+    durationInFrames: 240
+    notes: krbtgt が出れば答えが確定する。ここが山場。
+  - id: answer
+    title: 答え
+    durationInFrames: 180
+    notes: できる、と明言する。
+  - id: kdc-proof
+    title: KDC 側からも裏を取る
+    durationInFrames: 220
+    notes: 発行先IPがクライアントであることを見せる。
+  - id: ntlm-off
+    title: NTLM を止めても通る
+    durationInFrames: 240
+    notes: フォールバックを消しても成立する。NTLM廃止後も生き残る経路。
+  - id: requirements
+    title: 成立条件
+    durationInFrames: 260
+    notes: 分かれ目は参加状態ではない。5つそろうかどうか。
+  - id: ip-trap
+    title: なぜ踏み台はNTLMに落ちるのか
+    durationInFrames: 240
+    notes: 前回のNTLM廃止動画とつながる。原因は3番目。
+  - id: next
+    title: 今回やらないこと
+    durationInFrames: 200
+    notes: DCに届かない場合は別問題。次回へ。
+  - id: recap
+    title: まとめ
+    durationInFrames: 220
+    notes: リポジトリを案内して終わる。
