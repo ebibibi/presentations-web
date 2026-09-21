@@ -518,7 +518,7 @@ function ManagementSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
     <section className="remotion-slide ia13-slide">
-      <Header kicker="FOR DECISION MAKERS" title="経営から見ると、これは採用の話ではない" frame={frame} />
+      <Header kicker="FOR DECISION MAKERS" title="経営にも大きな影響がある" frame={frame} />
       <div className="ia13-mgmt">
         <div className="ia13-mgmt-said" style={lift(entrance(frame, fps, 16), 20)}>
           <span>よく聞く相談</span>
