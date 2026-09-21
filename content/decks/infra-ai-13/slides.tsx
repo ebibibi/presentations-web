@@ -119,11 +119,11 @@ function OpeningSlide({ frame }: SlideRenderContext) {
           「インフラはAIには無理」への回答
         </span>
         <h1 style={lift(entrance(frame, fps, 10), 26)}>
-          インフラエンジニアの
+          私はインフラエンジニアの
           <br />
-          業務13項目、
+          業務を全部
           <br />
-          全部AIにやらせています
+          AIにやらせています
         </h1>
         <p style={lift(entrance(frame, fps, 26), 18)}>
           ただし<b>「何も知らない人間ができる」とは思わない</b>。
