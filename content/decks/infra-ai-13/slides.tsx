@@ -1,0 +1,465 @@
+/* eslint-disable react-refresh/only-export-components */
+import {
+  Boxes,
+  Coins,
+  Database,
+  FileCode2,
+  Gauge,
+  HardDriveDownload,
+  Hand,
+  KeyRound,
+  Lightbulb,
+  type LucideIcon,
+  Network,
+  ScrollText,
+  ShieldCheck,
+  SignalHigh,
+  Siren,
+  Stethoscope,
+  UserCog
+} from 'lucide-react'
+import { spring, useVideoConfig } from 'remotion'
+import type { SlideModule, SlideRenderContext } from '../../../src/types'
+import { CtaSlide, LogoMark } from '../../../src/deck-shared'
+import './styles.css'
+
+export const slides: SlideModule['slides'] = [
+  { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'profile', render: (props) => <ProfileSlide {...props} /> },
+  { id: 'the-list', render: (props) => <TheListSlide {...props} /> },
+  { id: 'my-reply', render: (props) => <MyReplySlide {...props} /> },
+  { id: 'section-resolution', render: (props) => <SectionResolutionSlide {...props} /> },
+  { id: 'three-levels', render: (props) => <ThreeLevelsSlide {...props} /> },
+  { id: 'why-not-aligned', render: (props) => <WhyNotAlignedSlide {...props} /> },
+  { id: 'mapped', render: (props) => <MappedSlide {...props} /> },
+  { id: 'the-punchline', render: (props) => <PunchlineSlide {...props} /> },
+  { id: 'what-humans-keep', render: (props) => <WhatHumansKeepSlide {...props} /> },
+  { id: 'precedent', render: (props) => <PrecedentSlide {...props} /> },
+  { id: 'management', render: (props) => <ManagementSlide {...props} /> },
+  { id: 'recap', render: (props) => <RecapSlide {...props} /> },
+  { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
+  { id: 'cta', render: (props) => <CtaSlide {...props} /> }
+]
+
+// Level of autonomy a task is handed over at. The whole deck turns on this one
+// distinction, so the labels live here and every slide reads them from here.
+type Level = 1 | 2 | 3
+
+const LEVELS: Record<Level, { label: string; gloss: string; icon: LucideIcon }> = {
+  1: { label: 'AIが手を動かす', gloss: '設計と判断は人間', icon: Hand },
+  2: { label: 'AIが案を出す', gloss: '選ぶのは人間', icon: Lightbulb },
+  3: { label: 'AIが判断まで持つ', gloss: '人間は結果を見る', icon: UserCog }
+}
+
+const TASKS: Array<{ short: string; full: string; level: Level; icon: LucideIcon }> = [
+  { short: 'アカウント設計・IAM', full: 'アカウント／Organization設計、IAM、権限分離', level: 2, icon: UserCog },
+  { short: 'ネットワーク', full: 'VPC、Subnet、Routing、Firewall、VPN、PrivateLink', level: 2, icon: Network },
+  { short: '実行基盤', full: 'Kubernetes／ECS／VM／Serverless', level: 2, icon: Boxes },
+  { short: '状態を持つ基盤', full: 'DB、Redis、Kafka', level: 2, icon: Database },
+  { short: 'IaC・CI/CD・変更管理', full: 'Terraform等によるIaC、CI/CD、変更管理', level: 3, icon: FileCode2 },
+  { short: 'シークレット・証明書', full: 'Secret／KMS、証明書、セキュリティ', level: 1, icon: KeyRound },
+  { short: 'オブザーバビリティ', full: 'Logging／Metrics／Tracing／Alerting', level: 3, icon: SignalHigh },
+  { short: 'キャパシティ・性能', full: 'キャパシティ設計、スケーリング、パフォーマンス', level: 2, icon: Gauge },
+  { short: 'バックアップ・DR', full: 'Backup／Restore／Disaster Recovery', level: 2, icon: HardDriveDownload },
+  { short: 'SLO・可用性設計', full: 'SLO、可用性設計、障害対応、オンコール', level: 1, icon: ShieldCheck },
+  { short: 'コスト管理', full: 'コスト管理', level: 3, icon: Coins },
+  { short: 'コンプライアンス', full: 'Compliance、監査、脆弱性対応', level: 2, icon: ScrollText },
+  { short: '障害時の復旧判断', full: '本番障害時の原因切り分けと復旧判断', level: 1, icon: Siren }
+]
+
+function entrance(frame: number, fps: number, delay = 0) {
+  return spring({ frame: frame - delay, fps, config: { damping: 18, stiffness: 105 } })
+}
+
+function lift(value: number, distance = 26) {
+  return { opacity: value, transform: `translateY(${(1 - value) * distance}px)` }
+}
+
+function Header({ kicker, title, frame }: { kicker: string; title: React.ReactNode; frame: number }) {
+  const { fps } = useVideoConfig()
+  return (
+    <div className="ia13-head" style={lift(entrance(frame, fps), 22)}>
+      <span className="slide-kicker">{kicker}</span>
+      <h1>{title}</h1>
+    </div>
+  )
+}
+
+function Punch({ frame, delay = 70, children }: { frame: number; delay?: number; children: React.ReactNode }) {
+  const { fps } = useVideoConfig()
+  return (
+    <p className="ia13-punch" style={lift(entrance(frame, fps, delay), 14)}>
+      {children}
+    </p>
+  )
+}
+
+function OpeningSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide opening-slide ia13-slide ia13-opening">
+      <div className="motion-grid" />
+      <LogoMark />
+      <div className="showcase-copy">
+        <span className="slide-kicker ia13-alarm" style={lift(entrance(frame, fps), 18)}>
+          「インフラはAIには無理」への回答
+        </span>
+        <h1 style={lift(entrance(frame, fps, 10), 26)}>
+          インフラエンジニアの
+          <br />
+          業務13項目、
+          <br />
+          全部AIにやらせています
+        </h1>
+        <p style={lift(entrance(frame, fps, 26), 18)}>
+          ただし<b>「何も知らない人間ができる」とは思わない</b>。
+          <br />
+          その差が、この動画の中身です。
+        </p>
+      </div>
+    </section>
+  )
+}
+
+function ProfileSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const facts = ['Microsoft MVP 14年連続', 'Windows Server / Azure / Azure Hybrid', '生成AIを実運用へ組み込み中', '著書「Windowsインフラ管理者入門」']
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="YOUR GUIDE" title="解説する人：胡田 昌彦" frame={frame} />
+      <div className="ia13-profile">
+        <div className="ia13-profile-mark" style={lift(entrance(frame, fps, 16), 22)}>
+          <LogoMark className="ia13-profile-logo" />
+          <strong>
+            Masahiko
+            <br />
+            Ebisuda
+          </strong>
+          <span>えびすだ まさひこ</span>
+        </div>
+        <div className="ia13-profile-facts">
+          {facts.map((fact, i) => (
+            <div key={fact} style={lift(entrance(frame, fps, 28 + i * 10), 16)}>
+              <ShieldCheck size={24} />
+              <strong>{fact}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Punch frame={frame} delay={72}>
+        今日の話は意見ではなく、<b>毎日やっていることの報告</b>です。
+      </Punch>
+    </section>
+  )
+}
+
+function TheListSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="THE LIST" title="回ってきた13項目" frame={frame} />
+      <ol className="ia13-list">
+        {TASKS.map((task, i) => (
+          <li key={task.short} style={lift(entrance(frame, fps, 10 + i * 4), 12)}>
+            <span className="ia13-list-no">{String(i + 1).padStart(2, '0')}</span>
+            <span className="ia13-list-body">{task.full}</span>
+          </li>
+        ))}
+      </ol>
+      <Punch frame={frame} delay={78}>
+        よくできたリストです。<b>実務を知っている人が書いている</b>。だから土台にします。
+      </Punch>
+    </section>
+  )
+}
+
+function MyReplySlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide ia13-slide ia13-reply-slide">
+      <Header kicker="MY REPLY" title="私はこう答えました" frame={frame} />
+      <blockquote className="ia13-quote" style={lift(entrance(frame, fps, 18), 20)}>
+        <span>それ丸ごとできるけどな。私やらせてるけど。</span>
+        <span className="ia13-quote-dim">何も知らない人間ができるとは思わないけども。</span>
+        <strong>「AIでできる」の解像度を高めないと議論に乗らないかなあ。</strong>
+      </blockquote>
+      <Punch frame={frame} delay={74}>
+        <b>できる／できないの二択</b>で話している限り、この議論は終わりません。
+      </Punch>
+    </section>
+  )
+}
+
+function SectionResolutionSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide ia13-slide ia13-section">
+      <div className="motion-grid" />
+      <span className="slide-kicker" style={lift(entrance(frame, fps), 18)}>
+        SECTION 2
+      </span>
+      <h1 style={lift(entrance(frame, fps, 12), 26)}>
+        「AIでできる」の
+        <br />
+        解像度を上げる
+      </h1>
+    </section>
+  )
+}
+
+function ThreeLevelsSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const order: Level[] = [1, 2, 3]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="THE DISTINCTION" title="「できる」には3つの層がある" frame={frame} />
+      <div className="ia13-levels">
+        {order.map((level, i) => {
+          const Icon = LEVELS[level].icon
+          return (
+            <div key={level} className={`ia13-level ia13-level-${level}`} style={lift(entrance(frame, fps, 16 + i * 14), 20)}>
+              <span className="ia13-level-no">LEVEL {level}</span>
+              <Icon size={42} />
+              <strong>{LEVELS[level].label}</strong>
+              <span className="ia13-level-gloss">{LEVELS[level].gloss}</span>
+            </div>
+          )
+        })}
+      </div>
+      <Punch frame={frame} delay={78}>
+        この3つは<b>まったく別の話</b>なのに、同じ「AIでできる」で語られています。
+      </Punch>
+    </section>
+  )
+}
+
+function WhyNotAlignedSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const sides = [
+    { who: '「AIでできる」派', points: 'LEVEL 1 〜 2', tone: 'yes' as const },
+    { who: '「AIには無理」派', points: 'LEVEL 3', tone: 'no' as const }
+  ]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="WHY IT STALLS" title="議論が噛み合わない理由" frame={frame} />
+      <div className="ia13-sides">
+        {sides.map((side, i) => (
+          <div key={side.who} className={`ia13-side ia13-side-${side.tone}`} style={lift(entrance(frame, fps, 18 + i * 16), 20)}>
+            <strong>{side.who}</strong>
+            <span>が指しているのは</span>
+            <em>{side.points}</em>
+          </div>
+        ))}
+      </div>
+      <p className="ia13-verdict" style={lift(entrance(frame, fps, 62), 16)}>
+        どちらも正しい。<b>指しているものが違うだけ</b>。
+      </p>
+      <Punch frame={frame} delay={86}>
+        「AIでインフラはできますか」は、<b>レベルを添えないと質問として成立していない</b>。
+      </Punch>
+    </section>
+  )
+}
+
+function MappedSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const order: Level[] = [3, 2, 1]
+  return (
+    <section className="remotion-slide ia13-slide ia13-mapped-slide">
+      <Header kicker="THE MAP" title="13項目を、3つの層に置き直す" frame={frame} />
+      <div className="ia13-map">
+        {order.map((level, col) => {
+          const items = TASKS.filter((task) => task.level === level)
+          return (
+            <div key={level} className={`ia13-map-col ia13-level-${level}`} style={lift(entrance(frame, fps, 14 + col * 14), 20)}>
+              <header>
+                <span className="ia13-level-no">LEVEL {level}</span>
+                <strong>{LEVELS[level].label}</strong>
+                <em>{items.length}項目</em>
+              </header>
+              <ul>
+                {items.map((task) => {
+                  const Icon = task.icon
+                  return (
+                    <li key={task.short}>
+                      <Icon size={20} />
+                      <span>{task.short}</span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          )
+        })}
+      </div>
+      <Punch frame={frame} delay={88}>
+        これは<b>現時点の運用実感</b>です。境目は動きます。
+      </Punch>
+    </section>
+  )
+}
+
+function PunchlineSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  // Counted from TASKS so the headline numbers cannot drift away from the map
+  // on the previous slide when a task is re-sorted.
+  const countAt = (level: Level) => TASKS.filter((task) => task.level === level).length
+  const stats = [
+    { value: 0, unit: '項目', label: 'AIが一切触れない' },
+    { value: countAt(3), unit: '項目', label: '判断まで渡している' },
+    { value: countAt(1) + countAt(2), unit: '項目', label: '最後に決めるのは人間' }
+  ]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="THE PUNCHLINE" title="触れない項目はゼロ。渡せるのは3つ" frame={frame} />
+      <div className="ia13-stats">
+        {stats.map((stat, i) => (
+          <div key={stat.label} style={lift(entrance(frame, fps, 18 + i * 14), 22)}>
+            <strong>
+              {stat.value}
+              <span>{stat.unit}</span>
+            </strong>
+            <span className="ia13-stat-label">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+      <Punch frame={frame} delay={80}>
+        「全部できる」も「まだ無理」も、<b>同じ現実を別の角度から言っている</b>だけ。
+      </Punch>
+    </section>
+  )
+}
+
+function WhatHumansKeepSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const kept = [
+    { icon: KeyRound, title: 'シークレット・証明書', why: '間違えたときに取り返しがつかない' },
+    { icon: ShieldCheck, title: 'SLO・可用性設計', why: 'どれだけの停止を許容するかは経営判断' },
+    { icon: Siren, title: '障害時の復旧判断', why: '切り分けはAIが速い。決めるのは責任の話' }
+  ]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="WHAT REMAINS" title="人間に残っているもの" frame={frame} />
+      <div className="ia13-kept">
+        {kept.map((row, i) => {
+          const Icon = row.icon
+          return (
+            <div key={row.title} style={lift(entrance(frame, fps, 16 + i * 14), 18)}>
+              <Icon size={34} />
+              <div>
+                <strong>{row.title}</strong>
+                <span>{row.why}</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <Punch frame={frame} delay={80}>
+        残っているのは<b>技術的に難しいこと</b>ではなく、<b>責任を取る必要があること</b>。
+      </Punch>
+    </section>
+  )
+}
+
+function PrecedentSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const steps = [
+    { when: 'かつて', what: '「AIがプログラムを書くなんて」' },
+    { when: 'いま', what: '「もうAIに任せています」が多数派に' },
+    { when: 'クラウド', what: 'すでに同じ移動が起きている' },
+    { when: 'オンプレ', what: '時間の問題' }
+  ]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="THE PRECEDENT" title="プログラマーで起きたことが、起きる" frame={frame} />
+      <div className="ia13-steps">
+        {steps.map((step, i) => (
+          <div key={step.when} style={lift(entrance(frame, fps, 14 + i * 12), 18)}>
+            <span className="ia13-step-when">{step.when}</span>
+            <strong>{step.what}</strong>
+          </div>
+        ))}
+      </div>
+      <Punch frame={frame} delay={82}>
+        この移動は、<b>LEVEL 2 の{TASKS.filter((task) => task.level === 2).length}項目が LEVEL 3 へ動く</b>
+        という形で起きます。
+      </Punch>
+    </section>
+  )
+}
+
+function ManagementSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="FOR DECISION MAKERS" title="経営から見ると、これは採用の話ではない" frame={frame} />
+      <div className="ia13-mgmt">
+        <div className="ia13-mgmt-said" style={lift(entrance(frame, fps, 16), 20)}>
+          <span>よく聞く相談</span>
+          <strong>「インフラ人材が採れない」</strong>
+        </div>
+        <div className="ia13-mgmt-real" style={lift(entrance(frame, fps, 34), 20)}>
+          <span>本当の形</span>
+          <strong>
+            AIに任せられる層と任せてはいけない層の境目を、
+            <br />
+            社内の誰も言語化できていない
+          </strong>
+        </div>
+      </div>
+      <Punch frame={frame} delay={80}>
+        境目が引けていないと<b>「全部人間」か「全部丸投げ」の二択</b>になり、どちらも失敗します。
+      </Punch>
+    </section>
+  )
+}
+
+function RecapSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const points = [
+    '「AIでできる」は 手を動かす／案を出す／判断まで持つ の3層',
+    '13項目のうち、触れない項目は0・判断まで渡せるのは3',
+    '人間に残るのは「難しいこと」ではなく「責任を取ること」',
+    '自社でその境目を引けているかが、AI活用の分かれ目'
+  ]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="RECAP" title="今日のまとめ" frame={frame} />
+      <ol className="ia13-recap">
+        {points.map((point, i) => (
+          <li key={point} style={lift(entrance(frame, fps, 16 + i * 12), 16)}>
+            <span>{i + 1}</span>
+            <strong>{point}</strong>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+function SourcesSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const sources = [
+    { label: '元の13項目リスト（@aws202211maru）', href: 'https://x.com/aws202211maru/status/2101242302870298739' },
+    { label: '私の返信', href: 'https://x.com/ebi/status/2101475304342766023' },
+    { label: 'プログラマーの先例について', href: 'https://x.com/ebi/status/2101480635575754906' }
+  ]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="SOURCES" title="出典" frame={frame} />
+      <ul className="ia13-sources">
+        {sources.map((source, i) => (
+          <li key={source.href} style={lift(entrance(frame, fps, 16 + i * 12), 16)}>
+            <Stethoscope size={20} />
+            <a href={source.href} target="_blank" rel="noreferrer">
+              {source.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <Punch frame={frame} delay={64}>
+        いずれもXの<b>公開投稿</b>です。リンクは概要欄に置きます。
+      </Punch>
+    </section>
+  )
+}
