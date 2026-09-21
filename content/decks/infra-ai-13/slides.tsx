@@ -1,6 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import {
+  BookOpen,
+  Bot,
   Boxes,
+  Cloud,
   Coins,
   Database,
   FileCode2,
@@ -8,8 +11,11 @@ import {
   HardDriveDownload,
   Hand,
   KeyRound,
+  Layers,
   Lightbulb,
   type LucideIcon,
+  Milestone,
+  MousePointerClick,
   Network,
   ScrollText,
   ShieldCheck,
@@ -28,18 +34,27 @@ export const slides: SlideModule['slides'] = [
   { id: 'profile', render: (props) => <ProfileSlide {...props} /> },
   { id: 'the-list', render: (props) => <TheListSlide {...props} /> },
   { id: 'my-reply', render: (props) => <MyReplySlide {...props} /> },
+  { id: 'how-i-work', render: (props) => <HowIWorkSlide {...props} /> },
   { id: 'section-resolution', render: (props) => <SectionResolutionSlide {...props} /> },
   { id: 'three-levels', render: (props) => <ThreeLevelsSlide {...props} /> },
   { id: 'why-not-aligned', render: (props) => <WhyNotAlignedSlide {...props} /> },
   { id: 'mapped', render: (props) => <MappedSlide {...props} /> },
   { id: 'the-punchline', render: (props) => <PunchlineSlide {...props} /> },
+  { id: 'goalpost', render: (props) => <GoalpostSlide {...props} /> },
   { id: 'what-humans-keep', render: (props) => <WhatHumansKeepSlide {...props} /> },
   { id: 'precedent', render: (props) => <PrecedentSlide {...props} /> },
+  { id: 'why-it-moves', render: (props) => <WhyItMovesSlide {...props} /> },
+  { id: 'each-site-its-era', render: (props) => <EachSiteItsEraSlide {...props} /> },
   { id: 'management', render: (props) => <ManagementSlide {...props} /> },
   { id: 'recap', render: (props) => <RecapSlide {...props} /> },
   { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
   { id: 'cta', render: (props) => <CtaSlide {...props} /> }
 ]
+
+// Screenshot of the public reply this deck answers from; the same URL is the
+// deck's primary source, so both slides read it from here.
+const ASSET_BASE = '/decks/infra-ai-13'
+const REPLY_URL = 'https://x.com/ebi/status/2101475304342766023'
 
 // Level of autonomy a task is handed over at. The whole deck turns on this one
 // distinction, so the labels live here and every slide reads them from here.
@@ -178,13 +193,63 @@ function MyReplySlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide ia13-slide ia13-reply-slide">
       <Header kicker="MY REPLY" title="私はこう答えました" frame={frame} />
-      <blockquote className="ia13-quote" style={lift(entrance(frame, fps, 18), 20)}>
-        <span>それ丸ごとできるけどな。私やらせてるけど。</span>
-        <span className="ia13-quote-dim">何も知らない人間ができるとは思わないけども。</span>
-        <strong>「AIでできる」の解像度を高めないと議論に乗らないかなあ。</strong>
-      </blockquote>
+      <div className="ia13-reply">
+        <figure className="ia13-shot" style={lift(entrance(frame, fps, 14), 22)}>
+          <img src={`${ASSET_BASE}/x-reply.webp`} alt="元投稿を引用した返信（Xの公開投稿）のスクリーンショット" />
+          <figcaption>
+            <a href={REPLY_URL} target="_blank" rel="noreferrer">
+              2026年9月20日のポスト
+            </a>
+          </figcaption>
+        </figure>
+        <blockquote className="ia13-quote" style={lift(entrance(frame, fps, 26), 20)}>
+          <span>それ丸ごとできるけどな。私やらせてるけど。</span>
+          <span className="ia13-quote-dim">何も知らない人間ができるとは思わないけども。</span>
+          <strong>「AIでできる」の解像度を高めないと議論に乗らないかなあ。</strong>
+        </blockquote>
+      </div>
       <Punch frame={frame} delay={74}>
         <b>できる／できないの二択</b>で話している限り、この議論は終わりません。
+      </Punch>
+    </section>
+  )
+}
+
+function HowIWorkSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const modes = [
+    {
+      icon: MousePointerClick,
+      tone: 'past',
+      when: 'もうやっていない',
+      what: 'ポータル画面を自分で触る。コマンドを自分で打つ。'
+    },
+    {
+      icon: Bot,
+      tone: 'now',
+      when: 'いまのやり方',
+      what: 'やってほしいことをAIに伝えて、やってもらう。'
+    }
+  ] as const
+  return (
+    <section className="remotion-slide ia13-slide ia13-work-slide">
+      <Header kicker="HOW I ACTUALLY WORK" title="自分では、もう触っていません" frame={frame} />
+      <div className="ia13-modes">
+        {modes.map((mode, i) => {
+          const Icon = mode.icon
+          return (
+            <div key={mode.when} className={`ia13-mode ia13-mode-${mode.tone}`} style={lift(entrance(frame, fps, 16 + i * 16), 20)}>
+              <Icon size={38} />
+              <div>
+                <span>{mode.when}</span>
+                <strong>{mode.what}</strong>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <Punch frame={frame} delay={78}>
+        これは見通しではなく、<b>今日そうやって仕事をしている</b>という報告です。
       </Punch>
     </section>
   )
@@ -330,6 +395,38 @@ function PunchlineSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function GoalpostSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const said = [
+    '非エンジニアが開発のようにパッとAIに指示出してできることはない、ということを言っています',
+    'エンジニア経験長いのであれば、これくらいはAI使ってできるのは当然なのでは'
+  ]
+  return (
+    <section className="remotion-slide ia13-slide">
+      <Header kicker="THE GOALPOST MOVED" title="争点は、すでに動いている" frame={frame} />
+      <p className="ia13-said-lead" style={lift(entrance(frame, fps, 10), 14)}>
+        元の投稿をした方が、後からこう書いています。
+      </p>
+      <div className="ia13-said">
+        {said.map((line, i) => (
+          <p key={line} style={lift(entrance(frame, fps, 14 + i * 14), 18)}>
+            <Milestone size={26} />
+            <span>{line}</span>
+          </p>
+        ))}
+      </div>
+      <div className="ia13-shift" style={lift(entrance(frame, fps, 52), 18)}>
+        <em>「インフラはAIオンリーでは厳しい」</em>
+        <span>から</span>
+        <strong>「エンジニアならAIでできて当然」</strong>
+      </div>
+      <Punch frame={frame} delay={84}>
+        「AIにできるか」ではなく<b>「誰がやればできるか」</b>。私の最初の返信と、同じ場所です。
+      </Punch>
+    </section>
+  )
+}
+
 function WhatHumansKeepSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const kept = [
@@ -388,6 +485,67 @@ function PrecedentSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function WhyItMovesSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const needs = [
+    { icon: BookOpen, title: 'スキル集', gloss: 'AIに渡せる形になった運用知識' },
+    { icon: FileCode2, title: 'AIが読みやすいドキュメント', gloss: '人間向けの読み物ではなく参照用' },
+    { icon: Layers, title: 'リファレンスアーキテクチャ', gloss: '典型的なパターンを網羅したもの' }
+  ]
+  return (
+    <section className="remotion-slide ia13-slide ia13-moves-slide">
+      <Header kicker="WHY IT WILL MOVE" title="整備する動機は、運営元が一番持っている" frame={frame} />
+      <div className="ia13-needs">
+        {needs.map((need, i) => {
+          const Icon = need.icon
+          return (
+            <div key={need.title} style={lift(entrance(frame, fps, 14 + i * 12), 20)}>
+              <Icon size={32} />
+              <strong>{need.title}</strong>
+              <span>{need.gloss}</span>
+            </div>
+          )
+        })}
+      </div>
+      <div className="ia13-who" style={lift(entrance(frame, fps, 56), 18)}>
+        <Cloud size={34} />
+        <div>
+          <span>これを揃えたいのは誰か</span>
+          <strong>そのクラウドを運営しているメガテック自身。競い合って「AIが使いやすいクラウド」にしていく。</strong>
+        </div>
+      </div>
+      <Punch frame={frame} delay={88}>
+        AWS／GCP／Azureだけの話ではありません。<b>APIで触れるものすべて</b>、M365もWorkspaceも同じです。
+      </Punch>
+    </section>
+  )
+}
+
+function EachSiteItsEraSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const steps = [
+    { when: 'ただし', what: 'アプリからインフラまで全部、となるとレガシーの問題が大きく、ものすごく時間がかかる' },
+    { when: '現に', what: 'メインフレームもCOBOLも、まだ現役で動いている' },
+    { when: 'つまり', what: '「現場」ごとに違う「時代」がある。自分に合った現場＝時代で働ける' }
+  ]
+  return (
+    <section className="remotion-slide ia13-slide ia13-era-slide">
+      <Header kicker="NOT EVERYWHERE AT ONCE" title="現場ごとに、違う「時代」がある" frame={frame} />
+      <div className="ia13-steps">
+        {steps.map((step, i) => (
+          <div key={step.when} style={lift(entrance(frame, fps, 14 + i * 12), 18)}>
+            <span className="ia13-step-when">{step.when}</span>
+            <strong>{step.what}</strong>
+          </div>
+        ))}
+      </div>
+      <Punch frame={frame} delay={80}>
+        重宝されるのは、最先端をわかった上で<b>幅広い時代に合わせられる人</b>、現場に時代をまたぐ変化を起こせる人。
+      </Punch>
+    </section>
+  )
+}
+
 function ManagementSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   return (
@@ -420,6 +578,7 @@ function RecapSlide({ frame }: SlideRenderContext) {
     '「AIでできる」は 手を動かす／案を出す／判断まで持つ の3層',
     '13項目のうち、触れない項目は0・判断まで渡せるのは3',
     '人間に残るのは「難しいこと」ではなく「責任を取ること」',
+    '争点は「AIにできるか」から「誰がやればできるか」へ移った',
     '自社でその境目を引けているかが、AI活用の分かれ目'
   ]
   return (
@@ -441,7 +600,7 @@ function SourcesSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const sources = [
     { label: '元の13項目リスト（@aws202211maru）', href: 'https://x.com/aws202211maru/status/2101242302870298739' },
-    { label: '私の返信', href: 'https://x.com/ebi/status/2101475304342766023' },
+    { label: '私の返信（スライドのスクリーンショット）', href: REPLY_URL },
     { label: 'プログラマーの先例について', href: 'https://x.com/ebi/status/2101480635575754906' }
   ]
   return (

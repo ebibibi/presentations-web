@@ -160,6 +160,225 @@
   color: var(--coral);
 }
 
+/* The screenshot is the evidence for the quote next to it, so the two share a
+   row and the quote shrinks rather than the image. */
+
+.ia13-reply {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.ia13-reply .ia13-quote {
+  padding: 30px 32px;
+  font-size: 29px;
+  gap: 16px;
+}
+
+.ia13-shot {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.ia13-shot img {
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+}
+
+.ia13-shot figcaption {
+  font-size: 21px;
+}
+
+.ia13-shot a {
+  color: var(--teal);
+}
+
+/* ── how the work actually happens ───────────────────────── */
+
+.ia13-work-slide .ia13-head h1 {
+  font-size: 54px;
+}
+
+.ia13-modes {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ia13-mode {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 30px 32px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 8px solid currentColor;
+}
+
+.ia13-mode-past {
+  color: var(--ia13-l1);
+}
+
+.ia13-mode-now {
+  color: var(--ia13-l3);
+}
+
+.ia13-mode svg {
+  flex: none;
+}
+
+.ia13-mode span {
+  display: block;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  opacity: 0.72;
+}
+
+.ia13-mode strong {
+  display: block;
+  color: var(--ink);
+  font-size: 36px;
+  line-height: 1.34;
+}
+
+.ia13-mode-past strong {
+  opacity: 0.7;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+/* ── the goalpost ────────────────────────────────────────── */
+
+.ia13-said-lead {
+  margin: 0;
+  font-size: 25px;
+  opacity: 0.74;
+}
+
+.ia13-said {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ia13-said p {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0;
+  padding: 22px 28px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 27px;
+  line-height: 1.4;
+}
+
+.ia13-said svg {
+  flex: none;
+  margin-top: 6px;
+  color: var(--ia13-l2);
+}
+
+.ia13-shift {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ia13-shift em {
+  font-style: normal;
+  font-size: 30px;
+  opacity: 0.66;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.ia13-shift span {
+  font-size: 22px;
+  opacity: 0.66;
+}
+
+.ia13-shift strong {
+  color: var(--ia13-l3);
+  font-size: 36px;
+}
+
+/* ── why the boundary moves ──────────────────────────────── */
+
+.ia13-moves-slide {
+  gap: 26px;
+}
+
+.ia13-moves-slide .ia13-head h1 {
+  font-size: 54px;
+}
+
+.ia13-needs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.ia13-needs > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 26px 24px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.ia13-needs svg {
+  color: var(--ia13-l2);
+}
+
+.ia13-needs strong {
+  font-size: 27px;
+  line-height: 1.3;
+}
+
+.ia13-needs span {
+  font-size: 21px;
+  opacity: 0.76;
+}
+
+.ia13-who {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 30px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 8px solid var(--ia13-l3);
+}
+
+.ia13-who svg {
+  flex: none;
+  color: var(--ia13-l3);
+}
+
+.ia13-who span {
+  display: block;
+  font-size: 21px;
+  letter-spacing: 0.06em;
+  opacity: 0.66;
+}
+
+.ia13-who strong {
+  display: block;
+  font-size: 30px;
+  line-height: 1.36;
+}
+
 /* ── section divider ─────────────────────────────────────── */
 
 .ia13-section {
@@ -444,6 +663,12 @@
   line-height: 1.34;
 }
 
+/* ── one era per site ────────────────────────────────────── */
+
+.ia13-era-slide .ia13-head h1 {
+  font-size: 54px;
+}
+
 /* ── management framing ──────────────────────────────────── */
 
 .ia13-mgmt {
@@ -565,6 +790,16 @@
     grid-template-columns: 1fr;
   }
 
+  /* The slide canvas keeps its 1280px format on a phone, so these two stay
+     side by side: stacking them only pushes content past the fixed height. */
+  .ia13-reply {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ia13-needs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .ia13-profile {
     grid-template-columns: 1fr;
   }
@@ -572,5 +807,11 @@
   .ia13-steps > div {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .ia13-mode,
+  .ia13-who {
+    align-items: flex-start;
+    gap: 16px;
   }
 }
