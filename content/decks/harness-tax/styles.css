@@ -1,0 +1,667 @@
+/* Deck: harness-tax
+   Two colours carry the whole argument: amber is what you pay, teal is what you
+   get. Every comparison on the deck keeps that pairing. */
+
+.hxt-slide {
+  justify-content: center;
+  --hxt-cost: #d85d4a;
+  --hxt-gain: #14756f;
+  --hxt-accent: #6d5bd0;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  padding: 76px 86px;
+  text-align: left;
+}
+
+.hxt-head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hxt-head h1 {
+  margin: 0;
+  font-size: 62px;
+  line-height: 1.16;
+}
+
+.hxt-punch {
+  margin: 0;
+  padding-left: 22px;
+  border-left: 6px solid var(--hxt-gain);
+  font-size: 31px;
+  line-height: 1.5;
+}
+
+.hxt-punch b {
+  color: var(--coral);
+}
+
+/* ── opening ─────────────────────────────────────────────── */
+
+.hxt-opening h1 {
+  font-size: 74px;
+  line-height: 1.14;
+}
+
+.hxt-alarm {
+  color: var(--coral);
+}
+
+/* ── profile ─────────────────────────────────────────────── */
+
+.hxt-profile {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 44px;
+  align-items: center;
+}
+
+.hxt-profile-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 24px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+
+.hxt-profile-logo {
+  position: static;
+  z-index: auto;
+  box-shadow: none;
+  width: 108px;
+  height: 108px;
+}
+
+.hxt-profile-mark strong {
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+.hxt-profile-mark span {
+  font-size: 20px;
+  opacity: 0.72;
+}
+
+.hxt-profile-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hxt-profile-facts > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 30px;
+}
+
+.hxt-profile-facts svg {
+  flex: none;
+  color: var(--hxt-gain);
+}
+
+/* ── model vs harness ────────────────────────────────────── */
+
+.hxt-parts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+
+.hxt-parts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 34px 30px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-parts svg {
+  color: var(--hxt-accent);
+}
+
+.hxt-parts strong {
+  font-size: 40px;
+}
+
+.hxt-parts em {
+  font-style: normal;
+  font-size: 26px;
+  color: var(--hxt-accent);
+}
+
+.hxt-parts span {
+  font-size: 23px;
+  line-height: 1.42;
+  opacity: 0.82;
+}
+
+/* ── study provenance ────────────────────────────────────── */
+
+.hxt-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hxt-facts > div {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: baseline;
+  gap: 22px;
+  padding: 16px 24px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-facts span {
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  opacity: 0.62;
+}
+
+.hxt-facts strong {
+  font-size: 27px;
+  line-height: 1.34;
+}
+
+/* ── finding 1: the two bars ─────────────────────────────── */
+
+.hxt-bars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+
+.hxt-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 34px 30px;
+  border-radius: 22px;
+  border-top: 6px solid currentColor;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-bar-small {
+  color: var(--hxt-gain);
+}
+
+.hxt-bar-large {
+  color: var(--hxt-cost);
+}
+
+.hxt-bar-label {
+  font-size: 24px;
+  letter-spacing: 0.06em;
+}
+
+.hxt-bar strong {
+  color: var(--ink);
+  font-size: 64px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.hxt-bar-note {
+  color: var(--muted);
+  font-size: 21px;
+  line-height: 1.42;
+}
+
+/* ── the worked example table ────────────────────────────── */
+
+.hxt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 27px;
+}
+
+.hxt-table th,
+.hxt-table td {
+  padding: 18px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.hxt-table th {
+  font-size: 21px;
+  letter-spacing: 0.04em;
+  opacity: 0.66;
+}
+
+.hxt-table td:not(:first-child) {
+  font-variant-numeric: tabular-nums;
+}
+
+.hxt-row-costly td {
+  color: var(--hxt-cost);
+  font-weight: 700;
+}
+
+/* ── finding 2: the four tools ───────────────────────────── */
+
+.hxt-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hxt-tools-label {
+  font-size: 25px;
+  opacity: 0.8;
+}
+
+.hxt-tools-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hxt-tools-row code {
+  padding: 16px 28px;
+  border-radius: 14px;
+  background: rgba(20, 117, 111, 0.12);
+  color: var(--teal);
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.hxt-context {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 30px;
+  border-radius: 20px;
+  border-left: 6px solid var(--hxt-cost);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-context svg {
+  flex: none;
+  color: var(--hxt-cost);
+}
+
+.hxt-context strong {
+  display: block;
+  font-size: 30px;
+  line-height: 1.34;
+}
+
+.hxt-context span {
+  font-size: 23px;
+  opacity: 0.8;
+}
+
+/* ── finding 3: nine of twelve ───────────────────────────── */
+
+.hxt-headline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 30px;
+}
+
+.hxt-headline strong {
+  color: var(--hxt-gain);
+  font-size: 76px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.hxt-cases {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hxt-cases > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 28px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-cases strong {
+  font-size: 30px;
+}
+
+.hxt-case-pair {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 27px;
+  font-variant-numeric: tabular-nums;
+}
+
+.hxt-case-own {
+  opacity: 0.68;
+}
+
+.hxt-case-other {
+  color: var(--hxt-gain);
+  font-weight: 700;
+}
+
+.hxt-case-pair svg {
+  flex: none;
+  color: var(--hxt-accent);
+}
+
+.hxt-cases em {
+  font-style: normal;
+  font-size: 22px;
+  opacity: 0.78;
+}
+
+/* ── caveat ──────────────────────────────────────────────── */
+
+.hxt-limits {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hxt-limits li {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px;
+  border-radius: 20px;
+  border-left: 6px solid var(--hxt-cost);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 28px;
+  line-height: 1.38;
+}
+
+.hxt-limits svg {
+  flex: none;
+  color: var(--hxt-cost);
+}
+
+/* ── section divider ─────────────────────────────────────── */
+
+.hxt-section {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.hxt-section h1 {
+  margin: 0;
+  font-size: 82px;
+  line-height: 1.18;
+}
+
+/* ── my take ─────────────────────────────────────────────── */
+
+.hxt-take {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hxt-take > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 28px 30px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-take svg {
+  flex: none;
+  margin-top: 6px;
+}
+
+.hxt-take span {
+  display: block;
+  font-size: 21px;
+  letter-spacing: 0.06em;
+  opacity: 0.62;
+}
+
+.hxt-take strong {
+  display: block;
+  margin: 4px 0 6px;
+  font-size: 34px;
+  line-height: 1.3;
+}
+
+.hxt-take em {
+  font-style: normal;
+  font-size: 23px;
+  opacity: 0.78;
+}
+
+.hxt-take-wrong {
+  border-left: 6px solid var(--hxt-cost);
+}
+
+.hxt-take-wrong svg {
+  color: var(--hxt-cost);
+}
+
+.hxt-take-wrong strong {
+  opacity: 0.76;
+}
+
+.hxt-take-right {
+  border-left: 6px solid var(--hxt-gain);
+}
+
+.hxt-take-right svg {
+  color: var(--hxt-gain);
+}
+
+/* ── my setup ────────────────────────────────────────────── */
+
+.hxt-setup {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 34px 36px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-setup-entry {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 32px;
+}
+
+.hxt-setup-entry svg {
+  color: var(--hxt-accent);
+}
+
+.hxt-setup-arrow {
+  font-size: 46px;
+  opacity: 0.6;
+}
+
+.hxt-setup-backends {
+  display: flex;
+  gap: 16px;
+}
+
+.hxt-setup-backends span {
+  padding: 14px 30px;
+  border-radius: 14px;
+  background: rgba(20, 117, 111, 0.12);
+  color: var(--teal);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.hxt-inverse {
+  margin: 0;
+  font-size: 27px;
+  opacity: 0.8;
+}
+
+.hxt-inverse b {
+  color: var(--hxt-cost);
+}
+
+/* ── management ──────────────────────────────────────────── */
+
+.hxt-lead {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.48;
+}
+
+.hxt-lead b {
+  color: var(--hxt-gain);
+}
+
+.hxt-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: hxt-step;
+}
+
+.hxt-steps li {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 26px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 26px;
+  line-height: 1.36;
+}
+
+.hxt-steps svg {
+  flex: none;
+  color: var(--hxt-accent);
+}
+
+/* ── recap & sources ─────────────────────────────────────── */
+
+.hxt-recap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hxt-recap li {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 28px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hxt-recap li > span {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--hxt-gain);
+  color: var(--paper);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.hxt-recap strong {
+  font-size: 30px;
+  line-height: 1.34;
+}
+
+.hxt-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hxt-sources li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 25px;
+  line-height: 1.4;
+}
+
+.hxt-sources svg {
+  flex: none;
+  color: var(--hxt-accent);
+}
+
+.hxt-sources a {
+  color: var(--teal);
+}
+
+/* ── mobile ──────────────────────────────────────────────── */
+
+@media (max-width: 720px) {
+  .hxt-slide {
+    padding: 48px 40px;
+    gap: 24px;
+  }
+
+  .hxt-profile,
+  .hxt-parts,
+  .hxt-bars {
+    grid-template-columns: 1fr;
+  }
+
+  .hxt-facts > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .hxt-setup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hxt-table {
+    font-size: 21px;
+  }
+
+  .hxt-table th,
+  .hxt-table td {
+    padding: 12px 10px;
+  }
+}
