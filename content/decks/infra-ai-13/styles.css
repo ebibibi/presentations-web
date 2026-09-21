@@ -503,8 +503,24 @@
 
 .ia13-map {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Level 3 holds most of the list now, so it gets the room and wraps into two
+     inner columns; level 1 holds nothing and says so. */
+  grid-template-columns: 1.7fr 1fr 1fr;
   gap: 20px;
+}
+
+.ia13-map-col.ia13-level-3 ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+}
+
+.ia13-map-empty {
+  margin: 0;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.4;
+  opacity: 0.66;
 }
 
 .ia13-map-col {
@@ -563,6 +579,10 @@
 }
 
 /* ── the punchline numbers ───────────────────────────────── */
+
+.ia13-punchline-slide .ia13-head h1 {
+  font-size: 54px;
+}
 
 .ia13-stats {
   display: grid;
@@ -784,10 +804,18 @@
   }
 
   .ia13-levels,
-  .ia13-map,
-  .ia13-stats,
   .ia13-sides {
     grid-template-columns: 1fr;
+  }
+
+  /* The map and the counts read as one row; the canvas keeps its 1280px format
+     on a phone, so stacking them only pushed content past the slide height. */
+  .ia13-map {
+    grid-template-columns: 1.7fr 1fr 1fr;
+  }
+
+  .ia13-stats {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   /* The slide canvas keeps its 1280px format on a phone, so these two stay

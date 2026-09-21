@@ -67,19 +67,19 @@ const LEVELS: Record<Level, { label: string; gloss: string; icon: LucideIcon }> 
 }
 
 const TASKS: Array<{ short: string; full: string; level: Level; icon: LucideIcon }> = [
-  { short: 'アカウント設計・IAM', full: 'アカウント／Organization設計、IAM、権限分離', level: 2, icon: UserCog },
-  { short: 'ネットワーク', full: 'VPC、Subnet、Routing、Firewall、VPN、PrivateLink', level: 2, icon: Network },
-  { short: '実行基盤', full: 'Kubernetes／ECS／VM／Serverless', level: 2, icon: Boxes },
-  { short: '状態を持つ基盤', full: 'DB、Redis、Kafka', level: 2, icon: Database },
-  { short: 'IaC・CI/CD・変更管理', full: 'Terraform等によるIaC、CI/CD、変更管理', level: 3, icon: FileCode2 },
-  { short: 'シークレット・証明書', full: 'Secret／KMS、証明書、セキュリティ', level: 1, icon: KeyRound },
+  { short: 'アカウント設計・IAM', full: 'アカウント／Organization設計、IAM、権限分離', level: 3, icon: UserCog },
+  { short: 'ネットワーク', full: 'VPC、Subnet、Routing、Firewall、VPN、PrivateLink', level: 3, icon: Network },
+  { short: '実行基盤', full: 'Kubernetes／ECS／VM／Serverless', level: 3, icon: Boxes },
+  { short: '状態を持つ基盤', full: 'DB、Redis、Kafka', level: 3, icon: Database },
+  { short: 'IaC・変更管理', full: 'Terraform等によるIaC、CI/CD、変更管理', level: 3, icon: FileCode2 },
+  { short: 'シークレット・証明書', full: 'Secret／KMS、証明書、セキュリティ', level: 3, icon: KeyRound },
   { short: 'オブザーバビリティ', full: 'Logging／Metrics／Tracing／Alerting', level: 3, icon: SignalHigh },
-  { short: 'キャパシティ・性能', full: 'キャパシティ設計、スケーリング、パフォーマンス', level: 2, icon: Gauge },
-  { short: 'バックアップ・DR', full: 'Backup／Restore／Disaster Recovery', level: 2, icon: HardDriveDownload },
-  { short: 'SLO・可用性設計', full: 'SLO、可用性設計、障害対応、オンコール', level: 1, icon: ShieldCheck },
-  { short: 'コスト管理', full: 'コスト管理', level: 3, icon: Coins },
-  { short: 'コンプライアンス', full: 'Compliance、監査、脆弱性対応', level: 2, icon: ScrollText },
-  { short: '障害時の復旧判断', full: '本番障害時の原因切り分けと復旧判断', level: 1, icon: Siren }
+  { short: 'キャパシティ・性能', full: 'キャパシティ設計、スケーリング、パフォーマンス', level: 3, icon: Gauge },
+  { short: 'バックアップ・DR', full: 'Backup／Restore／Disaster Recovery', level: 3, icon: HardDriveDownload },
+  { short: 'SLO・可用性設計', full: 'SLO、可用性設計、障害対応、オンコール', level: 2, icon: ShieldCheck },
+  { short: 'コスト管理', full: 'コスト管理', level: 2, icon: Coins },
+  { short: 'コンプライアンス', full: 'Compliance、監査、脆弱性対応', level: 3, icon: ScrollText },
+  { short: '障害時の復旧判断', full: '本番障害時の原因切り分けと復旧判断', level: 2, icon: Siren }
 ]
 
 function entrance(frame: number, fps: number, delay = 0) {
@@ -342,17 +342,21 @@ function MappedSlide({ frame }: SlideRenderContext) {
                 <strong>{LEVELS[level].label}</strong>
                 <em>{items.length}項目</em>
               </header>
-              <ul>
-                {items.map((task) => {
-                  const Icon = task.icon
-                  return (
-                    <li key={task.short}>
-                      <Icon size={20} />
-                      <span>{task.short}</span>
-                    </li>
-                  )
-                })}
-              </ul>
+              {items.length === 0 ? (
+                <p className="ia13-map-empty">該当なし。手だけ借りる使い方は、もうしていない。</p>
+              ) : (
+                <ul>
+                  {items.map((task) => {
+                    const Icon = task.icon
+                    return (
+                      <li key={task.short}>
+                        <Icon size={20} />
+                        <span>{task.short}</span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
             </div>
           )
         })}
@@ -371,12 +375,12 @@ function PunchlineSlide({ frame }: SlideRenderContext) {
   const countAt = (level: Level) => TASKS.filter((task) => task.level === level).length
   const stats = [
     { value: 0, unit: '項目', label: 'AIが一切触れない' },
-    { value: countAt(3), unit: '項目', label: '判断まで渡している' },
-    { value: countAt(1) + countAt(2), unit: '項目', label: '最後に決めるのは人間' }
+    { value: countAt(3), unit: '項目', label: '完全に任せられる' },
+    { value: countAt(1) + countAt(2), unit: '項目', label: '人間が決める' }
   ]
   return (
-    <section className="remotion-slide ia13-slide">
-      <Header kicker="THE PUNCHLINE" title="触れない項目はゼロ。渡せるのは3つ" frame={frame} />
+    <section className="remotion-slide ia13-slide ia13-punchline-slide">
+      <Header kicker="THE PUNCHLINE" title="完全に任せられないのは3つだけ" frame={frame} />
       <div className="ia13-stats">
         {stats.map((stat, i) => (
           <div key={stat.label} style={lift(entrance(frame, fps, 18 + i * 14), 22)}>
@@ -389,7 +393,7 @@ function PunchlineSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <Punch frame={frame} delay={80}>
-        「全部できる」も「まだ無理」も、<b>同じ現実を別の角度から言っている</b>だけ。
+        残る3つは<b>可用性とお金に絡むもの</b>。技術ではなく、事業として決める話です。
       </Punch>
     </section>
   )
@@ -430,13 +434,13 @@ function GoalpostSlide({ frame }: SlideRenderContext) {
 function WhatHumansKeepSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const kept = [
-    { icon: KeyRound, title: 'シークレット・証明書', why: '間違えたときに取り返しがつかない' },
-    { icon: ShieldCheck, title: 'SLO・可用性設計', why: 'どれだけの停止を許容するかは経営判断' },
-    { icon: Siren, title: '障害時の復旧判断', why: '切り分けはAIが速い。決めるのは責任の話' }
+    { icon: ShieldCheck, title: 'SLO・可用性設計', why: 'どれだけの停止を許容するかを決めるのは人間。案はAIが出す' },
+    { icon: Coins, title: 'コスト管理', why: 'いくら払うかを決めるのは人間。案はAIが出す' },
+    { icon: Siren, title: '障害時の復旧判断', why: '切り分けはAIが速い。止めるか戻すかは可用性の判断' }
   ]
   return (
     <section className="remotion-slide ia13-slide">
-      <Header kicker="WHAT REMAINS" title="人間に残っているもの" frame={frame} />
+      <Header kicker="WHAT REMAINS" title="人間が決めているもの" frame={frame} />
       <div className="ia13-kept">
         {kept.map((row, i) => {
           const Icon = row.icon
@@ -452,7 +456,7 @@ function WhatHumansKeepSlide({ frame }: SlideRenderContext) {
         })}
       </div>
       <Punch frame={frame} delay={80}>
-        残っているのは<b>技術的に難しいこと</b>ではなく、<b>責任を取る必要があること</b>。
+        残っているのは<b>技術的に難しいこと</b>ではなく、<b>可用性とお金</b>。どちらも事業の判断です。
       </Punch>
     </section>
   )
@@ -478,8 +482,7 @@ function PrecedentSlide({ frame }: SlideRenderContext) {
         ))}
       </div>
       <Punch frame={frame} delay={82}>
-        この移動は、<b>LEVEL 2 の{TASKS.filter((task) => task.level === 2).length}項目が LEVEL 3 へ動く</b>
-        という形で起きます。
+        その移動は下の層から起きます。私の手元では<b>LEVEL 1 がもう空</b>になりました。
       </Punch>
     </section>
   )
@@ -576,8 +579,8 @@ function RecapSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const points = [
     '「AIでできる」は 手を動かす／案を出す／判断まで持つ の3層',
-    '13項目のうち、触れない項目は0・判断まで渡せるのは3',
-    '人間に残るのは「難しいこと」ではなく「責任を取ること」',
+    '13項目のうち、触れない項目は0・完全に任せられないのは3',
+    '人間が決めるのは可用性とお金。技術的な難しさではない',
     '争点は「AIにできるか」から「誰がやればできるか」へ移った',
     '自社でその境目を引けているかが、AI活用の分かれ目'
   ]
