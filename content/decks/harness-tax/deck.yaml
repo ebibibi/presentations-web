@@ -1,17 +1,22 @@
 slug: harness-tax
 title: AI導入で最初にツールを決める会社が、一番損をする
 summary: UC Berkeley と Arena の研究が、7モデル×3ハーネスの21通りを同じタスクで比較した。成功率の差は±2〜5%にとどまる一方、同じモデルでもコストは平均2倍、条件によって最大5倍に開く。さらに12通り中9通りで、純正ではないハーネスのほうが成功率が高かった。ここから導かれるのは「AI導入とはツールの選定ではなく、切り替えられる状態を作ること」という結論。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-09-21"
-updatedAt: "2026-09-21"
+updatedAt: "2026-09-22"
 tags:
   - ai
   - management
   - cost
   - llm
   - automation
+youtube:
+  id: SgUxNXmTSac
+  url: https://www.youtube.com/watch?v=SgUxNXmTSac
+  title: "harness_tax"
+  publishedAt: "2026-09-22"
 slides:
   - id: opening
     title: 同じAI、同じ成功率、コストだけ2倍
