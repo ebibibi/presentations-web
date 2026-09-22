@@ -1,0 +1,52 @@
+slug: slide-kit-showcase
+title: スライド部品ライブラリ ショーケース
+summary: content/decks 配下のデッキを組み立てるための共通部品（src/slide-kit）を、実物のスライドとして1枚ずつ確認できるデッキ。タイトル、章区切り、比較表、タイムライン、ターミナル、構成図、引用、動画埋め込みの標準形をここで見て、同じ形をそのまま自分のデッキで使う。
+status: draft
+visibility: public
+createdAt: "2026-09-22"
+updatedAt: "2026-09-22"
+tags:
+  - slide-kit
+  - platform
+  - documentation
+slides:
+  - id: opening
+    title: スライド部品ライブラリ
+    durationInFrames: 170
+    notes: src/slide-kit の入口。このデッキ自体が部品の実物見本で、docs/slide-kit.md と対で読む。29デッキ中24デッキが同じ entrance / lift をコピーしていた状態を、共通部品に寄せるのが目的。
+  - id: why
+    title: なぜ部品にするか
+    durationInFrames: 165
+    notes: 数字は実測。slides.tsx の合計17,567行、slide-kicker の出現143箇所、entrance / lift の重複24デッキ。1枚ずつ手書きすると見た目が揃わないうえ、直すときに全デッキを触ることになる。
+  - id: divider-structure
+    title: 章区切り
+    durationInFrames: 130
+    notes: SectionDivider。反転した色で「ここで一拍置く」を見せる。録画中に話題が変わったことが視覚で分かるので、長いデッキほど効く。
+  - id: comparison
+    title: 手書きと部品の比較
+    durationInFrames: 175
+    notes: ComparisonTable。行ラベル列 + 値の列で、before/after や選択肢A/Bを出す。列に accent を付けると「こっちを選べ」が伝わる。
+  - id: timeline
+    title: デッキを作る順番
+    durationInFrames: 170
+    notes: Timeline。3〜5ステップなら horizontal、それ以上は vertical。accent は今話しているステップに付ける。
+  - id: terminal
+    title: コマンドを見せる
+    durationInFrames: 175
+    notes: CodeSlide と Terminal。prompt / output / comment の3種類で行を書き分ける。行は配列データなので、ブラウザの編集画面から追加・削除・並べ替えができる。
+  - id: diagram
+    title: 構成を見せる
+    durationInFrames: 170
+    notes: DiagramFrame と FlowDiagram。枠とキャプションは部品が持つので、デッキ側は中身の箱だけ考える。
+  - id: quote
+    title: 引用と注意書き
+    durationInFrames: 150
+    notes: Quote と Callout。引用は出典を必ず付ける。デッキは動画公開後も読まれるので、出典のない引用は問い合わせの元になる。
+  - id: video
+    title: 動画を差し込む
+    durationInFrames: 150
+    notes: VideoSlide。既定はサムネイル + リンクで、録画中に iframe が動かない。embed を付けたときだけ実際のプレイヤーになる。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。slide-kit からも再エクスポートしているので、import 元は slide-kit に揃えてよい。

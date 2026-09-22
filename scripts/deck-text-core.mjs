@@ -29,8 +29,37 @@ export { duplicateTsxItems }
 /** deck.yaml keys the schema requires; emptying or dropping one breaks the deck. */
 const REQUIRED_YAML_KEYS = new Set(['title', 'summary'])
 
-/** JSX attributes whose value is copy shown to (or read by) a human. */
-const COPY_ATTRIBUTES = new Set(['alt', 'title', 'aria-label', 'label', 'caption', 'placeholder'])
+/**
+ * JSX attributes whose value is copy shown to (or read by) a human.
+ *
+ * A slide component takes its copy as props, so an attribute that is not listed
+ * here is copy the click-to-edit layer can never find again. The second group is
+ * the slide-kit prop vocabulary (src/slide-kit): keep a new copy-bearing prop
+ * named after one of these, or add the new name here, or the deck using it
+ * silently drops out of the editor.
+ */
+export const COPY_ATTRIBUTES = new Set([
+  'alt',
+  'title',
+  'aria-label',
+  'label',
+  'caption',
+  'placeholder',
+  'kicker',
+  'lead',
+  'heading',
+  'body',
+  'note',
+  'quote',
+  'source',
+  'items',
+  'lines',
+  'rows',
+  'columns',
+  'step',
+  'steps',
+  'points'
+])
 
 /** Object keys that hold styling or configuration, never copy. */
 const NON_COPY_KEYS = new Set([
