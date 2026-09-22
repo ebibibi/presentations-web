@@ -1,11 +1,11 @@
 slug: aws-middle-east-data-loss
 title: AWSが「復旧できない」と認めた日 ─ 中東リージョンのデータ永久喪失から読み直す冗長化
 summary: 2026年9月15日、AWSはバーレーンリージョン全域とUAEのmec1-az2について、そこにしか存在しなかったリソースとデータへのアクセスを復旧できないと正式に発表した。3月のドローン攻撃から6ヵ月。マルチAZはリージョンごと物理的に失われる事態を想定していない。何が起きたのかを時系列で整理し、自分のシステムで明日確認すべき3点に落とす。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-09-17"
-updatedAt: "2026-09-17"
+updatedAt: "2026-09-22"
 tags:
   - aws
   - cloud
@@ -13,6 +13,11 @@ tags:
   - resilience
   - hybrid-cloud
   - security
+youtube:
+  id: LSFn7e3v5Fc
+  url: https://www.youtube.com/watch?v=LSFn7e3v5Fc
+  title: "awscrash"
+  publishedAt: "2026-09-22"
 slides:
   - id: opening
     title: クラウドのデータが、物理的に消えた
