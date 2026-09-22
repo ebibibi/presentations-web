@@ -82,6 +82,17 @@ Rules:
 - Every metadata id must have exactly one rendered slide entry, and vice versa.
 - Put speaker notes in `notes`; studio mode can display them.
 
+## Slide Components
+
+Do not start from raw JSX. `src/slide-kit` holds the shared components — title
+slide, section divider, terminal, comparison table, timeline, diagram frame,
+callout, quote, video — and the entrance motion they all use. Read
+[slide-kit.md](slide-kit.md) and build the deck from those; reach for a
+hand-written slide only for something the kit genuinely does not cover, and
+consider adding it to the kit when you do.
+
+The section below describes the raw module shape the kit renders into.
+
 ## Slide Module
 
 Each `slides.tsx` exports `slides`.

@@ -1,0 +1,580 @@
+/*
+ * Slide kit styles.
+ *
+ * Every rule is scoped under `.sk-` so a deck's own stylesheet can override a
+ * component without fighting the rest of the site. Sizes are absolute pixels
+ * against the slide canvas (1280 x 1080, or 1920 x 1080 for `canvas: wide`);
+ * widths are percentages and flex so the same component fits both. No viewport
+ * units: the canvas is scaled to fit the browser, so `vw` would resize text
+ * independently of the slide and break the layout the deck was authored at.
+ */
+
+.sk-slide {
+  gap: 0;
+}
+
+.sk-slide-center {
+  justify-content: center;
+}
+
+/*
+ * Doubled up with `.remotion-slide` on purpose. The base slide rule sets the
+ * paper background and the body text colour at the same specificity as a bare
+ * `.sk-` class, and it wins on order — so a single-class tone rule silently did
+ * nothing and an inverted slide rendered pale text on pale paper.
+ */
+.remotion-slide.sk-slide-ink {
+  background: #17201b;
+  color: #fbf8ee;
+}
+
+.remotion-slide.sk-slide-ink h1,
+.remotion-slide.sk-slide-ink strong {
+  color: #fbf8ee;
+}
+
+.remotion-slide.sk-slide-ink .sk-kicker {
+  color: var(--mustard);
+}
+
+.remotion-slide.sk-slide-ink p,
+.remotion-slide.sk-slide-ink .sk-lead {
+  color: rgba(251, 248, 238, 0.72);
+}
+
+.remotion-slide.sk-slide-accent {
+  background:
+    linear-gradient(135deg, rgba(20, 117, 111, 0.16), transparent 42%),
+    linear-gradient(150deg, transparent 60%, rgba(216, 93, 74, 0.14)),
+    #fbf8ee;
+}
+
+/* ── Heading ─────────────────────────────────────────────────────────── */
+
+.sk-heading {
+  position: relative;
+  z-index: 2;
+}
+
+/*
+ * The site-wide `.slide-kicker` upper-cases its text, which turns a component
+ * name or a mixed Japanese label into an unreadable run of capitals. Inside a
+ * slide the kicker is authored copy: print it as written.
+ */
+.sk-kicker {
+  display: block;
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  text-transform: none;
+}
+
+.sk-heading h1 {
+  font-size: 78px;
+  max-width: 1060px;
+}
+
+.sk-line {
+  display: block;
+}
+
+.sk-lead {
+  margin-top: 4px;
+}
+
+/* ── Title slide ─────────────────────────────────────────────────────── */
+
+.sk-title-slide {
+  justify-content: center;
+}
+
+.sk-title-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.sk-title-copy h1 {
+  font-size: 104px;
+}
+
+.sk-title-points {
+  display: flex;
+  gap: 24px;
+  margin-top: 56px;
+  position: relative;
+  z-index: 2;
+}
+
+.sk-title-point {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 26px 28px;
+}
+
+.sk-title-point strong {
+  color: var(--teal);
+  display: block;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+}
+
+.sk-title-point span {
+  display: block;
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.sk-title-point p {
+  font-size: 24px;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+/* ── Section divider ─────────────────────────────────────────────────── */
+
+.sk-divider {
+  gap: 20px;
+}
+
+.sk-divider h1 {
+  font-size: 96px;
+}
+
+.sk-divider-step {
+  color: var(--mustard);
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* ── Terminal ────────────────────────────────────────────────────────── */
+
+.sk-terminal {
+  background: #101713;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sk-terminal-bar {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+}
+
+.sk-terminal-bar span {
+  background: rgba(251, 248, 238, 0.32);
+  border-radius: 50%;
+  height: 13px;
+  width: 13px;
+}
+
+.sk-terminal-bar strong {
+  color: rgba(251, 248, 238, 0.66);
+  font-size: 21px;
+  margin-left: 12px;
+}
+
+.sk-terminal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px 30px;
+}
+
+.sk-terminal-line {
+  color: #e7efe9;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 27px;
+  line-height: 1.42;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.sk-terminal-prefix {
+  color: var(--mustard);
+}
+
+.sk-terminal-output {
+  color: rgba(231, 239, 233, 0.7);
+}
+
+.sk-terminal-comment {
+  color: rgba(231, 239, 233, 0.46);
+}
+
+.sk-terminal-comment .sk-terminal-prefix {
+  color: inherit;
+}
+
+/* ── Code slide ──────────────────────────────────────────────────────── */
+
+.sk-code-stage {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 28px;
+  margin-top: 28px;
+  min-height: 0;
+}
+
+.sk-code-split .sk-terminal {
+  flex: 1 1 62%;
+}
+
+.sk-code-aside {
+  display: flex;
+  flex: 1 1 38%;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.sk-code-aside p {
+  font-size: 27px;
+}
+
+/* ── Comparison table ────────────────────────────────────────────────── */
+
+.sk-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Auto margins centre the block in the space the heading leaves, so a short
+     table does not sit against the headline with a third of the slide empty. */
+  margin: auto 0;
+}
+
+.sk-table-head,
+.sk-table-row {
+  align-items: center;
+  column-gap: 20px;
+  display: grid;
+}
+
+.sk-table-head {
+  padding: 0 24px 6px;
+}
+
+.sk-table-head span {
+  color: var(--muted);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sk-table-row {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px 24px;
+}
+
+.sk-table-row strong {
+  font-size: 27px;
+}
+
+.sk-table-row span {
+  color: #4e5a52;
+  font-size: 26px;
+  line-height: 1.45;
+}
+
+.sk-table-accent {
+  color: var(--teal);
+}
+
+.sk-table-row span.sk-table-accent {
+  font-weight: 700;
+}
+
+/* ── Timeline ────────────────────────────────────────────────────────── */
+
+.sk-timeline {
+  display: flex;
+  list-style: none;
+  margin: auto 0;
+  padding: 0;
+}
+
+.sk-timeline-horizontal {
+  gap: 20px;
+}
+
+/* No gap: the left border of each step is the rail, and a gap cuts it into
+   floating segments instead of one line running down the slide. */
+.sk-timeline-vertical {
+  flex-direction: column;
+  gap: 0;
+}
+
+.sk-timeline-step {
+  border-top: 3px solid var(--line);
+  flex: 1 1 0;
+  min-width: 0;
+  padding-top: 22px;
+  position: relative;
+}
+
+.sk-timeline-vertical .sk-timeline-step {
+  border-left: 3px solid var(--line);
+  border-top: 0;
+  padding: 0 0 26px 26px;
+}
+
+.sk-timeline-vertical .sk-timeline-step:last-child {
+  padding-bottom: 0;
+}
+
+.sk-timeline-dot {
+  background: var(--line);
+  border-radius: 50%;
+  height: 16px;
+  left: 0;
+  position: absolute;
+  top: -9px;
+  width: 16px;
+}
+
+.sk-timeline-vertical .sk-timeline-dot {
+  left: -9px;
+  top: 2px;
+}
+
+.sk-timeline-on {
+  border-color: var(--teal);
+}
+
+.sk-timeline-on .sk-timeline-dot {
+  background: var(--teal);
+}
+
+.sk-timeline-label {
+  color: var(--muted);
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sk-timeline-on .sk-timeline-label {
+  color: var(--teal);
+}
+
+.sk-timeline-step strong {
+  display: block;
+  font-size: 30px;
+  margin-top: 6px;
+}
+
+.sk-timeline-step p {
+  font-size: 24px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+/* ── Diagram ─────────────────────────────────────────────────────────── */
+
+.sk-diagram {
+  border: 2px dashed var(--line);
+  border-radius: 24px;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  margin: 32px 0 0;
+  min-height: 0;
+  padding: 30px;
+  position: relative;
+}
+
+.sk-diagram-caption {
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 22px;
+  font-weight: 700;
+  left: 28px;
+  letter-spacing: 0.06em;
+  padding: 0 12px;
+  position: absolute;
+  top: -14px;
+}
+
+.sk-diagram-stage {
+  align-items: center;
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-height: 0;
+}
+
+.sk-diagram-note {
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+.sk-flow {
+  align-items: stretch;
+  display: flex;
+  width: 100%;
+}
+
+.sk-flow-cell {
+  align-items: center;
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.sk-flow-node {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.sk-flow-on {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(20, 117, 111, 0.18);
+}
+
+.sk-flow-node strong {
+  display: block;
+  font-size: 28px;
+}
+
+.sk-flow-node p {
+  font-size: 20px;
+  line-height: 1.45;
+  margin-top: 8px;
+}
+
+.sk-flow-arrow {
+  color: var(--muted);
+  flex: 0 0 auto;
+  font-size: 34px;
+  padding: 0 10px;
+}
+
+/* ── Callout and quote ───────────────────────────────────────────────── */
+
+.sk-callout {
+  align-items: flex-start;
+  background: rgba(20, 117, 111, 0.08);
+  border-left: 6px solid var(--teal);
+  border-radius: 14px;
+  display: flex;
+  gap: 18px;
+  padding: 22px 26px;
+}
+
+.sk-callout-warn {
+  background: rgba(216, 93, 74, 0.1);
+  border-left-color: var(--coral);
+}
+
+.sk-callout-good {
+  background: rgba(217, 162, 27, 0.12);
+  border-left-color: var(--mustard);
+}
+
+.sk-callout-icon {
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+.sk-callout strong {
+  display: block;
+  font-size: 27px;
+  margin-bottom: 4px;
+}
+
+.sk-callout-body,
+.sk-callout-body p {
+  color: #4e5a52;
+  font-size: 25px;
+  line-height: 1.5;
+}
+
+.sk-quote {
+  margin: auto 0;
+}
+
+.sk-quote blockquote {
+  border-left: 6px solid var(--mustard);
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1.42;
+  margin: 0;
+  padding-left: 28px;
+}
+
+.sk-quote figcaption {
+  color: var(--muted);
+  font-size: 24px;
+  margin-top: 18px;
+  padding-left: 34px;
+}
+
+/* ── Video ───────────────────────────────────────────────────────────── */
+
+.sk-video {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  margin: 32px 0 0;
+  min-height: 0;
+}
+
+.sk-video-still,
+.sk-video-frame {
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  max-height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.sk-video-still {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.sk-video-still img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.sk-video-play {
+  align-items: center;
+  background: rgba(23, 32, 27, 0.72);
+  border-radius: 50%;
+  color: #fbf8ee;
+  display: flex;
+  font-size: 44px;
+  height: 108px;
+  justify-content: center;
+  padding-left: 8px;
+  position: absolute;
+  width: 108px;
+}
+
+.sk-video figcaption {
+  color: var(--muted);
+  font-size: 24px;
+  margin-top: 18px;
+}

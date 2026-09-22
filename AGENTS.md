@@ -76,11 +76,18 @@ This repository is intended to be public. Use English for code comments, README 
   playable for a signed-out viewer. Do not flip `status` by hand for a deck whose video
   is still members-only.
 - Read [docs/ai-deck-authoring.md](docs/ai-deck-authoring.md) before creating or heavily editing a deck.
+- Slide copy reaches a `src/slide-kit` component as a prop, and only the prop
+  names in `COPY_ATTRIBUTES` (`scripts/deck-text-core.mjs`) are extracted. Copy
+  passed under any other name renders fine and then disappears from the
+  click-to-edit layer for good, so register a new copy-bearing prop in the same
+  change. `npm run check:slide-kit` fails on an unregistered one.
 
 ## Implementation Rules
 
 - Keep the app static unless a backend is genuinely required.
-- Prefer reusable slide components before adding one-off patterns.
+- Prefer reusable slide components before adding one-off patterns. The shared
+  components live in `src/slide-kit`; read [docs/slide-kit.md](docs/slide-kit.md)
+  before hand-rolling a slide layout, and add to the kit rather than beside it.
 - Preserve the 1280 x 1080 slide canvas for studio mode.
 - Preserve the right-side studio panel as the future home for notes, live transcription, and AI guidance.
 - Preserve the dedicated 1920 x 1080 recording surface: 1280 x 1080 slide area on the left and 640 x 1080 reserved area on the right.
@@ -146,4 +153,10 @@ When changing keyboard handling or the click-to-edit overlay, run:
 ```bash
 npm run check:text-edit-keys
 npm run check:text-edit-delete
+```
+
+When changing `src/slide-kit` or a component's props, run:
+
+```bash
+npm run check:slide-kit
 ```
