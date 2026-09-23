@@ -1,0 +1,59 @@
+slug: jev-system-one
+title: Jevは「文章を書かないAI」——何がすごくて、何は新しくないのか
+summary: TypeSafeの判断特化モデルJevを一次情報で検証。LLMでもできる判断を、事前学習済みの汎用モデルで速く安く返す価値と、不得意・比較の注意点、LLMとの分業を解説する。
+status: draft
+visibility: public
+canvas: standard
+thumbnail: /thumbs/jev-system-one.png
+createdAt: "2026-09-23"
+updatedAt: "2026-09-23"
+tags:
+  - ai
+  - llm
+  - automation
+  - cost
+slides:
+  - id: opening
+    title: Jevは「文章を書かないAI」
+    durationInFrames: 180
+    notes: TypeSafeのJevは文章ではなく、ソフトウェアがそのまま使える判断を返します。何が新しく、何が既にLLMでもできることなのかを整理します。
+  - id: premise
+    title: まず結論：判断自体はLLMでもできる
+    durationInFrames: 220
+    notes: 分類や採点、選択肢から選ぶタスク自体は、LLMにJSONや構造化出力を求めれば実現できます。新しいのは判断という概念ではなく、目的に合わせて訓練したモデルと専用の出力・速度・価格設計です。
+  - id: three-primitives
+    title: Choice / Score / Noul の3種類
+    durationInFrames: 230
+    notes: 入力はstateと質問の集合。Choiceは選択肢、Scoreは尺度上の評価、Noulは真偽の確率。質問は同じstateに対して独立かつ並列に評価されます。選択肢から外れた文章は出ませんが、判断の誤りはあり得ます。
+  - id: example
+    title: たとえば問い合わせを振り分ける
+    durationInFrames: 240
+    notes: お客様の文章をstateとして渡し、返金要望の有無、問い合わせの種類、感情の強さを一度に聞きます。結果を閾値と社内ルールで処理します。Jevがメールの返信文を書くわけではありません。
+  - id: training
+    title: 汎用性の源は、大規模な事前学習
+    durationInFrames: 230
+    notes: 単発の分類器を案件ごとに学習するのではなく、事前学習済みモデルをRLCDで判断向けに後学習した仕組み。さまざまな判断を同じAPIに投げられる点がすごい。ただし学習データ量やモデル規模の詳細は未公表で、LLMと同等のデータ量とは断言できません。
+  - id: performance
+    title: 速さと単価が主役
+    durationInFrames: 260
+    notes: 公式発表値はエンドツーエンド70〜500ミリ秒、入力100万トークン当たり0.042ドル、出力の従量料金なし。20〜200倍などの比較倍率は同社条件下の値で、短い入力や比較対象によって変わります。ネットワーク距離と実運用の実測が必要です。
+  - id: benchmark
+    title: ベンチマークは「速い」だけで読まない
+    durationInFrames: 260
+    notes: TypeSafe公開の4ワークフロー評価は、最も強い外部LLMの平均回答を参照値にした比較で、外部の真の正解ラベルを使った独立第三者評価ではありません。同一ワークフローに他社LLMも組み込んでいる点はフェアですが、作問者が同社のチームである点にも注意。実案件で精度を検証します。
+  - id: limitations
+    title: 「ハルシネーションなし」は誤解しない
+    durationInFrames: 250
+    notes: 返答が定義済みの型や選択肢を逸脱しないという意味であり、正しい選択を保証するわけではありません。現行モデルの注意として計算・日付比較・長い無関係な文脈・誘導的な入力が弱点。画像や音声は前処理が必要。英語以外の精度は自分で検証してください。
+  - id: division
+    title: JevとLLMをどう組み合わせる？
+    durationInFrames: 260
+    notes: 大量・高頻度・低遅延の判断はJev、文章作成・複雑な推論や説明はLLM。判断不能や低確信度は人またはLLMに回します。緊急度判定だけで顧客対応を完結させない設計が重要です。
+  - id: outlook
+    title: 技術の将来：競争と共存
+    durationInFrames: 210
+    notes: 私見としてOpenAIやAnthropicも類似する高速・構造化判断サービスを出してもおかしくありません。ただし提供時期や実現は未確認の予想です。モデル固有APIに過度に結合せず、同じタスクで比較できる構成にします。
+  - id: sources
+    title: 一次情報と検証上の注意
+    durationInFrames: 240
+    notes: TypeSafe公式ブログ、公式ドキュメント、モデルの既知の弱点、同社ワークフロー評価、および技術評論社の報道を参照。数値は2026年9月23日に参照した公表値であり、当方の実測ではありません。公開前には最新価格を再確認してください。
