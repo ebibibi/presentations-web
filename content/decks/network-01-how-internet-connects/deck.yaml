@@ -1,0 +1,42 @@
+slug: network-01-how-internet-connects
+title: ネットワーク超基礎 01 — このPCはどうやってインターネットにつながる？
+summary: Wi-Fi接続から家庭のルーター、回線事業者、Webサイトへの往復を、動く図で一歩ずつ追う。
+status: draft
+visibility: public
+thumbnail: /thumbs/network-01-how-internet-connects.svg
+createdAt: "2026-09-23"
+updatedAt: "2026-09-23"
+tags: [ network, tcp-ip, it-foundations, tutorial ]
+slides:
+  - id: opening
+    title: このPCはどうやってインターネットにつながる？
+    durationInFrames: 170
+    notes: "冒頭：Wi-Fiのマークが出ているのにWebサイトが開かない。なぜ？ 身近なPCから順に見ていきます。"
+  - id: two-connections
+    title: Wi-Fiとインターネットは別
+    durationInFrames: 230
+    notes: "Wi-Fiはまず自宅の機器との接続。ルーターの外の回線が切れてもWi-Fiの表示は残ります。家庭用一体機ではAPとルーターは同じ箱の場合が多い。"
+  - id: route
+    title: PCからWebサイトへ
+    durationInFrames: 320
+    notes: "線に沿ってPC、家庭のルーター、ISP、Webサイトを追う。動く点は説明用の模式図であり、実際の通信は複数の機器や経路を通り得る。通信の戻りも説明する。"
+  - id: return
+    title: 通信には返事がある
+    durationInFrames: 260
+    notes: "ブラウザーは要求を送り、サーバーの応答を受けて描画する。DNSやHTTPSの詳細は後続回で説明するため、この図では省略。"
+  - id: outage
+    title: Wi-Fi表示が出ても開けない
+    durationInFrames: 270
+    notes: "家の中はつながっていても、外への回線や接続先で止まることがある。Wi-Fi切断と外の回線断は異なる症状の切り分け。原因を図だけで断定しない。"
+  - id: checklist
+    title: どこまでつながっている？
+    durationInFrames: 260
+    notes: "まず自分の端末と家庭内の接続を確認。次にルーターの回線状態。最後に特定サイトだけか他のサイトも開かないかを比較。設定変更はまだしない。"
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 220
+    notes: "Wi-Fiは家の中への入口。インターネットはその外まで続く経路。次回はネットワーク上の宛先を表すIPアドレスを見る。"
+  - id: sources
+    title: 出典と次の学び
+    durationInFrames: 220
+    notes: "教育用の典型的な家庭の例。配線・接続方式は家庭によって異なる。参考はInternet SocietyとIETF RFC 1122。動画収録後にURL・公開設定を確認してからEbi Studyへ掲載する。"

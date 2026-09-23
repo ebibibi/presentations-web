@@ -1,0 +1,42 @@
+slug: network-02-what-is-ip-address
+title: ネットワーク超基礎 02 — IPアドレスって何？
+summary: 家の中のIPアドレスと外側のIPアドレスを、同じ家庭のPC・スマホ・ルーターで比較する。
+status: draft
+visibility: public
+thumbnail: /thumbs/network-02-what-is-ip-address.svg
+createdAt: "2026-09-23"
+updatedAt: "2026-09-23"
+tags: [ network, tcp-ip, it-foundations, tutorial ]
+slides:
+  - id: opening
+    title: IPアドレスって何？
+    durationInFrames: 170
+    notes: "家にPCとスマホがある。同じ住所を使うのか？ 端末とネットワークの宛先を追う。IPv4の典型例を使い、IPv6なども存在することを最後に補足。"
+  - id: addresses
+    title: 家の中にも住所がある
+    durationInFrames: 270
+    notes: "模式図のPC 192.168.1.10、ルーター 192.168.1.1 を示す。これは例であり、実際のネットワークの値を開示しない。192.168.0.0/16はRFC1918のプライベート範囲。"
+  - id: two-scopes
+    title: 家の中とインターネット側
+    durationInFrames: 270
+    notes: "家の中のプライベートIPv4と、インターネット側で使うアドレスの役割を区別。203.0.113.10はRFC5737の資料用アドレスで、実際の公開サーバーではない。CGNATやIPv6等で家庭の外側の仕組みは異なる。"
+  - id: destination
+    title: 相手のIPへ届ける
+    durationInFrames: 270
+    notes: "接続先の例203.0.113.10へ向けてPCからルーターへ送る。IPは経路上の宛先情報で、人の身元や端末製造番号を指すものではない。名前からIPを調べるDNSは第5回以降。"
+  - id: can-change
+    title: IPアドレスは変わる
+    durationInFrames: 260
+    notes: "PCが別のWi-Fiに接続したり、割当てが更新されたりするとIPは変わり得る。DHCPの仕組みは後続回。静的設定や固定割当もあり、必ず毎回変わるわけではない。"
+  - id: find-ip
+    title: 自分のPCで確かめる
+    durationInFrames: 230
+    notes: "WindowsのPowerShellで ipconfig を実行し、Wi-FiアダプターのIPv4アドレスとデフォルトゲートウェイを確認。ネットワークに複数のアダプターがある場合は利用中のものを選ぶ。実値の画面撮影は伏せる。"
+  - id: recap
+    title: 今日のまとめ
+    durationInFrames: 210
+    notes: "IPは通信の宛先を見つける手掛かり。家の中のアドレスと外側のアドレスは役割が違う。次回は同じLANの次の相手にどう渡すかを見る。"
+  - id: sources
+    title: 出典と次の学び
+    durationInFrames: 200
+    notes: "RFC1918のプライベート範囲、RFC5737の資料用アドレス、RFC791のIPv4を参照。実機の固有アドレスは公開しない。"
