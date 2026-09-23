@@ -1,0 +1,17 @@
+.net-slide .sk-diagram { flex: 1; min-height: 0; }
+.net-slide .sk-diagram-stage { min-height: 0; display: flex; align-items: center; justify-content: center; }
+.net-diagram { width: 100%; height: auto; max-height: 580px; display: block; overflow: visible; font-family: 'Noto Sans JP', system-ui, sans-serif; }
+.net-home { fill: rgba(36, 113, 155, .08); stroke: #45657b; stroke-width: 2; stroke-dasharray: 10 8; }
+.net-zone { fill: #17658c; font-size: 25px; font-weight: 800; }
+.net-node { fill: #142a3c; stroke: #56b6dc; stroke-width: 3; }
+.net-symbol { fill: #fff; font-size: 28px; font-weight: 900; }
+.net-node-label { fill: #263949; font-size: 22px; font-weight: 800; }
+.net-link { fill: none; stroke: #72d8ff; stroke-width: 6; marker-end: url(#net-arrow); }
+.net-wifi { stroke-dasharray: 18 10; }
+.net-cut { stroke: #fb7185; stroke-dasharray: 12 10; }
+.net-packet { fill: #72d8ff; filter: drop-shadow(0 0 10px #72d8ff); }
+.net-cross { stroke: #fb7185; stroke-width: 10; stroke-linecap: round; }
+.net-bad { fill: #fb7185; font-size: 27px; font-weight: 850; }
+.net-return { fill: none; stroke: #ffbd6a; stroke-width: 5; }
+.net-query { fill: none; stroke: #72d8ff; stroke-width: 5; }
+.net-tag { font-size: 21px; font-weight: 800; }
