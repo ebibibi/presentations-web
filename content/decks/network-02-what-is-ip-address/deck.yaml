@@ -1,42 +1,42 @@
 slug: network-02-what-is-ip-address
 title: ネットワーク超基礎 02 — IPアドレスって何？
-summary: 家の中のIPアドレスと外側のIPアドレスを、同じ家庭のPC・スマホ・ルーターで比較する。
+summary: MACだけではなぜ届かないかという自著の問いから、同じ家と外のネットワークでIPの仕事を追う。
 status: draft
 visibility: public
 thumbnail: /thumbs/network-02-what-is-ip-address.svg
 createdAt: "2026-09-23"
-updatedAt: "2026-09-23"
+updatedAt: "2026-09-24"
 tags: [ network, tcp-ip, it-foundations, tutorial ]
 slides:
   - id: opening
-    title: IPアドレスって何？
-    durationInFrames: 170
-    notes: "家にPCとスマホがある。同じ住所を使うのか？ 端末とネットワークの宛先を追う。IPv4の典型例を使い、IPv6なども存在することを最後に補足。"
+    title: 住所だけではIPは分からない
+    durationInFrames: 180
+    notes: "胡田昌彦『Windowsインフラ管理者入門』（2014）第3章の『MACアドレスだけではなぜいけないのか』→『IPアドレス』を入門用に再構成。"
   - id: addresses
-    title: 家の中にも住所がある
-    durationInFrames: 270
-    notes: "模式図のPC 192.168.1.10、ルーター 192.168.1.1 を示す。これは例であり、実際のネットワークの値を開示しない。192.168.0.0/16はRFC1918のプライベート範囲。"
-  - id: two-scopes
-    title: 家の中とインターネット側
-    durationInFrames: 270
-    notes: "家の中のプライベートIPv4と、インターネット側で使うアドレスの役割を区別。203.0.113.10はRFC5737の資料用アドレスで、実際の公開サーバーではない。CGNATやIPv6等で家庭の外側の仕組みは異なる。"
-  - id: destination
-    title: 相手のIPへ届ける
-    durationInFrames: 270
-    notes: "接続先の例203.0.113.10へ向けてPCからルーターへ送る。IPは経路上の宛先情報で、人の身元や端末製造番号を指すものではない。名前からIPを調べるDNSは第5回以降。"
-  - id: can-change
-    title: IPアドレスは変わる
-    durationInFrames: 260
-    notes: "PCが別のWi-Fiに接続したり、割当てが更新されたりするとIPは変わり得る。DHCPの仕組みは後続回。静的設定や固定割当もあり、必ず毎回変わるわけではない。"
-  - id: find-ip
-    title: 自分のPCで確かめる
-    durationInFrames: 230
-    notes: "WindowsのPowerShellで ipconfig を実行し、Wi-FiアダプターのIPv4アドレスとデフォルトゲートウェイを確認。ネットワークに複数のアダプターがある場合は利用中のものを選ぶ。実値の画面撮影は伏せる。"
-  - id: recap
-    title: 今日のまとめ
+    title: 家の中のPCとルーターのIP
     durationInFrames: 210
-    notes: "IPは通信の宛先を見つける手掛かり。家の中のアドレスと外側のアドレスは役割が違う。次回は同じLANの次の相手にどう渡すかを見る。"
+    notes: "192.168.1.10／192.168.1.1は例示。家の中でも端末とルーターを区別する。"
+  - id: two-scopes
+    title: MACだけで全世界に聞けるか
+    durationInFrames: 220
+    notes: "原稿の問いをそのまま議論の起点にする。ただし文章は引用せず書き直した。IPv4 ARPのブロードキャストはルーターを越えない。"
+  - id: destination
+    title: 外の宛先ならゲートウェイへ
+    durationInFrames: 220
+    notes: "目的地のIPと最初に渡す相手は別。PCはサブネットをもとに同一ネットワークか判断する。"
+  - id: can-change
+    title: 同じPCのIPは変わり得る
+    durationInFrames: 200
+    notes: "ネットワークの所属や割当てによって変化し得る。固定のこともある。MACも絶対不変ではないが本話では触れない。"
+  - id: find-ip
+    title: ipconfigで確かめる
+    durationInFrames: 210
+    notes: "利用中のアダプターのIPとデフォルトゲートウェイを見る。実値の公開に注意。"
+  - id: recap
+    title: IPの役割
+    durationInFrames: 180
+    notes: "同じネットワークへ直接／異なるネットワークへゲートウェイへ。現実には次の相手に渡すためにリンク層も必要。"
   - id: sources
     title: 出典と次の学び
-    durationInFrames: 200
-    notes: "RFC1918のプライベート範囲、RFC5737の資料用アドレス、RFC791のIPv4を参照。実機の固有アドレスは公開しない。"
+    durationInFrames: 190
+    notes: "出典は自著第3章。実原稿や図は転載していない。次はMACとARP。RFC 1918とRFC 5737を参照。"
