@@ -113,6 +113,17 @@ When asked to create a new deck:
 7. Use Remotion only where timing or animation improves the presentation.
 8. Verify desktop and mobile layouts before finishing.
 
+### Decks that back a YouTube video
+
+Order the slides for retention, not for completeness. This ordering held viewers at roughly twice the channel's usual rate:
+
+1. State the answer to the title in the first one or two slides: what happened and why it matters. Move introductions later.
+2. Include a personal-stake slide when there is one ("I used to recommend the opposite").
+3. Tell the core as a timeline (trigger, escalation, official announcement) so each slide raises "what happened next?".
+4. Keep generic design advice short and close with a short "check this today" list.
+
+The owner keeps the detailed pattern and its evidence in private notes; follow them when available.
+
 If a user asks for a deck from a rough topic, produce a complete first draft without asking for every detail. Use `status: draft` until the user explicitly approves publication.
 
 ## Verification
