@@ -24,6 +24,10 @@ slides:
     title: 外の宛先ならゲートウェイへ
     durationInFrames: 220
     notes: "目的地のIPと最初に渡す相手は別。PCはサブネットをもとに同一ネットワークか判断する。"
+  - id: same-or-outside
+    title: 宛先IPで宛先MACが変わる
+    durationInFrames: 240
+    notes: "サブネットマスク255.255.255.0の例。宛先IPで家の中か外かを判定し、家の外ならデフォルトゲートウェイのMACを宛先に書く。値は文書用。"
   - id: can-change
     title: 同じPCのIPは変わり得る
     durationInFrames: 200

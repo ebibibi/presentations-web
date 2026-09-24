@@ -20,6 +20,10 @@ slides:
     title: IPはWebサイト／MACはルーター
     durationInFrames: 220
     notes: "原稿第3章の『フレームの構造』を、家から外への送信に適用。IPv4の家庭用LANの典型例である。"
+  - id: hop-rewrite
+    title: 区間ごとにMACを付け替える
+    durationInFrames: 240
+    notes: "MACは区間ごとに作り直し、宛先IPは変わらない。TTLはルーターで1減る。送信元IPの変化は家庭用ルーターのNATによるもので、一般のルーターは送信元IPを変えない。PPPoE接続では外側ヘッダーの形が異なる。"
   - id: arp
     title: ARP要求をブロードキャスト
     durationInFrames: 230
@@ -28,6 +32,10 @@ slides:
     title: ARPの返事が戻る
     durationInFrames: 220
     notes: "IPが一致した相手が自身のMACを通常ユニキャストで回答。原稿第3章のARP・ブロードキャストを再構成。IPv6はNDを使う。"
+  - id: arp-packet
+    title: ARP要求と応答の中身
+    durationInFrames: 240
+    notes: "EtherType 0x0806。ARPはIPヘッダーを持たない。要求は宛先MAC FF-FF-FF-FF-FF-FF のブロードキャスト、応答は通常ユニキャスト。値は RFC 7042 文書用MAC。"
   - id: compare
     title: スイッチは送信元MACを学習
     durationInFrames: 230
