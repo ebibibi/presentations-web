@@ -1,42 +1,42 @@
 slug: network-03-ip-vs-mac
 title: ネットワーク超基礎 03 — MACアドレスって何？ IPとどう違う？
-summary: WebサイトのIPを宛先にしたまま、LANの次の相手へフレームを渡すときのMACとARPを動く図で説明する。
+summary: 自著の「宛先MACが分からなければ？」という問いを起点に、フレーム、ARP、スイッチを順に動かす。
 status: draft
 visibility: public
 thumbnail: /thumbs/network-03-ip-vs-mac.svg
 createdAt: "2026-09-23"
-updatedAt: "2026-09-23"
+updatedAt: "2026-09-24"
 tags: [ network, tcp-ip, it-foundations, tutorial ]
 slides:
   - id: opening
-    title: IPが分かったのにMACも必要？
-    durationInFrames: 170
-    notes: "例はIPv4 over Ethernet/Wi-Fi。IPとMACの違いを一つの通信で説明。MACを全インターネットで不変の身元識別子とは言わない。"
+    title: WebサイトのIPが分かった後は？
+    durationInFrames: 190
+    notes: "胡田昌彦『Windowsインフラ管理者入門』（カットシステム、2014年）第3章をもとに、PC視点の問いを出す。"
   - id: two-labels
-    title: 最終宛先と次の相手
-    durationInFrames: 290
-    notes: "WebサイトのIPは最終目的地。自宅LANから外へ送る時のリンク上の次の相手は通常ルーター。その宛先MACを使って自宅LANのフレームを送る。Wi-Fiでは実際の802.11フレーム構造は簡略化している。"
+    title: IPパケットとLANフレーム
+    durationInFrames: 220
+    notes: "資料用IP203.0.113.10。家庭内で次に渡す相手はルーター。EthernetとWi-Fiのフレーム構造は異なるので模式図に限る。"
   - id: next-hop
-    title: WebサーバーのMACは知らなくていい
-    durationInFrames: 270
-    notes: "異なるネットワークへ送るIPv4パケットは、通常デフォルトゲートウェイに渡す。IP宛先はWebサーバー、同一リンクのフレーム宛先はルーター。NATを使う場合はルーターでIP等も変わる。"
+    title: IPはWebサイト／MACはルーター
+    durationInFrames: 220
+    notes: "原稿第3章の『フレームの構造』を、家から外への送信に適用。IPv4の家庭用LANの典型例である。"
   - id: arp
-    title: ルーターのMACをどう調べる？
-    durationInFrames: 290
-    notes: "IPv4で同じリンク上のIPに対応するMACをARPで照会する概念。キャッシュ済みなら毎回問い合わせない。ARPの要求は通常ブロードキャスト、返信は通常要求元宛。IPv6ではNeighbor Discoveryを使う。"
+    title: ARP要求をブロードキャスト
+    durationInFrames: 230
+    notes: "ARPの宛先を知らないから全員宛てを使う、という原稿の問いを動画で示す。キャッシュ済みなら毎回問い合わせない。"
   - id: changing-links
-    title: リンクが変わるとMACの宛先も変わる
-    durationInFrames: 260
-    notes: "ルーターを越えると次のリンク向けのフレームを作り直す。IPヘッダーの宛先は原則同じだが、NAT等は例外。MACを地球の反対側まで持ち運ぶわけではない。"
+    title: ARPの返事が戻る
+    durationInFrames: 220
+    notes: "IPが一致した相手が自身のMACを通常ユニキャストで回答。原稿第3章のARP・ブロードキャストを再構成。IPv6はNDを使う。"
   - id: compare
-    title: IPとMACを並べる
-    durationInFrames: 240
-    notes: "IPはネットワーク間の配送先・経路判断、MACは当該リンクで使う宛先。MACはNICと関連するが仮想化・ランダム化・変更があるため『変更できない製造番号』とは言わない。"
+    title: スイッチは送信元MACを学習
+    durationInFrames: 230
+    notes: "ARP表（IPとMAC）とスイッチのMACアドレス表（MACとポート）の違い。未学習宛先の扱いは口頭で補足。"
   - id: recap
-    title: 今日のまとめ
+    title: arp -aで表を確かめる
     durationInFrames: 200
-    notes: "最終宛先IPと次ホップのMACの区別を言い直す。続けて既存のWireshark ARP・ICMP実演へ導く。"
+    notes: "自分のPCのIP→MAC対応を表示。利用中のネットワークを確認する。実際のアドレスを公開しない。"
   - id: sources
-    title: 出典と実物
-    durationInFrames: 210
-    notes: "RFC826、RFC1122、RFC4861を参照。Ebi Studyの無料Wireshark/ARP実演へ接続。MACのOS上の公開・撮影は避ける。"
+    title: 既存Wireshark講座につなぐ
+    durationInFrames: 220
+    notes: "既存の無料動画でARP・ICMPを観察。原稿は自著第3章、仕様はRFC 826。動画は新たに収録・公開したわけではなく既存講座へのリンク。"
