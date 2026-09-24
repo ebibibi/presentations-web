@@ -20,14 +20,30 @@ slides:
     title: URLの名前からIPを調べる
     durationInFrames: 210
     notes: "DNSで名前をIPへ変換。203.0.113.10は資料用の例で実在サーバーではない。"
+  - id: dns-packet
+    title: DNSの質問と答えの中身
+    durationInFrames: 240
+    notes: "UDP 53番。ルーターがDNSの中継役をする家庭が多い（直接プロバイダーや公開DNSへ出す構成もある）。ポート番号・アドレスは例。203.0.113.0/24 は RFC 5737 の文書用、MACは RFC 7042 の文書用 00-00-5E-00-53-xx。"
   - id: return
     title: 外の宛先ならゲートウェイへ
     durationInFrames: 210
     notes: "PCは全世界の経路を知らずデフォルトゲートウェイに渡す。サブネット情報を使って家の外と判断する。原稿の『たらいまわす』の発想。"
+  - id: packet-anatomy
+    title: パケットは封筒の入れ子
+    durationInFrames: 240
+    notes: "外側から Ethernet → IP → TCP → データ。宛先MAC（ルーター）と宛先IP（Webサイト）が違うことを強調。HTTPSなので中身は暗号化されて見えない。値はすべて文書用の例。"
   - id: outage
     title: NATで行きと帰りを追う
     durationInFrames: 230
     notes: "送信元の書き換えと返信の逆変換を口頭でも一往復させる。複数端末の区別はポートも必要。NATを防火壁そのものとは言わない。家庭によってIPv6や事業者NATもある。"
+  - id: nat-rewrite
+    title: NATの行き：送信元の書き換え
+    durationInFrames: 240
+    notes: "198.51.100.20 はルーターの公開IPの例（RFC 5737 文書用）。宛先IP・宛先ポート・中身は変えない。ポート番号の割り当て方はルーターにより違う。"
+  - id: nat-return
+    title: NATの帰り：宛先を元に戻す
+    durationInFrames: 240
+    notes: "NAT表を逆に引いて宛先を書き戻す。表に無い通信は通常届かないが、NATをファイアウォールそのものとは言わない。"
   - id: checklist
     title: インターネットに繋がらない時
     durationInFrames: 200
