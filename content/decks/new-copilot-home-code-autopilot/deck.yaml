@@ -1,0 +1,75 @@
+slug: new-copilot-home-code-autopilot
+title: 新しいCopilotを解説 — Home・Code・Autopilotの3本柱と、課金の2階建て化
+summary: 2026年9月25日にMicrosoftが発表した「新しいCopilot」を、公式ブログと発表動画から整理します。Home・Code・Autopilotの中身、アプリを社内で動かすCopilot Managed Runtime、定額（USL）と従量（UBB）に分かれる課金、提供時期、管理者が今日確認することまで。
+status: draft
+visibility: public
+createdAt: "2026-09-26"
+updatedAt: "2026-09-26"
+canvas: standard
+tags:
+  - copilot
+  - microsoft
+  - m365
+  - ai
+  - agents
+slides:
+  - id: opening
+    title: 新しいCopilotは3本柱になった
+    durationInFrames: 240
+    notes: 冒頭で答えを言い切る。2026年9月25日、MicrosoftがCopilotアプリを作り直した。入口のHome、アプリを作るCode、自律して働き続けるAutopilotの3本柱。同時に課金が「定額の日常AI」と「従量の任せるAI」の2階建てになった。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
+  - id: overview
+    title: 3本柱をひと目で
+    durationInFrames: 300
+    notes: Homeは「聞く・任せる」、Codeは「作る」、Autopilotは「ずっと任せる」。ChatとCoworkは別物ではなくHomeの中の2つのモード。近いうちにモードを選ばなくても、Copilotが Chat / Cowork / Code に振り分けるようになる。
+  - id: official-video
+    title: 公式の発表動画
+    durationInFrames: 240
+    notes: 公式ブログに埋め込まれている93秒の発表動画。ナレーションは無く、画面デモだけで流れを見せている。仕入先レビューという1つの題材を、Home（スプレッドシート・資料作成）→ Code（ライブアプリ化）→ Autopilot（Dotという名前のAutopilotが会議設定まで）の順で通していく。画面はシミュレーションで、短縮されているという注記付き。
+  - id: home
+    title: Home — ChatとCoworkが1か所に
+    durationInFrames: 300
+    notes: Homeが新しい出発点。Chatは即答・下書き・調べ物。Coworkは任せる仕事で、RFP回答や顧客向け資料のような完成物を最後まで作って返す。さらにOffice in Copilotで、Word・Excel・PowerPointの本物のファイルをCopilotの中で作って編集できる。作るのは画面上のプレビューではなく、チームがそのまま共同編集できる実ファイル。
+  - id: code
+    title: Code — 誰でも小さなアプリを作る
+    durationInFrames: 300
+    notes: 仕事の単位は今まで「ファイル」（文書・表・スライド）だった。そこに4つ目として「小さな専用の解決策」が加わる、というのがMicrosoftの説明。自然言語で頼むと、デスクトップのウィジェット、ダッシュボード、チームで共有するクラウドアプリまで作る。中身はGitHub Copilotと同じ技術で、サンドボックスで動き、テナント内でホストできる。開発者は引き続きGitHub Copilotを使う。
+  - id: managed-runtime
+    title: Copilot Managed Runtime — 作ったアプリの置き場所
+    durationInFrames: 320
+    notes: 誰でもアプリを作れるようになると、次の問題は「どこで動かして、誰が管理するか」。Copilot Managed RuntimeはM365テナントの中でコードを動かす基盤で、パブリックプレビュー。Cowork・Code・Copilot Studioで作ったアプリも、SDK対応の他社ツール（例としてLovable）で作ったアプリも、同じ場所で動く。Entra IDで認証し、コネクタ・データ・接続先はポリシーで制御、Gitで版管理。管理者はM365管理センターの新しい「Apps」で一覧・利用状況・ポリシーを見る。
+  - id: autopilot
+    title: Autopilot — 自分のIDを持つ同僚
+    durationInFrames: 320
+    notes: 以前Scoutと呼ばれていたもの。名前・役割・目標を与えると、プロンプトを待たずに働く。チャネルを見張り、スレッドを追いかけ、定期作業を回し、数日後に案件を拾い直す。クラウドで動くので寝ている間も止まらない。テナント内に独自のID・記憶・コンピューター・作業場所を持ち、TeamsやOutlookで同僚のように@メンションできる。権限・監査・ガバナンスが後ろにある。発表動画では「Dot」という名前のAutopilotが、仕入先データを見直して会議を設定し、「あなたの時間を守りました」と報告している。
+  - id: pricing
+    title: 課金は2階建てになる
+    durationInFrames: 320
+    notes: 日常のAI（質問・下書き・要約・分析）はユーザー単位の定額ライセンス（USL）。中心はAutoで、1回ごとに精度・速さ・コストを見てモデルを選ぶ。モデルを自分で選ぶこともでき、GPT-5.6とSonnet 5が含まれる。任せるAI（Cowork・Code・Autopilot・長時間のエージェント・Fable/Astraのような最先端モデル）は従量課金（UBB）でCopilot Creditsを消費する。UBBを使うにはUSLが前提。Microsoft自身は「プラグインハイブリッド車」と例えている。USLがバッテリー、UBBがガソリンタンク。
+  - id: finops
+    title: 管理者が握る蛇口
+    durationInFrames: 320
+    notes: 大事なのは既定値。エンタープライズではUBBの機能は画面に見えるが、管理者がM365管理センターで支出ポリシーを作るまではオフで、それまでは課金されない。ポリシーではテナント・グループ単位の予算、グループ内のユーザー上限、閾値アラートを設定できる。グループごとに使えるモデルファミリーを絞れ、その設定はAutoが選ぶモデルにも効く。Graph APIでポリシーを一括管理でき、利用者も自分の残りクレジットをCopilotで見られる。コスト管理の対象はCowork・Work IQ APIに加えてCodeとManaged Runtimeまで広がり、Copilot Studioのエージェントは10月予定。
+  - id: timeline
+    title: いつ使えるのか
+    durationInFrames: 320
+    notes: 発表日にすべて使えるわけではない。ほとんどがFrontierプログラム（早期アクセス）かプレビューから始まる。HomeとCodeはFrontierで今後数週間のうちに展開、CodeはFrontierに月末、その後数週間で広く提供、M365 Premium / Pro向けのプレビューは年内。Autopilotは月末にプライベートプレビューへ拡大。Managed Runtimeはパブリックプレビュー開始。TodayとTeamsの@Copilotもプライベートプレビュー。詳しくは11月17〜20日のIgniteで。
+  - id: reading
+    title: 読み解き — 何が本当に変わったのか
+    durationInFrames: 320
+    notes: ここからは発表内容からの読み解き。1つ目、Copilotは「使う道具」から「任せて作らせる場所」になった。2つ目、お金の設計が変わった。任せる仕事ほど従量で、予算の管理が情シスの仕事になる。3つ目、AutopilotもManaged Runtimeのアプリも「テナントの中に住む」。つまり人ではないIDと、人が作っていないアプリの管理が本題になる。モデル選択画面にGPTとClaudeが並んでいるのも、複数の研究所のモデルを使い分ける前提がはっきりした印。
+  - id: checklist
+    title: 管理者が今日確認すること
+    durationInFrames: 300
+    notes: 1. Frontierプログラムに参加しているか、誰を対象にするか。2. UBBの支出ポリシーをどう作るか。作らなければ課金されないが、Cowork・Code・Autopilotも使えない。予算・グループ・上限・許可するモデルを先に決める。3. M365管理センターの「Apps」でManaged Runtimeの既定ポリシーを確認する。4. Autopilotが持つIDの権限・監査・棚卸しを、人のIDと同じ目線で設計する。
+  - id: sources
+    title: 出典
+    durationInFrames: 240
+    notes: すべて2026年9月25日公開のMicrosoft公式情報。提供時期や価格は変わりうるので、判断の前に一次情報の最新状態を確認する。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
