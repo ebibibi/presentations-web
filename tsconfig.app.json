@@ -17,6 +17,7 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx"
   },
   "include": ["src", "content"]

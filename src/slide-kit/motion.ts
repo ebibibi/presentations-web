@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react'
 import { spring, useVideoConfig } from 'remotion'
+import { DEFAULT_BPM, beatClock } from './beat'
+import type { BeatClock } from './beat'
 
 /**
  * The entrance motion every deck in this repository had copied by hand.
@@ -56,4 +58,15 @@ export function useStagger(
   return Array.from({ length: count }, (_, index) =>
     lift(entrance(frame, fps, start + index * step), distance)
   )
+}
+
+/**
+ * Beat arithmetic for the current frame, reading fps from the Remotion config.
+ *
+ * `beat.frameOf(4)` is the frame beat 4 lands on; `beat.progress(4, 1, ease.backOut)`
+ * is a one-beat pop that starts there. Beat 0 is the first frame of the slide.
+ */
+export function useBeat(frame: number, bpm = DEFAULT_BPM): BeatClock {
+  const { fps } = useVideoConfig()
+  return beatClock(frame, bpm, fps)
 }
