@@ -1,11 +1,11 @@
 slug: infra-ai-13
 title: 私はインフラエンジニアの業務を全部AIにやらせています
 summary: 「インフラはAIには無理」という主張とともに、実務レベルのインフラエンジニアの業務13項目が並んだリストが広く共有された。ポータルもコマンドも自分では触らず、13項目すべてをAIにやらせている立場から答える。議論が噛み合わないのは「AIでできる」に3つの層が混ざっているからで、手を動かす／案を出す／判断まで持つ、を分ければ話が始められる。AIが触れない項目はゼロ、手だけ借りる項目もゼロ。作業は完全に任せられ、人間に残っているのはデザイン（設計）。リスクが低ければ全部任せられて、コストだけは人間が確認する。どこまで任せるかはシステムの重要度とリスクで都度決める。そして元の投稿者自身が後から「エンジニアならできて当然」と言い直しており、争点はすでに「誰がやればできるか」へ移っている。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-09-21"
-updatedAt: "2026-09-21"
+updatedAt: "2026-09-22"
 tags:
   - ai
   - infrastructure
@@ -13,6 +13,11 @@ tags:
   - management
   - automation
   - azure
+youtube:
+  id: wcVomW5RccQ
+  url: https://www.youtube.com/watch?v=wcVomW5RccQ
+  title: "ai_infra"
+  publishedAt: "2026-09-22"
 slides:
   - id: opening
     title: 私はインフラエンジニアの業務を全部AIにやらせています
