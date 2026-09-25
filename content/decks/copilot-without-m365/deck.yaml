@@ -40,7 +40,7 @@ slides:
   - id: order
     title: 前提が崩れたまま買うと
     durationInFrames: 300
-    notes: ライセンス購入が先に決まる。情報の置き場は後回し。一部だけSharePointへ移す。使われない。研修で挽回しようとする。歪な形。
+    notes: ライセンス購入が決まる。でもCopilotが読める仕事の中身（コンテキスト）がM365に無いので、良い仕事ができない。使われない。個人で使っているChatGPTの方がはるかに高機能に見えてしまう。
   - id: kpi
     title: 売る側に目標があるのは当たり前
     durationInFrames: 300
@@ -48,7 +48,7 @@ slides:
   - id: checklist
     title: 今日確認する3つ
     durationInFrames: 300
-    notes: 1. 社内会議はTeamsで、文字起こしが残っているか。2. Copilotを実際に使っている人の割合。3. 完成した資料（正本）の置き場が決まっているか。
+    notes: 1. M365をTeamsの「チーム」中心に素直に利用しているか。2. 必要な情報はM365にあるか。3. 求めているのは「個人や少数に特化した最先端で最強のAI」ではなく、「エンタープライズで大規模に信頼して使えるAI基盤」で間違いないか。
   - id: cta-outro
     title: 応援お願いします！
     durationInFrames: 150

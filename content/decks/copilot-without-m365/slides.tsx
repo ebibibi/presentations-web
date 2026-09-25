@@ -35,7 +35,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
         points={[
           { step: '01', heading: '当たり前の前提', body: 'CopilotはM365の延長線上' },
           { step: '02', heading: '崩れると歪になる', body: '素直に使わない弊害' },
-          { step: '03', heading: '今日確認する3つ', body: '会議・利用率・正本' },
+          { step: '03', heading: '今日確認する3つ', body: 'チーム・情報・求めるAI' },
         ]}
       />
   )
@@ -68,10 +68,9 @@ function OrderSlide({ frame }: SlideRenderContext) {
         orientation="vertical"
         steps={[
           { label: '1', heading: 'ライセンス購入が決まる' },
-          { label: '2', heading: '情報の置き場は後回し' },
-          { label: '3', heading: 'SharePointへ一部だけ移す' },
-          { label: '4', heading: '使われない', accent: true },
-          { label: '5', heading: '研修で挽回しようとする' },
+          { label: '2', heading: '「コンテキスト」が無いので良い仕事ができない' },
+          { label: '3', heading: '使われない' },
+          { label: '4', heading: '個人で使っているChatGPTの方がはるかに高機能…', accent: true },
         ]}
       />
     </Slide>
@@ -160,9 +159,14 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
         frame={frame}
         orientation="vertical"
         steps={[
-          { label: '1', heading: '会議はTeamsで、文字起こしが残っているか' },
-          { label: '2', heading: 'Copilotを実際に使っている人の割合', body: 'M365管理センターの利用状況レポート' },
-          { label: '3', heading: '完成した資料（正本）の置き場が決まっているか', accent: true },
+          { label: '1', heading: 'M365をTeamsの「チーム」中心に素直に利用しているか' },
+          { label: '2', heading: '必要な情報はM365にあるか' },
+          {
+            label: '3',
+            heading: '求めているのは「エンタープライズで大規模に信頼して使えるAI基盤」か',
+            body: '「個人や少数に特化した最先端で最強のAI」ではなく',
+            accent: true,
+          },
         ]}
       />
     </Slide>
