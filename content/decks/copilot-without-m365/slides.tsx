@@ -149,8 +149,8 @@ function GapSlide({ frame }: SlideRenderContext) {
         rows={[
           { label: '会議', cells: ['対面・電話、記録なし', 'Teams会議＋文字起こし'] },
           { label: 'やり取り', cells: ['メール添付', 'Teamsのチャット・チャネル'] },
-          { label: 'ファイル', cells: ['ファイルサーバー', 'SharePoint・Teams'] },
-          { label: 'SharePoint', cells: ['ファイル置き場', 'チームの仕事場'] },
+          { label: 'ファイル', cells: ['ファイルサーバー', 'チームの中で作って共有'] },
+          { label: '仕事の単位', cells: ['部署のフォルダ', 'Teamsの「チーム」'] },
         ]}
       />
     </Slide>
