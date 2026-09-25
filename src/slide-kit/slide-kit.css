@@ -59,11 +59,9 @@
 /*
  * The site-wide `.slide-kicker` upper-cases its text, which turns a component
  * name or a mixed Japanese label into an unreadable run of capitals. Inside a
- * slide the kicker is authored copy: print it as written. Qualified with
- * `.remotion-slide` because the production bundle places this sheet before
- * styles.css, where the bare `.slide-kicker` rule would otherwise win on order.
+ * slide the kicker is authored copy: print it as written.
  */
-.remotion-slide .sk-kicker {
+.sk-kicker {
   display: block;
   font-size: 26px;
   letter-spacing: 0.04em;
