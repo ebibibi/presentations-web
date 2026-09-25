@@ -1,7 +1,7 @@
 slug: copilot-without-m365
 title: Copilotが活きるのはM365を素直に使う会社だけ — 前提が崩れると歪になる
 summary: Microsoft 365 Copilotが本来の性能を出せるのは、Microsoft 365を本来の使い方で素直に使っている組織です。その前提が崩れたままライセンスを先に買うと何が起きるのかを、キーワードで整理します。
-status: draft
+status: public
 visibility: public
 createdAt: "2026-09-25"
 updatedAt: "2026-09-25"
@@ -12,6 +12,11 @@ tags:
   - m365
   - sharepoint
   - teams
+youtube:
+  id: bkunkO4QDEU
+  url: https://www.youtube.com/watch?v=bkunkO4QDEU
+  title: "main"
+  publishedAt: "2026-09-25"
 slides:
   - id: opening
     title: Copilotが活きるのはM365を素直に使う会社だけ
