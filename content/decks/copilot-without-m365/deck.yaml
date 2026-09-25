@@ -36,7 +36,7 @@ slides:
   - id: gap
     title: 素直に使っていないM365
     durationInFrames: 320
-    notes: 会議は対面や電話で記録が残らない。やり取りはメール添付。ファイルはファイルサーバー。SharePointはファイル置き場。これだとCopilotはただのチャットになる。
+    notes: 会議は対面や電話で記録が残らない。やり取りはメール添付。ファイルはファイルサーバー。仕事の単位は部署のフォルダ。これだとCopilotはただのチャットになる。素直な使い方なら、仕事の単位はTeamsの「チーム」で、ファイルもその中で作って共有する（裏側がSharePoint）。
   - id: harm
     title: Copilot以前の問題
     durationInFrames: 300
