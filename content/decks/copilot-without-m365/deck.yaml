@@ -1,0 +1,47 @@
+slug: copilot-without-m365
+title: Copilotを買っても仕事は変わらない — M365の使い方が変わらない会社で起きていること
+summary: Microsoft 365 Copilotのライセンスを先に買い、メール・会議・ファイルの置き場は今まで通り。そういう組織でCopilotが力を出せない理由と、買う前・買った後に確認すべきことをキーワードで整理します。
+status: draft
+visibility: public
+createdAt: "2026-09-25"
+updatedAt: "2026-09-25"
+canvas: standard
+tags:
+  - copilot
+  - microsoft
+  - m365
+  - sharepoint
+  - teams
+slides:
+  - id: opening
+    title: Copilotを買っても仕事は変わらない
+    durationInFrames: 240
+    notes: 冒頭で答えを言い切る。Copilotは、仕事がM365の中にある会社でしか力を出せない。ライセンスを先に買って、使い方はそのまま、という順番が今あちこちで起きている。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
+  - id: order
+    title: 買う順番が逆
+    durationInFrames: 300
+    notes: よくある流れ。ライセンスの購入が先に決まる。情報の置き場は後回し。ファイルサーバーから一部だけSharePointへ。使われない。そこから研修や定着化で挽回しようとする。
+  - id: graph
+    title: Copilotが読んでいるもの
+    durationInFrames: 300
+    notes: CopilotはMicrosoft Graph経由で、その人のメール・会議・チャット・ファイルを読んで答える。M365の中に仕事が無ければ、答える材料が無い。
+  - id: gap
+    title: よくある環境と、Copilotが活きる環境
+    durationInFrames: 320
+    notes: 会議は対面や電話で記録が残らない。やり取りはメール添付。ファイルはファイルサーバー。SharePointはファイル置き場。これだとCopilotはただのチャットになる。
+  - id: kpi
+    title: 売る側のスコアと、買う側のゴール
+    durationInFrames: 300
+    notes: 売る側のスコアはライセンス数。使われるかどうかは別の話。買う側のゴールは仕事が変わること。このずれたまま契約が進む。これが世の中にはびこっている、というのが今日一番言いたいこと。
+  - id: checklist
+    title: 今日確認する3つ
+    durationInFrames: 300
+    notes: 1. 社内会議はTeamsで、文字起こしが残っているか。2. Copilotの利用状況レポートで、実際に使っている人の割合。3. 完成した資料（正本）の置き場が決まっているか。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
