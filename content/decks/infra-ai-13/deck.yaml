@@ -5,7 +5,7 @@ status: public
 visibility: public
 canvas: standard
 createdAt: "2026-09-21"
-updatedAt: "2026-09-22"
+updatedAt: "2026-09-25"
 tags:
   - ai
   - infrastructure
@@ -16,8 +16,8 @@ tags:
 youtube:
   id: wcVomW5RccQ
   url: https://www.youtube.com/watch?v=wcVomW5RccQ
-  title: "ai_infra"
-  publishedAt: "2026-09-22"
+  title: "インフラエンジニアの業務、全部AIにやらせています"
+  publishedAt: "2026-09-25"
 slides:
   - id: opening
     title: 私はインフラエンジニアの業務を全部AIにやらせています
