@@ -36,7 +36,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
         points={[
           { step: '01', heading: '当たり前の前提', body: 'CopilotはM365の延長線上' },
           { step: '02', heading: '崩れると歪になる', body: '素直に使わない弊害' },
-          { step: '03', heading: '今日確認する3つ', body: 'チーム・情報・求めるAI' },
+          { step: '03', heading: '今日確認する3つ', body: '自社が前提を満たしているか' },
         ]}
       />
   )
