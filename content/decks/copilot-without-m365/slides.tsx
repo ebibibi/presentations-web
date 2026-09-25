@@ -17,6 +17,7 @@ export const slides: SlideModule['slides'] = [
   { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
   { id: 'premise', render: (props) => <PremiseSlide {...props} /> },
   { id: 'graph', render: (props) => <GraphSlide {...props} /> },
+  { id: 'platform', render: (props) => <PlatformSlide {...props} /> },
   { id: 'gap', render: (props) => <GapSlide {...props} /> },
   { id: 'harm', render: (props) => <HarmSlide {...props} /> },
   { id: 'order', render: (props) => <OrderSlide {...props} /> },
@@ -110,6 +111,30 @@ function GraphSlide({ frame }: SlideRenderContext) {
           ]}
         />
       </DiagramFrame>
+    </Slide>
+  )
+}
+
+function PlatformSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="M365とは"
+        heading={'M365はアプリだけじゃない'}
+        lead="エンタープライズITを安心して使える土台ごと"
+      />
+      <Timeline
+        frame={frame}
+        orientation="vertical"
+        steps={[
+          { label: 'ID', heading: 'Entra ID' },
+          { label: 'アクセス制御', heading: '条件付きアクセス' },
+          { label: 'データ保護', heading: 'Purview' },
+          { label: 'エージェント管理', heading: 'Agent 365' },
+          { label: 'AI', heading: 'Copilot・AIエージェントが自然に乗る', accent: true },
+        ]}
+      />
     </Slide>
   )
 }

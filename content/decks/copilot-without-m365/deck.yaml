@@ -29,6 +29,10 @@ slides:
     title: Copilotが読んでいるもの
     durationInFrames: 300
     notes: CopilotはMicrosoft Graph経由で、その人のメール・会議・チャット・ファイルを読んで答える。M365の中に仕事が無ければ、答える材料が無い。
+  - id: platform
+    title: M365はアプリだけじゃない
+    durationInFrames: 300
+    notes: M365と言ったら、Entra ID、条件付きアクセス、Purview、Agent 365まで全部含む。エンタープライズITを安心して使えるようにしてきた既存の仕組みの上に、CopilotやAIエージェントも自然に乗ってくる。だから素直に使っている会社ほど、AIも安心して広げられる。
   - id: gap
     title: 素直に使っていないM365
     durationInFrames: 320
