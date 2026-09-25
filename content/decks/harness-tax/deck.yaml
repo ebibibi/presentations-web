@@ -5,7 +5,7 @@ status: public
 visibility: public
 canvas: standard
 createdAt: "2026-09-21"
-updatedAt: "2026-09-22"
+updatedAt: "2026-09-25"
 tags:
   - ai
   - management
@@ -15,7 +15,7 @@ tags:
 youtube:
   id: SgUxNXmTSac
   url: https://www.youtube.com/watch?v=SgUxNXmTSac
-  title: "harness_tax"
+  title: "同じ性能のままコスト半減可能？ ─ AIツールを先に1つ決める会社が損をする"
   publishedAt: "2026-09-22"
 slides:
   - id: opening
