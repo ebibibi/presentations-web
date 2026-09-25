@@ -1,6 +1,6 @@
 slug: copilot-without-m365
-title: Copilotを買っても仕事は変わらない — M365の使い方が変わらない会社で起きていること
-summary: Microsoft 365 Copilotのライセンスを先に買い、メール・会議・ファイルの置き場は今まで通り。そういう組織でCopilotが力を出せない理由と、買う前・買った後に確認すべきことをキーワードで整理します。
+title: Copilotが活きるのはM365を素直に使う会社だけ — 前提が崩れると歪になる
+summary: Microsoft 365 Copilotが本来の性能を出せるのは、Microsoft 365を本来の使い方で素直に使っている組織です。その前提が崩れたままライセンスを先に買うと何が起きるのかを、キーワードで整理します。
 status: draft
 visibility: public
 createdAt: "2026-09-25"
@@ -14,33 +14,41 @@ tags:
   - teams
 slides:
   - id: opening
-    title: Copilotを買っても仕事は変わらない
+    title: Copilotが活きるのはM365を素直に使う会社だけ
     durationInFrames: 240
-    notes: 冒頭で答えを言い切る。Copilotは、仕事がM365の中にある会社でしか力を出せない。ライセンスを先に買って、使い方はそのまま、という順番が今あちこちで起きている。
+    notes: 冒頭で答えを言い切る。CopilotはM365を本来の使い方で素直に使っている会社で本領を発揮する。火を見るより明らか、そもそも当たり前の話。その前提が崩れているところにCopilotを入れると歪な形になる。
   - id: cta-intro
     title: 応援お願いします！
     durationInFrames: 150
     notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
-  - id: order
-    title: 買う順番が逆
-    durationInFrames: 300
-    notes: よくある流れ。ライセンスの購入が先に決まる。情報の置き場は後回し。ファイルサーバーから一部だけSharePointへ。使われない。そこから研修や定着化で挽回しようとする。
+  - id: premise
+    title: 当たり前の前提
+    durationInFrames: 280
+    notes: M365を素直に使う → 仕事の中身がM365に溜まる → Copilotはその延長線上にある。Copilotは特別な魔法ではなく、M365の上に乗っている機能。
   - id: graph
     title: Copilotが読んでいるもの
     durationInFrames: 300
     notes: CopilotはMicrosoft Graph経由で、その人のメール・会議・チャット・ファイルを読んで答える。M365の中に仕事が無ければ、答える材料が無い。
   - id: gap
-    title: よくある環境と、Copilotが活きる環境
+    title: 素直に使っていないM365
     durationInFrames: 320
     notes: 会議は対面や電話で記録が残らない。やり取りはメール添付。ファイルはファイルサーバー。SharePointはファイル置き場。これだとCopilotはただのチャットになる。
-  - id: kpi
-    title: 売る側のスコアと、買う側のゴール
+  - id: harm
+    title: Copilot以前の問題
     durationInFrames: 300
-    notes: 売る側のスコアはライセンス数。使われるかどうかは別の話。買う側のゴールは仕事が変わること。このずれたまま契約が進む。これが世の中にはびこっている、というのが今日一番言いたいこと。
+    notes: M365を素直に使わないこと自体に弊害がある。以前の動画でも「そういう組織があって残念」という話をした。正本が分からない、探せない、共同編集できない、新機能が来ても恩恵が届かない。Copilotはその延長線上の話。
+  - id: order
+    title: 前提が崩れたまま買うと
+    durationInFrames: 300
+    notes: ライセンス購入が先に決まる。情報の置き場は後回し。一部だけSharePointへ移す。使われない。研修で挽回しようとする。歪な形。
+  - id: kpi
+    title: 売る側に目標があるのは当たり前
+    durationInFrames: 300
+    notes: 外資のITは目標がしっかりしている。ライセンス数も利用率も売る側のKPI。それ自体は当たり前で、悪いことではない。だからこそ、自分たちの環境が前提を満たしているかは買う側が確かめるしかない。
   - id: checklist
     title: 今日確認する3つ
     durationInFrames: 300
-    notes: 1. 社内会議はTeamsで、文字起こしが残っているか。2. Copilotの利用状況レポートで、実際に使っている人の割合。3. 完成した資料（正本）の置き場が決まっているか。
+    notes: 1. 社内会議はTeamsで、文字起こしが残っているか。2. Copilotを実際に使っている人の割合。3. 完成した資料（正本）の置き場が決まっているか。
   - id: cta-outro
     title: 応援お願いします！
     durationInFrames: 150
