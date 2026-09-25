@@ -17,8 +17,21 @@ import './slide-kit.css'
 export { BRAND, CtaSlide, LogoMark } from '../deck-shared'
 export type { CtaAction } from '../deck-shared'
 
-export { STAGGER_STEP, entrance, lift, useEnter, useStagger } from './motion'
+export { STAGGER_STEP, entrance, lift, useBeat, useEnter, useStagger } from './motion'
 export type { StaggerOptions } from './motion'
+
+export {
+  DEFAULT_BPM,
+  beatClock,
+  beatToFrame,
+  clamp01,
+  ease,
+  frameToBeat,
+  mixSeed,
+  progress,
+  seededRandom
+} from './beat'
+export type { BeatClock, Ease, EaseName } from './beat'
 
 export { Slide } from './Slide'
 export type { SlideProps, SlideTone } from './Slide'
@@ -53,3 +66,12 @@ export type { CalloutProps, CalloutTone, QuoteProps } from './Callout'
 
 export { VideoSlide } from './VideoSlide'
 export type { VideoSlideProps } from './VideoSlide'
+
+export { KineticTitle } from './KineticTitle'
+export type { KineticEnter, KineticTitleProps } from './KineticTitle'
+
+export { ParticleText } from './ParticleText'
+export type { ParticleTextProps } from './ParticleText'
+
+export { FilmFinish } from './FilmFinish'
+export type { FilmFinishProps } from './FilmFinish'

@@ -36,6 +36,18 @@ const CONFIG_PROPS = new Set([
   'embed',
   'videoId',
   'poster',
+  'motion',
+  'bpm',
+  'start',
+  'every',
+  'enter',
+  'length',
+  'count',
+  'seed',
+  'grain',
+  'vignette',
+  'glitch',
+  'glitchLength',
   'key'
 ])
 

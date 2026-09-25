@@ -1,10 +1,10 @@
 slug: slide-kit-showcase
 title: スライド部品ライブラリ ショーケース
-summary: content/decks 配下のデッキを組み立てるための共通部品（src/slide-kit）を、実物のスライドとして1枚ずつ確認できるデッキ。タイトル、章区切り、比較表、タイムライン、ターミナル、構成図、引用、動画埋め込みの標準形をここで見て、同じ形をそのまま自分のデッキで使う。
+summary: content/decks 配下のデッキを組み立てるための共通部品（src/slide-kit）を、実物のスライドとして1枚ずつ確認できるデッキ。タイトル、章区切り、比較表、タイムライン、ターミナル、構成図、引用、動画埋め込み、拍に乗せる見出し・粒子文字・仕上げの質感の標準形をここで見て、同じ形をそのまま自分のデッキで使う。
 status: draft
 visibility: public
 createdAt: "2026-09-22"
-updatedAt: "2026-09-22"
+updatedAt: "2026-09-25"
 tags:
   - slide-kit
   - platform
@@ -46,6 +46,22 @@ slides:
     title: 動画を差し込む
     durationInFrames: 150
     notes: VideoSlide。既定はサムネイル + リンクで、録画中に iframe が動かない。embed を付けたときだけ実際のプレイヤーになる。
+  - id: kinetic-title
+    title: 拍に乗せる見出し
+    durationInFrames: 150
+    notes: KineticTitle。タイミングはフレームではなく拍（BPM）で書く。128BPMなら1拍は約14フレーム。1語ずつ slide（expo-out）、pop（back-out）、drop（bounce-out）で入り、動いた量に比例してぼかしを掛けてモーションブラーに見せる。
+  - id: divider-kinetic
+    title: 章区切りを拍で出す
+    durationInFrames: 140
+    notes: SectionDivider の motion="kinetic"。既定の動きは変えず、指定したときだけ KineticTitle で見出しを出す。日本語は半角スペースで区切った単位が1拍ずつ入る。
+  - id: particle-text
+    title: 粒子で文字を組み立てる
+    durationInFrames: 170
+    notes: ParticleText。文字をオフスクリーンのcanvasに描いてピクセルを拾い、シード付きの乱数で散らした位置から集める。Math.random を使わないので、巻き戻しても同じ絵になる。
+  - id: film-finish
+    title: 仕上げの質感
+    durationInFrames: 150
+    notes: FilmFinish。フィルム粒子、周辺減光、指定フレームだけのRGBずらし。上に重ねる層はクリックを透過するので、リンクも文字選択もそのまま使える。
   - id: cta-outro
     title: 応援お願いします！
     durationInFrames: 150

@@ -6,7 +6,10 @@ import {
   ComparisonTable,
   CtaSlide,
   DiagramFrame,
+  FilmFinish,
   FlowDiagram,
+  KineticTitle,
+  ParticleText,
   Quote,
   SectionDivider,
   Slide,
@@ -30,6 +33,10 @@ export const slides: SlideModule['slides'] = [
   { id: 'diagram', render: (props) => <DiagramSlide {...props} /> },
   { id: 'quote', render: (props) => <QuoteSlide {...props} /> },
   { id: 'video', render: (props) => <VideoShowcaseSlide {...props} /> },
+  { id: 'kinetic-title', render: (props) => <KineticSlide {...props} /> },
+  { id: 'divider-kinetic', render: (props) => <KineticDividerSlide {...props} /> },
+  { id: 'particle-text', render: (props) => <ParticleSlide {...props} /> },
+  { id: 'film-finish', render: (props) => <FilmFinishSlide {...props} /> },
   { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> }
 ]
 
@@ -217,5 +224,66 @@ function VideoShowcaseSlide({ frame }: SlideRenderContext) {
       videoId="XQAVfYVe5FI"
       caption="クリックすると YouTube が開く。embed を付けたときだけ埋め込みプレイヤーになる。"
     />
+  )
+}
+
+function KineticSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide tone="ink" grid center>
+      <KineticTitle
+        frame={frame}
+        kicker="キネティック見出し ─ KineticTitle"
+        heading={'Every word\nlands on the beat'}
+        lead="1語ずつ拍に乗せる。入り方は slide・pop・drop の3種類。"
+        bpm={128}
+        start={1}
+        enter={['slide', 'pop', 'drop']}
+      />
+    </Slide>
+  )
+}
+
+function KineticDividerSlide({ frame }: SlideRenderContext) {
+  return (
+    <SectionDivider
+      frame={frame}
+      motion="kinetic"
+      step="03"
+      kicker="章の区切り ─ motion=kinetic"
+      heading="ここから 動きの 話"
+      lead="SectionDivider に motion を渡すと、見出しが拍に合わせて入る"
+    />
+  )
+}
+
+function ParticleSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide tone="ink">
+      <SlideHeading
+        frame={frame}
+        kicker="粒子の文字 ─ ParticleText"
+        heading="文字の形から粒を拾う"
+        lead="ばらまいた約3,000粒が、文字のピクセルに向かって集まる。"
+      />
+      <ParticleText frame={frame} heading="Claude Code" start={1} length={5} count={3200} seed={7} />
+    </Slide>
+  )
+}
+
+function FilmFinishSlide({ frame }: SlideRenderContext) {
+  return (
+    <FilmFinish frame={frame} grain={0.1} vignette={0.3} glitch={[30, 64]}>
+      <Slide tone="accent">
+        <SlideHeading
+          frame={frame}
+          kicker="仕上げの質感 ─ FilmFinish"
+          heading={'粒子感と周辺減光、\n一瞬のグリッチ'}
+          lead="毎フレーム変わるフィルム粒子と周辺減光を重ね、指定したフレームだけRGBをずらす。"
+        />
+        <Callout frame={frame} tone="note" icon="🎞️" label="控えめが既定">
+          <p>既定値はほとんど気付かない強さ。視差効果を減らす設定の閲覧者には、粒子とグリッチを出さない。</p>
+        </Callout>
+      </Slide>
+    </FilmFinish>
   )
 }

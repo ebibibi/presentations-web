@@ -131,6 +131,10 @@ slide.
 />
 ```
 
+`motion="kinetic"` lands the heading word by word on the beat through
+[KineticTitle](#kinetictitle); the default, `fade`, lifts the copy in as one
+block and is unchanged.
+
 ### CodeSlide and Terminal
 
 `Terminal` is the window; `CodeSlide` is a whole slide built around one, with
@@ -246,6 +250,99 @@ be scrubbed with the slide. `poster` replaces the YouTube still with an image
 under `public/`. Pass the 11-character video id, not the watch URL — anything
 else throws at render time rather than showing an empty box.
 
+### KineticTitle
+
+Kinetic typography: the headline's words land one per beat.
+
+```tsx
+<Slide tone="ink" center>
+  <KineticTitle
+    frame={frame}
+    kicker="キネティック見出し"
+    heading={'Every word\nlands on the beat'}
+    lead="1語ずつ拍に乗せる"
+    bpm={128}
+    start={1}
+    enter={['slide', 'pop', 'drop']}
+  />
+</Slide>
+```
+
+| prop | values | effect |
+| --- | --- | --- |
+| `heading` | string | split on spaces; each word is one beat. `\n` breaks the line |
+| `bpm` | number, default `128` | tempo; match the soundtrack so words land on the music |
+| `start` | beat, default `1` | beat the first word lands on (beat 0 is the slide's first frame) |
+| `every` | beats, default `1` | gap between words |
+| `enter` | `slide`, `pop`, `drop`, or a list | `slide` is expo-out from the left, `pop` a back-out scale (overshoot, then settle), `drop` a bounce-out fall. A list is cycled word by word |
+
+Each word is blurred in proportion to how far it moved since the previous frame,
+which reads as motion blur and leaves a word at rest perfectly sharp. The kicker
+fades in first and the lead arrives with the last word.
+
+Japanese has no spaces, so put a half-width space where each beat should fall
+(`"ここから 動きの 話"`). Keep the last word inside roughly 90 frames: arrow-key
+navigation lands a slide on frame 112, and the slide should be settled by then.
+
+### ParticleText
+
+A short word assembled from particles. The word is drawn on an offscreen canvas,
+points are sampled from its glyph pixels, and each particle flies in from a
+seeded scatter to its point.
+
+```tsx
+<Slide tone="ink">
+  <SlideHeading frame={frame} kicker="粒子の文字" heading="文字の形から粒を拾う" />
+  <ParticleText frame={frame} heading="Claude Code" start={1} length={5} count={3200} seed={7} />
+</Slide>
+```
+
+| prop | values | effect |
+| --- | --- | --- |
+| `heading` | string | the word; one to a dozen characters |
+| `bpm`, `start`, `length` | default `128`, `0`, `6` | the flight starts on beat `start` and lasts `length` beats |
+| `count` | default `2800`, capped at 6000 | 2,000–4,000 reads as a word and redraws cheaply |
+| `seed` | number, default `7` | the scatter pattern; the same seed always gives the same flight |
+
+The stage takes the free space left in the slide (`flex: 1`), so put it after the
+heading. Colours come from `--sk-particle-a/b/c` and switch automatically on an
+`ink` slide. There is no `Math.random`: the canvas is redrawn from `frame` alone,
+only when the frame, the size or the word changes, so scrubbing backwards
+un-assembles the word exactly.
+
+A bare Latin token such as `"CLAUDE"` is treated as wiring by the copy extractor
+and cannot be edited from the browser. Use a phrase with a space or Japanese when
+the word should stay editable.
+
+### FilmFinish
+
+Finishing texture: film grain that changes every frame, a vignette, and an
+optional RGB-split glitch with horizontal slice offsets on chosen frames. Wrap
+the slide in it.
+
+```tsx
+<FilmFinish frame={frame} grain={0.1} vignette={0.3} glitch={[30, 64]}>
+  <Slide tone="accent">
+    <SlideHeading frame={frame} kicker="仕上げの質感" heading="粒子感と周辺減光" />
+  </Slide>
+</FilmFinish>
+```
+
+| prop | values | effect |
+| --- | --- | --- |
+| `grain` | 0..1, default `0.08` | strength of the grain; `0` removes it |
+| `vignette` | 0..1, default `0.25` | darkening at the corners; `0` removes it |
+| `glitch` | frame numbers, default none | a glitch starts on each listed frame |
+| `glitchLength` | frames, default `5` | how long one glitch lasts |
+| `seed` | number | grain and glitch pattern; deterministic per frame |
+
+The defaults are meant to be barely noticed. The grain and the vignette sit on
+top with `pointer-events: none`, so links and text selection keep working; the
+glitch filters the slide itself for its few frames and is otherwise absent.
+Viewers with `prefers-reduced-motion: reduce` get the vignette only — no grain
+and no glitch. Keep glitch frames away from the settled frame (112) so a slide
+reached with the arrow keys is never caught mid-glitch.
+
 ### CtaSlide and LogoMark
 
 Re-exported from `src/deck-shared.tsx` so a deck has one import. The branding and
@@ -265,13 +362,44 @@ const styles = useStagger(frame, items.length) // one style per list item
 its own timing. Hooks cannot run in a loop, which is why `useStagger` returns the
 whole array at once.
 
+### Beats and easing
+
+Motion-graphics timing is written in beats, so picture and soundtrack share one
+set of numbers and nothing drifts when the frame rate changes.
+
+```tsx
+import { beatToFrame, ease, progress, useBeat } from '../../../src/slide-kit'
+
+const beat = useBeat(frame, 128)            // 128 BPM, fps from Remotion
+const pop = beat.progress(4, 1, ease.backOut) // one-beat pop starting on beat 4
+const burstFrame = beat.frameOf(28)          // the frame beat 28 lands on
+
+beatToFrame(4, 128, 30)                      // 56.25 — the pure form
+progress(frame, 20, 15, ease.expoOut)        // 0 before frame 20, 1 after frame 35
+```
+
+`ease` holds `linear`, `expoOut` (fast, then a gentle stop — a slide-in),
+`backOut` (overshoot, then settle — a pop), `bounceOut` (drop and bounce) and
+`easeInOutCubic`. `progress` clamps the raw fraction to 0..1 before easing, so
+only an overshooting curve such as `backOut` leaves that range. Beat 0 is the
+first frame of the slide.
+
+For anything random, use `seededRandom(seed)` and `mixSeed(seed, frame)` instead
+of `Math.random`: a slide scrubbed to the same frame must draw the same picture.
+The maths lives in `beat.ts` and `particles.ts`, which stay import-free apart
+from each other so `npm run check:motion` can run them directly under Node.
+
 ## Verification
 
 ```bash
 npm run lint
 npm run build
+npm run check:motion
 npm run check:slide-kit
 ```
+
+`check:motion` unit-checks the beat, easing, seeded-random and particle maths
+(`build` runs it too).
 
 `check:slide-kit` builds the site, walks the showcase deck one slide at a time,
 and fails if a slide is not exactly 1280 x 1080, if its content overflows, or if
