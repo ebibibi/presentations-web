@@ -150,7 +150,7 @@ const TOPICS: Record<string, TopicData> = {
   presentations: {
     category: '作ったもの ─ Webサービス',
     name: 'Webプレゼン配信プラットフォーム',
-    url: 'presentations.ebisuda.net',
+    url: 'slides.ebistudy.net',
     lead: '今まさに映しているこのスライド自体が、それ。',
     points: [
       'ブラウザで動くプレゼン基盤を約1日でMVPまで構築',

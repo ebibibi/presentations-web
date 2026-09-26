@@ -1,4 +1,4 @@
-# Local editing server for presentations.ebisuda.net.
+# Local editing server for slides.ebistudy.net.
 #
 # The published site is static, so slide copy is edited against `npm run dev`
 # running here; the owner-only link on the public site points at this port.
@@ -13,7 +13,7 @@
 # deploys the site. Anyone who can reach the port can do that, so keep it on a
 # trusted network.
 [Unit]
-Description=presentations.ebisuda.net local editing server (Vite dev)
+Description=slides.ebistudy.net local editing server (Vite dev)
 After=network.target
 StartLimitIntervalSec=300
 StartLimitBurst=5

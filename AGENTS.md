@@ -1,6 +1,6 @@
 # Repository Instructions
 
-This is the source for `presentations.ebisuda.net`, a public browser-based presentation platform.
+This is the source for `slides.ebistudy.net`, a public browser-based presentation platform.
 
 ## Language
 

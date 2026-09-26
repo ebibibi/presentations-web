@@ -799,7 +799,7 @@ function RelatedDecksSlide({ frame }: SlideRenderContext) {
         {decks.map((d, i) => (
           <a
             key={d.slug}
-            href={`https://presentations.ebisuda.net/decks/${d.slug}`}
+            href={`https://slides.ebistudy.net/decks/${d.slug}`}
             target="_blank"
             rel="noreferrer"
             style={lift(entrance(frame, fps, 18 + i * 14), 22)}

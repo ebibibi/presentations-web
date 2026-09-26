@@ -31,7 +31,7 @@ slides:
   - id: product-presentations
     title: Webプレゼン配信プラットフォーム
     durationInFrames: 175
-    notes: 今まさに表示しているこのスライド自体がそれ。presentations.ebisuda.net。ブラウザで動くプレゼン基盤を、1日（約9セッション）でMVPまで構築。観客が後から読む閲覧モードと、自分が収録するスタジオモードを分離。スライドはコードで書くのでアニメーションも自由。今日のこのデッキもAIが新規作成した。
+    notes: 今まさに表示しているこのスライド自体がそれ。slides.ebistudy.net。ブラウザで動くプレゼン基盤を、1日（約9セッション）でMVPまで構築。観客が後から読む閲覧モードと、自分が収録するスタジオモードを分離。スライドはコードで書くのでアニメーションも自由。今日のこのデッキもAIが新規作成した。
   - id: product-debate
     title: 論点マップ
     durationInFrames: 170
