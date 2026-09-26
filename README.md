@@ -1,6 +1,6 @@
 # Ebisuda Presentations
 
-Personal web presentation platform for publishing YouTube-linked rich slide decks at `presentations.ebisuda.net`.
+Personal web presentation platform for publishing YouTube-linked rich slide decks at `slides.ebistudy.net`.
 
 ## Goals
 
@@ -112,7 +112,7 @@ time or the `deck-local-editor-hosts` localStorage key in the browser. It is a
 plain link on purpose: an HTTPS page may not fetch a private address, so the site
 cannot tell whether the dev server is up — it only offers the door.
 
-**In production.** Signed in as an owner on `presentations.ebisuda.net`, the same
+**In production.** Signed in as an owner on `slides.ebistudy.net`, the same
 editor appears. There is no checkout there, so a save is a commit on GitHub
 instead of a file write: the copy index published with the build
 (`/deck-text/<slug>.json`) locates the string, a Pages Function re-verifies the
@@ -215,7 +215,14 @@ Cloudflare Pages project name:
 
 Production custom domain:
 
-- `presentations.ebisuda.net`
+- `slides.ebistudy.net`
+
+The former host `presentations.ebisuda.net` is attached to the redirect-only
+Pages project `presentations-redirect` (`redirect/_redirects`), which answers
+every path with a 301 to the same path on `slides.ebistudy.net`. Links already
+published in YouTube descriptions keep working through it. It has to stay a
+separate project: Pages `_redirects` cannot redirect by hostname, so putting the
+rule here would send the new host to itself.
 
 ## Google Analytics
 

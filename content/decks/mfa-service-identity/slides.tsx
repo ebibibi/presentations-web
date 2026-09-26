@@ -1094,7 +1094,7 @@ function NextDecksSlide({ frame }: SlideRenderContext) {
         {decks.map((deck, i) => (
           <a
             key={deck.slug}
-            href={`https://presentations.ebisuda.net/decks/${deck.slug}`}
+            href={`https://slides.ebistudy.net/decks/${deck.slug}`}
             target="_blank"
             rel="noreferrer"
             style={lift(entrance(frame, fps, 18 + i * 14), 22)}

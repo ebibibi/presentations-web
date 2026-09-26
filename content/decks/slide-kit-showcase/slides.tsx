@@ -44,7 +44,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
   return (
     <TitleSlide
       frame={frame}
-      kicker="presentations.ebisuda.net ─ 開発者向け"
+      kicker="slides.ebistudy.net ─ 開発者向け"
       heading={'スライド部品\nライブラリ'}
       lead="同じ見た目を、毎回書き直さずに出す"
       points={[
