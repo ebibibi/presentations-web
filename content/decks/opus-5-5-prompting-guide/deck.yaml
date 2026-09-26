@@ -1,7 +1,7 @@
 slug: opus-5-5-prompting-guide
 title: Opus 5.5 公式プロンプトガイドの要点 ─「よく考えて」は消していい
 summary: Anthropicが公開した「Prompting Claude Opus 5.5」の要点を整理します。思考量はプロンプトではなくeffortで調整し、既定のmediumでOpus 5のhigh相当。後半は、長時間タスクのチェックリスト、複数アプリの事前探索、マルチエージェントへの時間予算など、プロンプトの書き方よりハーネス側の設計が中心になっています。
-status: draft
+status: public
 visibility: public
 canvas: standard
 thumbnail: /thumbs/opus-5-5-prompting-guide.png
@@ -13,6 +13,11 @@ tags:
   - api
   - agents
   - ai-agent
+youtube:
+  id: MvLN0oNJzJU
+  url: https://www.youtube.com/watch?v=MvLN0oNJzJU
+  title: "opus5.5"
+  publishedAt: "2026-09-26"
 slides:
   - id: opening
     title: Opus 5.5 公式プロンプトガイドの要点
