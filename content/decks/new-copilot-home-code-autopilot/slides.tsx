@@ -21,8 +21,11 @@ export const slides: SlideModule['slides'] = [
   { id: 'home', render: (props) => <HomeSlide {...props} /> },
   { id: 'code', render: (props) => <CodeSlide {...props} /> },
   { id: 'managed-runtime', render: (props) => <ManagedRuntimeSlide {...props} /> },
+  { id: 'runtime-sdk', render: (props) => <RuntimeSdkSlide {...props} /> },
   { id: 'autopilot', render: (props) => <AutopilotSlide {...props} /> },
+  { id: 'work-iq', render: (props) => <WorkIqSlide {...props} /> },
   { id: 'pricing', render: (props) => <PricingSlide {...props} /> },
+  { id: 'usl-detail', render: (props) => <UslDetailSlide {...props} /> },
   { id: 'finops', render: (props) => <FinOpsSlide {...props} /> },
   { id: 'timeline', render: (props) => <AvailabilitySlide {...props} /> },
   { id: 'reading', render: (props) => <ReadingSlide {...props} /> },
@@ -172,6 +175,73 @@ function AutopilotSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function RuntimeSdkSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="Managed Runtime の中身"
+        heading={'作るのは自由、\n動かすのは管理下で'}
+      />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: '作る人' }, { label: 'IT部門', accent: true }]}
+        rows={[
+          { label: '道具', cells: ['好きなツール（例：Lovable）', 'SDK・CLIで同じ基盤へ'] },
+          { label: '版管理', cells: ['Gitで自動管理', '現行版を止めずに新版を試す'] },
+          { label: '見る場所', cells: ['いつもの共有・サインイン', 'M365管理センター「Apps」'] },
+        ]}
+      />
+      <Callout frame={frame} icon="🧩" label="Microsoftの言い方">
+        <p>一元的な統制に、作成の一元化は要らない</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function WorkIqSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="Work IQ × Dynamics 365 / Power Platform（9月30日からプレビュー）"
+        heading={'業務システムのデータも\nCopilotが読む'}
+      />
+      <Timeline
+        frame={frame}
+        orientation="vertical"
+        steps={[
+          { label: '理解', heading: 'セマンティックモデル', body: '既存のビュー・リレーション・用語集から文脈を作る' },
+          { label: '手順', heading: 'ビジネススキル', body: '社内の進め方を再利用できる形にする' },
+          { label: '実行', heading: '統制されたアクション', body: '承認を経て、利用者の権限内でレコードを更新', accent: true },
+        ]}
+      />
+    </Slide>
+  )
+}
+
+function UslDetailSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="定額（USL）の中身"
+        heading={'賢さが要らない仕事は\n定額で回す'}
+        lead="根拠は「飽和」：要約に最強のモデルは要らない"
+      />
+      <Timeline
+        frame={frame}
+        orientation="vertical"
+        steps={[
+          { label: '含まれる', heading: 'Auto、GPT-5.6、Sonnet 5', body: 'Opus 5などの新モデルは上限付き' },
+          { label: '上限', heading: 'フェアユースに届いたら警告', body: 'Autoへ切替（追加費用なし）か、クレジットへ' },
+          { label: '今後', heading: '採算が合えば従量から定額へ移る機能も', accent: true },
+        ]}
+      />
+    </Slide>
+  )
+}
+
 function PricingSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
@@ -206,7 +276,8 @@ function FinOpsSlide({ frame }: SlideRenderContext) {
         steps={[
           { label: '予算', heading: 'テナント・グループ単位＋ユーザー上限・アラート' },
           { label: 'モデル', heading: 'グループごとに使えるモデルを絞る', body: 'Autoが選ぶモデルにも効く' },
-          { label: '自動化', heading: 'Graph APIでポリシーを一括管理' },
+          { label: '部門', heading: 'Azureのサブスク・リソースグループに付け替え' },
+          { label: '自動化', heading: 'Graph API・既存の承認フローに接続' },
           { label: '利用者', heading: '自分の残りクレジットをCopilotで確認', accent: true },
         ]}
       />
@@ -282,29 +353,22 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
 }
 
 function SourcesSlide({ frame }: SlideRenderContext) {
+  const links = [
+    ['発表本体', 'Introducing the new Copilot with Home, Code and Autopilot', 'https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/'],
+    ['課金', 'Evolution of the Copilot pricing model', 'https://techcommunity.microsoft.com/blog/microsoft-copilot-blog/evolution-of-the-copilot-pricing-model/4559416'],
+    ['実行基盤', 'Microsoft Copilot Managed Runtime', 'https://www.microsoft.com/en-us/copilot/blog/copilot-studio/build-where-you-want-run-with-confidence-now-microsoft-hosts-and-manages-the-code-created-by-copilot/'],
+    ['業務データ', 'Business applications in Work IQ', 'https://aka.ms/BizAppsInWorkIQ/Blog'],
+    ['コスト管理', 'New FinOps for AI capabilities', 'https://techcommunity.microsoft.com/blog/ai-finops-blog/new-finops-for-ai-capabilities-control-spend-measure-value-and-optimize-for-impa/4559660'],
+  ]
   return (
     <Slide>
       <SlideHeading frame={frame} kicker="出典" heading="一次情報" lead="すべて2026年9月25日公開のMicrosoft公式情報" />
-      <Callout frame={frame} icon="📰" label="発表本体">
-        <p>
-          <a href="https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/" target="_blank" rel="noreferrer">
-            Introducing the new Copilot with Home, Code and Autopilot
-          </a>
-        </p>
-      </Callout>
-      <Callout frame={frame} icon="💴" label="課金の考え方">
-        <p>
-          <a href="https://techcommunity.microsoft.com/blog/microsoft-copilot-blog/evolution-of-the-copilot-pricing-model/4559416" target="_blank" rel="noreferrer">
-            Evolution of the Copilot pricing model
-          </a>
-        </p>
-      </Callout>
-      <Callout frame={frame} icon="🏗️" label="アプリの実行基盤">
-        <p>
-          <a href="https://www.microsoft.com/en-us/copilot/blog/copilot-studio/build-where-you-want-run-with-confidence-now-microsoft-hosts-and-manages-the-code-created-by-copilot/" target="_blank" rel="noreferrer">
-            Microsoft Copilot Managed Runtime: Enterprise code execution for Microsoft 365
-          </a>
-        </p>
+      <Callout frame={frame} icon="📰" label="発表本体と関連記事">
+        {links.map(([label, title, href]) => (
+          <p key={href}>
+            {label}：<a href={href} target="_blank" rel="noreferrer">{title}</a>
+          </p>
+        ))}
       </Callout>
       <Callout frame={frame} tone="warn" icon="⚠️" label="提供時期と価格は変わりうる">
         <p>判断の前に、一次情報の最新状態を確認してください</p>
