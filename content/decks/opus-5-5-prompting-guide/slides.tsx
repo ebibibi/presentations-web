@@ -42,8 +42,8 @@ function OpeningSlide({ frame }: SlideRenderContext) {
   return (
     <TitleSlide
       frame={frame}
-      kicker="Anthropic 公式ガイド ─ Prompting Claude Opus 5.5"
-      heading={'「よく考えて」は\n消していい'}
+      kicker="Anthropic ─ Prompting Claude Opus 5.5"
+      heading={'Opus 5.5 公式ガイド\n「よく考えて」は消していい'}
       lead="思考量はeffortで決める。後半はハーネスの設計の話"
       points={[
         { step: '01', heading: 'effortが主役', body: '既定のmediumでOpus 5のhigh相当' },
