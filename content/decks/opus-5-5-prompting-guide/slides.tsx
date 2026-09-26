@@ -328,18 +328,22 @@ function PastedSlide({ frame }: SlideRenderContext) {
 function VisualFrontendSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="画像入力・フロントエンド" heading={'以前の足場は\n外せるかもしれない'} />
+      <SlideHeading
+        frame={frame}
+        kicker="画像を読ませる・Web画面を作らせる"
+        heading={'図表の読み取りと\nWeb画面づくり'}
+      />
       <ComparisonTable
         frame={frame}
-        columns={[{ label: '画像・図表の入力' }, { label: 'フロントエンド', accent: true }]}
+        columns={[{ label: '図表・スクショを読ませる' }, { label: 'Web画面を作らせる', accent: true }]}
         rows={[
-          { label: '変化', cells: ['最低effortでもOpus 5の最高より正確', '指示がないと既定のスタイルに戻る'] },
-          { label: 'やること', cells: ['以前の補助の要否を再テスト', '避けたいパターンを具体的に名指し'] },
-          { label: 'まだ効く', cells: ['高解像度・切り抜き/拡大ツール', '結果を見てリストを足していく'] },
+          { label: '変化', cells: ['最低effortでもOpus 5の最高より正確', 'デザイン指示がないと決まった見た目に戻る'] },
+          { label: 'やること', cells: ['以前の補助の要否を再テスト', '避けたい見た目を具体的に名指し'] },
+          { label: 'まだ効く', cells: ['高解像度・切り抜き/拡大ツール', '出てきた型を禁止リストに足していく'] },
         ]}
       />
-      <Callout frame={frame} icon="🎨" label="「AIっぽさを避けて」は効かない">
-        <p>別の既定値に入れ替わるだけ</p>
+      <Callout frame={frame} icon="🎨" label="公式の例：こう名指しする">
+        <p>クリーム色の背景、見出しの斜体の強調、「01/02/03」の番号ラベル、等幅フォントのラベル、角の丸い錠剤型ボタンは使わない</p>
       </Callout>
     </Slide>
   )
