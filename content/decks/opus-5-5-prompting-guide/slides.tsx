@@ -355,18 +355,21 @@ function RefusalsSlide({ frame }: SlideRenderContext) {
       <SlideHeading
         frame={frame}
         kicker="Safeguard refusals"
-        heading={'安全分類器による\n拒否'}
-        lead={'stop_reason: "refusal" で返る'}
+        heading={'3つの分野は\n自動チェックで断られる'}
+        lead="依頼が引っかかると、回答の代わりに「お断り」が返る"
       />
       <ComparisonTable
         frame={frame}
-        columns={[{ label: '範囲' }, { label: '注意点', accent: true }]}
+        columns={[{ label: '引っかかる依頼' }, { label: '大丈夫なこと・代わりの手', accent: true }]}
         rows={[
-          { label: '生物', cells: ['Fable 5.1 と同じ', 'Opus 5 から来ると新しい'] },
-          { label: 'サイバー', cells: ['脆弱性の発見は可', '高リスクなデュアルユースは不可'] },
-          { label: '推論抽出', cells: ['本文への推論の再現', 'フォールバックで再試行されない'] },
+          { label: '生物', cells: ['悪用につながる生物学の依頼', '健康・教育の質問は影響なし'] },
+          { label: 'サイバー', cells: ['攻撃に転用できる高リスク作業', 'コードの脆弱性探しはOK'] },
+          { label: '推論抽出', cells: ['考えた過程を回答本文に書かせる', '思考の要約は別枠で受け取る'] },
         ]}
       />
+      <Callout frame={frame} tone="warn" icon="🧠" label="推論抽出とは">
+        <p>「考えた過程を全部、回答に書き出して」という依頼。Opus 5.5 は裏で考える（thinking）ので、その中身を本文に出させようとすると断られる</p>
+      </Callout>
     </Slide>
   )
 }
