@@ -118,28 +118,26 @@ function EffortTipsSlide({ frame }: SlideRenderContext) {
 
 function DeleteThinkSlide({ frame }: SlideRenderContext) {
   return (
-    <CodeSlide
-      frame={frame}
-      kicker="チャットのシステムプロンプト"
-      heading={'「よく考えて」は\n消していい'}
-      caption="system prompt 末尾に2文（公式例）"
-      lines={[
-        { kind: 'output', body: 'Once you have answered something,' },
-        { kind: 'output', body: 'treat that answer as done. On' },
-        { kind: 'output', body: 'later turns, focus your thinking' },
-        { kind: 'output', body: 'on what the user is asking now,' },
-        { kind: 'output', body: "and don't go back over an earlier" },
-        { kind: 'output', body: 'answer unless the user asks about' },
-        { kind: 'output', body: 'it or points out a problem with it.' },
-      ]}
-    >
-      <Callout frame={frame} tone="good" icon="⚡" label="削除した結果">
-        <p>返答の開始が早まり、品質の明確な低下なし</p>
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="チャットのシステムプロンプト"
+        heading={'「よく考えて」は\n消していい'}
+        lead="思考量はモデル自身とeffortが決める"
+      />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: '① 消す' }, { label: '② 足してもいい（任意）', accent: true }]}
+        rows={[
+          { label: '中身', cells: ['「回答前によく考えて」系の指示', '「答えた内容は確定扱い」の2文'] },
+          { label: '狙い', cells: ['考えすぎによる返答の遅れを消す', '追加の質問で前の回答を蒸し返さない'] },
+          { label: '効果', cells: ['返答が早まり、品質の明確な低下なし', '後続ターンの思考が減り、返答が早まる'] },
+        ]}
+      />
+      <Callout frame={frame} tone="warn" icon="⚠️" label="②を入れない場面">
+        <p>長い分析や、後で誤りに気づいてほしいエージェント作業。自分から誤りを指摘しにくくなる</p>
       </Callout>
-      <Callout frame={frame} tone="warn" icon="⚠️" label="入れない場面">
-        <p>長い分析や、後で誤りに気づいてほしいエージェント作業</p>
-      </Callout>
-    </CodeSlide>
+    </Slide>
   )
 }
 
