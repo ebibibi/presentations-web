@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "node scripts/check-decks.mjs && node scripts/check-motion.mjs && node scripts/check-deck-text.mjs && node scripts/check-deck-source.mjs && node scripts/build-text-index.mjs && tsc -b && vite build",
+    "build": "node scripts/check-decks.mjs && node scripts/check-motion.mjs && node scripts/check-deck-text.mjs && node scripts/check-deck-source.mjs && node scripts/build-text-index.mjs && tsc -b && vite build && node scripts/prerender-decks.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
     "check:recording": "npm run build && node scripts/check-recording-surface.mjs",
@@ -24,7 +24,9 @@
     "check:text": "node scripts/check-deck-text.mjs",
     "check:source": "node scripts/check-deck-source.mjs",
     "build:text-index": "node scripts/build-text-index.mjs",
-    "check:source-editor": "node scripts/check-source-editor.mjs"
+    "check:source-editor": "node scripts/check-source-editor.mjs",
+    "test:prerender": "node --test scripts/prerender-decks.test.mjs",
+    "prerender": "node scripts/prerender-decks.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.481",
