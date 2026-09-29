@@ -4,7 +4,7 @@ summary: Microsoft 365 Copilotが本来の性能を出せるのは、Microsoft 3
 status: public
 visibility: public
 createdAt: "2026-09-25"
-updatedAt: "2026-09-25"
+updatedAt: "2026-09-29"
 canvas: standard
 tags:
   - copilot
@@ -15,8 +15,8 @@ tags:
 youtube:
   id: bkunkO4QDEU
   url: https://www.youtube.com/watch?v=bkunkO4QDEU
-  title: "main"
-  publishedAt: "2026-09-25"
+  title: "Microsoft 365 Copilotが空回りする組織 ─ 導入前に情シスが確認すべき前提"
+  publishedAt: "2026-09-29"
 slides:
   - id: opening
     title: Copilotが活きるのはM365を素直に使う会社だけ
