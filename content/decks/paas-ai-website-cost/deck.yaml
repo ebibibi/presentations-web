@@ -1,0 +1,115 @@
+slug: paas-ai-website-cost
+title: 「サイトの運用は大変」はもう古い ─ PaaS＋AIの時代に、何にお金を払うべきか
+summary: Webサイトと聞いてレンタルサーバーと保守契約を思い浮かべる前提は、クラウドのPaaSとAIで大きく変わりました。Cloudflareの無料プランでできること、公式が示すプランの用途区分とSLAの有無、SLAが付く金額、Azure Static Web Appsとの比較まで、公式の料金と規約で確かめます。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-09-30"
+updatedAt: "2026-09-30"
+tags:
+  - cloudflare
+  - azure
+  - static-web-apps
+  - paas
+  - cost
+slides:
+  - id: opening
+    title: 「サイトの運用は大変」はもう古い
+    durationInFrames: 240
+    notes: 結論から。Webサイトづくりは、PaaSとAIで昔とは何もかも違います。静的サイトなら配信もSSLも月0円。ただし業務で頼るなら、何にお金を払うかを見極める必要がある、という話です。
+  - id: x-posts
+    title: この話です ─ 9月29日のX投稿
+    durationInFrames: 260
+    notes: この話です。医師会のホームページ立ち上げで初期費用60万円、管理維持費が月2万5千円という投稿を引用して、ITの正しい価格が分からない、自分でできる人から見たら情弱ぼったくり価格に見える、と書いた。続けて、運用も今どきクラウドに置けば下回りはお任せ、Cloudflareの無料枠で静的コンテンツは捌ける、更新はClaudeに頼める、と書いた。
+  - id: answer
+    title: PaaS＋AIで昔とは何もかも違う
+    durationInFrames: 200
+    notes: 私の見立てです。公式に確認できる事実として、Cloudflareの無料プランには配信・SSL・DDoS防御が含まれます。PaaSは後で説明します。
+  - id: old-picture
+    title: 「Webサイトを作る」と聞いて思い浮かべる流れ
+    durationInFrames: 220
+    notes: サーバーを借りる、業者に作ってもらう、保守契約を結ぶ。その裏に「サイトは自社で保守するもの、人手とお金がかかり続ける」という思い込みがある。
+  - id: rental-server
+    title: レンタルサーバー自体は安い
+    durationInFrames: 240
+    notes: エックスサーバーのスタンダードは月990円から（36か月契約、税込）。重いのは料金ではなく、WordPressやプラグイン、PHPの更新、改ざん対応。私の意見では、レンタルサーバーやWordPressを持ち出すこと自体がオーバーヘッド。
+  - id: paas-big
+    title: 土台ごと任せて、中身だけ置く
+    durationInFrames: 160
+    notes: サーバーを借りるのをやめて、土台ごと任せる。それがPaaS。
+  - id: responsibility
+    title: PaaS＝土台は事業者任せ
+    durationInFrames: 260
+    notes: 自社サーバー、レンタルサーバー、Cloudflare Pagesで誰が何を面倒見るか。一般的な例を私が整理したもので、業者や契約で異なる。
+  - id: easier
+    title: Cloudflare Pagesで「やらなくてよくなる」こと
+    durationInFrames: 240
+    notes: Gitに送れば自動でビルドと公開。SSL証明書は自動発行・自動更新。DDoS防御は無料プランでも付く。確認用URLは何個でも作れる。AzureのStatic Web Appsなど、同じ種類のPaaSは各クラウドにある。
+  - id: global-big
+    title: 世界348都市の拠点から配信
+    durationInFrames: 180
+    notes: しかも性能が桁違い。Cloudflareの公式ネットワークページでは348都市。CDNは世界中の拠点から近くの人に届ける仕組み。
+  - id: performance
+    title: 置いた瞬間の実力が違う
+    durationInFrames: 300
+    notes: 配信する場所、配信の回数、攻撃対策、パッチ当て、通信料、CDN。通信料は正直に言うと、エックスサーバーは転送量無制限で課金なし。差が出るのは自前の仮想マシンに置いた場合で、Azure東日本は月100GB超で1GBあたり0.12ドルから。
+  - id: ai
+    title: 作るのも直すのも、AIに頼める
+    durationInFrames: 240
+    notes: 連休の6日間でAIがPR158本をマージした実績。私の意見として、人間が作るよりクオリティが高く、保守もしやすい。
+  - id: zero-yen
+    title: 静的サイトなら月0円
+    durationInFrames: 160
+    notes: 無料プランの上限内なら。独自ドメイン代は別。業務で使うときの話は後半で。
+  - id: free-plan
+    title: Cloudflare無料プランに入っているもの
+    durationInFrames: 260
+    notes: ドメイン単位のFreeプランにDNS、CDN、SSL、DDoS防御、基本の攻撃遮断ルール。Pagesの無料上限はビルド月500回、独自ドメイン1プロジェクト100個、ファイル2万個・1個25MiB。静的ファイルの配信無料はWorkers版の公式ドキュメントで明記。
+  - id: dynamic
+    title: フォームやDBにも無料枠
+    durationInFrames: 260
+    notes: Workersの無料枠は1日10万回、1回10msの計算。超えた処理はエラー。D1は5GB、R2は10GB-月で転送料無料。有料のWorkers Paidはアカウント単位で月5ドルから。公式の計算例では月1,500万リクエスト、8割が静的ファイルで合計月5ドル。
+  - id: my-setup
+    title: 私のサイトも実際にここへ集めている
+    durationInFrames: 220
+    notes: Pagesに10プロジェクト。9月29日に、個人と自分の会社のWebはCloudflareを標準にすると決めた。AzureはIDやM365連携など補完に回す。
+  - id: official-plans
+    title: Cloudflare公式の言い分
+    durationInFrames: 300
+    notes: 向こうも商売。FreeとProは業務上重要でないもの向け、Businessはオンラインで事業をする中小企業向け、Contractは事業の中核を担う用途。SLAが付くのはBusinessから。止まったら困るなら払ってね、は筋が通っている、というのが私の見方。
+  - id: real-price
+    title: 「業務で使うなら払う」の金額
+    durationInFrames: 260
+    notes: 月5ドルでも20ドルでもない。Cloudflareのドメイン向けプランで稼働率の保証を得るなら、月200ドル（年払い）から。Pages・Workers自体が保証の対象になるかは規約で要確認。
+  - id: azure-swa
+    title: Azure SWAは月9ドルで保証付き
+    durationInFrames: 280
+    notes: Standardは1アプリ月9ドルで、SLA 99.95%。下回ると料金の10%、99%未満で25%がクレジットされる。Cloudflare標準の私から見ても、保証付きの業務サイトならこの価格は競争力がある。ただしCloudflare Businessは防御込みのドメイン単位プラン、SWAは1アプリ単位のサイト置き場で、性格も保証条件も違う。
+  - id: both-true
+    title: 無料でできることと、払うべきこと
+    durationInFrames: 240
+    notes: 個人ならかなりのことができる。法人サイトも特別なことをしなければ無料枠で捌ける（私の見立て）。一方で、無料枠を超えた処理は止まるし、止まったら業務に響くサイトや保証が要るときはお金を払う。
+  - id: opinion-price
+    title: 「数百万円」の見積もりに首をかしげてしまう
+    durationInFrames: 240
+    notes: リスクへの備え、体制の維持、保守の人件費は分からなくもない。でも自分でできる人から見ると実装は1日くらいの感覚。見積もりの中身を場所代・作る手間・保守・保証に分けて見てほしい。
+  - id: judge
+    title: 見極めるのは
+    durationInFrames: 180
+    notes: どこに、何のために、何のお金を払うのか。その価値は「今」本当にあるか。
+  - id: checklist
+    title: 自社サイトについて今日確認する3項目
+    durationInFrames: 240
+    notes: 特別なことをしているか。払っているお金を分けて見たか。止まったら困る度合いに見合っているか。
+  - id: conclusion
+    title: PaaS＋AIの威力は本物
+    durationInFrames: 180
+    notes: 私の結論。PaaS＋AIの威力は本物。払うのは「今」価値があるものにだけ。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: 料金・上限・SLAは2026年9月30日時点の公式ページと規約。
+  - id: cta
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
