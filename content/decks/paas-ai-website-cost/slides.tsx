@@ -336,7 +336,7 @@ function MySetupSlide({ frame }: SlideRenderContext) {
         orientation="vertical"
         steps={[
           { label: '10', heading: 'Cloudflare Pagesに10プロジェクト', body: 'ebistudy.net・shogi.ebisuda.net・debate.ebisuda.net・www.hccjp.org など' },
-          { label: '9/29', heading: '個人と自分の会社のWebはCloudflareを標準に', body: 'AzureはID・M365連携などの補完に回す', accent: true },
+          { label: '9/29', heading: '個人とコミュニティのWebはCloudflareを標準に', body: 'AzureはID・M365連携などの補完に回す', accent: true },
         ]}
       />
       <Callout frame={frame} icon="🧑‍💻" label="Microsoft MVPの私でも">
