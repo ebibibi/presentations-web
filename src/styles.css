@@ -13224,3 +13224,31 @@ main {
   color: var(--muted);
   font-size: 21px;
 }
+
+/* Deck: paas-ai-website-cost (post screenshot beside its link) */
+.paas-post {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  flex: 1;
+  min-height: 0;
+}
+
+.paas-post-shot {
+  flex: none;
+  max-height: 740px;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.paas-post-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.paas-post-side a {
+  word-break: break-all;
+}

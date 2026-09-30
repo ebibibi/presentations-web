@@ -17,14 +17,14 @@ slides:
     title: 「サイトの運用は大変」はもう古い
     durationInFrames: 240
     notes: 結論から。Webサイトづくりは、PaaSとAIで昔とは何もかも違います。静的サイトなら配信もSSLも月0円。ただし業務で頼るなら、何にお金を払うかを見極める必要がある、という話です。
+  - id: x-posts
+    title: この話です ─ 9月29日のX投稿
+    durationInFrames: 260
+    notes: この話です。医師会のホームページ立ち上げで初期費用60万円、管理維持費が月2万5千円という投稿を引用して、ITの正しい価格が分からない、自分でできる人から見たら情弱ぼったくり価格に見える、と書いた。続けて、運用も今どきクラウドに置けば下回りはお任せ、Cloudflareの無料枠で静的コンテンツは捌ける、更新はClaudeに頼める、と書いた。
   - id: answer
     title: PaaS＋AIで昔とは何もかも違う
     durationInFrames: 200
     notes: 私の見立てです。公式に確認できる事実として、Cloudflareの無料プランには配信・SSL・DDoS防御が含まれます。PaaSは後で説明します。
-  - id: x-posts
-    title: きっかけは9月29日のX投稿
-    durationInFrames: 240
-    notes: 2つの投稿を読み上げる。運用は下回りお任せ、Cloudflareの無料枠で捌ける、更新はClaudeに頼める。そして見積もりの数百万円が情弱ぼったくり価格に見える、という話。
   - id: old-picture
     title: 「Webサイトを作る」と聞いて思い浮かべる流れ
     durationInFrames: 220

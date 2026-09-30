@@ -13,6 +13,7 @@ import {
 } from '../../../src/slide-kit'
 
 const SOURCES = [
+  { label: '胡田のX投稿（2026年9月29日）', url: 'https://x.com/ebi/status/2104891831091925063' },
   { label: 'Cloudflare Plans', url: 'https://www.cloudflare.com/plans/' },
   { label: 'Cloudflare Network', url: 'https://www.cloudflare.com/network/' },
   { label: 'Cloudflare Pages Limits', url: 'https://developers.cloudflare.com/pages/platform/limits/' },
@@ -26,8 +27,8 @@ const SOURCES = [
 
 export const slides: SlideModule['slides'] = [
   { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
-  { id: 'answer', render: (props) => <AnswerSlide {...props} /> },
   { id: 'x-posts', render: (props) => <XPostsSlide {...props} /> },
+  { id: 'answer', render: (props) => <AnswerSlide {...props} /> },
   { id: 'old-picture', render: (props) => <OldPictureSlide {...props} /> },
   { id: 'rental-server', render: (props) => <RentalServerSlide {...props} /> },
   { id: 'paas-big', render: (props) => <PaasBigSlide {...props} /> },
@@ -81,20 +82,31 @@ function AnswerSlide({ frame }: SlideRenderContext) {
   )
 }
 
+const POST_URL = 'https://x.com/ebi/status/2104891831091925063'
+
 function XPostsSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="きっかけ" heading={'9月29日の\n私のX投稿'} />
-      <Callout frame={frame} icon="💬" label="投稿1">
-        <p>
-          今時クラウドにコンテンツ展開しておけば下回りは全部お任せだし、なんならCloudflareとか使っておけば無料枠でもたいていの静的なコンテンツなんて捌けるし。更新だって、claudeにでもお願いすれば破綻なくやり続けてくれる。
-        </p>
-      </Callout>
-      <Callout frame={frame} tone="warn" icon="💬" label="投稿2">
-        <p>
-          私がやるなら実装部分は１日かなー？って感覚で数百万くらいの値段になる。（中略）自分でできる人から見たら「情弱ぼったくり価格」に全部見えるんだよね。
-        </p>
-      </Callout>
+      <SlideHeading frame={frame} kicker="2026年9月29日の私のX投稿" heading="この話です" />
+      <div className="paas-post">
+        <img
+          className="paas-post-shot"
+          src="/decks/paas-ai-website-cost/x-post-2026-09-29.webp"
+          alt="胡田のX投稿とスレッドのスクリーンショット"
+        />
+        <div className="paas-post-side">
+          <Callout frame={frame} icon="🔗" label="投稿">
+            <p>
+              <a href={POST_URL} target="_blank" rel="noreferrer">
+                x.com/ebi/status/2104891831091925063
+              </a>
+            </p>
+          </Callout>
+          <Callout frame={frame} tone="warn" icon="💬" label="言いたかったこと">
+            <p>今どきクラウドに置けば下回りはお任せ。Cloudflareの無料枠で静的サイトは捌けるし、更新はAIに頼める</p>
+          </Callout>
+        </div>
+      </div>
     </Slide>
   )
 }
