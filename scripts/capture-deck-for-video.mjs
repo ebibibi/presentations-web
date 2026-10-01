@@ -15,7 +15,8 @@ if (!slug || !out) {
 }
 await mkdir(`${out}/stills`, { recursive: true })
 const site = await startStaticSite({ port: 5198, session: { authenticated: true, canRecord: true, user: { email: 'ebibibi@gmail.com', name: 'capture' } } })
-const browser = await chromium.launch()
+// Without an explicit window size the fullscreen recording surface is captured at 800x600.
+const browser = await chromium.launch({ args: ['--window-size=1920,1080'] })
 const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 }, recordVideo: { dir: `${out}/video`, size: { width: 1920, height: 1080 } } })
 const page = await ctx.newPage()
 const t0 = Date.now()
