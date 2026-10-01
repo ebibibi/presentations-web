@@ -1,17 +1,22 @@
 slug: paas-ai-website-cost
 title: 「サイトの運用は大変」はもう古い ─ PaaS＋AIの時代に、何にお金を払うべきか
 summary: Webサイトと聞いてレンタルサーバーと保守契約を思い浮かべる前提は、クラウドのPaaSとAIで大きく変わりました。Cloudflareの無料プランでできること、公式が示すプランの用途区分とSLAの有無、SLAが付く金額、Azure Static Web Appsとの比較まで、公式の料金と規約で確かめます。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-09-30"
-updatedAt: "2026-09-30"
+updatedAt: "2026-10-01"
 tags:
   - cloudflare
   - azure
   - static-web-apps
   - paas
   - cost
+youtube:
+  id: 6vhsMvbQS18
+  url: https://www.youtube.com/watch?v=6vhsMvbQS18
+  title: "Cloudflare無料枠でホームページ維持費は0円に ─「レンタルサーバー＋保守契約」はもう時代遅れ"
+  publishedAt: "2026-10-01"
 slides:
   - id: opening
     title: 「サイトの運用は大変」はもう古い
