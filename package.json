@@ -26,7 +26,8 @@
     "build:text-index": "node scripts/build-text-index.mjs",
     "check:source-editor": "node scripts/check-source-editor.mjs",
     "test:prerender": "node --test scripts/prerender-decks.test.mjs",
-    "prerender": "node scripts/prerender-decks.mjs"
+    "prerender": "node scripts/prerender-decks.mjs",
+    "capture:video": "node scripts/capture-deck-for-video.mjs"
   },
   "dependencies": {
     "@remotion/player": "^4.0.481",
