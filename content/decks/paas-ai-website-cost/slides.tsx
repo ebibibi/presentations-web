@@ -309,7 +309,7 @@ function FreePlanSlide({ frame }: SlideRenderContext) {
 function DynamicSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="プログラムも動かすなら" heading={'フォームやDBにも無料枠。\n超えても月5ドル〜'} />
+      <SlideHeading frame={frame} kicker="プログラムも動かすなら" heading={'WorkersやDBにも\n無料枠。\n超えても月5ドル〜'} />
       <ComparisonTable
         frame={frame}
         columns={[{ label: '無料枠' }, { label: 'Workers Paid', accent: true }]}
@@ -336,7 +336,7 @@ function MySetupSlide({ frame }: SlideRenderContext) {
         orientation="vertical"
         steps={[
           { label: '10', heading: 'Cloudflare Pagesに10プロジェクト', body: 'ebistudy.net・shogi.ebisuda.net・debate.ebisuda.net・www.hccjp.org など' },
-          { label: '9/29', heading: '個人と自分の会社のWebはCloudflareを標準に', body: 'AzureはID・M365連携などの補完に回す', accent: true },
+          { label: '9/29', heading: '個人とコミュニティのWebはCloudflareを標準に', body: 'AzureはID・M365連携などの補完に回す', accent: true },
         ]}
       />
       <Callout frame={frame} icon="🧑‍💻" label="Microsoft MVPの私でも">
