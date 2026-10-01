@@ -309,7 +309,7 @@ function FreePlanSlide({ frame }: SlideRenderContext) {
 function DynamicSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="プログラムも動かすなら" heading={'フォームやDBにも無料枠。\n超えても月5ドル〜'} />
+      <SlideHeading frame={frame} kicker="プログラムも動かすなら" heading={'WorkersやDBにも\n無料枠。\n超えても月5ドル〜'} />
       <ComparisonTable
         frame={frame}
         columns={[{ label: '無料枠' }, { label: 'Workers Paid', accent: true }]}
