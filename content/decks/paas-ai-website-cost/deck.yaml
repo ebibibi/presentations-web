@@ -5,7 +5,7 @@ status: public
 visibility: public
 canvas: standard
 createdAt: "2026-09-30"
-updatedAt: "2026-10-01"
+updatedAt: "2026-10-02"
 tags:
   - cloudflare
   - azure
@@ -15,8 +15,8 @@ tags:
 youtube:
   id: 85cj4-ZDgY0
   url: https://www.youtube.com/watch?v=85cj4-ZDgY0
-  title: "Cloudflare無料枠でホームページ維持費は0円に ─「レンタルサーバー＋保守契約」はもう時代遅れ"
-  publishedAt: "2026-10-01"
+  title: "Cloudflare＋AIでサイト維持費0円 ─ 保守契約の前提が崩れた"
+  publishedAt: "2026-10-02"
 slides:
   - id: opening
     title: 「サイトの運用は大変」はもう古い
