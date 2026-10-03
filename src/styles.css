@@ -10930,7 +10930,7 @@ main {
   pointer-events: none;
 }
 
-.h77-slide > *:not(.h77-grid):not(.h77-logo):not(.h77-speaker):not(.h77-source):not(.h77-live):not(.h77-promo-glow) {
+.h77-slide > *:not(.h77-grid):not(.h77-logo):not(.h77-speaker):not(.h77-source):not(.h77-live) {
   position: relative;
   z-index: 1;
 }
@@ -11738,81 +11738,6 @@ main {
   margin-top: 34px;
 }
 
-/* Promo (2026-10-03) ----------------------------------------- */
-
-.h77-promo {
-  background: linear-gradient(135deg, #1b1026 0%, #24122c 50%, #341a2a 100%);
-  display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
-  align-items: center;
-  gap: 40px;
-}
-
-.h77-promo-glow {
-  background: radial-gradient(circle at 78% 42%, rgba(255, 180, 84, 0.28), transparent 62%);
-  inset: 0;
-  position: absolute;
-}
-
-.h77-promo-body h1 {
-  font-size: 74px;
-  line-height: 1.1;
-}
-
-.h77-promo-body em {
-  color: var(--h77-amber);
-  font-style: normal;
-}
-
-.h77-promo-lead {
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 30px;
-  margin: 14px 0 22px;
-}
-
-.h77-promo-list {
-  display: grid;
-  gap: 12px;
-  list-style: none;
-  margin: 0 0 22px;
-  padding: 0;
-}
-
-.h77-promo-list li {
-  align-items: center;
-  display: flex;
-  font-size: 26px;
-  gap: 14px;
-}
-
-.h77-promo-list svg {
-  color: var(--h77-amber);
-  flex: none;
-}
-
-.h77-promo-note {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 23px;
-}
-
-.h77-promo-link {
-  background: var(--h77-amber);
-  border-radius: 12px;
-  color: #2a1206;
-  display: inline-block;
-  font-size: 27px;
-  font-weight: 800;
-  margin-top: 20px;
-  padding: 14px 26px;
-  text-decoration: none;
-}
-
-.h77-promo-art {
-  color: rgba(255, 180, 84, 0.35);
-  display: grid;
-  place-items: center;
-}
-
 /* h77: layout corrections for the 16:9 canvas.
    `.h77-slide p` beats a single class, so metric/lead sizes need the same
    specificity. Main blocks also stretch so slides do not bunch at the top. */
@@ -11829,10 +11754,6 @@ main {
 
 .h77-slide .h77-big-q {
   font-size: 44px;
-}
-
-.h77-slide .h77-promo-lead {
-  font-size: 32px;
 }
 
 .h77-slide .h77-note {
