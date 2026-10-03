@@ -8,7 +8,6 @@ import {
   Clock,
   Cloud,
   FileCheck,
-  Guitar,
   HardDrive,
   KeyRound,
   Languages,
@@ -19,7 +18,6 @@ import {
   ShieldCheck,
   Terminal,
   TriangleAlert,
-  Users,
   X,
   Zap
 } from 'lucide-react'
@@ -55,7 +53,6 @@ export const slides: SlideModule['slides'] = [
   { id: 'session-end', render: (props) => <SessionEndSlide {...props} /> },
   { id: 'next-session', render: (props) => <NextSessionSlide {...props} /> },
   { id: 'qa', render: (props) => <QaSlide {...props} /> },
-  { id: 'promo-1003', render: (props) => <Promo1003Slide {...props} /> },
   { id: 'closing', render: (props) => <ClosingSlide {...props} /> },
   { id: 'thanks', render: (props) => <ThanksSlide {...props} /> }
 ]
@@ -1294,47 +1291,6 @@ function QaSlide({ frame }: SlideRenderContext) {
         <span className="h77-kicker">Q &amp; A</span>
         <h1>質疑応答</h1>
         <p>チャットからどうぞ ─ #HCCJP</p>
-      </div>
-    </section>
-  )
-}
-
-function Promo1003Slide({ frame }: SlideRenderContext) {
-  const { fps } = useVideoConfig()
-  const drift = Math.sin(frame / 16) * 5
-  return (
-    <section className="remotion-slide h77-slide h77-promo">
-      <div className="h77-promo-glow" />
-      <div className="h77-promo-body" style={lift(entrance(frame, fps), 30)}>
-        <span className="h77-kicker h77-kicker-warm">2026.10.3 SAT ・ 千葉県南柏</span>
-        <h1>
-          胡田昌彦の
-          <br />
-          <em>ITと音楽の文化祭 2026</em>
-        </h1>
-        <p className="h77-promo-lead">勉強会・セッション・バンドライブ</p>
-        <ul className="h77-promo-list">
-          <li>
-            <Users size={30} /> 第1部 ─ IT勉強会＋交流会
-          </li>
-          <li>
-            <Guitar size={30} /> 第2部 ─ ミニ演奏・全員セッション・バンドライブ（20:00〜）
-          </li>
-          <li>
-            <Check size={30} /> 会場 Live Bar CheSara（南柏）／ 参加無料
-          </li>
-        </ul>
-        <p className="h77-promo-note">
-          東京事変のコピーバンドで演奏します。胡田もメンバーです。
-          <br />
-          ITと音楽、どちらか片方でも好きな方はぜひ。
-        </p>
-        <a className="h77-promo-link" href="https://ebisuda.connpass.com/event/401188/" target="_blank" rel="noreferrer">
-          ebisuda.connpass.com/event/401188/
-        </a>
-      </div>
-      <div className="h77-promo-art" style={{ transform: `translateY(${drift}px)` }}>
-        <Guitar size={220} />
       </div>
     </section>
   )
