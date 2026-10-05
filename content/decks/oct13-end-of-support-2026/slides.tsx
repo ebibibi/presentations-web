@@ -17,7 +17,6 @@ export const slides: SlideModule['slides'] = [
   { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
   { id: 'lineup', render: (props) => <LineupSlide {...props} /> },
   { id: 'still-runs', render: (props) => <StillRunsSlide {...props} /> },
-  { id: 'confession', render: (props) => <ConfessionSlide {...props} /> },
   { id: 'history', render: (props) => <HistorySlide {...props} /> },
   { id: 'connectivity', render: (props) => <ConnectivitySlide {...props} /> },
   { id: 'ws2012', render: (props) => <Ws2012Slide {...props} /> },
@@ -108,19 +107,6 @@ function StillRunsSlide({ frame }: SlideRenderContext) {
       <Callout frame={frame} tone="warn" icon="⚠️" label="だから気づかない">
         <p>見つかった脆弱性は、もう塞がれない</p>
       </Callout>
-    </Slide>
-  )
-}
-
-function ConfessionSlide({ frame }: SlideRenderContext) {
-  return (
-    <Slide center>
-      <SlideHeading
-        frame={frame}
-        kicker="正直に言うと"
-        heading={'「買い切りで十分」\nだと思っていた'}
-        lead="間違いではなかった。ただし期限付きの安心だった"
-      />
     </Slide>
   )
 }
