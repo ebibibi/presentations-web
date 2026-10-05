@@ -29,10 +29,6 @@ slides:
     title: 起動はする。でも直らない
     durationInFrames: 260
     notes: 誤解されがちなところ。10月14日になってもOfficeは普通に起動する。止まるのはセキュリティ更新と技術サポート。だから気づかないまま使い続けてしまう。見つかった脆弱性はもう塞がれない。
-  - id: confession
-    title: 正直、買い切りで十分だと思っていた
-    durationInFrames: 260
-    notes: "TODO（胡田さん）: 自分の実体験に置き換える。例: 買い切りの永続版は更新に振り回されなくていい、と思っていた側。間違いではなかった。ただし期限付きの安心だった。"
   - id: history
     title: Office 2016/2019のときに何が起きたか
     durationInFrames: 300
