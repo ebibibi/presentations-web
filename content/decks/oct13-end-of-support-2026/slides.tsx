@@ -22,6 +22,7 @@ export const slides: SlideModule['slides'] = [
   { id: 'ws2012', render: (props) => <Ws2012Slide {...props} /> },
   { id: 'checklist', render: (props) => <ChecklistSlide {...props} /> },
   { id: 'migrate', render: (props) => <MigrateSlide {...props} /> },
+  { id: 'lifecycle', render: (props) => <LifecycleSlide {...props} /> },
   { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
   { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> },
 ]
@@ -219,6 +220,26 @@ function MigrateSlide({ frame }: SlideRenderContext) {
       />
       <Callout frame={frame} icon="🤝" label="相談先はどこでもいい">
         <p>情シスでも、いつものベンダーでも、Microsoftのパートナーでも。10月13日までに一度見る</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function LifecycleSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="一番言いたいこと" heading={'EOS対策して\n安心するな'} />
+      <Timeline
+        frame={frame}
+        orientation="vertical"
+        steps={[
+          { label: '出た日', heading: '終わる日はもう決まっている', body: 'ライフサイクルは最初から公開されている' },
+          { label: '入れ替えた日', heading: 'その瞬間に次のEOSが始まる', body: 'LTSC 2024も2029年10月9日に終わる' },
+          { label: 'EOS直前', heading: 'そこで移行していては話にならない', accent: true },
+        ]}
+      />
+      <Callout frame={frame} tone="warn" icon="⚠️" label="EOSは「対策」ではなく「計画」">
+        <p>次の終わる日まで、最初から計画に入れておく</p>
       </Callout>
     </Slide>
   )
