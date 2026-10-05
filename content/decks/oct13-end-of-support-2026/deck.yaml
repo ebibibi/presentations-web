@@ -1,0 +1,63 @@
+slug: oct13-end-of-support-2026
+title: 10月13日、Office 2021とWindows Server 2012が同じ日に終わる【+M365接続も】
+summary: 2026年10月13日、Office LTSC 2021とOffice 2021、Visio・Project 2021、Windows Server 2012 / 2012 R2の拡張セキュリティ更新（ESU）3年目、Windows 10 2016 LTSB、Windows 11 Home/Pro 24H2が同じ日に終わります。Office LTSC 2021からMicrosoft 365サービスへの接続もこの日でサポート外になります。何が止まり、何が動き続けるのか、今日確認すべきことを公式のライフサイクル情報で整理します。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-05"
+updatedAt: "2026-10-05"
+tags:
+  - microsoft
+  - m365
+  - windows-server
+  - office
+  - lifecycle
+slides:
+  - id: opening
+    title: 10月13日、Office 2021とWindows Server 2012が同じ日に終わる
+    durationInFrames: 240
+    notes: 冒頭で言い切る。10月13日、火曜日。Office 2021もWindows Server 2012のESUも、同じ日に終わります。アプリは起動したまま、でもセキュリティ更新はもう来ない。さらにOffice 2021からM365への接続もこの日でサポート外。挨拶はこの後。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
+  - id: lineup
+    title: 10月13日に終わるもの
+    durationInFrames: 300
+    notes: 一覧で見せる。Office LTSC 2021（Mac版含む）とOffice 2021、Word/Excel/Outlook等の単体LTSC 2021、Visio LTSC 2021、Project 2021。Windows Server 2012 / 2012 R2はESUの3年目が終わり、4年目は無い。Windows 10 2016 LTSB。Windows 11 Home/Proの24H2。おまけでWindows Server 2022はこの日メインストリームが終わって延長サポートに入る（こちらは更新は続く）。
+  - id: still-runs
+    title: 起動はする。でも直らない
+    durationInFrames: 260
+    notes: 誤解されがちなところ。10月14日になってもOfficeは普通に起動する。止まるのはセキュリティ更新と技術サポート。だから気づかないまま使い続けてしまう。見つかった脆弱性はもう塞がれない。
+  - id: confession
+    title: 正直、買い切りで十分だと思っていた
+    durationInFrames: 260
+    notes: "TODO（胡田さん）: 自分の実体験に置き換える。例: 買い切りの永続版は更新に振り回されなくていい、と思っていた側。間違いではなかった。ただし期限付きの安心だった。"
+  - id: history
+    title: Office 2016/2019のときに何が起きたか
+    durationInFrames: 300
+    notes: 前回の流れ。Office 2016/2019は、M365への接続サポートが2023年10月に先に切れて、本体のサポートは2025年10月に終わった。今回のOffice 2021は、本体の終了とM365接続のサポート終了が同じ日に来る。ここが前回と違う。
+  - id: connectivity
+    title: 【+新問題】M365への接続もサポート外に
+    durationInFrames: 300
+    notes: Office LTSC 2021からExchange Online、SharePoint Online、OneDriveへの接続が、10月13日でサポート対象外になる。当日に遮断されるわけではない。Office 2016/2019も接続自体はまだ続いている。ただ、この先のサービス側の改善は古いクライアントとの互換性を見なくなる。いつ何が使えなくなるかは保証されない状態。
+  - id: ws2012
+    title: Windows Server 2012は「延長の延長」も終わる
+    durationInFrames: 300
+    notes: Windows Server 2012 / 2012 R2の延長サポートは2023年10月に終わっていて、そこからESUで3年間つないできた。その3年目が10月13日で終わる。4年目は無い。Azure Arc経由のESUや、Azure上で動かして無償で受けていたESUも同じ日に終わる。
+  - id: checklist
+    title: 今日確認する3つ
+    durationInFrames: 300
+    notes: 1. Intune管理センターの アプリ → モニター → 検出されたアプリ で Office / Visio / Project を絞り込む。名前にLTSCや2021が付いているものが対象。2. そこに出てこない端末を別に確認する。Intune未登録、Intune管理拡張機能（IME）が入っていない、個人所有の端末。出てこないことは入っていないことの証明ではない。3. Windows Server 2012 / 2012 R2が残っていないか。Arc経由のESUでも期限は同じ。
+  - id: migrate
+    title: 移行先の考え方
+    durationInFrames: 260
+    notes: 普通の業務端末ならMicrosoft 365 Apps。更新が続き、M365への接続もサポートされる。オフライン前提・機能を固定したい端末ならOffice LTSC 2024（2029年10月9日まで）。どちらにするかは利用条件と既存契約を見て決める。棚卸しは情シスでも、いつものベンダーさんでも、Microsoftのパートナーでもいいので、とにかく10月13日までに一度見てください。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: 日付はすべて2026年10月5日時点のMicrosoft Learnのライフサイクル情報。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。
