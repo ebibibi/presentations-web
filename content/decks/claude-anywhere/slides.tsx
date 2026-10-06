@@ -8,7 +8,7 @@ export const slides: SlideModule['slides'] = [
   { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
   { id: 'native-options', render: (props) => <NativeOptionsSlide {...props} /> },
   { id: 'remote-control', render: (props) => <RemoteControlSlide {...props} /> },
-  { id: 'whats-new', render: (props) => <WhatsNewSlide {...props} /> },
+  { id: 'hand-off', render: (props) => <HandOffSlide {...props} /> },
   { id: 'official-channels', render: (props) => <OfficialChannelsSlide {...props} /> },
   { id: 'ccdb', render: (props) => <CcdbSlide {...props} /> },
   { id: 'discord-demo', render: (props) => <DiscordDemoSlide {...props} /> },
@@ -96,7 +96,7 @@ function NativeOptionsSlide({ frame }: SlideRenderContext) {
     <section className="remotion-slide e18-slide">
       <div style={lift(heading, 24)}>
         <span className="slide-kicker">まずはネイティブ機能（2026年10月時点）</span>
-        <h1>公式の入口は7つに増えた</h1>
+        <h1>公式の入口は7つある</h1>
       </div>
       <div className="e18-compare">
         <div className="e18-compare-card e18-compare-accent" style={lift(local, 30)}>
@@ -160,7 +160,7 @@ function RemoteControlSlide({ frame }: SlideRenderContext) {
   )
 }
 
-function WhatsNewSlide({ frame }: SlideRenderContext) {
+function HandOffSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
 
@@ -174,8 +174,8 @@ function WhatsNewSlide({ frame }: SlideRenderContext) {
   return (
     <section className="remotion-slide e18-slide">
       <div style={lift(heading, 24)}>
-        <span className="slide-kicker">7月から増えたもの</span>
-        <h1>「投げて放っておく」が公式でもできる</h1>
+        <span className="slide-kicker">任せて離れる</span>
+        <h1>投げて、放っておける</h1>
       </div>
       <div className="e18-surfaces">
         {items.map(([name, body], index) => (
@@ -201,7 +201,7 @@ function OfficialChannelsSlide({ frame }: SlideRenderContext) {
     <section className="remotion-slide e18-slide e18-channels">
       <div style={lift(heading, 24)}>
         <span className="slide-kicker">公式Channels</span>
-        <h1>いまは公式にもDiscord連携がある</h1>
+        <h1>公式にもDiscord連携がある</h1>
       </div>
       <div className="e18-port" style={lift(card, 30)}>
         <span className="e18-tag">Research preview</span>
@@ -512,7 +512,7 @@ function RecapSlide({ frame }: SlideRenderContext) {
 
   const points = [
     '公式の入口は「自分のPCで動く」と「クラウドで動く」に分かれる',
-    '新顔はProjects・Routines・Slack。投げて放っておける',
+    'Projects・Routines・Slackなら、投げて放っておける',
     'CCDBはDiscordを複数AIセッションの作業台にする',
     'ここまでの18回を貫いたのはコンテキスト管理。あとは使い方次第'
   ]
