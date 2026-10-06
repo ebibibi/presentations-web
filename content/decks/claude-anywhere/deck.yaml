@@ -1,10 +1,10 @@
 slug: claude-anywhere
 title: 第18回 どこからでもClaude Code
-summary: Claude Codeを机の前だけで使う時代は終わった。公式のRemote Control、Web、Desktop＋Dispatch、Channelsを整理し、DiscordからClaude/Codexの複数セッションを運用するOSS「CCDB」との違いも正直に比較する。Claude Codeの使い方コース 第18回。
+summary: Claude Codeを机の前だけで使う時代は終わった。公式のRemote Control、Dispatch、Channels、Web、Projects、Routines、Slackを「自分のPCで動く／クラウドで動く」で整理し、DiscordからClaude/Codexの複数セッションを運用するOSS「CCDB」との違いも正直に比較する。Claude Codeの使い方コース 第18回。
 status: public
 visibility: members
 createdAt: "2026-06-26"
-updatedAt: "2026-07-29"
+updatedAt: "2026-10-06"
 tags:
   - claude-code
   - course
@@ -18,13 +18,17 @@ slides:
     durationInFrames: 150
     notes: 共通テンプレート（src/deck-shared.tsx の CtaSlide）。高評価・チャンネル登録・メンバーシップ・noteメンバーシップのお願い。内容はテンプレート側で一括管理。
   - id: native-options
-    title: 公式だけでも4つの入口
+    title: 公式の入口は7つに増えた
     durationInFrames: 185
-    notes: 2026年7月時点の公式機能を先に整理する。①Remote Control＝ローカルのCLI/VS Codeセッションをブラウザ・Claudeモバイルアプリから継続 ②Claude Code on the web＝Anthropic管理のクラウド環境でGitHubリポジトリを処理 ③Desktop＋Dispatch＝スマホから依頼してDesktop上のCodeセッションを起動 ④Channels＝Discord・Telegram・iMessageなどから実行中セッションへイベントを送る。機能はresearch previewを含むため、撮影時にも公式ドキュメントを開いて「現在の仕様」と断る。出典 https://code.claude.com/docs/en/remote-control
+    notes: 2026年10月時点の公式機能を「どこで動くか」で2つに分ける。自分のPCで動く＝①Remote Control（手元のCLI/Desktop/VS CodeのセッションをWeb・スマホから操作）②Dispatch（スマホのClaudeアプリから頼むとDesktopがCodeセッションを起動。Pro/Maxのみ）③Channels（Discord・Telegram・iMessageから実行中セッションへイベントをpush）。クラウドで動く＝④Web/モバイルのクラウドセッション ⑤Projects ⑥Routines ⑦Slackの@Claude。PCの電源を切りたいならクラウド側、ローカルのファイルやMCPが要るならPC側。preview段階の機能を含むので、撮影時は公式ドキュメントを開いて「現在の仕様」と断る。出典 https://code.claude.com/docs/en/platforms
   - id: remote-control
     title: Remote ControlとWebの違い
     durationInFrames: 185
-    notes: 同じclaude.ai/codeやモバイルアプリを入口に使っても、実行場所が違う。Remote Controlは自分のPC上で動き、ローカルファイル・MCP・ツール・設定をそのまま使える代わりにローカルプロセスを動かしておく。WebはAnthropic管理の隔離VMで動き、ローカルPC不要・並列タスク向き。Remote Controlは `claude remote-control` / `claude --remote-control` / セッション内 `/remote-control`。出典 https://code.claude.com/docs/en/remote-control と https://code.claude.com/docs/en/web-quickstart
+    notes: 同じclaude.ai/codeやモバイルアプリを入口に使っても、実行場所が違う。Remote Controlは自分のPC上で動き、ローカルファイル・MCP・ツール・設定をそのまま使える代わりにローカルプロセスを動かしておく。WebはAnthropic管理の隔離VMで動き、ローカルPC不要・並列タスク向き。Remote Controlは `claude remote-control` / `claude --remote-control` / セッション内 `/remote-control`。スマホから写真やファイルを添付でき、長い作業が終わるとプッシュ通知も来る。逆方向の移動もでき、`claude --cloud` で手元からクラウドへ仕事を送り出し、`claude --teleport` でクラウドのセッションを手元に引き戻せる。出典 https://code.claude.com/docs/en/remote-control と https://code.claude.com/docs/en/web-quickstart
+  - id: whats-new
+    title: 7月から増えたもの
+    durationInFrames: 185
+    notes: 前回デッキを作った7月から増えた公式機能を4つ紹介する。①Projects（public beta、Pro/Max）＝1つの会話にタスクを投げると、Claudeがクラウドの並列スレッドに分けて実行し、Overviewで「終わった／PR準備OK／返事待ち」をまとめる ②Routines（research preview）＝プロンプト・リポジトリ・コネクタを保存し、スケジュール・API・GitHubイベントで自動実行。CLIからは `/schedule` ③Slack＝チャンネルで @Claude とメンションするとクラウドで作業してPRを返す。チームで共有するIDで動かす版がClaude Tag（Team/Enterprise）④Remote Control中のプッシュ通知。共通点は「投げて放っておける」こと。出典 https://code.claude.com/docs/en/claude-projects https://code.claude.com/docs/en/routines https://code.claude.com/docs/en/slack
   - id: official-channels
     title: 公式ChannelsにもDiscordがある
     durationInFrames: 185
@@ -32,7 +36,7 @@ slides:
   - id: ccdb
     title: CCDBはDiscordを作業台にする
     durationInFrames: 185
-    notes: 公式Channelsを否定せず用途の違いを説明する。CCDB（Claude & Codex Discord Bridge）はDiscordスレッド1つをAIセッション1つとして管理し、ClaudeとCodexのバックエンド切替、複数セッションの並行運用、ファイル添付、APIからのセッション起動、セッション間の観測・claim・引き継ぎまで含むOSS。単一の実行中セッションへイベントをpushするChannelsより、Discordそのものを複数AIの作業台・履歴・監査画面にしたい場合に向く。
+    notes: 公式Channelsを否定せず用途の違いを説明する。CCDB（Claude & Codex Discord Bridge）はDiscordスレッド1つをAIセッション1つとして管理し、ClaudeとCodexのバックエンド切替、複数セッションの並行運用、ファイル添付、APIからのセッション起動、セッション間の観測・claim・引き継ぎまで含むOSS。単一の実行中セッションへイベントをpushするChannelsより、Discordそのものを複数AIの作業台・履歴・監査画面にしたい場合に向く。複数セッションをまとめる用途では公式にもProjectsが出たので正直に比較する。Projectsはクラウドで動き、PCを閉じても進む。CCDBはすべて自分のPCで動くので、ローカルのファイル・MCP・認証情報をそのまま使え、Codexも混ぜられる。
   - id: discord-demo
     title: CCDBの実演
     durationInFrames: 180
@@ -68,7 +72,7 @@ slides:
   - id: recap
     title: 今日のまとめ
     durationInFrames: 160
-    notes: 今日のまとめ。公式にはRemote Control、Web、Desktop＋Dispatch、Channelsがある。ローカルの続きを操るのか、クラウドへ仕事を投げるのか、外部イベントを実行中セッションへ送るのかで選ぶ。CCDBはDiscordを複数AIセッションの作業台にする別解。そしてここまでの18回を貫いてきたのはコンテキスト管理。
+    notes: 今日のまとめ。公式の入口は「自分のPCで動く」（Remote Control・Dispatch・Channels）と「クラウドで動く」（Web/モバイル・Projects・Routines・Slack）に分かれる。新しく増えたProjects・Routines・Slackで、投げて放っておく使い方が公式でもできるようになった。CCDBはDiscordを複数AIセッションの作業台にする別解。そしてここまでの18回を貫いてきたのはコンテキスト管理。
   - id: finale
     title: ここまでありがとう・続きます
     durationInFrames: 175

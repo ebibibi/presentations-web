@@ -8,6 +8,7 @@ export const slides: SlideModule['slides'] = [
   { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
   { id: 'native-options', render: (props) => <NativeOptionsSlide {...props} /> },
   { id: 'remote-control', render: (props) => <RemoteControlSlide {...props} /> },
+  { id: 'whats-new', render: (props) => <WhatsNewSlide {...props} /> },
   { id: 'official-channels', render: (props) => <OfficialChannelsSlide {...props} /> },
   { id: 'ccdb', render: (props) => <CcdbSlide {...props} /> },
   { id: 'discord-demo', render: (props) => <DiscordDemoSlide {...props} /> },
@@ -76,27 +77,48 @@ function OpeningSlide({ frame }: SlideRenderContext) {
 function NativeOptionsSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const heading = entrance(frame, fps)
+  const local = entrance(frame, fps, 22)
+  const cloud = entrance(frame, fps, 36)
 
-  const options = [
-    ['Remote Control', 'ローカルの続きをスマホ・Webから'],
-    ['Web', 'クラウドへタスクを投げる'],
-    ['Desktop + Dispatch', 'スマホからDesktopの仕事を起動'],
-    ['Channels', 'Discord等から実行中セッションへpush']
+  const localOptions = [
+    ['Remote Control', '手元のセッションをスマホ・Webから'],
+    ['Dispatch', 'スマホからDesktopに仕事を頼む'],
+    ['Channels', 'Discord等から実行中セッションへ']
+  ]
+  const cloudOptions = [
+    ['Web / モバイル', 'クラウドにタスクを投げる'],
+    ['Projects', '複数の作業をまとめて任せる'],
+    ['Routines', '予約・API・GitHubで自動実行'],
+    ['Slack', '@Claude で頼むとPRが返る']
   ]
 
   return (
     <section className="remotion-slide e18-slide">
       <div style={lift(heading, 24)}>
-        <span className="slide-kicker">まずはネイティブ機能</span>
-        <h1>公式だけでも4つの入口</h1>
+        <span className="slide-kicker">まずはネイティブ機能（2026年10月時点）</span>
+        <h1>公式の入口は7つに増えた</h1>
       </div>
-      <div className="e18-surfaces">
-        {options.map(([name, body], index) => (
-          <div key={name} style={lift(entrance(frame, fps, 26 + index * 10), 24)}>
-            <strong>{name}</strong>
-            <span>{body}</span>
-          </div>
-        ))}
+      <div className="e18-compare">
+        <div className="e18-compare-card e18-compare-accent" style={lift(local, 30)}>
+          <span className="e18-tag">自分のPCで動く</span>
+          {localOptions.map(([name, body]) => (
+            <p key={name}>
+              <b>{name}</b>
+              <br />
+              {body}
+            </p>
+          ))}
+        </div>
+        <div className="e18-compare-card" style={lift(cloud, 30)}>
+          <span className="e18-tag e18-tag-muted">クラウドで動く</span>
+          {cloudOptions.map(([name, body]) => (
+            <p key={name}>
+              <b>{name}</b>
+              <br />
+              {body}
+            </p>
+          ))}
+        </div>
       </div>
       <p className="e18-judge" style={lift(entrance(frame, fps, 78), 18)}>
         「どこから使うか」より、<b>どこで動かすか・何を起点にするか</b>で選ぶ。
@@ -126,11 +148,45 @@ function RemoteControlSlide({ frame }: SlideRenderContext) {
         <div className="e18-compare-card" style={lift(cloud, 30)}>
           <span className="e18-tag e18-tag-muted">Claude Code on the web</span>
           <strong>Anthropicのクラウドで動く</strong>
-          <p>GitHubのリポジトリを隔離VMへ複製。PCを開かず、複数タスクを並列で投げる。</p>
+          <p>GitHubのリポジトリを隔離VMへ複製。PCを閉じても続き、複数タスクを並列で投げられる。</p>
         </div>
       </div>
       <p className="e18-note" style={lift(entrance(frame, fps, 78), 18)}>
         ローカルの続きなら <b>Remote Control</b>、独立仕事を任せるなら <b>Web</b>。
+        <br />
+        <code>--cloud</code> でクラウドへ送り、<code>--teleport</code> で手元へ戻す。
+      </p>
+    </section>
+  )
+}
+
+function WhatsNewSlide({ frame }: SlideRenderContext) {
+  const { fps } = useVideoConfig()
+  const heading = entrance(frame, fps)
+
+  const items = [
+    ['Projects', '1つの会話に投げると、Claudeが並列作業に分けて進捗をまとめる'],
+    ['Routines', '毎晩・API呼び出し・PR作成をきっかけに、クラウドで自動実行'],
+    ['Slack / Claude Tag', 'チャンネルで @Claude と頼むと、作業してPRを返す'],
+    ['スマホに通知', 'Remote Control中、終わった・判断が要るとプッシュ通知']
+  ]
+
+  return (
+    <section className="remotion-slide e18-slide">
+      <div style={lift(heading, 24)}>
+        <span className="slide-kicker">7月から増えたもの</span>
+        <h1>「投げて放っておく」が公式でもできる</h1>
+      </div>
+      <div className="e18-surfaces">
+        {items.map(([name, body], index) => (
+          <div key={name} style={lift(entrance(frame, fps, 26 + index * 10), 24)}>
+            <strong>{name}</strong>
+            <span>{body}</span>
+          </div>
+        ))}
+      </div>
+      <p className="e18-note" style={lift(entrance(frame, fps, 78), 18)}>
+        Projects・Routines・Channelsは<b>プレビュー段階</b>。仕様は公式ドキュメントで確認。
       </p>
     </section>
   )
@@ -261,11 +317,11 @@ function CcdbSlide({ frame }: SlideRenderContext) {
         <strong>1スレッド = 1 AIセッション</strong>
         <p>
           Claude / Codexの切替、複数セッション、添付、API起動、セッション間連携まで。
-          私が作り、<b>OSSとして公開</b>している。
+          すべて<b>自分のPC</b>で動く。私が作り、<b>OSSとして公開</b>している。
         </p>
       </div>
       <p className="e18-note" style={lift(note, 18)}>
-        Channelsは「実行中セッションへの入口」。CCDBは<b>DiscordをAIの作業場所にする</b>。
+        複数をまとめるなら公式はProjects（クラウド）。CCDBは<b>手元のPCでDiscordを作業場所にする</b>。
       </p>
     </section>
   )
@@ -401,7 +457,7 @@ function YourWaySlide({ frame }: SlideRenderContext) {
         <div className="e18-choose-card e18-choose-accent" style={lift(left, 30)}>
           <span className="e18-tag">事実</span>
           <strong>Claude Codeはどこからでも動く</strong>
-          <p>ターミナル・Discord・Web・Desktop・IDE、入口は自由。</p>
+          <p>ターミナル・IDE・Desktop・Web・スマホ・Slack・Discord、入口は自由。</p>
         </div>
         <div className="e18-choose-card" style={lift(right, 30)}>
           <span className="e18-tag e18-tag-muted">あとは</span>
@@ -455,8 +511,8 @@ function RecapSlide({ frame }: SlideRenderContext) {
   const heading = entrance(frame, fps)
 
   const points = [
-    '公式はRemote Control / Web / Desktop / Channels',
-    'ローカル・クラウド・イベントpushを目的で選ぶ',
+    '公式の入口は「自分のPCで動く」と「クラウドで動く」に分かれる',
+    '新顔はProjects・Routines・Slack。投げて放っておける',
     'CCDBはDiscordを複数AIセッションの作業台にする',
     'ここまでの18回を貫いたのはコンテキスト管理。あとは使い方次第'
   ]
