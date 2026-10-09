@@ -1,0 +1,59 @@
+slug: ms-weekly-2026-10-09
+title: 【MS週報】Windows Update の証明書が2027年に入れ替わる ─ 10月9日までの Microsoft の変更17件
+summary: 2026年10月9日までの1週間の Microsoft 関連の変更から、管理者に関係する17件をまとめました。いちばん大きいのは Windows Update の証明書ローテーションで、月例更新が古いまま止まっているデバイスは2027年に Windows Update へ接続できなくなります。オンプレミス Exchange の9月 V2 セキュリティ更新と権限昇格の脆弱性への緊急更新、Exchange Online のエイリアス送信の一般提供、Windows 11 26H2 まわりの対応状況と不具合なども、製品別に整理します。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-09"
+updatedAt: "2026-10-09"
+tags:
+  - microsoft
+  - m365
+  - windows
+  - exchange-online
+  - ms-weekly
+slides:
+  - id: opening
+    title: 今週の答え
+    durationInFrames: 240
+    notes: 冒頭で言い切る。Windows Update の証明書が2027年に入れ替わり、月例更新が古いデバイスは接続できなくなる。
+  - id: wu-cert
+    title: Windows Update 証明書の期限
+    durationInFrames: 300
+    notes: 2027年5月17日（WS2019/2016・LTSC 2019）と6月19日（それ以外）。WSUS 配信は対象外。
+  - id: exchange-server
+    title: オンプレミス Exchange
+    durationInFrames: 280
+    notes: "#2 9月 V2 のセキュリティ更新、#3 CVE-2026-96940 の緊急更新。"
+  - id: exchange-online
+    title: Exchange Online
+    durationInFrames: 280
+    notes: "#4 エイリアス送信 GA、#5 EWSAllowedAppIDs の検証手順（先週の EWS 廃止の続報）、#17 Copilot とアーカイブ メールボックス。"
+  - id: windows-26h2
+    title: Windows 11 26H2 まわり
+    durationInFrames: 300
+    notes: "#8 GPO 28個追加、#9 Intune・ConfigMgr 対応、#10 ゲーム・アプリのクラッシュ、#13 Ask Copilot 一時停止。"
+  - id: windows-platform
+    title: Windows のそのほか
+    durationInFrames: 260
+    notes: "#6 Microsoft Execution Containers、#7 Windows App のリモート PC 接続、#11 Graph PowerShell SDK 2.41。"
+  - id: azure-security
+    title: Azure・セキュリティ・Teams
+    durationInFrames: 280
+    notes: "#12 ASR for Azure Local、#15 Arc Multicloud Connector、#14 ポスト量子認証、#16 What's New in Teams が四半期ごとに。"
+  - id: checklist
+    title: 今日確認すること
+    durationInFrames: 300
+    notes: 私の提案としてのチェックリスト。
+  - id: sources-1
+    title: 出典（1〜9）
+    durationInFrames: 240
+    notes: 各項目の一次情報。
+  - id: sources-2
+    title: 出典（10〜17）
+    durationInFrames: 240
+    notes: 各項目の一次情報。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
