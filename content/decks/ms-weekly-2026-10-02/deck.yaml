@@ -1,0 +1,68 @@
+slug: ms-weekly-2026-10-02
+title: 【MS週報】Exchange Online の EWS 廃止が始まった ─ 10月2日までの Microsoft の変更20件
+summary: 2026年10月2日までの1週間の Microsoft 関連の変更から、管理者に関係する20件をまとめました。いちばん大きいのは Exchange Online の EWS 廃止の開始で、10月10日以降は EWSEnabled を True にしておくだけでは EWS を使えなくなります。ExchangeOnlineManagement 3.10.1 への更新、Windows 11 26H2 の提供開始と設定バックアップの既定オン、Graph PowerShell SDK の Windows PowerShell 5.1 サポート廃止、WDS の非推奨化なども含めて、製品別に整理します。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-04"
+updatedAt: "2026-10-09"
+tags:
+  - microsoft
+  - m365
+  - exchange-online
+  - windows
+  - ms-weekly
+youtube:
+  id: mmNfvfy81vU
+  url: https://www.youtube.com/watch?v=mmNfvfy81vU
+  title: "【MS週報】Exchange OnlineのEWS廃止が始まった｜10月10日から「EWSEnabled = True」だけでは動かない"
+  publishedAt: "2026-10-04"
+slides:
+  - id: opening
+    title: 今週の答え
+    durationInFrames: 240
+    notes: 冒頭で言い切る。Exchange Online の EWS 廃止が始まった。10月10日以降は EWSEnabled = True だけでは動かない。
+  - id: ews-timeline
+    title: EWS 廃止の段階
+    durationInFrames: 300
+    notes: 10月2日時点の自動登録、10月10日以降の許可リスト必須、次の段階での無効化と7日前の通知。
+  - id: ews-hidden
+    title: 知らないうちに EWS を使っているもの
+    durationInFrames: 260
+    notes: 従来の Outlook for Mac、Excel の Power Query、ハイブリッド構成。オンプレ側の EWS 自体は廃止されない。
+  - id: exchange
+    title: Exchange Online のそのほかの変更
+    durationInFrames: 300
+    notes: "#2 ハイブリッド、#3 クロステナント アクセス ポリシー、#4 ExchangeOnlineManagement 3.10.1。"
+  - id: windows
+    title: Windows・Windows Server・Office
+    durationInFrames: 300
+    notes: "#5 設定バックアップ既定オン、#6 26H2、#9 WDS 非推奨、#10 KB5002907 一時停止。"
+  - id: identity
+    title: Entra ID と管理ツール
+    durationInFrames: 300
+    notes: "#7 サインイン ページのスクリプト挿入ブロック、#8 Graph SDK の PS 5.1 廃止、#12 外部 IdP のパスキー。"
+  - id: m365-azure
+    title: Microsoft 365・Azure
+    durationInFrames: 320
+    notes: "#11 ACS 廃止、#13 Teams フェデレーション、#14 Intune、#15 SharePoint/OneDrive Storage、#16 Copilot in SharePoint、#17 AVD。"
+  - id: security
+    title: 攻撃の事例
+    durationInFrames: 260
+    notes: "#18 侵害された ID からクラウドへ、#19 Zimbra CVE-2026-73570、#20 RMM ツールの悪用。"
+  - id: checklist
+    title: 今日確認すること
+    durationInFrames: 300
+    notes: 私の提案としてのチェックリスト。
+  - id: sources-1
+    title: 出典（1〜10）
+    durationInFrames: 240
+    notes: 各項目の一次情報。
+  - id: sources-2
+    title: 出典（11〜20）
+    durationInFrames: 240
+    notes: 各項目の一次情報。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
