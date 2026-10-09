@@ -1,0 +1,54 @@
+slug: windows-update-cert-rotation-2027
+title: Windows Update の証明書が2027年に期限切れ。必要な更新を当てていない端末はつながらなくなる
+summary: Windows Update が接続先の確認に使う証明書の一部が、2027年5月17日と6月19日に期限切れになります。サポート中で月例更新を当てていればほとんどの端末は対応不要ですが、必要な更新を当てていない端末とサポート切れの Windows は Windows Update につながらなくなります。バージョンごとに当てる更新と期限、期限後の扱い、今日確認することを公式発表にそって整理します。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-09"
+updatedAt: "2026-10-09"
+tags:
+  - microsoft
+  - windows
+  - windows-server
+  - windows-update
+slides:
+  - id: opening
+    title: Windows Update の証明書が2027年に期限切れ
+    durationInFrames: 240
+    notes: 冒頭で言い切る。答えは「最新の月例更新を当てる」。当てていない端末とサポート切れは Windows Update につながらなくなる。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
+  - id: answer
+    title: 何をすればいい？
+    durationInFrames: 240
+    notes: サポート中の Windows を最新に保てば、ほとんどの端末は対応不要。
+  - id: why
+    title: なぜ証明書で更新が止まるのか
+    durationInFrames: 300
+    notes: 証明書で本物のサーバーかを確認している。期限があるので交換する。新しい証明書は月例更新に入っている。
+  - id: versions
+    title: バージョン別：いつまでに何を当てるか
+    durationInFrames: 320
+    notes: 期限はいずれも2027年。LTSC系とServer 2019/2016だけ期限が早い（5月17日より前）。
+  - id: after-expiry
+    title: 期限を過ぎると3通りに分かれる
+    durationInFrames: 300
+    notes: 最新なら影響なし。サポート中で未適用なら、カタログから手動か管理ツールで入れる。サポート切れはアップグレードが推奨。
+  - id: wsus
+    title: WSUS 経由の端末は対象外
+    durationInFrames: 240
+    notes: 公式に明記。直接 Windows Update につなぐ端末を先に把握するのは私の提案。
+  - id: checklist
+    title: 今日確認する3つ
+    durationInFrames: 300
+    notes: 私の提案としてのチェックリスト。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: Windows IT Pro Blog の発表（2026年10月時点）。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
