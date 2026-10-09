@@ -1,0 +1,58 @@
+slug: exo-send-from-alias-ga
+title: Exchange Online でエイリアスから送信できるように。有効化の前にルールとトレースを確認
+summary: Exchange Online で、メールボックスに付けたエイリアス（別名のアドレス）から送信する機能がパブリックプレビューを経て一般提供（GA）になりました。有効化は管理者がテナント単位で行います。便利になる一方、メールフロールールやジャーナリングがエイリアス送信に適用されない場合があり、メッセージトレースもエイリアスで検索する必要があります。仕組みと既知の制限、有効化前の確認ポイントを整理します。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-09"
+updatedAt: "2026-10-09"
+tags:
+  - microsoft
+  - m365
+  - exchange-online
+  - outlook
+slides:
+  - id: opening
+    title: エイリアスから送信できる
+    durationInFrames: 240
+    notes: 冒頭で言い切る。エイリアス送信が GA。便利だが、ルールとトレースの前提が変わる。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
+  - id: what-is-alias
+    title: エイリアスとは
+    durationInFrames: 300
+    notes: 1つのメールボックスに付いた別のアドレス。提供前は送信がプライマリ固定で、共有メールボックスや配布グループなどで回避していた。
+  - id: enable
+    title: 有効にするのは管理者
+    durationInFrames: 300
+    notes: Set-OrganizationConfig -SendFromAliasEnabled $True か、EAC の Settings → Mail Flow → Sending from Aliases。送信させたくないドメインは受信のみに。
+  - id: clients
+    title: 利用者はどこで選ぶ？
+    durationInFrames: 240
+    notes: Web版は設定の作成と返信、デスクトップは差出人欄、モバイルは差出人欄をタップ。返信は届いたエイリアスから自動。
+  - id: rules
+    title: ルールが効かないことがある
+    durationInFrames: 260
+    notes: 公式の既知の制限のうち、私が最重要と見るもの。スパム対策・ジャーナリング・メールフロールール。
+  - id: limits
+    title: そのほかの既知の制限
+    durationInFrames: 320
+    notes: メッセージトレース、共有メールボックス、ハイブリッドの自動応答、差出人表示の変化。
+  - id: roadmap
+    title: 今後の検討項目
+    durationInFrames: 200
+    notes: 実装の確約ではない。
+  - id: checklist
+    title: 有効化の前に確認したいこと
+    durationInFrames: 300
+    notes: 私の提案としてのチェックリスト。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: 日本マイクロソフトのサポートブログ（抄訳）と原文。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
