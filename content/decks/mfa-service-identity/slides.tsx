@@ -1075,12 +1075,6 @@ function NextDecksSlide({ frame }: SlideRenderContext) {
   const { fps } = useVideoConfig()
   const decks = [
     {
-      icon: <Monitor size={34} />,
-      title: 'MFAをかけられない機器の守り方',
-      note: 'Teams Rooms / ROPC / デバイスコードフロー',
-      slug: 'mfa-exempt-identities'
-    },
-    {
       icon: <User size={34} />,
       title: 'そのMFA、中継されて終わりです',
       note: '人にどうかけるか。方式の選択肢とフィッシング耐性',
