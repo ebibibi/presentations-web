@@ -1,0 +1,57 @@
+slug: data-leak-design-for-leaks
+title: 情報漏洩は防げない。漏れても大丈夫な設計に変えるしかない
+summary: 情報漏洩はAIの攻撃で急に増えたのではなく、昔から起きていて気づいていないだけ、というのが私の見方です。隠し通す発想には限界があるので、持たない・暗号化する・パスワードをやめる・いつでも戻せる状態にする、そしてクラウドの仕組みと保険で被害を限定する。「漏れる前提」で組み立て直す考え方を整理します。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-11"
+updatedAt: "2026-10-11"
+tags:
+  - security
+  - passkey
+  - identity
+slides:
+  - id: opening
+    title: 情報漏洩は防げない
+    durationInFrames: 240
+    notes: 冒頭で言い切る。漏れる前提で、漏れても大丈夫にしておく。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
+  - id: answer
+    title: 先に結論
+    durationInFrames: 240
+    notes: システムは侵入される、データは持ち出される。それを前提に組み立てる。
+  - id: not-new
+    title: AIのせい？ それ以前の問題
+    durationInFrames: 300
+    notes: 添付ファイルを外へ送れる組織は多い。承認フローも全件見れば形だけになる。
+  - id: hiding-limits
+    title: 隠し通すには限界がある
+    durationInFrames: 300
+    notes: 名簿・電話帳、マイナンバーの提出。手本はクレジットカード。
+  - id: four-principles
+    title: 漏れても大丈夫にする4つの方針
+    durationInFrames: 320
+    notes: 持たない・暗号化・パスワードをやめる・いつでも戻せる。
+  - id: key-not-number
+    title: 本人確認の本質は番号ではなく鍵
+    durationInFrames: 300
+    notes: マイナンバーカードはICチップの鍵が本質。パスキーも同じ発想。
+  - id: cloud
+    title: 人間に頼らない仕組みに乗る
+    durationInFrames: 300
+    notes: メガクラウドの仕組みを使い、推奨設定にAIで追従する。
+  - id: insurance
+    title: それでも人は騙される
+    durationInFrames: 240
+    notes: 本気で狙われたら防ぎきれない。保険で被害を限定する。
+  - id: checklist
+    title: 今日から変える3つの前提
+    durationInFrames: 300
+    notes: 私の提案としてのチェックリスト。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
