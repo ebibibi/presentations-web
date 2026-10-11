@@ -18,6 +18,7 @@ export const slides: SlideModule['slides'] = [
   { id: 'answer', render: (props) => <AnswerSlide {...props} /> },
   { id: 'not-new', render: (props) => <NotNewSlide {...props} /> },
   { id: 'hiding-limits', render: (props) => <HidingLimitsSlide {...props} /> },
+  { id: 'replaceable', render: (props) => <ReplaceableSlide {...props} /> },
   { id: 'four-principles', render: (props) => <FourPrinciplesSlide {...props} /> },
   { id: 'key-not-number', render: (props) => <KeyNotNumberSlide {...props} /> },
   { id: 'cloud', render: (props) => <CloudSlide {...props} /> },
@@ -35,7 +36,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       lead="漏れても大丈夫な設計に変えるしかない"
       points={[
         { step: '01', heading: '昔から起きている', body: '違いは気づいているかどうかだけ' },
-        { step: '02', heading: '漏れても困らない形に', body: '持たない・暗号化・パスキー' },
+        { step: '02', heading: '漏れても困らない形に', body: '持たない・暗号化・早く気づく' },
         { step: '03', heading: '最後は仕組みと保険', body: 'クラウドに乗せ、被害を限定する' },
       ]}
     />
@@ -49,7 +50,7 @@ function AnswerSlide({ frame }: SlideRenderContext) {
         frame={frame}
         kicker="先に結論"
         heading={'情報は漏れる。\n漏れても大丈夫にしておく'}
-        lead="システムは侵入される。データは持ち出される。それを前提に対策を組み立てる"
+        lead="「漏れてもいい」ではない。漏れる確率も、漏れたときの被害も、両方下げる"
       />
     </Slide>
   )
@@ -92,6 +93,30 @@ function HidingLimitsSlide({ frame }: SlideRenderContext) {
           { label: '手本はクレジットカード', cells: ['止めて再発行でき、不正利用は条件付きで補償がある'] },
         ]}
       />
+      <Callout frame={frame} tone="warn" icon="🧩" label="ただし昔と違うのは「名寄せ」の規模">
+        <p>バラバラに漏れた情報がつなぎ合わされ、AIで一瞬で使える形になる。だから責任は「集める側」が持たないこと</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function ReplaceableSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="クレジットカードが強い理由"
+        heading={'漏れても「取り替えられる」\nかどうか'}
+      />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: '取り替えられる', accent: true }, { label: '取り替えられない' }]}
+        rows={[
+          { label: '例', cells: ['カード番号・パスワード・鍵', '氏名・生年月日・住所・顔・病歴'] },
+          { label: '漏れたら', cells: ['止めて新しくすれば守れる', 'あとから取り戻せない'] },
+          { label: '守り方', cells: ['取り替えやすい仕組みにしておく', 'そもそも持たない・集めない'] },
+        ]}
+      />
     </Slide>
   )
 }
@@ -99,15 +124,16 @@ function HidingLimitsSlide({ frame }: SlideRenderContext) {
 function FourPrinciplesSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="漏れても大丈夫にする" heading="4つの方針" lead="＋ 攻撃される面（アタックサーフェス）を減らし続ける" />
+      <SlideHeading frame={frame} kicker="漏れても大丈夫にする" heading="5つの方針" lead="＋ 攻撃される面（アタックサーフェス）を減らし続ける" />
       <Timeline
         frame={frame}
         orientation="vertical"
         steps={[
           { label: '1', heading: '持たない', body: 'そもそも危ない情報を保持しない' },
           { label: '2', heading: '暗号化する', body: '鍵を持つ人しか開けない形で持つ' },
-          { label: '3', heading: 'パスワードをやめる', body: 'ID＋パスワードは破綻する前提で、パスキーへ', accent: true },
+          { label: '3', heading: 'パスワードをやめる', body: 'ID＋パスワードは破綻する前提で、パスキーへ' },
           { label: '4', heading: 'いつでも戻せる', body: 'PCは初期化できる状態に。データはクラウド＋バックアップ' },
+          { label: '5', heading: '早く気づく', body: 'ログ・監視・持ち出しの検知。差は「気づいているかどうか」', accent: true },
         ]}
       />
     </Slide>
@@ -137,7 +163,7 @@ function CloudSlide({ frame }: SlideRenderContext) {
       <DiagramFrame
         frame={frame}
         caption="私のおすすめ"
-        note="AWS・GCP・Azure は、事業者の社員でも顧客データに勝手に触れにくい仕組みと監査を持つ。自前で同じことをするのは無理"
+        note="事業者の社員でも顧客データに勝手に触れにくい仕組みと監査がある。ただしクラウドの漏洩の多くは利用者側の設定ミス。だから推奨に追従し続ける"
       >
         <FlowDiagram
           frame={frame}
@@ -159,6 +185,9 @@ function InsuranceSlide({ frame }: SlideRenderContext) {
       <Callout frame={frame} icon="🛟" label="最後の備え">
         <p>被害を限定できる「保険」をかけておく</p>
       </Callout>
+      <Callout frame={frame} tone="warn" icon="⚠️" label="保険が戻すのはお金だけ">
+        <p>信用やプライバシーは戻らない。だから本体はここまでの対策</p>
+      </Callout>
     </Slide>
   )
 }
@@ -171,8 +200,8 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
         frame={frame}
         orientation="vertical"
         steps={[
-          { label: '1', heading: '漏洩・侵害は「起きる」前提で考える', body: '気づいていないだけ、を疑う' },
-          { label: '2', heading: '漏れても困らない形にする', body: '持たない・暗号化・パスキー', accent: true },
+          { label: '1', heading: '漏洩・侵害は「起きる」前提で考える', body: '気づける仕組み（ログ・監視）を持つ' },
+          { label: '2', heading: '漏れても困らない形にする', body: '取り替えられない情報は持たない。残りは暗号化・パスキー', accent: true },
           { label: '3', heading: '守りはクラウドの仕組みに乗せる', body: '最後は保険で被害を限定する' },
         ]}
       />
