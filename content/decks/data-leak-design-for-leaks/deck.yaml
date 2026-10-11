@@ -35,6 +35,10 @@ slides:
     title: 隠し通すには限界がある
     durationInFrames: 300
     notes: 名簿・電話帳、マイナンバーの提出。手本はクレジットカード。
+  - id: expert-takagi
+    title: 専門家の声 高木浩光さん
+    durationInFrames: 300
+    notes: 秘密かどうかより、データで一方的に選別されて不利益を受けないこと。
   - id: replaceable
     title: 取り替えられる情報・取り替えられない情報
     durationInFrames: 300
@@ -47,6 +51,10 @@ slides:
     title: 国も動いた
     durationInFrames: 300
     notes: 2026年10月9日、金融庁が画像による本人確認の前倒し廃止とICチップ読取への一本化を要請。
+  - id: expert-tokumaru
+    title: 専門家の声 徳丸浩さん
+    durationInFrames: 320
+    notes: 平文保存の真因、持たない・使い捨てる、ゼロトラストのラベル化、基本の徹底。
   - id: four-principles
     title: 漏れても大丈夫にする5つの方針
     durationInFrames: 320

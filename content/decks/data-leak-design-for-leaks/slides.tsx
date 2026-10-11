@@ -2,6 +2,7 @@
 import type { SlideModule, SlideRenderContext } from '../../../src/types'
 import {
   Callout,
+  Quote,
   ComparisonTable,
   CtaSlide,
   DiagramFrame,
@@ -19,9 +20,11 @@ export const slides: SlideModule['slides'] = [
   { id: 'not-new', render: (props) => <NotNewSlide {...props} /> },
   { id: 'zero-trust', render: (props) => <ZeroTrustSlide {...props} /> },
   { id: 'hiding-limits', render: (props) => <HidingLimitsSlide {...props} /> },
+  { id: 'expert-takagi', render: (props) => <ExpertTakagiSlide {...props} /> },
   { id: 'replaceable', render: (props) => <ReplaceableSlide {...props} /> },
   { id: 'dont-hold', render: (props) => <DontHoldSlide {...props} /> },
   { id: 'government', render: (props) => <GovernmentSlide {...props} /> },
+  { id: 'expert-tokumaru', render: (props) => <ExpertTokumaruSlide {...props} /> },
   { id: 'four-principles', render: (props) => <FourPrinciplesSlide {...props} /> },
   { id: 'key-not-number', render: (props) => <KeyNotNumberSlide {...props} /> },
   { id: 'cloud', render: (props) => <CloudSlide {...props} /> },
@@ -40,6 +43,14 @@ const SOURCES = [
   {
     label: '犯罪収益移転防止法施行規則の改正による本人確認方法の厳格化について（TMI総合法律事務所）',
     url: 'https://www.tmi.gr.jp/eyes/blog/2026/18168.html',
+  },
+  {
+    label: '「パスワード平文保存」が今なお繰り返される真因 徳丸浩が警告する「形だけのセキュリティ」（＠IT, 2026年8月20日）',
+    url: 'https://atmarkit.itmedia.co.jp/ait/articles/2608/20/news004.html',
+  },
+  {
+    label: 'リクナビだけじゃない――不正利用元年に理解すべき個人情報の概念と倫理（＠IT, 2019年11月8日）',
+    url: 'https://atmarkit.itmedia.co.jp/ait/articles/1911/08/news028_6.html',
   },
 ]
 
@@ -138,6 +149,22 @@ function HidingLimitsSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function ExpertTakagiSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="専門家の声① 高木浩光さん" heading={'「秘密」より\n「選別されない」こと'} />
+      <Quote
+        frame={frame}
+        quote="本当に大事なのは、勝手に個人のデータを取得されたり第三者に提供されたりしないということよりも、一方的にデータによって選別されて不利益を被ることがないようにすること"
+        source="高木浩光さん（＠IT 2019年11月8日の記事より）"
+      />
+      <Callout frame={frame} icon="💡" label="私の受け取り方">
+        <p>隠し通すことより、データの使われ方を守るほうが本質</p>
+      </Callout>
+    </Slide>
+  )
+}
+
 function ReplaceableSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
@@ -189,6 +216,29 @@ function GovernmentSlide({ frame }: SlideRenderContext) {
           { label: '決まっていた', heading: '2027年4月に画像での本人確認を廃止', body: '犯罪収益移転防止法の施行規則改正。ICチップの読み取りに一本化する予定' },
           { label: '2026年10月', heading: '不正アクセスによる情報漏えいが相次ぐ', body: '運転免許証など本人確認書類の画像が流出した例も' },
           { label: '2026年10月9日', heading: '金融庁が前倒しを要請', body: '施行日を待たず、可及的速やかにICチップ読み取りへ', accent: true },
+        ]}
+      />
+    </Slide>
+  )
+}
+
+function ExpertTokumaruSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="専門家の声② 徳丸浩さん"
+        heading="「持たない・使い捨てる」へ"
+        lead="＠IT 2026年8月20日のインタビューより（要約）"
+      />
+      <Timeline
+        frame={frame}
+        orientation="vertical"
+        steps={[
+          { label: '平文保存の真因', heading: '「侵入されたらどうせアウト」という思い込み', body: '使い回しで、漏れたパスワードは他サービスへの入口になった' },
+          { label: '認証情報', heading: 'そもそも持たない・寿命を短くする', body: 'トークンを永続的に持つこと自体がリスク', accent: true },
+          { label: 'ゼロトラスト', heading: '製品のラベルで「やった気分」になる', body: '自社にとって本当に困る被害は何か、の分析が先' },
+          { label: 'AIの脅威', heading: '金融庁の通達の中身は「基本の徹底」', body: 'AI対策ではなく、基本的な脆弱性対応' },
         ]}
       />
     </Slide>
