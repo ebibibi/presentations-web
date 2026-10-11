@@ -27,6 +27,10 @@ slides:
     title: AIのせい？ それ以前の問題
     durationInFrames: 300
     notes: 添付ファイルを外へ送れる組織は多い。承認フローも全件見れば形だけになる。
+  - id: zero-trust
+    title: ゼロトラストは当たり前
+    durationInFrames: 300
+    notes: この考え方はゼロトラストそのもの。侵害を前提にする。
   - id: hiding-limits
     title: 隠し通すには限界がある
     durationInFrames: 300
@@ -35,6 +39,14 @@ slides:
     title: 取り替えられる情報・取り替えられない情報
     durationInFrames: 300
     notes: クレカの本質は取り替えられること。取り替えられない情報は持たない・集めないしかない。
+  - id: dont-hold
+    title: 持っていること自体がおかしい
+    durationInFrames: 300
+    notes: パスワードを生で保存、免許証の写真を保管。持たなければ漏れない。
+  - id: government
+    title: 国も動いた
+    durationInFrames: 300
+    notes: 2026年10月9日、金融庁が画像による本人確認の前倒し廃止とICチップ読取への一本化を要請。
   - id: four-principles
     title: 漏れても大丈夫にする5つの方針
     durationInFrames: 320
@@ -47,6 +59,10 @@ slides:
     title: 人間に頼らない仕組みに乗る
     durationInFrames: 300
     notes: メガクラウドの仕組みを使い、推奨設定にAIで追従する。
+  - id: mechanism-not-location
+    title: 場所ではなく仕組みの話
+    durationInFrames: 300
+    notes: オンプレでも Azure Arc などでクラウドの守りを使える。ただ世界への分散は一企業では難しい。
   - id: insurance
     title: それでも人は騙される
     durationInFrames: 240
@@ -55,6 +71,10 @@ slides:
     title: 今日から変える3つの前提
     durationInFrames: 300
     notes: 私の提案としてのチェックリスト。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: 2026年10月11日時点。
   - id: cta-outro
     title: 応援お願いします！
     durationInFrames: 150

@@ -17,14 +17,30 @@ export const slides: SlideModule['slides'] = [
   { id: 'cta-intro', render: (props) => <CtaSlide {...props} /> },
   { id: 'answer', render: (props) => <AnswerSlide {...props} /> },
   { id: 'not-new', render: (props) => <NotNewSlide {...props} /> },
+  { id: 'zero-trust', render: (props) => <ZeroTrustSlide {...props} /> },
   { id: 'hiding-limits', render: (props) => <HidingLimitsSlide {...props} /> },
   { id: 'replaceable', render: (props) => <ReplaceableSlide {...props} /> },
+  { id: 'dont-hold', render: (props) => <DontHoldSlide {...props} /> },
+  { id: 'government', render: (props) => <GovernmentSlide {...props} /> },
   { id: 'four-principles', render: (props) => <FourPrinciplesSlide {...props} /> },
   { id: 'key-not-number', render: (props) => <KeyNotNumberSlide {...props} /> },
   { id: 'cloud', render: (props) => <CloudSlide {...props} /> },
+  { id: 'mechanism-not-location', render: (props) => <MechanismNotLocationSlide {...props} /> },
   { id: 'insurance', render: (props) => <InsuranceSlide {...props} /> },
   { id: 'checklist', render: (props) => <ChecklistSlide {...props} /> },
+  { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
   { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> },
+]
+
+const SOURCES = [
+  {
+    label: '金融庁、本人確認のICチップ1本化前倒しを要請 免許証情報漏えいで（Impress Watch, 2026年10月9日）',
+    url: 'https://www.watch.impress.co.jp/docs/news/2147233.html',
+  },
+  {
+    label: '犯罪収益移転防止法施行規則の改正による本人確認方法の厳格化について（TMI総合法律事務所）',
+    url: 'https://www.tmi.gr.jp/eyes/blog/2026/18168.html',
+  },
 ]
 
 function OpeningSlide({ frame }: SlideRenderContext) {
@@ -75,6 +91,28 @@ function NotNewSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function ZeroTrustSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading
+        frame={frame}
+        kicker="この考え方には名前がある"
+        heading="ゼロトラストは当たり前"
+        lead="社内だから安全、という前提を捨てる"
+      />
+      <Timeline
+        frame={frame}
+        orientation="vertical"
+        steps={[
+          { label: '1', heading: '毎回確かめる', body: '社内・社外を問わず、アクセスのたびに本人と端末を確認' },
+          { label: '2', heading: '必要な分だけ渡す', body: '権限は最小限。持ち出せる範囲を最初から狭くする' },
+          { label: '3', heading: '侵入されている前提で考える', body: 'この動画の主張そのもの', accent: true },
+        ]}
+      />
+    </Slide>
+  )
+}
+
 function HidingLimitsSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
@@ -115,6 +153,42 @@ function ReplaceableSlide({ frame }: SlideRenderContext) {
           { label: '例', cells: ['カード番号・パスワード・鍵', '氏名・生年月日・住所・顔・病歴'] },
           { label: '漏れたら', cells: ['止めて新しくすれば守れる', 'あとから取り戻せない'] },
           { label: '守り方', cells: ['取り替えやすい仕組みにしておく', 'そもそも持たない・集めない'] },
+        ]}
+      />
+    </Slide>
+  )
+}
+
+function DontHoldSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="漏れる以前に" heading={'持っていること自体が\nおかしい'} />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: 'よくある持ち方' }, { label: 'こうすれば持たなくていい', accent: true }]}
+        rows={[
+          { label: 'パスワード', cells: ['生のまま保存している', '生で保存しない。パスキーならサーバーには公開鍵だけ'] },
+          { label: '免許証の写真', cells: ['本人確認のために画像を集めて保管', 'ICチップを読み取って確認すれば画像はいらない'] },
+        ]}
+      />
+      <Callout frame={frame} icon="🗑️" label="持たなければ漏れない">
+        <p>「どう守るか」の前に「そもそも持つ必要があるか」</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function GovernmentSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="国も動いた" heading={'免許証の画像での\n本人確認は廃止へ'} />
+      <Timeline
+        frame={frame}
+        orientation="vertical"
+        steps={[
+          { label: '決まっていた', heading: '2027年4月に画像での本人確認を廃止', body: '犯罪収益移転防止法の施行規則改正。ICチップの読み取りに一本化する予定' },
+          { label: '2026年10月', heading: '不正アクセスによる情報漏えいが相次ぐ', body: '運転免許証など本人確認書類の画像が流出した例も' },
+          { label: '2026年10月9日', heading: '金融庁が前倒しを要請', body: '施行日を待たず、可及的速やかにICチップ読み取りへ', accent: true },
         ]}
       />
     </Slide>
@@ -178,6 +252,26 @@ function CloudSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function MechanismNotLocationSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="クラウドかオンプレか？" heading={'場所ではなく\n「仕組み」の話'} />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: 'オンプレ＋クラウドの技術' }, { label: 'メガクラウドに置く', accent: true }]}
+        rows={[
+          { label: '例', cells: ['Azure Arc でオンプレのサーバーをクラウドから管理', 'データそのものをクラウドに置く'] },
+          { label: '守り', cells: ['ポリシー・更新・脅威検知をクラウドと同じ仕組みで', '同じ仕組み＋事業者の内部統制'] },
+          { label: '場所の分散', cells: ['世界中に拠点を持つのは一企業では難しい', '複数リージョンへ簡単に複製できる'] },
+        ]}
+      />
+      <Callout frame={frame} icon="💡" label="私のおすすめ">
+        <p>どこに置くにしても、守りはクラウドの仕組みに乗せる</p>
+      </Callout>
+    </Slide>
+  )
+}
+
 function InsuranceSlide({ frame }: SlideRenderContext) {
   return (
     <Slide center>
@@ -201,10 +295,29 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
         orientation="vertical"
         steps={[
           { label: '1', heading: '漏洩・侵害は「起きる」前提で考える', body: '気づける仕組み（ログ・監視）を持つ' },
-          { label: '2', heading: '漏れても困らない形にする', body: '取り替えられない情報は持たない。残りは暗号化・パスキー', accent: true },
-          { label: '3', heading: '守りはクラウドの仕組みに乗せる', body: '最後は保険で被害を限定する' },
+          { label: '2', heading: '漏れても困らない形にする', body: 'パスワードや免許証の画像を生で持たない。残りは暗号化・パスキー', accent: true },
+          { label: '3', heading: '守りはクラウドの仕組みに乗せる', body: 'オンプレも Azure Arc などで。最後は保険で被害を限定する' },
         ]}
       />
+    </Slide>
+  )
+}
+
+function SourcesSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="Sources" heading="出典" lead="2026年10月11日時点の情報" />
+      <Callout frame={frame} icon="📘" label="参考">
+        <ul>
+          {SOURCES.map((s) => (
+            <li key={s.url}>
+              <a href={s.url} target="_blank" rel="noreferrer">
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Callout>
     </Slide>
   )
 }
