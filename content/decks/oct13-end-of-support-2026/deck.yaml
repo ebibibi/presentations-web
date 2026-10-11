@@ -5,13 +5,18 @@ status: draft
 visibility: public
 canvas: standard
 createdAt: "2026-10-05"
-updatedAt: "2026-10-05"
+updatedAt: "2026-10-11"
 tags:
   - microsoft
   - m365
   - windows-server
   - office
   - lifecycle
+youtube:
+  id: DdHxGcU9lwU
+  url: https://www.youtube.com/watch?v=DdHxGcU9lwU
+  title: "10月13日、Office 2021とWindows Server 2012が同じ日に終わる【+M365接続も】"
+  publishedAt: "2026-10-11"
 slides:
   - id: opening
     title: 10月13日、Office 2021とWindows Server 2012が同じ日に終わる
