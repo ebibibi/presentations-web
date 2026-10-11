@@ -47,6 +47,10 @@ slides:
     title: 人間に頼らない仕組みに乗る
     durationInFrames: 300
     notes: メガクラウドの仕組みを使い、推奨設定にAIで追従する。
+  - id: mechanism-not-location
+    title: 場所ではなく仕組みの話
+    durationInFrames: 300
+    notes: オンプレでも Azure Arc などでクラウドの守りを使える。ただ世界への分散は一企業では難しい。
   - id: insurance
     title: それでも人は騙される
     durationInFrames: 240

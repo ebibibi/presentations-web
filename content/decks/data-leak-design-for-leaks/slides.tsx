@@ -22,6 +22,7 @@ export const slides: SlideModule['slides'] = [
   { id: 'four-principles', render: (props) => <FourPrinciplesSlide {...props} /> },
   { id: 'key-not-number', render: (props) => <KeyNotNumberSlide {...props} /> },
   { id: 'cloud', render: (props) => <CloudSlide {...props} /> },
+  { id: 'mechanism-not-location', render: (props) => <MechanismNotLocationSlide {...props} /> },
   { id: 'insurance', render: (props) => <InsuranceSlide {...props} /> },
   { id: 'checklist', render: (props) => <ChecklistSlide {...props} /> },
   { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> },
@@ -178,6 +179,26 @@ function CloudSlide({ frame }: SlideRenderContext) {
   )
 }
 
+function MechanismNotLocationSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="クラウドかオンプレか？" heading={'場所ではなく\n「仕組み」の話'} />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: 'オンプレ＋クラウドの技術' }, { label: 'メガクラウドに置く', accent: true }]}
+        rows={[
+          { label: '例', cells: ['Azure Arc でオンプレのサーバーをクラウドから管理', 'データそのものをクラウドに置く'] },
+          { label: '守り', cells: ['ポリシー・更新・脅威検知をクラウドと同じ仕組みで', '同じ仕組み＋事業者の内部統制'] },
+          { label: '場所の分散', cells: ['世界中に拠点を持つのは一企業では難しい', '複数リージョンへ簡単に複製できる'] },
+        ]}
+      />
+      <Callout frame={frame} icon="💡" label="私のおすすめ">
+        <p>どこに置くにしても、守りはクラウドの仕組みに乗せる</p>
+      </Callout>
+    </Slide>
+  )
+}
+
 function InsuranceSlide({ frame }: SlideRenderContext) {
   return (
     <Slide center>
@@ -202,7 +223,7 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
         steps={[
           { label: '1', heading: '漏洩・侵害は「起きる」前提で考える', body: '気づける仕組み（ログ・監視）を持つ' },
           { label: '2', heading: '漏れても困らない形にする', body: '取り替えられない情報は持たない。残りは暗号化・パスキー', accent: true },
-          { label: '3', heading: '守りはクラウドの仕組みに乗せる', body: '最後は保険で被害を限定する' },
+          { label: '3', heading: '守りはクラウドの仕組みに乗せる', body: 'オンプレも Azure Arc などで。最後は保険で被害を限定する' },
         ]}
       />
     </Slide>
