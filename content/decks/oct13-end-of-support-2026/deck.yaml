@@ -1,11 +1,11 @@
 slug: oct13-end-of-support-2026
 title: 10月13日、Office 2021とWindows Server 2012が同じ日に終わる【+M365接続も】
 summary: 2026年10月13日、Office LTSC 2021とOffice 2021、Visio・Project 2021、Windows Server 2012 / 2012 R2の拡張セキュリティ更新（ESU）3年目、Windows 10 2016 LTSB、Windows 11 Home/Pro 24H2が同じ日に終わります。Office LTSC 2021からMicrosoft 365サービスへの接続もこの日でサポート外になります。何が止まり、何が動き続けるのか、今日確認すべきことを公式のライフサイクル情報で整理します。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-05"
-updatedAt: "2026-10-11"
+updatedAt: "2026-10-13"
 tags:
   - microsoft
   - m365
@@ -16,7 +16,7 @@ youtube:
   id: DdHxGcU9lwU
   url: https://www.youtube.com/watch?v=DdHxGcU9lwU
   title: "10月13日、Office 2021とWindows Server 2012が同じ日に終わる【+M365接続も】"
-  publishedAt: "2026-10-11"
+  publishedAt: "2026-10-13"
 slides:
   - id: opening
     title: 10月13日、Office 2021とWindows Server 2012が同じ日に終わる
