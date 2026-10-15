@@ -1,11 +1,11 @@
 slug: data-leak-design-for-leaks
 title: 情報漏洩は防げない。漏れても大丈夫な設計に変えるしかない
 summary: 情報漏洩はAIの攻撃で急に増えたのではなく、昔から起きていて気づいていないだけ、というのが私の見方です。隠し通す発想には限界があるので、情報を「取り替えられるもの」と「取り替えられないもの」に分け、持たない・暗号化する・パスワードをやめる・いつでも戻せる・早く気づく、の5つで備える。最後はクラウドの仕組みと保険で被害を限定する。「漏れる前提」で組み立て直す考え方を整理します。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-11"
-updatedAt: "2026-10-11"
+updatedAt: "2026-10-15"
 tags:
   - security
   - passkey
@@ -14,7 +14,7 @@ youtube:
   id: J6DfGwzf5_0
   url: https://www.youtube.com/watch?v=J6DfGwzf5_0
   title: "情報漏洩は防げない。漏れても大丈夫な設計に変えるしかない ─ 免許証画像の本人確認も廃止へ"
-  publishedAt: "2026-10-11"
+  publishedAt: "2026-10-15"
 slides:
   - id: opening
     title: 情報漏洩は防げない
