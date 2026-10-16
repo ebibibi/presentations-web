@@ -1,17 +1,22 @@
 slug: ms-weekly-2026-10-09
 title: 【MS週報】Windows Update の証明書が2027年に入れ替わる ─ 10月9日までの Microsoft の変更17件
 summary: 2026年10月9日までの1週間の Microsoft 関連の変更から、管理者に関係する17件をまとめました。いちばん大きいのは Windows Update の証明書ローテーションで、月例更新が古いまま止まっているデバイスは2027年に Windows Update へ接続できなくなります。オンプレミス Exchange の9月 V2 セキュリティ更新と権限昇格の脆弱性への緊急更新、Exchange Online のエイリアス送信の一般提供、Windows 11 26H2 まわりの対応状況と不具合なども、製品別に整理します。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-09"
-updatedAt: "2026-10-09"
+updatedAt: "2026-10-16"
 tags:
   - microsoft
   - m365
   - windows
   - exchange-online
   - ms-weekly
+youtube:
+  id: E7JW4nhy-O4
+  url: https://www.youtube.com/watch?v=E7JW4nhy-O4
+  title: "【MS週報】Windows Update の証明書が2027年に期限 ─ 月例更新が止まったPC・サーバーは更新できなくなる"
+  publishedAt: "2026-10-11"
 slides:
   - id: opening
     title: 今週の答え
