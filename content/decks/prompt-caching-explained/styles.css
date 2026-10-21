@@ -1,0 +1,357 @@
+/* Deck: prompt-caching-explained
+   One colour code carries every diagram: teal is read from the cache (cheap),
+   mustard is written to the cache, grey is computed normally and coral is a
+   miss that had to be recomputed. */
+
+.pc-slide {
+  --pc-hit: #14756f;
+  --pc-write: #d9a21b;
+  --pc-compute: #8d958f;
+  --pc-miss: #d85d4a;
+  gap: 30px;
+}
+
+.pc-slide .sk-heading h1 {
+  font-size: 62px;
+  line-height: 1.18;
+}
+
+.pc-slide .sk-lead {
+  font-size: 28px;
+}
+
+/* ── segment colours ─────────────────────────────────────── */
+
+.pc-seg-hit { background: var(--pc-hit); color: #fff; }
+.pc-seg-write { background: var(--pc-write); color: #17201b; }
+.pc-seg-compute { background: var(--pc-compute); color: #fff; }
+.pc-seg-miss { background: var(--pc-miss); color: #fff; }
+
+/* ── token strips ────────────────────────────────────────── */
+
+.pc-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.pc-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  column-gap: 18px;
+  row-gap: 8px;
+  align-items: center;
+}
+
+.pc-row-label {
+  font-size: 30px;
+}
+
+.pc-strip {
+  display: flex;
+  gap: 6px;
+}
+
+.pc-seg {
+  flex-basis: 0;
+  min-width: 0;
+  padding: 20px 10px;
+  border-radius: 10px;
+  font-size: 23px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.pc-row-note {
+  grid-column: 2;
+  margin: 0;
+  font-size: 24px;
+  color: var(--muted);
+}
+
+.pc-store {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-left: 128px;
+  padding: 12px 20px;
+  border: 3px dashed var(--pc-write);
+  border-radius: 14px;
+  font-size: 26px;
+}
+
+.pc-store strong {
+  font-size: 30px;
+}
+
+.pc-store p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.pc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 30px;
+  margin-left: 128px;
+  font-size: 22px;
+  color: var(--muted);
+}
+
+.pc-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pc-swatch {
+  display: inline-block;
+  width: 26px;
+  height: 18px;
+  border-radius: 5px;
+}
+
+/* ── two effects ─────────────────────────────────────────── */
+
+.pc-effects {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.pc-effect {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 30px;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 18px;
+}
+
+.pc-effect-tag {
+  align-self: flex-start;
+  padding: 4px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fbf8ee;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.pc-effect strong {
+  font-size: 30px;
+}
+
+.pc-effect p {
+  margin: 0;
+  font-size: 21px;
+  color: var(--muted);
+}
+
+.pc-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pc-bar-line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 6px;
+  align-items: center;
+}
+
+.pc-bar-label {
+  font-size: 22px;
+}
+
+.pc-bar-track {
+  grid-column: 1;
+  height: 30px;
+  background: #ece9df;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pc-bar {
+  display: block;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.pc-bar-value {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: end;
+  min-width: 110px;
+  padding-left: 14px;
+  font-size: 34px;
+  text-align: right;
+}
+
+/* ── cost ────────────────────────────────────────────────── */
+
+.pc-cost {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.pc-cost-row {
+  display: grid;
+  grid-template-columns: 1fr 170px;
+  row-gap: 8px;
+  align-items: center;
+}
+
+.pc-cost-label {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.pc-cost-track {
+  grid-column: 1;
+  display: flex;
+  height: 56px;
+  background: #ece9df;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pc-cost-bar {
+  display: block;
+  height: 100%;
+}
+
+.pc-cost-row b {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 52px;
+  text-align: right;
+}
+
+.pc-cost-row p {
+  grid-column: 1 / span 2;
+  margin: 0;
+  font-size: 23px;
+  color: var(--muted);
+}
+
+/* ── hourly (12h) ────────────────────────────────────────── */
+
+.pc-hourly {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pc-hourly-axis {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 140px 0 220px;
+  font-size: 20px;
+  color: var(--muted);
+}
+
+.pc-hourly-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 120px;
+  gap: 20px;
+  align-items: center;
+}
+
+.pc-hourly-row strong {
+  font-size: 26px;
+}
+
+.pc-hourly-row b {
+  font-size: 38px;
+  text-align: right;
+}
+
+.pc-hourly-cells {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 6px;
+}
+
+.pc-hourly-cell {
+  display: block;
+  height: 52px;
+  border-radius: 8px;
+}
+
+.pc-hourly .pc-legend {
+  margin-left: 220px;
+}
+
+/* ── layers ──────────────────────────────────────────────── */
+
+.pc-layers {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 20px;
+}
+
+.pc-layer-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pc-layer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 28px;
+  border-radius: 14px;
+  font-size: 24px;
+}
+
+.pc-layer strong {
+  font-size: 30px;
+}
+
+.pc-layer-0 { background: var(--pc-hit); color: #fff; }
+.pc-layer-1 { background: #3f8f89; color: #fff; }
+.pc-layer-2 { background: #8fbcb6; color: #17201b; }
+.pc-layer-3 { background: #e8e4d8; color: #17201b; border: 2px dashed var(--pc-compute); }
+
+.pc-slide .pc-layer-0 strong,
+.pc-slide .pc-layer-1 strong { color: #fff; }
+
+.pc-layer-axis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.pc-layer-axis i {
+  flex: 1;
+  width: 6px;
+  border-radius: 3px;
+  background: linear-gradient(var(--pc-hit), var(--pc-compute));
+}
+
+/* ── sources ─────────────────────────────────────────────── */
+
+.pc-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding-left: 30px;
+  font-size: 25px;
+  line-height: 1.45;
+}
+
+.pc-sources a {
+  color: var(--teal);
+}

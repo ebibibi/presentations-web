@@ -1,0 +1,80 @@
+slug: prompt-caching-explained
+title: AIのプロンプトキャッシュ図解｜OpenAIが12時間キャッシュ開始、同じ資料100回で94%オフ
+summary: 同じ資料を何度もAIに読ませるなら、2回目からは「先頭の読み込み」を使い回せます。それがプロンプトキャッシュです。答えを保存する仕組みではなく、入力を読んだ途中の計算（KVキャッシュ）を保存する仕組みで、先頭が1文字でも違えば外れます。OpenAI が2026年10月20日に出した12時間キャッシュ、OpenAI・Claude・Gemini の仕様の違い、10万トークンを100回読ませたときの料金（$20→約$1.24）、Claude Code チームが踏んだ「キャッシュを壊す5つの例」、今日確認する3項目を図でまとめます。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-21"
+updatedAt: "2026-10-21"
+tags:
+  - ai
+  - api
+  - openai
+  - claude
+  - prompt-caching
+  - cost
+slides:
+  - id: opening
+    title: AIのプロンプトキャッシュ図解
+    durationInFrames: 240
+    notes: 冒頭40秒で言い切る。同じ資料を何度もAIに読ませるとき、2回目からは先頭の読み込みを使い回せる。それがプロンプトキャッシュ。10万トークンの資料に100回質問すると、資料部分の入力料金は約20ドルが約1.24ドルになる（Claude Sonnet 5.5 と GPT-6.1 Sol の公式単価で私が計算）。そして2026年10月20日、OpenAI が12時間キャッシュを出した。条件はただ1つ、「先頭が同じであること」。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
+  - id: misconception
+    title: 答えを保存するのではない
+    durationInFrames: 260
+    notes: 要本人確認：「私も最初は答えのキャッシュだと思っていた」を本人の体験として言えるか。言えなければ「よくある誤解」として話す。保存されるのは出力ではなく、入力を読んだ途中の計算。だから出力は毎回ちゃんと生成されるし、似た質問でも先頭が違えば当たらない。Anthropic の公式ドキュメントも「キャッシュは出力の生成には影響しない」と書いている。
+  - id: kv-cache
+    title: 何を保存しているのか（KVキャッシュ）
+    durationInFrames: 320
+    notes: LLM は入力を読むとき（prefill）、トークンごと・層ごとに Attention の Key と Value を計算する。これが KV。普段は1回の応答の間だけ使って捨てる。プロンプトキャッシュは、これをリクエストをまたいで取っておく仕組み。2回目は、増えた末尾だけ計算すればよい。仕組みの説明は vLLM の公式設計ドキュメント（prefix caching）に基づく。OpenAI・Anthropic・Google の内部実装は非公開なので「考え方は同じ」と言うにとどめる。
+  - id: prefix-match
+    title: 先頭が1文字でも違えば外れる
+    durationInFrames: 320
+    notes: いちばん大事な図。トークンiのKVはそれより前の全トークンに依存する。だから途中が1つ変わると、そこから後ろは全部計算し直し。vLLM はブロックのハッシュを「前のブロックのハッシュ＋自分の中身」で連鎖させている。Bは質問だけ違うので、資料までは当たる。Cは先頭に日時を入れただけで、全部外れる。Anthropic も「Prompt caching is a prefix match」と言っている。
+  - id: two-effects
+    title: 効き目は2つ：速い・安い
+    durationInFrames: 280
+    notes: 速い方は、長い入力の読み込み（prefill）を飛ばせるから。Anthropic 公式ブログの測定例では、10万トークンの本との対話で最初のトークンまで11.5秒が2.4秒。古いモデルでの測定なので「公式の測定例」と添える。安い方は、読み取りが入力単価の0.1倍（モデルによっては0.05倍）。出力の速さと中身は変わらない。
+  - id: cost-example
+    title: 同じ資料を100回読ませると
+    durationInFrames: 300
+    notes: 前提は、10万トークンの資料を先頭に置き、100回質問する。質問と出力は同じなので比較から外し、資料部分の入力料金だけ比べる。100回ともキャッシュの有効期限内、1回目で書き込み、残り99回が読み取り。単価は公式、計算は私。Claude Sonnet 5.5 は入力 $2、5分書き込み $2.50、読み取り $0.10。GPT-6.1 Sol も入力 $2、書き込み $2.50、キャッシュ入力 $0.10 で同じ数字になる。キャッシュなし 100×0.1M×$2＝$20。キャッシュあり $0.25＋99×$0.01＝$1.24。約94%減。
+  - id: section-openai
+    title: OpenAI の最新動向
+    durationInFrames: 150
+    notes: ここから OpenAI の話。DevDay 2026（9月29日）の前後に、キャッシュの改善が続けて出ている。
+  - id: openai-timeline
+    title: 2026年、OpenAI のキャッシュはこう変わった
+    durationInFrames: 320
+    notes: すべて OpenAI 公式 changelog で確認。7月9日 GPT-5.6 で明示的なキャッシュ制御。8月20日 キャッシュのダッシュボード（ヒット率の推移など）。9月8日 ミスの原因を教える Prompt Cache Diagnostics が GA。9月29日 DevDay 2026、GPT-6.1 Sol はキャッシュ入力 $0.10（入力の0.05倍＝95%引き）。DevDay の公式まとめでは API の TTFT 45%短縮もうたっている（計測条件は不明）。10月20日 12時間キャッシュ。なお「28日間、毎日改善を出す」企画の16日目という扱いはコミュニティのまとめ（二次情報）なので、言うなら「〜と言われている」程度に。壇上でキャッシュの新機能が発表されたという一次情報は見つかっていない。
+  - id: twelve-hour
+    title: 12時間キャッシュは「間隔が空く」人の味方
+    durationInFrames: 320
+    notes: 出典は OpenAI changelog（2026年10月20日）と公式ガイド。Responses API のみ、GPT-5.6 以降。`prompt_cache_options.ttl` に "12h" を指定。書き込みは入力単価の2.5倍（既定の30分は1.25倍）、読み取りは同じ。例は私の計算：GPT-6.1 Sol で10万トークンを1時間おきに12回呼ぶ。キャッシュなし 12×$0.20＝$2.40。30分だと毎回切れて毎回書き込み 12×$0.25＝$3.00 でむしろ高い。12時間なら書き込み1回 $0.50＋読み取り11回 $0.11＝$0.61。逆に数分おきに呼ぶなら30分で十分で、12時間の高い書き込みは要らない。
+  - id: three-vendors
+    title: OpenAI・Claude・Gemini の違い
+    durationInFrames: 320
+    notes: いずれも各社の公式ドキュメント（2026年10月21日時点）。OpenAI は既定でオン。最小1,024トークン（GPT-5.6以降）。Claude は cache_control を付けて指定する。リクエストの一番上に1つ書く自動モードもある。最小はモデルにより512〜4,096トークン。読み取りは基本0.1倍、Opus 5.5・Sonnet 5.5 は0.05倍。Gemini は implicit が Gemini 2.5 以降で既定オンだが割引の保証は無い。料金表上のキャッシュ単価は入力の1/10。explicit は TTL 既定1時間で、保存時間に応じたストレージ料金がかかる。Gemini 4 Argon 以降は explicit 非対応。
+  - id: breakers
+    title: キャッシュを壊す5つの例
+    durationInFrames: 320
+    notes: 出典は Anthropic の Claude Code チームのブログ「Prompt caching is everything」（2026年4月30日）。実際に踏んだもの。1 システムプロンプトに細かい日時を入れた。2 ツール定義の並び順が毎回違った。3 会話の途中でツールを足した・消した。4 会話の途中でモデルを変えた。Opus で10万トークン話した後に Haiku に回すと、Haiku 側でキャッシュを作り直すぶん Opus に答えさせるより高くつく。5 呼ぶ間隔が TTL より長い、または最小トークン数より短い。これは3社共通。
+  - id: layout
+    title: 変わらないものを前に、変わるものを後ろに
+    durationInFrames: 300
+    notes: Claude Code の並び順。静的なシステムプロンプトとツール → CLAUDE.md → セッションの文脈 → 会話。情報が古くなったらプロンプトを書き換えず、次のメッセージに system-reminder として足す。Claude Code チームはキャッシュのヒット率にアラートを張り、下がったら SEV（障害）扱いにしている。
+  - id: checklist
+    title: 今日確認する3項目
+    durationInFrames: 300
+    notes: 調査をもとにした私の提案。1 レスポンスの usage を見る。OpenAI は cached_tokens、Claude は cache_read_input_tokens。0のままなら当たっていない。OpenAI はダッシュボードと診断も使える。2 プロンプトの先頭に日時・ユーザー名・ランダムなIDが入っていないか。3 呼ぶ間隔と TTL を合わせる。1時間おきなら長い TTL（OpenAI 12時間、Claude 1時間）、数分おきなら既定で十分。
+  - id: sources
+    title: 出典
+    durationInFrames: 200
+    notes: 料金は2026年10月21日時点の公式料金表。料金の計算例は私が公式単価から計算したもの。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
