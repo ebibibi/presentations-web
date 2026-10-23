@@ -1,0 +1,66 @@
+slug: phishing-training-is-theater
+title: 標的型メール訓練はもう通用しない ─ 「気づいて報告」より先にフィッシング耐性のある認証を強制せよ
+summary: 巧妙な標的型攻撃は、人間が気づけないから成立します。「怪しいと思ったら報告」「報告しなかったらトレーニング」という運用は、守っているふりにしかなりません。約2万人を8か月追った研究と英国NCSCの指針を根拠に、訓練と報告の限界、M365の標準機能でできる報告の形、そして本当に先にやるべきフィッシング耐性のある認証の強制を整理します。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-23"
+updatedAt: "2026-10-23"
+tags:
+  - microsoft
+  - security
+  - entra-id
+  - m365
+slides:
+  - id: opening
+    title: 標的型メール訓練はもう通用しない
+    durationInFrames: 240
+    notes: 冒頭で言い切る。人間は巧妙な標的型に気づけない。訓練と報告で守っているふりをする前に、フィッシング耐性のある認証を強制せよ。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
+  - id: confession
+    title: 報告しなかったら、トレーニング送り
+    durationInFrames: 300
+    notes: 自分の告白。勤務先の名前・社内の仕組みの固有名・フォームの画面は出さない（一般論として話す）。オチは「受講の催促メールのほうをフィッシングとして報告した」。
+  - id: cant-notice
+    title: 巧妙な標的型は、そもそも気づけない
+    durationInFrames: 300
+    notes: AIで文面の違和感が消えた。乗っ取った本物のアカウントから既存のスレッドに返信してくる。AiTMは本物のログイン画面を中継するので、だまされた本人に違和感が残らない。
+  - id: evidence
+    title: 約2万人・8か月の実験の結果
+    durationInFrames: 320
+    notes: UC San Diego の研究（IEEE S&P 2025）。19,500人超・8か月・10種類の訓練メール。年次研修の受講と引っかかり率に有意な関係なし。引っかかった直後の研修でも改善は約2%。3分の1は研修ページをすぐ閉じ、75%は1分以内。8か月で半数以上が少なくとも1回クリックした。
+  - id: ncsc
+    title: 英国NCSCも同じことを言っている
+    durationInFrames: 240
+    notes: 英国の国家サイバーセキュリティセンターの公式ガイダンス。訓練でどんなフィッシングも見抜けるようにはならない。
+  - id: report-paradox
+    title: 「気づいたら報告」の矛盾
+    durationInFrames: 300
+    notes: 気づけるものは雑な攻撃で、フィルターでも止まる。本当に危ないものは気づけないので報告されない。標的型かどうかは、届いた人数などを見られる側にしか判定できない。
+  - id: one-click
+    title: やるならM365の標準ボタン1つで
+    durationInFrames: 300
+    notes: Outlook の標準の報告ボタンなら、メール本体がヘッダーごと届く。報告先は管理者の決めたメールボックスとMicrosoftの両方を選べる。訓練メールは高度な配信ポリシーで訓練として扱える。
+  - id: punishment
+    title: 罰の研修が人を攻撃に弱くする
+    durationInFrames: 320
+    notes: 受講の催促メールは、権威・不安・期限・不利益・リンクと、フィッシングの典型的な手口がそろっている。正規のメールでこの形に慣れさせるのは、攻撃者が真似する形に慣れさせること。罰はミスの報告も止める（NCSC）。
+  - id: real-fix
+    title: だまされても被害が出ない認証へ
+    durationInFrames: 320
+    notes: パスキー・FIDO2・Windows Hello for Business はサインイン先のドメインに紐づくので、偽サイトでは認証が成立しない。だまされても被害にならない。Entra ID の条件付きアクセスで認証強度「フィッシング耐性のあるMFA」を要求する。
+  - id: checklist
+    title: 今日確認する3つ
+    durationInFrames: 300
+    notes: 私の提案としてのチェックリスト。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: 2026年10月23日時点で確認。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
