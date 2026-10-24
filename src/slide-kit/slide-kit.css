@@ -244,54 +244,81 @@
 /* ── Comparison table ────────────────────────────────────────────────── */
 
 .sk-table {
+  background: #ffffff;
+  border: 2px solid #b9b5a8;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   /* Auto margins centre the block in the space the heading leaves, so a short
      table does not sit against the headline with a third of the slide empty. */
   margin: auto 0;
+  overflow: hidden;
 }
 
+/*
+ * A plain spreadsheet-style table: one bordered block, a filled header row,
+ * and ruled lines between every cell. The earlier design floated the header
+ * labels above separate row cards, and viewers could not tell which heading a
+ * value belonged to.
+ */
 .sk-table-head,
 .sk-table-row {
-  align-items: center;
-  column-gap: 20px;
+  align-items: stretch;
+  column-gap: 0;
   display: grid;
 }
 
 .sk-table-head {
-  padding: 0 24px 6px;
+  background: var(--ink);
 }
 
 .sk-table-head span {
-  color: var(--muted);
+  border-left: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
   font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  padding: 14px 20px;
+}
+
+.sk-table-head span:first-child {
+  border-left: 0;
+}
+
+.sk-table-head span.sk-table-accent {
+  background: var(--teal);
+  color: #ffffff;
 }
 
 .sk-table-row {
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 20px 24px;
+  border-top: 1px solid var(--line);
+}
+
+.sk-table-row > * {
+  align-items: center;
+  border-left: 1px solid var(--line);
+  display: flex;
+  padding: 16px 20px;
+}
+
+.sk-table-row > :first-child {
+  background: #f1efe8;
+  border-left: 0;
 }
 
 .sk-table-row strong {
-  font-size: 27px;
+  font-size: 26px;
+  line-height: 1.35;
 }
 
 .sk-table-row span {
-  color: #4e5a52;
+  color: var(--ink);
   font-size: 26px;
   line-height: 1.45;
 }
 
-.sk-table-accent {
-  color: var(--teal);
-}
-
 .sk-table-row span.sk-table-accent {
+  background: #e6f2f0;
   font-weight: 700;
 }
 
