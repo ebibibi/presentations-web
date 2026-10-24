@@ -8,6 +8,7 @@
   --pc-write: #d9a21b;
   --pc-compute: #8d958f;
   --pc-miss: #d85d4a;
+  --pc-output: #6d5bd0;
   gap: 30px;
 }
 
@@ -26,6 +27,7 @@
 .pc-seg-write { background: var(--pc-write); color: #17201b; }
 .pc-seg-compute { background: var(--pc-compute); color: #fff; }
 .pc-seg-miss { background: var(--pc-miss); color: #fff; }
+.pc-seg-output { background: var(--pc-output); color: #fff; }
 
 /* ── token strips ────────────────────────────────────────── */
 
@@ -111,6 +113,82 @@
   width: 26px;
   height: 18px;
   border-radius: 5px;
+}
+
+/* ── turns: prompt strip, then the answer ───────────────── */
+
+.pc-row-turn {
+  grid-template-columns: 110px 1fr 150px;
+}
+
+.pc-row-turn .pc-row-note {
+  grid-column: 2 / span 2;
+}
+
+.pc-answer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.pc-answer .pc-seg {
+  flex: 1;
+}
+
+/* ── input / output ──────────────────────────────────────── */
+
+.pc-io {
+  display: grid;
+  grid-template-columns: 1fr 220px 1fr;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.pc-io-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 20px;
+  border-radius: 18px;
+}
+
+.pc-io-box strong {
+  font-size: 44px;
+  color: inherit;
+}
+
+.pc-io-box span {
+  font-size: 26px;
+}
+
+.pc-io-box b {
+  margin-top: 6px;
+  font-size: 50px;
+}
+
+.pc-io-ai {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 40px;
+}
+
+.pc-io-ai strong {
+  padding: 22px 26px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fbf8ee;
+}
+
+.pc-io-note {
+  margin: 0;
+  font-size: 22px;
+  color: var(--muted);
+  text-align: center;
 }
 
 /* ── two effects ─────────────────────────────────────────── */
