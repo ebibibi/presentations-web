@@ -1,7 +1,7 @@
 slug: windows-update-cert-rotation-2027
 title: Windows Update の証明書が2027年に期限切れ。必要な更新を当てていない端末はつながらなくなる
 summary: Windows Update が接続先の確認に使う証明書の一部が、2027年5月17日と6月19日に期限切れになります。サポート中で月例更新を当てていればほとんどの端末は対応不要ですが、必要な更新を当てていない端末とサポート切れの Windows は Windows Update につながらなくなります。バージョンごとに当てる更新と期限、期限後の扱い、今日確認することを公式発表にそって整理します。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-09"

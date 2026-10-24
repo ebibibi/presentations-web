@@ -1,7 +1,7 @@
 slug: exo-send-from-alias-ga
 title: Exchange Online でエイリアスから送信できるように。有効化の前にルールとトレースを確認
 summary: Exchange Online で、メールボックスに付けたエイリアス（別名のアドレス）から送信する機能がパブリックプレビューを経て一般提供（GA）になりました。有効化は管理者がテナント単位で行います。便利になる一方、メールフロールールやジャーナリングがエイリアス送信に適用されない場合があり、メッセージトレースもエイリアスで検索する必要があります。仕組みと既知の制限、有効化前の確認ポイントを整理します。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-09"

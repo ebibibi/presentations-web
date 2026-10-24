@@ -1,7 +1,7 @@
 slug: azure-mcp-threat-model
 title: AIにAzureを操作させる前に｜Azure MCP 7つの脅威
 summary: Azure MCP Server で AI アシスタントを Azure につなぐと、調査は速くなる一方で、モデルが作ったリクエストがサブスクリプションやデータプレーンへ届くようになります。Microsoft Tech Community の記事（2026年10月16日）が整理した7つの脅威と、ツールのフィルタは認可ではない・アクティビティログは通常読み取りを記録しない・タイムアウトは失敗の証明ではない、という3つの事実、提案→検証→承認→実行→確認の型、今日確認する3項目をまとめます。守りはプロンプトではなく、モデルの外にある Azure の権限です。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-17"
