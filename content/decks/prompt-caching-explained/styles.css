@@ -9,6 +9,10 @@
   --pc-compute: #8d958f;
   --pc-miss: #d85d4a;
   --pc-output: #6d5bd0;
+  /* One unit of prompt. Every diagram draws a segment as a whole number of
+     units, so the same thing is the same size on every row. */
+  --pc-unit: 104px;
+  --pc-gap: 6px;
   gap: 30px;
 }
 
@@ -51,11 +55,12 @@
 
 .pc-strip {
   display: flex;
-  gap: 6px;
+  gap: var(--pc-gap);
+  justify-content: flex-start;
 }
 
 .pc-seg {
-  flex-basis: 0;
+  flex: none;
   min-width: 0;
   padding: 20px 10px;
   border-radius: 10px;
@@ -118,7 +123,7 @@
 /* ── turns: prompt strip, then the answer ───────────────── */
 
 .pc-row-turn {
-  grid-template-columns: 110px 1fr 150px;
+  grid-template-columns: 110px 1fr 154px;
 }
 
 .pc-row-turn .pc-row-note {
@@ -134,7 +139,7 @@
 }
 
 .pc-answer .pc-seg {
-  flex: 1;
+  width: var(--pc-unit);
 }
 
 /* ── input / output ──────────────────────────────────────── */

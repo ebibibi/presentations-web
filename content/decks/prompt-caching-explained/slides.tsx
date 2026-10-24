@@ -49,8 +49,16 @@ type SegmentState = 'hit' | 'write' | 'compute' | 'miss' | 'output'
 type Segment = {
   label: string
   state: SegmentState
-  /** Relative width; the long document is drawn wider than the question. */
+  /**
+   * Width in fixed units. The same segment is drawn at the same width on every
+   * row, so a growing conversation reads as a longer strip, not a squeezed one.
+   */
   grow?: number
+}
+
+/** Fixed width for a segment of `units` units, gaps between units included. */
+function segmentWidth(units: number): string {
+  return `calc(${units} * var(--pc-unit) + ${units - 1} * var(--pc-gap))`
 }
 
 type TokenRowProps = {
@@ -76,7 +84,7 @@ function TokenRow({ frame, label, note, items, body, delay }: TokenRowProps) {
           <span
             key={`${item.label}-${index}`}
             className={`pc-seg pc-seg-${item.state}`}
-            style={{ ...cells[index], flexGrow: item.grow ?? 1 }}
+            style={{ ...cells[index], width: segmentWidth(item.grow ?? 1) }}
           >
             {item.label}
           </span>
@@ -409,7 +417,7 @@ function PrefixMatchSlide({ frame }: SlideRenderContext) {
           label="今回B"
           note="先頭に今の日時を入れただけ → 全部外れる"
           items={[
-            { label: '10/24 9:05', state: 'miss' },
+            { label: '日時', state: 'miss' },
             { label: '最初の指示文', state: 'miss', grow: 2 },
             { label: '資料', state: 'miss', grow: 3 },
             { label: '質問2', state: 'write' },
