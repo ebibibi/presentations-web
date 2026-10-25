@@ -5,7 +5,7 @@ status: draft
 visibility: public
 canvas: standard
 createdAt: "2026-10-21"
-updatedAt: "2026-10-24"
+updatedAt: "2026-10-25"
 tags:
   - ai
   - api
@@ -54,10 +54,34 @@ slides:
     title: 同じ資料に100回質問すると
     durationInFrames: 300
     notes: 前提は、10万トークン（文庫本1冊くらい）の資料を先頭に置き、100回質問する。資料を読む料金だけを比べる。100回とも期限内、1回目で保存、残り99回はキャッシュから読む。単価は公式、計算は私。Claude Sonnet 5.5 と GPT-6.1 Sol はどちらも入力 $2、保存 $2.50、キャッシュ読み $0.10（100万トークンあたり）で同じ数字になる。キャッシュなし 100×0.1M×$2＝$20。キャッシュあり $0.25＋99×$0.01＝$1.24。約94%減。
+  - id: section-user
+    title: 結局、自分はどうすればいい？
+    durationInFrames: 150
+    notes: ここからが本題。APIで開発していなくても、Web やアプリやサブスクで使っている人にも関係がある。使い方ひとつで、利用上限の減り方と返事の速さが変わる。
+  - id: app-users
+    title: アプリで使う人にも関係ある？
+    durationInFrames: 320
+    notes: Claude はヘルプ記事で「キャッシュに当たった部分は上限を少なく消費する」「長く空けて戻ると最初のメッセージは全部数える」と書いている（support.claude.com の Usage limit best practices）。claude.ai・Claude Code・Desktop は同じ上限を共有。換算率は非公開なので「少なく」まで。Codex は料金ページで「キャッシュが利用量に効く」と書き、クレジット換算でキャッシュ入力は通常の1/10〜1/20。ChatGPT と Gemini アプリは、上限や速さとの関係について公式の説明が見つからなかった。裏で使っているはずだが、それは推測。速さは Claude Code の公式ドキュメントが「休憩明けの最初のターンは目に見えて遅いことがある」と書いている。
+  - id: tip-keep-going
+    title: こうすると良い① 続きは間を空けずに同じ会話で
+    durationInFrames: 320
+    notes: キャッシュは使うたびに期限が延びる（Anthropic・OpenAI とも公式）。Claude Code をサブスクで使うと、会話の本体の期限は1時間（上限を超えて従量課金に入ると5分）。API キーなら既定5分。だから続きは間を空けずにやるのが得。逆に、複数の会話を開いて少しずつ行き来すると、戻るたびに期限が切れていて、毎回その会話を全部読み直すことになる。Claude Code は75分以上空けて戻ると /clear を勧める表示を出し、20万トークン以上の会話は約54分放置すると期限切れ前に要約しておく機能もある（changelog）。
+  - id: tip-new-topic
+    title: こうすると良い② 関係ない話は新しい会話で
+    durationInFrames: 320
+    notes: キャッシュに当たっても0にはならない。Claude Code のコスト文書は「1日開きっぱなしのセッションでの1行の質問でも、会話全体ぶんの利用量を消費する」と書いている。関係ない話は新しい会話（Claude Code なら /clear。コストゼロ）で。Claude ヘルプも「長い会話は上限を多く消費する。上限に近いなら新しい会話を」と書く。何度も使う資料は Claude のプロジェクトに入れると、キャッシュされて使い回すと上限を少なく消費する。
+  - id: tip-model
+    title: こうすると良い③ モデルは最初に決めて途中で変えない
+    durationInFrames: 320
+    notes: キャッシュはモデルごと。Claude Code の公式ドキュメントは /model で切り替えると「次のリクエストは会話全体をキャッシュなしで読む」と書いていて、キャッシュが温かいうちは確認を出す。effort（考える強さ）は意外な結果で、Claude Code では Opus 5.5・Sonnet 5.5・Haiku 5.5・Fable 5.1 を API キーかサブスクで使うときはキャッシュが保たれる。それ以外のモデルでは切れる。OpenAI も GPT-6 では effort の変更を会話の末尾に足す仕組み（configuration_update）でキャッシュを保てる。Codex・Work は途中で reasoning を変えても切れなくなったと言われている（二次情報）。ultrathink は effort の値を変えずに指示を足すだけ（公式）なので、切れないはず（推測）。公式の助言は「モデルと effort はセッションの最初に決める」。
+  - id: do-dont
+    title: こうすると得、こうすると損（早見表）
+    durationInFrames: 300
+    notes: ここまでのまとめ。ほかに、Claude Code ではファイルを編集してもキャッシュは切れない。CLAUDE.md を途中で書き換えても切れないが、反映もされない（次の /clear か再起動で反映）。やり直したいときは /compact より /rewind（すでにキャッシュされた位置に戻るだけ）。/compact（要約）は会話部分を必ず作り直す。
   - id: section-openai
     title: OpenAI の最新動向
     durationInFrames: 150
-    notes: ここから OpenAI の話。DevDay 2026（9月29日）の前後に、キャッシュの改善が続けて出ている。
+    notes: ここから OpenAI の話（第3章）。DevDay 2026（9月29日）の前後に、キャッシュの改善が続けて出ている。
   - id: openai-timeline
     title: 2026年、OpenAI のキャッシュはこう変わった
     durationInFrames: 320
@@ -66,6 +90,10 @@ slides:
     title: 12時間キャッシュは「間隔が空く」人の味方
     durationInFrames: 320
     notes: 出典は OpenAI changelog（2026年10月20日）と公式ガイド。Responses API のみ、GPT-5.6 以降。保存料は入力単価の2.5倍（既定の30分は1.25倍）、キャッシュから読む料金は同じ。例は私の計算：GPT-6.1 Sol で10万トークンを1時間おきに12回呼ぶ。キャッシュなし 12×$0.20＝$2.40。30分だと毎回期限切れで毎回保存し直し 12×$0.25＝$3.00 でむしろ高い。12時間なら保存1回 $0.50＋キャッシュ読み11回 $0.11＝$0.61。数分おきに呼ぶなら30分で十分で、12時間の高い保存料は要らない。
+  - id: forever
+    title: 「キャッシュを永久に保持」の正体
+    durationInFrames: 320
+    notes: 2026年10月20日、OpenAI Codex の責任者 Tibo 氏が X で「API は12時間、Codex と Work にログインしているユーザーはキャッシュを永久に保持する。古い会話に戻っても、数時間後に再開してもペナルティはなく、必ずキャッシュに当たる」と投稿（28日間企画の Day 16）。ただし OpenAI の公式文書にはまだ書かれておらず、API のガイドは「キャッシュは無期限には保存しない」のまま。GitHub の Codex リポジトリには、約11時間44分空けて戻った最初のリクエストがキャッシュ0%だったという報告もある（未回答）。仕組みや条件は公表されていないので「責任者がこう宣言した」と紹介するのが正確。他社の API に無期限はない。Gemini の自分で作るキャッシュは期限の上限がないが、保存時間に応じた料金がかかる。DeepSeek のディスクキャッシュは「ふつうは数時間〜数日で消える」と公式に書かれている。
   - id: three-vendors
     title: OpenAI・Claude・Gemini の違い
     durationInFrames: 320
