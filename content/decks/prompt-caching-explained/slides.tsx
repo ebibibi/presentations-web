@@ -9,9 +9,9 @@ import {
   SlideHeading,
   Timeline,
   TitleSlide,
-  useEnter,
   useStagger,
 } from '../../../src/slide-kit'
+import { ALL_COMPUTE, ALL_WRITE, HourlyRow, Legend, TokenRow, WRITE_ONCE } from './diagram'
 import './styles.css'
 
 export const slides: SlideModule['slides'] = [
@@ -25,9 +25,16 @@ export const slides: SlideModule['slides'] = [
   { id: 'ttl-table', render: (props) => <TtlTableSlide {...props} /> },
   { id: 'prefix-match', render: (props) => <PrefixMatchSlide {...props} /> },
   { id: 'cost-example', render: (props) => <CostExampleSlide {...props} /> },
+  { id: 'section-user', render: (props) => <SectionUserSlide {...props} /> },
+  { id: 'app-users', render: (props) => <AppUsersSlide {...props} /> },
+  { id: 'tip-keep-going', render: (props) => <TipKeepGoingSlide {...props} /> },
+  { id: 'tip-new-topic', render: (props) => <TipNewTopicSlide {...props} /> },
+  { id: 'tip-model', render: (props) => <TipModelSlide {...props} /> },
+  { id: 'do-dont', render: (props) => <DoDontSlide {...props} /> },
   { id: 'section-openai', render: (props) => <SectionOpenAiSlide {...props} /> },
   { id: 'openai-timeline', render: (props) => <OpenAiTimelineSlide {...props} /> },
   { id: 'twelve-hour', render: (props) => <TwelveHourSlide {...props} /> },
+  { id: 'forever', render: (props) => <ForeverSlide {...props} /> },
   { id: 'three-vendors', render: (props) => <ThreeVendorsSlide {...props} /> },
   { id: 'breakers', render: (props) => <BreakersSlide {...props} /> },
   { id: 'layout', render: (props) => <LayoutSlide {...props} /> },
@@ -36,85 +43,6 @@ export const slides: SlideModule['slides'] = [
   { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
   { id: 'cta-outro', render: (props) => <CtaSlide {...props} /> },
 ]
-
-/* ── shared diagram parts ─────────────────────────────────── */
-
-/**
- * hit = read from the cache, write = read for the first time and saved for next time,
- * compute = read normally with no cache, miss = cache expired or prefix changed,
- * output = what the AI writes back.
- */
-type SegmentState = 'hit' | 'write' | 'compute' | 'miss' | 'output'
-
-type Segment = {
-  label: string
-  state: SegmentState
-  /**
-   * Width in fixed units. The same segment is drawn at the same width on every
-   * row, so a growing conversation reads as a longer strip, not a squeezed one.
-   */
-  grow?: number
-}
-
-/** Fixed width for a segment of `units` units, gaps between units included. */
-function segmentWidth(units: number): string {
-  return `calc(${units} * var(--pc-unit) + ${units - 1} * var(--pc-gap))`
-}
-
-type TokenRowProps = {
-  frame: number
-  label: string
-  note?: string
-  items: Segment[]
-  /** The answer the AI writes back, drawn after an arrow. */
-  body?: string
-  delay: number
-}
-
-/** One request drawn as a strip of prompt segments, coloured by what happened to them. */
-function TokenRow({ frame, label, note, items, body, delay }: TokenRowProps) {
-  const rowStyle = useEnter(frame, delay, 18)
-  const cells = useStagger(frame, items.length + 1, { start: delay + 6, step: 6, distance: 12 })
-
-  return (
-    <div className={body ? 'pc-row pc-row-turn' : 'pc-row'} style={rowStyle}>
-      <strong className="pc-row-label">{label}</strong>
-      <div className="pc-strip">
-        {items.map((item, index) => (
-          <span
-            key={`${item.label}-${index}`}
-            className={`pc-seg pc-seg-${item.state}`}
-            style={{ ...cells[index], width: segmentWidth(item.grow ?? 1) }}
-          >
-            {item.label}
-          </span>
-        ))}
-      </div>
-      {body ? (
-        <div className="pc-answer" style={cells[items.length]}>
-          <span aria-hidden="true">→</span>
-          <span className="pc-seg pc-seg-output">{body}</span>
-        </div>
-      ) : null}
-      {note ? <p className="pc-row-note">{note}</p> : null}
-    </div>
-  )
-}
-
-function Legend({ frame, items }: { frame: number; items: { label: string; state: SegmentState }[] }) {
-  const style = useEnter(frame, 70, 10)
-
-  return (
-    <div className="pc-legend" style={style}>
-      {items.map((item) => (
-        <span key={item.label} className="pc-legend-item">
-          <i className={`pc-swatch pc-seg-${item.state}`} />
-          {item.label}
-        </span>
-      ))}
-    </div>
-  )
-}
 
 /* ── opening and basics ───────────────────────────────────── */
 
@@ -128,7 +56,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       points={[
         { step: '01', heading: '前回読んだところを再利用', body: '読み直しが安く、速くなる' },
         { step: '02', heading: 'ただし有効期限つき', body: 'Claude は5分、OpenAI は30分（既定）' },
-        { step: '03', heading: 'OpenAI が12時間に', body: '2026年10月20日。間隔が空いても効く' },
+        { step: '03', heading: 'アプリで使う人にも効く', body: '使い方で上限の減り方と速さが変わる' },
       ]}
     />
   )
@@ -368,8 +296,9 @@ function TtlTableSlide({ frame }: SlideRenderContext) {
         frame={frame}
         columns={[{ label: '既定の期限' }, { label: '長くすると', accent: true }]}
         rows={[
-          { label: 'OpenAI', cells: ['30分（保存料1.25倍）', '12時間（保存料2.5倍）'] },
-          { label: 'Claude', cells: ['5分（保存料1.25倍）', '1時間（保存料2倍）'] },
+          { label: 'OpenAI（API）', cells: ['30分（保存料1.25倍）', '12時間（保存料2.5倍）'] },
+          { label: 'Claude（API）', cells: ['5分（保存料1.25倍）', '1時間（保存料2倍）'] },
+          { label: 'Claude Code（サブスク）', cells: ['1時間（会話の本体）', '上限を超えて従量になると5分'] },
           { label: 'Gemini', cells: ['自動（割引の保証なし）', '自分で作る：既定1時間＋置いておく料金'] },
         ]}
       />
@@ -476,13 +405,216 @@ function CostExampleSlide({ frame }: SlideRenderContext) {
   )
 }
 
+/* ── what to do as a user ─────────────────────────────────── */
+
+function SectionUserSlide({ frame }: SlideRenderContext) {
+  return (
+    <SectionDivider
+      frame={frame}
+      step="02"
+      kicker="結局、自分はどうすればいい？"
+      heading={'アプリで使う人にも\n関係ある'}
+      lead="使い方ひとつで、上限の減り方と返事の速さが変わる"
+    />
+  )
+}
+
+function AppUsersSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide className="pc-slide">
+      <SlideHeading
+        frame={frame}
+        kicker="Web・アプリ・サブスクで使う人"
+        heading={'料金は払っていなくても\n「利用上限」の減り方に効く'}
+      />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: '関係ある？', accent: true }, { label: '公式の説明' }]}
+        rows={[
+          { label: 'Claude（Web・アプリ・Claude Code）', cells: ['ある', 'キャッシュに当たった分は上限を少なく消費。長く空けた後の最初の1通は全部数える'] },
+          { label: 'Codex・ChatGPT Work', cells: ['ある', 'キャッシュに当たった入力は1/10〜1/20のクレジット'] },
+          { label: 'ChatGPT・Gemini アプリ', cells: ['公式の説明なし', '裏では使われているはずだが、上限との関係は非公開'] },
+        ]}
+      />
+      <Callout frame={frame} icon="🐢" label="速さにも効く" delay={60}>
+        <p>休憩明けの最初の返事が遅いのは、会話全体を読み直しているから（Claude Code 公式）</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function TipKeepGoingSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide className="pc-slide">
+      <SlideHeading
+        frame={frame}
+        kicker="こうすると良い①"
+        heading={'続きは、間を空けずに\n同じ会話で'}
+        lead="使うたびに期限が延びる。Claude Code（サブスク）の期限は1時間"
+      />
+      <div className="pc-diagram">
+        <TokenRow
+          frame={frame}
+          delay={20}
+          label="20分後"
+          body="答え"
+          note="◯ 期限内：キャッシュから読む。速く、上限の減りも少ない"
+          items={[
+            { label: 'これまでの会話', state: 'hit', grow: 4 },
+            { label: '質問', state: 'write' },
+          ]}
+        />
+        <TokenRow
+          frame={frame}
+          delay={38}
+          label="2時間後"
+          body="答え"
+          note="✕ 期限切れ：全部読み直し。遅く、上限も全部減る"
+          items={[
+            { label: 'これまでの会話', state: 'miss', grow: 4 },
+            { label: '質問', state: 'write' },
+          ]}
+        />
+      </div>
+      <Callout frame={frame} tone="warn" icon="🔀" label="複数の会話を少しずつ行き来するのは損" delay={64}>
+        <p>戻るたびに期限が切れていれば、毎回その会話を全部読み直す。1つを片付けてから次へ</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function TipNewTopicSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide className="pc-slide">
+      <SlideHeading
+        frame={frame}
+        kicker="こうすると良い②"
+        heading={'関係ない話は\n新しい会話で始める'}
+        lead="キャッシュに当たっても0にはならない。毎回、会話全体を読んでいる"
+      />
+      <div className="pc-diagram">
+        <TokenRow
+          frame={frame}
+          delay={20}
+          label="続けて"
+          body="答え"
+          note="✕ 長い会話の続きで別の話：関係ない会話まで毎回読む"
+          items={[
+            { label: 'これまでの長い会話', state: 'hit', grow: 5 },
+            { label: '質問', state: 'write' },
+          ]}
+        />
+        <TokenRow
+          frame={frame}
+          delay={38}
+          label="新しく"
+          body="答え"
+          note="◯ 新しい会話（Claude Code は /clear）：指示文と質問だけ"
+          items={[
+            { label: '最初の指示文', state: 'hit', grow: 2 },
+            { label: '質問', state: 'write' },
+          ]}
+        />
+      </div>
+      <Callout frame={frame} icon="📌" label="何度も使う資料は「プロジェクト」に入れる" delay={64}>
+        <p>Claude のプロジェクトに入れた資料はキャッシュされ、使い回すと上限を少なく消費する（Claude ヘルプ）</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function TipModelSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide className="pc-slide">
+      <SlideHeading
+        frame={frame}
+        kicker="こうすると良い③"
+        heading={'モデルは最初に決めて\n途中で変えない'}
+        lead="キャッシュはモデルごと。変えた直後は会話全体を読み直す"
+      />
+      <div className="pc-diagram">
+        <TokenRow
+          frame={frame}
+          delay={20}
+          label="同じまま"
+          body="答え"
+          note="◯ これまでの会話はキャッシュから"
+          items={[
+            { label: 'これまでの会話', state: 'hit', grow: 4 },
+            { label: '質問', state: 'write' },
+          ]}
+        />
+        <TokenRow
+          frame={frame}
+          delay={38}
+          label="変えた"
+          body="答え"
+          note="✕ 別のモデルにはキャッシュがない：全部読み直し"
+          items={[
+            { label: 'これまでの会話', state: 'miss', grow: 4 },
+            { label: '質問', state: 'write' },
+          ]}
+        />
+      </div>
+      <Callout frame={frame} icon="🎚️" label="考える強さ（effort）は、最新モデルなら変えても大丈夫" delay={64}>
+        <p>Claude Code の Opus 5.5・Sonnet 5.5 などと、OpenAI の新しい仕組みは保つ。古いモデルでは切れる</p>
+      </Callout>
+    </Slide>
+  )
+}
+
+function DoDontSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide className="pc-slide">
+      <SlideHeading frame={frame} kicker="早見表" heading="こうすると得、こうすると損" />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: '◯ こうする', accent: true }, { label: '✕ こうしない' }, { label: 'なぜ' }]}
+        rows={[
+          { label: '間隔', cells: ['続きは空けずに', '何本も少しずつ行き来', '期限が切れると全部読み直し'] },
+          { label: '話題', cells: ['別の話は新しい会話で', '1つの会話に全部', '毎回、会話全体を読む'] },
+          { label: 'モデル', cells: ['最初に決める', '途中で切り替える', 'キャッシュはモデルごと'] },
+          { label: '休憩明け', cells: ['続きが要らなければ新しく', '長い会話に1行だけ足す', '最初の1通は全部数える'] },
+          { label: '資料', cells: ['プロジェクトに入れる', '毎回貼り付け直す', '同じ先頭なら当たる'] },
+        ]}
+      />
+    </Slide>
+  )
+}
+
+function ForeverSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide className="pc-slide">
+      <SlideHeading
+        frame={frame}
+        kicker="「キャッシュを永久に保持」の正体"
+        heading={'Codex と ChatGPT Work で\n「永久に保持」と責任者が宣言'}
+        lead="2026年10月20日、OpenAI Codex 責任者の X 投稿。12時間キャッシュと同じ日"
+      />
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: '分かっていること', accent: true }]}
+        rows={[
+          { label: '対象', cells: ['Codex と ChatGPT Work にログインして使う人（API は12時間まで）'] },
+          { label: '言っていること', cells: ['古い会話に数時間後に戻っても必ずキャッシュに当たる'] },
+          { label: '公式文書', cells: ['まだ書かれていない。API のガイドは「無期限には保存しない」'] },
+          { label: '利用者の報告', cells: ['約12時間後に戻ったら外れた、という報告もある'] },
+        ]}
+      />
+      <Callout frame={frame} tone="warn" icon="🔍" label="他社の API に「無期限」はない" delay={60}>
+        <p>Gemini の自分で作るキャッシュは期限の上限なし（ただし時間ごとの保存料）。DeepSeek は数時間〜数日で消える</p>
+      </Callout>
+    </Slide>
+  )
+}
+
 /* ── OpenAI ───────────────────────────────────────────────── */
 
 function SectionOpenAiSlide({ frame }: SlideRenderContext) {
   return (
     <SectionDivider
       frame={frame}
-      step="02"
+      step="03"
       kicker="OpenAI の最新動向"
       heading={'DevDay 2026 の前後で\nキャッシュが一気に変わった'}
       lead="そして10月20日、12時間キャッシュ"
@@ -508,37 +640,6 @@ function OpenAiTimelineSlide({ frame }: SlideRenderContext) {
     </Slide>
   )
 }
-
-type HourlyRowProps = {
-  frame: number
-  delay: number
-  label: string
-  body: string
-  /** One state per hourly call. */
-  items: SegmentState[]
-}
-
-/** Twelve hourly calls drawn as cells, with what they cost in total. */
-function HourlyRow({ frame, delay, label, body, items }: HourlyRowProps) {
-  const rowStyle = useEnter(frame, delay, 14)
-  const cells = useStagger(frame, items.length, { start: delay + 4, step: 3, distance: 8 })
-
-  return (
-    <div className="pc-hourly-row" style={rowStyle}>
-      <strong>{label}</strong>
-      <div className="pc-hourly-cells">
-        {items.map((state, index) => (
-          <i key={index} className={`pc-hourly-cell pc-seg-${state}`} style={cells[index]} />
-        ))}
-      </div>
-      <b>{body}</b>
-    </div>
-  )
-}
-
-const ALL_COMPUTE: SegmentState[] = Array.from({ length: 12 }, () => 'compute')
-const ALL_WRITE: SegmentState[] = Array.from({ length: 12 }, () => 'write')
-const WRITE_ONCE: SegmentState[] = ['write', ...Array.from({ length: 11 }, (): SegmentState => 'hit')]
 
 function TwelveHourSlide({ frame }: SlideRenderContext) {
   return (
@@ -659,9 +760,9 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
     <Slide className="pc-slide">
       <SlideHeading
         frame={frame}
-        kicker="APIでAIを使っている人向け（筆者の提案）"
+        kicker="APIで開発している人向け（筆者の提案）"
         heading="今日確認する3項目"
-        lead="アプリを使うだけなら、各社が裏でやってくれている"
+        lead="アプリで使う人は「こうすると得」の早見表を"
       />
       <Timeline
         frame={frame}
