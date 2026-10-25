@@ -516,8 +516,8 @@ function TipNewTopicSlide({ frame }: SlideRenderContext) {
           ]}
         />
       </div>
-      <Callout frame={frame} icon="📌" label="何度も使う資料は「プロジェクト」に入れる" delay={64}>
-        <p>Claude のプロジェクトに入れた資料はキャッシュされ、使い回すと上限を少なく消費する（Claude ヘルプ）</p>
+      <Callout frame={frame} icon="📌" label="何度も使う資料は、決まった置き場所へ" delay={64}>
+        <p>チャット（Web・デスクトップ・スマホ）はプロジェクトに入れる。Claude Code は CLAUDE.md に書くか作業フォルダに置く</p>
       </Callout>
     </Slide>
   )
@@ -575,7 +575,8 @@ function DoDontSlide({ frame }: SlideRenderContext) {
           { label: '話題', cells: ['別の話は新しい会話で', '1つの会話に全部', '毎回、会話全体を読む'] },
           { label: 'モデル', cells: ['最初に決める', '途中で切り替える', 'キャッシュはモデルごと'] },
           { label: '休憩明け', cells: ['続きが要らなければ新しく', '長い会話に1行だけ足す', '最初の1通は全部数える'] },
-          { label: '資料', cells: ['プロジェクトに入れる', '毎回貼り付け直す', '同じ先頭なら当たる'] },
+          { label: '資料（チャット）', cells: ['プロジェクトに入れる', '毎回貼り付け直す', '同じ先頭なら当たる'] },
+          { label: '資料（Claude Code）', cells: ['CLAUDE.md に書く', '毎回貼り付け直す', '会話の最初に読まれ先頭に入る'] },
         ]}
       />
     </Slide>
@@ -718,7 +719,7 @@ function BreakersSlide({ frame }: SlideRenderContext) {
 
 const LAYERS = [
   { label: '変わらない指示文・道具の説明', body: 'ほぼ変わらない' },
-  { label: 'プロジェクトのルール・資料', body: 'プロジェクトの中では同じ' },
+  { label: 'CLAUDE.md（ルール・前提知識）', body: '作業フォルダの中では同じ' },
   { label: 'その作業の情報', body: '作業の間は同じ' },
   { label: '会話・今回の質問', body: '毎回変わる' },
 ]
@@ -796,6 +797,8 @@ function GlossarySlide({ frame }: SlideRenderContext) {
           { label: 'キャッシュ', cells: ['前回読んだときのメモを、しばらくとっておくこと'] },
           { label: '有効期限', cells: ['メモをとっておく時間。切れたら全部読み直し'] },
           { label: '保存料', cells: ['はじめて読んでメモを作るときの割増し料金'] },
+          { label: 'プロジェクト', cells: ['Claude のチャットで、資料と指示をまとめておく作業部屋'] },
+          { label: 'CLAUDE.md', cells: ['Claude Code が会話の最初に読む、フォルダごとのルール'] },
         ]}
       />
     </Slide>
