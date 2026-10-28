@@ -87,8 +87,8 @@ function ConfessionSlide({ frame }: SlideRenderContext) {
     <Slide center>
       <SlideHeading
         frame={frame}
-        kicker="正直に言うと"
-        heading={'「MFA は\nAuthenticator で」と\n勧めてきた側です'}
+        kicker="これまでの定番"
+        heading={'「MFA は\nAuthenticator で」が\n定番の答えだった'}
       />
       <Callout frame={frame} tone="warn" icon="🔑" label="スマホのアプリはトークンを融通し合っている">
         <p>Authenticator は MFA の通知アプリであり、ほかの Microsoft アプリにトークンを配る係でもある。今年壊れたのは、その受け渡しの部分</p>
