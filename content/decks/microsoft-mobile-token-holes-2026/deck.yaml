@@ -1,0 +1,85 @@
+slug: microsoft-mobile-token-holes-2026
+title: スマホのMicrosoftアプリ、2026年に4回「サインインを横取りされる穴」｜利用者がやることは4つ
+summary: 2026年、Microsoft Authenticator と Office 系の Android アプリで、ほかのアプリや偽の要求にサインイン情報やトークンを渡してしまう脆弱性が4回続きました。3月の CVE-2026-26123（QRコード・サインインリンクの横取り）、5月の CVE-2026-41615（承認させたトークンを外へ送らせる）、5月に修正され6月に公開された Office 系6アプリのデバッグフラグ消し忘れ（FlagLeft、CVE-2026-41100 ほか）、9月の CVE-2026-80097（偽 Teams にトークンを渡した AuthMask）です。4件それぞれの仕組み、共通点、安全なバージョン、そして利用者がやる4つと管理者がやることをまとめます。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-10-28"
+updatedAt: "2026-10-28"
+tags:
+  - security
+  - vulnerability
+  - identity
+  - entra-id
+  - mfa
+  - oauth
+  - android
+slides:
+  - id: opening
+    title: スマホのMicrosoftアプリ、今年4回の穴
+    durationInFrames: 240
+    notes: 冒頭40秒で言い切る。2026年、Authenticator と Office 系の Android アプリで、サインイン情報やトークンをほかのアプリ・偽の要求に渡してしまう穴が4回続いた。全部修正済み。利用者がやることは4つで、いちばん効くのは自動更新。
+  - id: cta-intro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
+  - id: answer
+    title: 結局やることは4つ
+    durationInFrames: 300
+    notes: 答えを先に出す。1 自動更新をオンにして、Authenticator と Office アプリを最新にする（4件全部に効く唯一の対策）。2 Play ストア以外からアプリを入れない、見覚えのないアプリを消す（3件の入口を塞ぐ）。3 QRコードやサインインリンクを開くとき、開くアプリを聞かれたら Authenticator 以外を選ばない（3月の穴）。4 自分で始めていないサインインや承認の要求は承認しない（5月の穴）。
+  - id: confession
+    title: 正直、私も勧めてきた側です
+    durationInFrames: 240
+    notes: 要本人確認：本人の体験として言えるか確認。言えない場合はこのスライドを差し替える。「MFA は Authenticator で」と勧めてきた。Authenticator は MFA の通知アプリであると同時に、Android では他の Microsoft アプリにトークンを配るブローカーでもある。Office アプリ同士もトークンを融通し合っている。今年壊れたのはそこ。
+  - id: overview
+    title: 4件の一覧
+    durationInFrames: 300
+    notes: 値は Microsoft のセキュリティ更新ガイド。3月と5月の Authenticator の穴は iOS 版も対象。6月公開の件は CVE が4つに分かれていて、Copilot（41100、4.4。Excel・OneNote・Loop などにも及ぶ）、Word（41101、7.1）、PowerPoint（41102、7.1）、Office（42832、7.7）。どれも公開時点で悪用は確認されていない。
+  - id: hole-1
+    title: 3月：QRコードとリンクの横取り
+    durationInFrames: 300
+    notes: CVE-2026-26123、CVSS 5.5。Authenticator のサインイン用ディープリンク（QRコードやリンクから Authenticator を開く仕組み）を、悪意あるアプリも受け取れた。研究者の記事では、Authenticator がそのリンクを自分のものとして確実に押さえていなかったと説明している。Microsoft の説明では、利用者が開くアプリを選ぶ画面で悪意あるアプリを選んでしまうと、ワンタイムのサインインコードやサインイン情報がそのアプリに渡る。修正は Android 6.2511.7533、iOS 6.8.40。
+  - id: hole-2
+    title: 5月：承認したらトークンが外へ
+    durationInFrames: 300
+    notes: CVE-2026-41615、CVSS 9.6（Microsoft の評価。NVD は 7.4）。Microsoft の FAQ によれば、本物に見える悪意ある要求を利用者が承認すると、Authenticator が利用者の代わりに職場アカウントのアクセストークンを取得し、攻撃者の管理する場所へ送ってしまう。どんな権限を渡したかは利用者にはっきり示されない。技術的な詳細は公開されていない。修正は Android 6.2605.2973、iOS 6.8.47。
+  - id: hole-3
+    title: 6月：消し忘れたデバッグフラグ
+    durationInFrames: 320
+    notes: Enclave が「FlagLeft」として6月2日に公開。CVE は5月12日に公開・修正済み。Word・Excel・PowerPoint・OneNote・Loop・Microsoft 365 Copilot の Android 版の本番ビルドに setIsDebugMode(true) が残っていて、信頼していないアプリにトークンを渡さないための検査が飛ばされていた。権限もユーザー操作も要らず、15行ほどのコードでトークンが取れたと研究者は言っている。渡ったのは FOCI トークン（Microsoft のアプリ同士で使い回せる種類のリフレッシュトークン）で、長期間使い続けられる。Teams はフラグが false で対象外。修正版は 16.0.19822.20190。
+  - id: hole-4
+    title: 9月：偽Teamsにトークンを渡した
+    durationInFrames: 320
+    notes: CVE-2026-80097、CVSS 8.6、研究者 Enclave の名前は「AuthMask」（10月下旬に詳細公開）。Authenticator の AccountChooserActivity（受付画面）は exported=true で、どのアプリからでも起動できた。呼び出し元の UID・パッケージ名・リダイレクトURI・スコープは全部、呼び出し側が書いた値。結果としてトークンを起動した偽アプリへ平文で返した。Microsoft は「認証フローを完了させる必要がある」（UI:R）、研究者は「サインイン済みなら追加操作は不要だった」と説明が分かれる。修正は Android 6.2606.4246。iOS は対象外。
+  - id: self-check
+    title: 自分で自分を確かめる署名チェック
+    durationInFrames: 300
+    notes: 検証はあった。申告されたパッケージ（Teams）の署名を端末から読み、そこから「そのアプリが使うはずのリダイレクトURI」を作り、送られてきたURIと比べる。本物の Teams が入っていれば、その署名は誰でも読める。偽アプリも同じ計算をして同じURIを送れるので、検査は必ず通る。本当の呼び出し元は getCallingActivity() で取れていたが、信頼判断には使っていなかった。コードは Enclave の記事からの抜粋。
+  - id: scopes
+    title: 取れた権限
+    durationInFrames: 280
+    notes: Enclave の検証では3種類の偽装で3種類のトークンを得た。Teams として Graph を要求すると、メールの読み書きと送信、ファイル、予定表、チャット送信、SharePoint。Teams のチャット基盤として user_impersonation。Authenticator 自身としては、認証方法の読み書きとパスキーの作成・削除。最後は持続化の足場になりうる（私の見立て。記事が実証したのはスコープの取得まで）。
+  - id: common
+    title: 4件の共通点
+    durationInFrames: 300
+    notes: 入口は4件中3件が「同じ端末に入った悪意あるアプリ」、1件が「本物に見える偽の承認要求」。渡ってしまうのは、MFA を通ったあとのトークンやサインインコード。だから MFA では防げない。そして4件すべてに効くのは、アプリを最新にすることだけ。
+  - id: versions
+    title: この版以上なら安全
+    durationInFrames: 280
+    notes: Microsoft のセキュリティ更新ガイドの修正ビルド。Authenticator Android は 6.2606.4246 以上で4件中3件（3月・5月・9月）が全部直る。iOS は 6.8.47 以上。Office 系 Android アプリは 16.0.19822.20190 以上（6月公開の件）。Android ではアプリのバージョンは「設定 → アプリ → 該当アプリ」の画面で確認できる。
+  - id: user-actions
+    title: 利用者がやる4つ
+    durationInFrames: 320
+    notes: それぞれがどの穴を塞ぐかを添えて説明する。1 自動更新オン＋最新版（4件全部）。2 ストア外のアプリを入れない・見覚えのないアプリを消す（3月・6月・9月）。3 QR・リンクを開くアプリを聞かれたら Authenticator 以外を選ばない（3月）。4 自分で始めていない承認は押さない（5月）。
+  - id: admin-actions
+    title: 管理者がやること
+    durationInFrames: 300
+    notes: 管理者向けは記事をもとにした私の提案で、Microsoft の公式手順ではない。Intune の管理対象 Google Play で Authenticator と Office アプリの更新を高優先度にする。アプリ保護ポリシーの条件付き起動で Office アプリの最小バージョンを指定する。アプリのインベントリで版を確認し、管理していない BYOD は周知で補う。疑わしい利用者がいれば、非対話型サインインを確認し、セッションを取り消し、登録済みの認証方法（特にパスキー）を見直す。
+  - id: closing
+    title: MFAの「後ろ」も守る
+    durationInFrames: 240
+    notes: 締め。MFA を入れたら終わりではない。MFA を通ったあとのトークンを、どのアプリが持ち、どのアプリに渡すかが攻撃面になっている。守りの基本はアプリを最新に保つこと。出典は Microsoft のセキュリティ更新ガイドと各研究者の記事。
+  - id: cta-outro
+    title: 応援お願いします！
+    durationInFrames: 150
+    notes: 共通テンプレート。
