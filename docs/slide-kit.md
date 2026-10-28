@@ -2,7 +2,8 @@
 
 Reusable slide components for decks under `content/decks`. Source lives in
 `src/slide-kit`; the live example is the `slide-kit-showcase` deck, which
-renders every component in this document.
+renders every component in this document. It is `hidden: true`, so it is not
+in the archive list; open it at `/decks/slide-kit-showcase`.
 
 Read [ai-deck-authoring.md](ai-deck-authoring.md) first for the deck file layout
 and the metadata schema. This document covers the components only.

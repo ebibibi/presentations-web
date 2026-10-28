@@ -72,6 +72,9 @@ Rules:
   uses `youtube.publishedAt` instead once the deck is linked to a video, so an accurate
   `createdAt` matters most for decks that have no video. There is no manual sort field.
 - Use `visibility: public` unless access control is implemented.
+- `hidden: true` keeps a deck out of the archive list for everyone, the owner
+  included; it still opens by URL according to `status`. It is meant for fixture
+  decks such as `slide-kit-showcase`, which `npm run check:slide-kit` measures.
 - The archive card image comes from the linked video. A deck with no video of its
   own needs `thumbnail: /thumbs/<slug>.png` pointing at a 16:9 image committed under
   `public/thumbs/`; it also overrides the video image when both are present.

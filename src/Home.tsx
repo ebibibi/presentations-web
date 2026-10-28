@@ -35,7 +35,7 @@ export function Home({
   const [view, setView] = useState<ArchiveView>(loadView)
 
   const listedDecks = useMemo(
-    () => decks.filter((deck) => isDeckListed(deck.meta.status, isOwner)),
+    () => decks.filter((deck) => isDeckListed(deck.meta.status, isOwner, deck.meta.hidden)),
     [decks, isOwner]
   )
   const hiddenCount = listedDecks.filter((deck) => !isPublished(deck.meta.status)).length

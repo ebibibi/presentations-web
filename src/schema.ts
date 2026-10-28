@@ -27,6 +27,10 @@ export const deckMetaSchema = z.object({
   // projected as-is at an event.
   canvas: z.enum(['standard', 'wide']).default('standard'),
   tags: z.array(z.string()).default([]),
+  // Keeps a deck out of the archive list for everyone, the owner included. The
+  // deck still builds and opens by URL per `status`; use it for fixture decks
+  // that checks depend on but nobody should browse.
+  hidden: z.boolean().default(false),
   // Archive card image. Decks linked to a video take their card image from
   // YouTube; a deck with no video of its own needs one supplied here as a
   // site-absolute path under public/ (16:9).

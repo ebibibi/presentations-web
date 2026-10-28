@@ -4,7 +4,8 @@ summary: content/decks 配下のデッキを組み立てるための共通部品
 status: draft
 visibility: public
 createdAt: "2026-09-22"
-updatedAt: "2026-09-25"
+updatedAt: "2026-10-28"
+hidden: true
 tags:
   - slide-kit
   - platform
