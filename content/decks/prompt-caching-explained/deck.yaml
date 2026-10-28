@@ -5,7 +5,7 @@ status: draft
 visibility: public
 canvas: standard
 createdAt: "2026-10-21"
-updatedAt: "2026-10-25"
+updatedAt: "2026-10-28"
 tags:
   - ai
   - api
@@ -13,6 +13,11 @@ tags:
   - claude
   - prompt-caching
   - cost
+youtube:
+  id: QIZTU4Kgk-8
+  url: https://www.youtube.com/watch?v=QIZTU4Kgk-8
+  title: "ChatGPT・Claudeのプロンプトキャッシュ図解｜期限切れで読み直し代25倍、OpenAIは12時間キャッシュへ"
+  publishedAt: "2026-10-28"
 slides:
   - id: opening
     title: AIのプロンプトキャッシュ図解
