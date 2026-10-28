@@ -13,6 +13,9 @@ export type DeckStatus = DeckMeta['status']
 //   draft    → owner only (hidden from the list and not openable publicly)
 //   private  → owner only (same as draft here)
 //
+// `hidden: true` in deck.yaml removes a deck from the list for everyone,
+// owner included, without changing who may open it.
+//
 // To publish a deck, change `status: draft` to `status: public` in its
 // deck.yaml and merge. That single line is the publish switch.
 //
@@ -20,8 +23,8 @@ export type DeckStatus = DeckMeta['status']
 // present in the downloaded JS bundle. That is fine for staging a course
 // before its video airs; it is not cryptographic access control.
 
-export function isDeckListed(status: DeckStatus, isOwner: boolean): boolean {
-  return isOwner || status === 'public'
+export function isDeckListed(status: DeckStatus, isOwner: boolean, hidden = false): boolean {
+  return !hidden && (isOwner || status === 'public')
 }
 
 export function isDeckAccessible(status: DeckStatus, isOwner: boolean): boolean {
