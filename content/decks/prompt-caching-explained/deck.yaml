@@ -1,11 +1,11 @@
 slug: prompt-caching-explained
 title: AIのプロンプトキャッシュ図解｜OpenAIが12時間キャッシュ開始、同じ資料100回で94%オフ
 summary: AIは会話を覚えていません。2回目の質問でも、最初の指示文から前回までのやり取りまでを毎回全部送り直し、全部読み直しています。プロンプトキャッシュは「前回読んだところ」を一定時間とっておき、読み直しを安く速くする仕組みです。3往復の会話のどこにキャッシュが効くのか、同じ質問でも有効期限内と期限切れ後で何が変わるのか、OpenAI が2026年10月20日に出した12時間キャッシュ、10万トークンの資料に100回質問したときの料金（$20→約$1.24）、キャッシュを壊す例と今日確認する3項目を、前提知識なしで読める図でまとめます。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-21"
-updatedAt: "2026-10-28"
+updatedAt: "2026-10-29"
 tags:
   - ai
   - api
@@ -17,7 +17,7 @@ youtube:
   id: JGvpN_yHXOM
   url: https://www.youtube.com/watch?v=JGvpN_yHXOM
   title: "ChatGPT・Claudeのプロンプトキャッシュ図解｜期限切れで読み直し代25倍、OpenAIは12時間キャッシュへ"
-  publishedAt: "2026-10-28"
+  publishedAt: "2026-10-29"
 slides:
   - id: opening
     title: AIのプロンプトキャッシュ図解
