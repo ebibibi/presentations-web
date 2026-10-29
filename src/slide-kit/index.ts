@@ -40,6 +40,9 @@ export { renderLines } from './lines'
 export { SlideHeading } from './SlideHeading'
 export type { SlideHeadingProps } from './SlideHeading'
 
+export { HookSlide } from './HookSlide'
+export type { HookSlideProps } from './HookSlide'
+
 export { TitleSlide } from './TitleSlide'
 export type { TitlePoint, TitleSlideProps } from './TitleSlide'
 

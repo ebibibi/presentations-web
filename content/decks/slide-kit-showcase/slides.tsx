@@ -8,6 +8,7 @@ import {
   DiagramFrame,
   FilmFinish,
   FlowDiagram,
+  HookSlide,
   KineticTitle,
   ParticleText,
   Quote,
@@ -25,6 +26,7 @@ import {
  */
 export const slides: SlideModule['slides'] = [
   { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
+  { id: 'hook', render: (props) => <HookShowcaseSlide {...props} /> },
   { id: 'why', render: (props) => <WhySlide {...props} /> },
   { id: 'divider-structure', render: (props) => <DividerSlide {...props} /> },
   { id: 'comparison', render: (props) => <ComparisonSlide {...props} /> },
@@ -285,5 +287,26 @@ function FilmFinishSlide({ frame }: SlideRenderContext) {
         </Callout>
       </Slide>
     </FilmFinish>
+  )
+}
+
+function HookShowcaseSlide({ frame }: SlideRenderContext) {
+  return (
+    <HookSlide
+      frame={frame}
+      kicker="答えのあるデッキの1枚目"
+      heading={'あなたのデッキ、\n1枚目で伝わりますか？'}
+      lead="一番大きな文字で、視聴者と状況を名指しする"
+    >
+      <ComparisonTable
+        frame={frame}
+        columns={[{ label: '置くもの', accent: true }]}
+        rows={[
+          { label: '一番大きい文字', cells: ['「あなたの〇〇が…」という問いかけ'] },
+          { label: 'その直下', cells: ['答えを1行で'] },
+          { label: '下の段', cells: ['答えの中身（表・注意書き）'] },
+        ]}
+      />
+    </HookSlide>
   )
 }

@@ -15,6 +15,10 @@ slides:
     title: スライド部品ライブラリ
     durationInFrames: 170
     notes: src/slide-kit の入口。このデッキ自体が部品の実物見本で、docs/slide-kit.md と対で読む。29デッキ中24デッキが同じ entrance / lift をコピーしていた状態を、共通部品に寄せるのが目的。
+  - id: hook
+    title: あなたが対象だと1秒で分かる
+    durationInFrames: 170
+    notes: HookSlide。答えのあるデッキの1枚目。一番大きい文字で「あなたの〇〇が…」と視聴者と状況を名指しし、その直下に答えを1行、下に詳細を置く。TitleSlide は目次になりがちなので、答えのあるデッキでは使わない。
   - id: why
     title: なぜ部品にするか
     durationInFrames: 165

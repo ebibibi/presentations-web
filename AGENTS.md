@@ -120,6 +120,9 @@ Order the slides for retention, not for completeness. This ordering held viewers
 1. State the answer to the title in the first one or two slides: what happened and why it matters. Move introductions later.
    Write the concrete answers on the slide ("change the password, call the card issuer"), not section labels
    ("what to do right after"); `TitleSlide` points pull toward labels, so do not use it for this slide.
+   Use `HookSlide`: the biggest text on the first slide names the viewer and their situation
+   ("あなたの個人情報が漏れたら？"), so viewers recognise it is about them before anything else.
+   The answer goes directly under it. This applies to every deck that backs a video.
 2. Include a personal-stake slide when there is one ("I used to recommend the opposite").
 3. Tell the core as a timeline (trigger, escalation, official announcement) so each slide raises "what happened next?".
 4. Keep generic design advice short and close with a short "check this today" list.

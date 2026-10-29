@@ -5,6 +5,7 @@ import {
   ComparisonTable,
   DiagramFrame,
   FlowDiagram,
+  HookSlide,
   Slide,
   SlideHeading,
   Timeline,
@@ -52,25 +53,24 @@ const SOURCES = [
 
 function OpeningSlide({ frame }: SlideRenderContext) {
   return (
-    <Slide>
-      <SlideHeading
-        frame={frame}
-        kicker="「あなたの情報が漏えいしました」と連絡が来たら"
-        heading={'パスワードを変える。\nそして、パスワードをやめる。'}
-        lead="どれも10年以上前からの当たり前。やるかどうかだけ"
-      />
+    <HookSlide
+      frame={frame}
+      kicker="2026年10月 IPAが対処法を公開"
+      heading={'あなたの個人情報が\n漏れたら、どうする？'}
+      lead="パスワードを変える。そして、パスワードをやめる。"
+    >
       <ComparisonTable
         frame={frame}
         columns={[{ label: 'やること', accent: true }]}
         rows={[
-          { label: 'パスワードが漏れた', cells: ['すぐ変える。同じものを使っている所も全部'] },
-          { label: 'カードが漏れた', cells: ['カード会社に電話。止めて再発行'] },
-          { label: '住所・電話・メールが漏れた', cells: ['届くメール・SMS・電話をまず疑う'] },
-          { label: '免許証の画像が漏れた', cells: ['信用情報機関に本人申告'] },
-          { label: '普段から', cells: ['パスワードは使い回さない → パスキーにして無くす'], },
+          { label: 'パスワード', cells: ['すぐ変える。同じものを使っている所も全部'] },
+          { label: 'カード', cells: ['カード会社に電話。止めて再発行'] },
+          { label: '住所・電話・メール', cells: ['届くメール・SMS・電話をまず疑う'] },
+          { label: '免許証の画像', cells: ['信用情報機関に本人申告'] },
+          { label: '普段から', cells: ['使い回さない → パスキーにして無くす'] },
         ]}
       />
-    </Slide>
+    </HookSlide>
   )
 }
 
