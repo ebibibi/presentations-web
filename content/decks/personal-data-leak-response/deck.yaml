@@ -5,12 +5,17 @@ status: draft
 visibility: public
 canvas: standard
 createdAt: "2026-10-29"
-updatedAt: "2026-10-29"
+updatedAt: "2026-10-30"
 tags:
   - security
   - passkey
   - phishing-resistant
   - mfa
+youtube:
+  id: X1XGneSPe1U
+  url: https://www.youtube.com/watch?v=X1XGneSPe1U
+  title: "個人情報が漏れたら、まず何をする？パスワード・カード・免許証の対処とパスキーへの切り替え【今日やる3つ】"
+  publishedAt: "2026-10-30"
 slides:
   - id: opening
     title: あなたの個人情報が漏れたら、どうする？
