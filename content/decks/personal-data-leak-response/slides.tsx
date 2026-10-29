@@ -8,19 +8,16 @@ import {
   Slide,
   SlideHeading,
   Timeline,
-  TitleSlide,
 } from '../../../src/slide-kit'
 
 export const slides: SlideModule['slides'] = [
   { id: 'opening', render: (props) => <OpeningSlide {...props} /> },
-  { id: 'why-now', render: (props) => <WhyNowSlide {...props} /> },
   { id: 'first-step', render: (props) => <FirstStepSlide {...props} /> },
   { id: 'by-type', render: (props) => <ByTypeSlide {...props} /> },
   { id: 'why-reuse', render: (props) => <WhyReuseSlide {...props} /> },
-  { id: 'infostealer', render: (props) => <InfostealerSlide {...props} /> },
   { id: 'password-manager', render: (props) => <PasswordManagerSlide {...props} /> },
   { id: 'passkey', render: (props) => <PasskeySlide {...props} /> },
-  { id: 'auto-update', render: (props) => <AutoUpdateSlide {...props} /> },
+  { id: 'history', render: (props) => <HistorySlide {...props} /> },
   { id: 'priority', render: (props) => <PrioritySlide {...props} /> },
   { id: 'checklist', render: (props) => <ChecklistSlide {...props} /> },
   { id: 'sources', render: (props) => <SourcesSlide {...props} /> },
@@ -36,8 +33,16 @@ const SOURCES = [
     url: 'https://japan.cnet.com/article/35254062/',
   },
   {
-    label: 'INTERNET Watch：パッチ当てはもう自動化するしかない――日本ハッカー協会・杉浦隆幸代表理事【Security Days Fall 2026】',
-    url: 'https://internet.watch.impress.co.jp/docs/event/2151590.html',
+    label: 'INTERNET Watch：「パスワードの定期変更は危険」を報じた日経の記事が話題に（2018年3月）',
+    url: 'https://internet.watch.impress.co.jp/docs/yajiuma/1113835.html',
+  },
+  {
+    label: 'FIDO Alliance：Apple・Google・Microsoftがパスキー対応の拡大を表明（2022年5月5日）',
+    url: 'https://fidoalliance.org/apple-google-and-microsoft-commit-to-expanded-support-for-fido-standard-to-accelerate-availability-of-passwordless-sign-ins/',
+  },
+  {
+    label: 'NIST SP 800-63B（パスワードの定期変更を求めない）',
+    url: 'https://pages.nist.gov/800-63-4/sp800-63b.html',
   },
   {
     label: 'IPA 情報セキュリティ安心相談窓口',
@@ -47,41 +52,24 @@ const SOURCES = [
 
 function OpeningSlide({ frame }: SlideRenderContext) {
   return (
-    <TitleSlide
-      frame={frame}
-      kicker="「あなたの情報が漏えいしました」と連絡が来たら"
-      heading={'漏れたら\n「何が漏れたか」で動く'}
-      lead="本当の対策は、漏れても困らない状態にしておくこと"
-      points={[
-        { step: '01', heading: '漏れた直後', body: '種類ごとに決まった手を打つ' },
-        { step: '02', heading: '漏れる前提で備える', body: '使い回しをやめる・更新を自動に' },
-        { step: '03', heading: 'パスワードを使わない', body: 'パスキーに移る' },
-      ]}
-    />
-  )
-}
-
-function WhyNowSlide({ frame }: SlideRenderContext) {
-  return (
     <Slide>
       <SlideHeading
         frame={frame}
-        kicker="なぜ今か"
-        heading={'大情報漏洩時代\nAIで攻撃が速く、多くなった'}
-        lead="自分が気をつけても、サービス側から漏れることは避けられない"
+        kicker="「あなたの情報が漏えいしました」と連絡が来たら"
+        heading={'パスワードを変える。\nそして、パスワードをやめる。'}
+        lead="どれも10年以上前からの当たり前。やるかどうかだけ"
       />
       <ComparisonTable
         frame={frame}
-        columns={[{ label: '講演で語られた現状', accent: true }]}
+        columns={[{ label: 'やること', accent: true }]}
         rows={[
-          { label: '攻撃の量', cells: ['AIは普通の攻撃者の100倍近い'] },
-          { label: '脆弱性探し', cells: ['人なら2週間 → AIなら数時間'] },
-          { label: '攻撃開始まで', cells: ['脆弱性の公開から約1日'] },
+          { label: 'パスワードが漏れた', cells: ['すぐ変える。同じものを使っている所も全部'] },
+          { label: 'カードが漏れた', cells: ['カード会社に電話。止めて再発行'] },
+          { label: '住所・電話・メールが漏れた', cells: ['届くメール・SMS・電話をまず疑う'] },
+          { label: '免許証の画像が漏れた', cells: ['信用情報機関に本人申告'] },
+          { label: '普段から', cells: ['パスワードは使い回さない → パスキーにして無くす'], },
         ]}
       />
-      <Callout frame={frame} icon="🎤" label="日本ハッカー協会 杉浦隆幸氏（Security Days Fall 2026）">
-        <p>だから「漏れたらどうするか」と「漏れても困らない状態」の両方を用意しておく。</p>
-      </Callout>
     </Slide>
   )
 }
@@ -142,7 +130,7 @@ function WhyReuseSlide({ frame }: SlideRenderContext) {
         frame={frame}
         kicker="そもそもの対策"
         heading={'一番効くのは\n「使い回しをやめる」'}
-        lead="漏れたID・パスワードは、ほかのサービスでも試される（リスト型攻撃）"
+        lead="漏れたID・パスワードは、ほかのサービスでも試される（リスト型攻撃）。IPAは2013年から呼びかけている"
       />
       <DiagramFrame frame={frame} caption="使い回していると" note="使い回していなければ、被害は漏れたサービス1つで止まる。">
         <FlowDiagram
@@ -154,30 +142,6 @@ function WhyReuseSlide({ frame }: SlideRenderContext) {
           ]}
         />
       </DiagramFrame>
-    </Slide>
-  )
-}
-
-function InfostealerSlide({ frame }: SlideRenderContext) {
-  return (
-    <Slide>
-      <SlideHeading
-        frame={frame}
-        kicker="もう1つの漏れ方"
-        heading={'自分のPCから\nまるごと抜かれることもある'}
-        lead="インフォスティーラー：ブラウザに保存したID・パスワード・カード情報を盗むマルウェア"
-      />
-      <Callout frame={frame} tone="warn" icon="🕵️" label="講演で紹介された実態">
-        <p>1人で1000近いIDがまるごと漏れる例も。肌感覚で3000人に1人が被害に遭っている。</p>
-      </Callout>
-      <ComparisonTable
-        frame={frame}
-        columns={[{ label: 'やること', accent: true }]}
-        rows={[
-          { label: '感染させない', cells: ['更新を止めない。出所の分からないソフト・拡張機能を入れない'] },
-          { label: '感染したら', cells: ['端末を初期化。きれいな別の端末からパスワード変更とログアウト'] },
-        ]}
-      />
     </Slide>
   )
 }
@@ -233,26 +197,27 @@ function PasskeySlide({ frame }: SlideRenderContext) {
   )
 }
 
-function AutoUpdateSlide({ frame }: SlideRenderContext) {
+function HistorySlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
       <SlideHeading
         frame={frame}
-        kicker="人が判断していたら間に合わない"
-        heading="更新は自動にしておく"
-        lead="脆弱性の公開から約1日で攻撃が始まる"
+        kicker="年表"
+        heading="この常識はいつから？"
+        lead="どれも「最近言われ始めた話」ではない"
       />
-      <FlowDiagram
+      <ComparisonTable
         frame={frame}
-        items={[
-          { heading: 'PC・スマホ', body: 'OSとアプリ' },
-          { heading: 'ブラウザ', body: '拡張機能も' },
-          { heading: 'ルーター・NAS', body: '家の機器も', accent: true },
+        columns={[{ label: '常識になったこと', accent: true }]}
+        rows={[
+          { label: '2013年8月', cells: ['使い回しをやめて（リスト型攻撃を受けてIPAが呼びかけ）'] },
+          { label: '2017〜2018年', cells: ['定期変更は不要（米NISTが方針転換、2018年3月に総務省サイトも）'] },
+          { label: '2022年5月', cells: ['パスキーへ（Apple・Google・Microsoftが共同で表明）'] },
+          { label: '2023年10月', cells: ['Googleアカウントでパスキーが既定に'] },
+          { label: '2025年5月', cells: ['Microsoftの新規アカウントはパスワード無しが既定に'] },
+          { label: '2026年10月', cells: ['IPAも日頃の対策に「パスキー」'] },
         ]}
       />
-      <Callout frame={frame} tone="warn" icon="🗑️" label="サポートが切れた機器は使わない">
-        <p>更新が来ない機器は、穴が見つかっても塞がらない。買い替えるか、ネットから外す。</p>
-      </Callout>
     </Slide>
   )
 }
@@ -282,7 +247,7 @@ function PrioritySlide({ frame }: SlideRenderContext) {
 function ChecklistSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="チェックリスト" heading="今日やる4つ" />
+      <SlideHeading frame={frame} kicker="チェックリスト" heading="今日やる3つ" />
       <Timeline
         frame={frame}
         orientation="vertical"
@@ -302,11 +267,6 @@ function ChecklistSlide({ frame }: SlideRenderContext) {
             label: '3',
             heading: '登録は最小限、使わないアカウントは削除',
             body: '削除しても事業者側に残ることがある。規約を確認',
-          },
-          {
-            label: '4',
-            heading: '自動更新がオンか確認、サポート切れの機器は外す',
-            body: 'PC・スマホ・ブラウザ・ルーター・NAS',
           },
         ]}
       />

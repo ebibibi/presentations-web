@@ -104,6 +104,12 @@ where the author decided and stays one editable string.
 
 Opening slide: title, promise, and up to three things the viewer will get.
 
+`points` read as a table of contents, so this is the right opening for a course
+episode and the wrong one for a deck that has an answer. When the deck exists to
+tell the viewer what to do or what changed, open with `Slide` + `SlideHeading` +
+a `ComparisonTable` (or a short list) that states the answers themselves. Test:
+a viewer who sees only the first slide can act on it.
+
 ```tsx
 <TitleSlide
   frame={frame}
