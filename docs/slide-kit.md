@@ -106,8 +106,8 @@ Opening slide: title, promise, and up to three things the viewer will get.
 
 `points` read as a table of contents, so this is the right opening for a course
 episode and the wrong one for a deck that has an answer. When the deck exists to
-tell the viewer what to do or what changed, open with `Slide` + `SlideHeading` +
-a `ComparisonTable` (or a short list) that states the answers themselves. Test:
+tell the viewer what to do or what changed, open with [HookSlide](#hookslide)
+and state the answers themselves. Test:
 a viewer who sees only the first slide can act on it.
 
 ```tsx
@@ -122,6 +122,26 @@ a viewer who sees only the first slide can act on it.
   ]}
 />
 ```
+
+### HookSlide
+
+Opening slide for a deck that has an answer — a YouTube explainer, a "what to
+do" deck. The hook is the biggest text in the deck and names the viewer and
+their situation, so they know in the first second that this is about them. The
+answer follows in one line, and the children carry the detail.
+
+```tsx
+<HookSlide
+  frame={frame}
+  kicker="2026年10月 IPAが対処法を公開"
+  heading={'あなたの個人情報が\n漏れたら、どうする？'}
+  lead="パスワードを変える。そして、パスワードをやめる。"
+>
+  <ComparisonTable frame={frame} columns={[{ label: 'やること', accent: true }]} rows={[…]} />
+</HookSlide>
+```
+
+Keep the hook to two short lines; it is set at 124px.
 
 ### SectionDivider
 
