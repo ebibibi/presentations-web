@@ -5,7 +5,7 @@ status: public
 visibility: public
 canvas: standard
 createdAt: "2026-10-21"
-updatedAt: "2026-10-29"
+updatedAt: "2026-10-30"
 tags:
   - ai
   - api
@@ -16,7 +16,7 @@ tags:
 youtube:
   id: JGvpN_yHXOM
   url: https://www.youtube.com/watch?v=JGvpN_yHXOM
-  title: "ChatGPT・Claudeのプロンプトキャッシュ図解｜期限切れで読み直し代25倍、OpenAIは12時間キャッシュへ"
+  title: "ChatGPT・Claudeで損する使い方｜時間を空けると全部読み直し【プロンプトキャッシュ】"
   publishedAt: "2026-10-29"
 slides:
   - id: opening
