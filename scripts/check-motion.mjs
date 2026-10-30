@@ -10,6 +10,7 @@ import {
   seededRandom
 } from '../src/slide-kit/beat.ts'
 import { particlePosition, sampleGlyphPoints, scatterParticles } from '../src/slide-kit/particles.ts'
+import { THEMES, getTheme, resolveThemeId } from '../src/themes/registry.ts'
 
 // Unit checks for the pure motion maths behind KineticTitle, ParticleText and
 // FilmFinish. Node strips the TypeScript types itself, which is why beat.ts
@@ -82,5 +83,22 @@ for (const particle of particles) {
   close(end.x, particle.to.x, 'flight ends on the glyph (x)')
   close(end.y, particle.to.y, 'flight ends on the glyph (y)')
 }
+
+// Theme selection. A published deck must never change look because a newer
+// theme was registered, so the pick is a pure function of createdAt + theme:.
+const dated = THEMES.filter((theme) => 'from' in theme).sort((a, b) => (a.from < b.from ? -1 : 1))
+assert.ok(dated.length > 0, 'at least one dated theme')
+assert.equal(new Set(THEMES.map((theme) => theme.id)).size, THEMES.length, 'theme ids are unique')
+assert.equal(new Set(THEMES.map((theme) => theme.className)).size, THEMES.length, 'theme classes are unique')
+for (const theme of dated) {
+  assert.match(theme.from, /^\d{4}-\d{2}-\d{2}$/, `${theme.id}.from is YYYY-MM-DD`)
+  assert.equal(resolveThemeId({ createdAt: theme.from }), theme.id, `${theme.id} starts on its from date`)
+}
+assert.equal(resolveThemeId({ createdAt: '2026-10-29' }), 'classic', 'decks before the first dated theme stay classic')
+assert.equal(resolveThemeId({ createdAt: '2020-01-01' }), 'classic', 'old decks stay classic')
+assert.equal(resolveThemeId({ createdAt: '2026-10-29', theme: 'sumi' }), 'sumi', 'theme: pins a deck')
+assert.equal(resolveThemeId({ createdAt: '2099-01-01', theme: 'classic' }), 'classic', 'theme: can pin classic')
+assert.equal(resolveThemeId({ createdAt: '2099-01-01' }), dated.at(-1).id, 'newest dated theme carries forward')
+assert.equal(getTheme('no-such-theme').id, 'classic', 'unknown id falls back to classic')
 
 console.log('Motion maths check passed.')

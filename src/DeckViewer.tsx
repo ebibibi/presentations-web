@@ -22,11 +22,32 @@ import {
   studioOutroFrames
 } from './studio-timeline'
 import type { AuthState } from './auth'
+import { isManualAmbient, resolveTheme, setAmbientFrame, useAmbientClockDriver } from './themes'
 import type { DeckBundle } from './types'
 import { DeckOutro } from './DeckOutro'
 
 const fps = 30
 const settledFrameOffset = 112
+
+/**
+ * Frame-exact control for scripts/capture-deck-for-video.mjs. Only installed
+ * when the page is opened with `?ambient=manual`, which also stops the ambient
+ * clock so the script owns both clocks.
+ */
+type DeckCaptureHandle = {
+  theme: string
+  slideStarts: number[]
+  settledFrames: number[]
+  /** Moves both players to a deck frame (not counting the studio intro). */
+  seek: (frame: number) => void
+  setAmbientFrame: (frame: number) => void
+}
+
+declare global {
+  interface Window {
+    __deckCapture?: DeckCaptureHandle
+  }
+}
 
 type ViewerMode = 'audience' | 'studio'
 type StudioCue = 'hook' | 'signoff' | null
@@ -87,6 +108,8 @@ export function DeckViewer({
     [deck]
   )
   const studioTotalFrames = useMemo(() => getStudioTimelineDuration(deck), [deck])
+  const theme = useMemo(() => resolveTheme(deck.meta), [deck.meta])
+  useAmbientClockDriver(theme.ambient, fps)
 
   const getSlideSettledFrame = useCallback(
     (index: number) => {
@@ -138,6 +161,31 @@ export function DeckViewer({
     },
     [pausePlayers, setPlayersFrame]
   )
+
+  useEffect(() => {
+    if (!isManualAmbient()) {
+      return undefined
+    }
+
+    window.__deckCapture = {
+      theme: theme.id,
+      slideStarts,
+      settledFrames: deck.meta.slides.map((_, index) => getSlideSettledFrame(index)),
+      seek: (frame) => {
+        if (smoothSeekRef.current !== null) {
+          window.cancelAnimationFrame(smoothSeekRef.current)
+          smoothSeekRef.current = null
+        }
+        pausePlayers()
+        setPlayersFrame(frame)
+      },
+      setAmbientFrame: (frame) => setAmbientFrame(Math.max(0, Math.round(frame)))
+    }
+
+    return () => {
+      delete window.__deckCapture
+    }
+  }, [deck.meta.slides, getSlideSettledFrame, pausePlayers, setPlayersFrame, slideStarts, theme.id])
 
   const goToSlide = useCallback(
     (index: number) => {

@@ -76,6 +76,10 @@ This repository is intended to be public. Use English for code comments, README 
   playable for a signed-out viewer. Do not flip `status` by hand for a deck whose video
   is still members-only.
 - Read [docs/ai-deck-authoring.md](docs/ai-deck-authoring.md) before creating or heavily editing a deck.
+- Slide colours and motion come from a theme (`src/themes/`). A deck without `theme:`
+  takes the newest theme whose `from` date is on or before its `createdAt`; older decks
+  stay `classic`, so published decks never change. The look changes about once a month:
+  follow "Adding next month's theme" in docs/ai-deck-authoring.md.
 - Slide copy reaches a `src/slide-kit` component as a prop, and only the prop
   names in `COPY_ATTRIBUTES` (`scripts/deck-text-core.mjs`) are extracted. Copy
   passed under any other name renders fine and then disappears from the

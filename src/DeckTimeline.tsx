@@ -1,9 +1,22 @@
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
+import { ThemeRoot, resolveTheme } from './themes'
+import type { DeckTheme } from './themes'
 import type { DeckBundle } from './types'
 
 const transitionFrames = 24
 
+/** Renders a deck in its theme (deck.yaml `theme:`, or the one its `createdAt` falls under). */
 export function DeckTimeline({ deck }: { deck: DeckBundle }) {
+  const theme = resolveTheme(deck.meta)
+
+  return (
+    <ThemeRoot theme={theme}>
+      <DeckFrames deck={deck} theme={theme} />
+    </ThemeRoot>
+  )
+}
+
+function DeckFrames({ deck, theme }: { deck: DeckBundle; theme: DeckTheme }) {
   const frame = useCurrentFrame()
   let cursor = 0
 
@@ -47,9 +60,8 @@ export function DeckTimeline({ deck }: { deck: DeckBundle }) {
             </AbsoluteFill>
             <AbsoluteFill
               style={{
-                background:
-                  'linear-gradient(90deg, transparent, rgba(20, 117, 111, 0.18), transparent)',
-                mixBlendMode: 'multiply',
+                background: `linear-gradient(90deg, transparent, ${theme.transition.tint}, transparent)`,
+                mixBlendMode: theme.transition.blend,
                 opacity: interpolate(progress, [0, 0.5, 1], [0, 0.8, 0]),
                 transform: `translateX(${interpolate(progress, [0, 1], [-80, 80])}%)`
               }}

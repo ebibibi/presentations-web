@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 import { LogoMark } from '../deck-shared'
+import { AmbientBackdrop } from '../themes/AmbientBackdrop'
+import { useDeckTheme } from '../themes/ThemeRoot'
 
 /**
  * Background treatment. `paper` is the deck default; `ink` inverts for a
@@ -26,6 +28,9 @@ export type SlideProps = {
  * deck asked for (1280 x 1080 standard, 1920 x 1080 wide). Nothing here sets a
  * width, a height, or a viewport unit, so a slide fits both canvases; layout is
  * flex and percentage based for the same reason.
+ *
+ * Under a theme with `ambient` on, the slide sits on the theme's moving
+ * backdrop, and `grid` is drawn inside it so the grid drifts with the light.
  */
 export function Slide({
   tone = 'paper',
@@ -35,6 +40,7 @@ export function Slide({
   className,
   children
 }: SlideProps) {
+  const { ambient } = useDeckTheme()
   const classes = ['remotion-slide', 'sk-slide', `sk-slide-${tone}`]
 
   if (center) classes.push('sk-slide-center')
@@ -42,7 +48,7 @@ export function Slide({
 
   return (
     <section className={classes.join(' ')}>
-      {grid ? <div className="motion-grid" /> : null}
+      {ambient ? <AmbientBackdrop grid={grid} /> : grid ? <div className="motion-grid" /> : null}
       {logo ? <LogoMark /> : null}
       {children}
     </section>

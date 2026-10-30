@@ -5,6 +5,7 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { parse } from 'yaml'
 import { collectTsxSlideIds } from './deck-text-core.mjs'
+import { THEME_IDS } from '../src/themes/registry.ts'
 
 const decksDir = join(process.cwd(), 'content', 'decks')
 const required = ['slug', 'title', 'summary', 'status', 'createdAt', 'slides']
@@ -42,6 +43,11 @@ for (const entry of entries) {
 
   if (deck?.createdAt !== undefined && !isDate(deck.createdAt)) {
     problems.push(`${entry.name}/deck.yaml has a non-date "createdAt": ${deck.createdAt}`)
+  }
+
+  // An unknown theme fails schema parsing in the browser, which is a blank deck.
+  if (deck?.theme !== undefined && !THEME_IDS.includes(deck.theme)) {
+    problems.push(`${entry.name}/deck.yaml has an unknown "theme": ${deck.theme} (known: ${THEME_IDS.join(', ')})`)
   }
 
   const publishedAt = deck?.youtube?.publishedAt
