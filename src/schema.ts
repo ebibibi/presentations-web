@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { THEME_IDS } from './themes/registry'
 
 const slideMetaSchema = z.object({
   id: z.string().min(1),
@@ -26,6 +27,10 @@ export const deckMetaSchema = z.object({
   // most decks; 'wide' renders a full 16:9 1920x1080 surface for decks that are
   // projected as-is at an event.
   canvas: z.enum(['standard', 'wide']).default('standard'),
+  // Slide theme (src/themes/registry.ts). Leave it out: a deck then takes the
+  // theme of the month it was created in, and older decks stay 'classic'. Set
+  // it only to pin a deck to a theme other than that one.
+  theme: z.enum(THEME_IDS).optional(),
   tags: z.array(z.string()).default([]),
   // Keeps a deck out of the archive list for everyone, the owner included. The
   // deck still builds and opens by URL per `status`; use it for fixture decks

@@ -389,6 +389,15 @@ const styles = useStagger(frame, items.length) // one style per list item
 its own timing. Hooks cannot run in a loop, which is why `useStagger` returns the
 whole array at once.
 
+`useEnter` and `useStagger` follow the deck theme: under a theme with
+`motion: 'lively'` (see `src/themes/registry.ts`) they rise further, overshoot
+a touch and clear a blur as they land, and they set `--sk-enter` (0..1) so the
+theme stylesheet can draw rules and timeline rails in with the element. The
+settled frame is identical to the resting style. `entrance` and `lift` stay the
+calm originals. Colours in kit CSS go through theme custom properties (`--sk-*`
+plus the site names `--ink`, `--teal`, …); add a property with the `classic`
+value as its fallback rather than hard-coding a colour.
+
 ### Beats and easing
 
 Motion-graphics timing is written in beats, so picture and soundtrack share one

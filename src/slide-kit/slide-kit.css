@@ -24,13 +24,13 @@
  * nothing and an inverted slide rendered pale text on pale paper.
  */
 .remotion-slide.sk-slide-ink {
-  background: #17201b;
-  color: #fbf8ee;
+  background: var(--sk-ink-tone-bg, #17201b);
+  color: var(--sk-ink-tone-fg, #fbf8ee);
 }
 
 .remotion-slide.sk-slide-ink h1,
 .remotion-slide.sk-slide-ink strong {
-  color: #fbf8ee;
+  color: var(--sk-ink-tone-fg, #fbf8ee);
 }
 
 .remotion-slide.sk-slide-ink .sk-kicker {
@@ -39,14 +39,16 @@
 
 .remotion-slide.sk-slide-ink p,
 .remotion-slide.sk-slide-ink .sk-lead {
-  color: rgba(251, 248, 238, 0.72);
+  color: var(--sk-ink-tone-body, rgba(251, 248, 238, 0.72));
 }
 
 .remotion-slide.sk-slide-accent {
-  background:
+  background: var(
+    --sk-accent-tone-bg,
     linear-gradient(135deg, rgba(20, 117, 111, 0.16), transparent 42%),
     linear-gradient(150deg, transparent 60%, rgba(216, 93, 74, 0.14)),
-    #fbf8ee;
+    #fbf8ee
+  );
 }
 
 /* ── Heading ─────────────────────────────────────────────────────────── */
@@ -106,7 +108,7 @@
 }
 
 .sk-title-point {
-  background: rgba(255, 255, 255, 0.82);
+  background: var(--sk-card-bg, rgba(255, 255, 255, 0.82));
   border: 1px solid var(--line);
   border-radius: 20px;
   flex: 1 1 0;
@@ -191,7 +193,7 @@
 /* ── Terminal ────────────────────────────────────────────────────────── */
 
 .sk-terminal {
-  background: #101713;
+  background: var(--sk-code-bg, #101713);
   border-radius: 18px;
   box-shadow: var(--shadow);
   flex: 1 1 auto;
@@ -281,8 +283,8 @@
 /* ── Comparison table ────────────────────────────────────────────────── */
 
 .sk-table {
-  background: #ffffff;
-  border: 2px solid #b9b5a8;
+  background: var(--sk-table-bg, #ffffff);
+  border: 2px solid var(--sk-table-border, #b9b5a8);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -307,12 +309,12 @@
 }
 
 .sk-table-head {
-  background: var(--ink);
+  background: var(--sk-table-head-bg, var(--ink));
 }
 
 .sk-table-head span {
   border-left: 1px solid rgba(255, 255, 255, 0.28);
-  color: #ffffff;
+  color: var(--sk-table-head-fg, #ffffff);
   font-size: 24px;
   font-weight: 700;
   padding: 14px 20px;
@@ -324,7 +326,7 @@
 
 .sk-table-head span.sk-table-accent {
   background: var(--teal);
-  color: #ffffff;
+  color: var(--sk-table-head-accent-fg, #ffffff);
 }
 
 .sk-table-row {
@@ -339,7 +341,7 @@
 }
 
 .sk-table-row > :first-child {
-  background: #f1efe8;
+  background: var(--sk-table-label-bg, #f1efe8);
   border-left: 0;
 }
 
@@ -355,7 +357,7 @@
 }
 
 .sk-table-row span.sk-table-accent {
-  background: #e6f2f0;
+  background: var(--sk-table-accent-bg, #e6f2f0);
   font-weight: 700;
 }
 
@@ -508,7 +510,7 @@
 
 .sk-flow-on {
   border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(20, 117, 111, 0.18);
+  box-shadow: 0 0 0 3px var(--sk-accent-ring, rgba(20, 117, 111, 0.18));
 }
 
 .sk-flow-node strong {
@@ -533,8 +535,8 @@
 
 .sk-callout {
   align-items: flex-start;
-  background: rgba(20, 117, 111, 0.08);
-  border-left: 6px solid var(--teal);
+  background: var(--sk-callout-note-bg, rgba(20, 117, 111, 0.08));
+  border-left: 6px solid var(--sk-callout-note-edge, var(--teal));
   border-radius: 14px;
   display: flex;
   gap: 18px;
@@ -542,13 +544,13 @@
 }
 
 .sk-callout-warn {
-  background: rgba(216, 93, 74, 0.1);
-  border-left-color: var(--coral);
+  background: var(--sk-callout-warn-bg, rgba(216, 93, 74, 0.1));
+  border-left-color: var(--sk-callout-warn-edge, var(--coral));
 }
 
 .sk-callout-good {
-  background: rgba(217, 162, 27, 0.12);
-  border-left-color: var(--mustard);
+  background: var(--sk-callout-good-bg, rgba(217, 162, 27, 0.12));
+  border-left-color: var(--sk-callout-good-edge, var(--mustard));
 }
 
 .sk-callout-icon {
@@ -564,7 +566,7 @@
 
 .sk-callout-body,
 .sk-callout-body p {
-  color: #4e5a52;
+  color: var(--sk-body, #4e5a52);
   font-size: 25px;
   line-height: 1.5;
 }

@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react'
 import { spring, useVideoConfig } from 'remotion'
+import { useDeckTheme } from '../themes/ThemeRoot'
+import type { ThemeMotion } from '../themes/registry'
 import { DEFAULT_BPM, beatClock } from './beat'
 import type { BeatClock } from './beat'
 
@@ -28,10 +30,50 @@ export function lift(value: number, distance = 32): CSSProperties {
   }
 }
 
-/** `lift(entrance(...))` for one element, reading fps from the Remotion config. */
+/**
+ * The `lively` entrance a theme can ask for (see src/themes/registry.ts).
+ *
+ * A slightly softer spring that overshoots a touch, a longer rise, and a blur
+ * that clears as the element lands. Once the spring has settled the style is
+ * exactly the resting one — no transform, no filter — so text is as sharp as
+ * in the calm profile. `--sk-enter` carries the progress (clamped to 0..1) for
+ * theme CSS that draws rules or rails in with the element.
+ */
+const LIVELY_CONFIG = { damping: 14, stiffness: 120, mass: 0.9 } as const
+const LIVELY_DISTANCE = 1.35
+const LIVELY_BLUR_PX = 7
+
+function livelyEntrance(frame: number, fps: number, delay = 0): number {
+  return spring({ frame: frame - delay, fps, config: LIVELY_CONFIG })
+}
+
+function livelyLift(value: number, distance: number): CSSProperties {
+  const settled = Math.abs(1 - value) < 0.002
+  const shown = Math.min(1, Math.max(0, value))
+  const blur = Math.max(0, 1 - value) * LIVELY_BLUR_PX
+
+  return {
+    opacity: shown,
+    transform: settled ? undefined : `translateY(${((1 - value) * distance * LIVELY_DISTANCE).toFixed(2)}px)`,
+    filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : undefined,
+    '--sk-enter': shown.toFixed(3)
+  } as CSSProperties
+}
+
+function enterStyle(motion: ThemeMotion, frame: number, fps: number, delay: number, distance: number) {
+  return motion === 'lively'
+    ? livelyLift(livelyEntrance(frame, fps, delay), distance)
+    : lift(entrance(frame, fps, delay), distance)
+}
+
+/**
+ * `lift(entrance(...))` for one element, reading fps from the Remotion config.
+ * Under a theme with `motion: 'lively'` it uses the livelier entrance above.
+ */
 export function useEnter(frame: number, delay = 0, distance = 32): CSSProperties {
   const { fps } = useVideoConfig()
-  return lift(entrance(frame, fps, delay), distance)
+  const { motion } = useDeckTheme()
+  return enterStyle(motion, frame, fps, delay, distance)
 }
 
 export type StaggerOptions = {
@@ -55,8 +97,9 @@ export function useStagger(
   { start = 24, step = STAGGER_STEP, distance = 26 }: StaggerOptions = {}
 ): CSSProperties[] {
   const { fps } = useVideoConfig()
+  const { motion } = useDeckTheme()
   return Array.from({ length: count }, (_, index) =>
-    lift(entrance(frame, fps, start + index * step), distance)
+    enterStyle(motion, frame, fps, start + index * step, distance)
   )
 }
 

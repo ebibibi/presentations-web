@@ -919,9 +919,13 @@ main {
   margin: 0;
 }
 
+/*
+ * Slide colours come from the deck theme (src/themes). The fallbacks are the
+ * `classic` palette, which defines none of these properties.
+ */
 .remotion-slide {
-  background: #fbf8ee;
-  color: #17201b;
+  background: var(--sk-bg, #fbf8ee);
+  color: var(--sk-ink, #17201b);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -947,7 +951,7 @@ main {
 }
 
 .remotion-slide p {
-  color: #4e5a52;
+  color: var(--sk-body, #4e5a52);
   font-size: 34px;
   line-height: 1.52;
   margin: 0;
@@ -960,8 +964,8 @@ main {
 
 .motion-grid {
   background-image:
-    linear-gradient(rgba(23, 32, 27, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23, 32, 27, 0.08) 1px, transparent 1px);
+    linear-gradient(var(--sk-grid-line, rgba(23, 32, 27, 0.08)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sk-grid-line, rgba(23, 32, 27, 0.08)) 1px, transparent 1px);
   background-size: 64px 64px;
   inset: 0;
   mask-image: radial-gradient(circle at 42% 45%, black 0, transparent 70%);

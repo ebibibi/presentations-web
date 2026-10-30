@@ -138,6 +138,37 @@ function WhyItMattersSlide({ frame }: SlideRenderContext) {
 
 Use the `frame` value when animation adds meaning. If the slide is static, it is fine not to use Remotion animation.
 
+## Themes
+
+The look of a slide comes from a theme in `src/themes/`, not from the deck. A
+theme is an entry in `src/themes/registry.ts` plus a stylesheet scoped to its
+class (`.theme-<id>`) that sets CSS custom properties; the slide kit and the
+base `.remotion-slide` read those and fall back to the original paper palette
+(`classic`).
+
+- A deck normally leaves `theme:` out of `deck.yaml`. It then gets the newest
+  theme whose `from` date is on or before its `createdAt`, and decks older than
+  every dated theme stay `classic`. So a new deck picks up the current month's
+  look by itself, and a published deck never changes when a new theme lands.
+- Set `theme: <id>` only to pin a deck to another theme (for example a deck
+  created a day before the new theme was merged).
+- Themes are written for the slide kit. Hand-built slides with their own
+  colours in `src/styles.css` keep those colours under any theme.
+- A theme can switch on `ambient` (a slow, frame-driven backdrop behind kit
+  slides) and `motion: 'lively'` (the livelier kit entrance). Both are
+  computed from frame numbers, never CSS time, so captures are reproducible.
+
+### Adding next month's theme
+
+1. Copy `src/themes/sumi.css` to `src/themes/<id>.css`, rename the class to
+   `.theme-<id>` and change the values. Keep text contrast readable at 1080p.
+2. Import it in `src/themes/index.ts`.
+3. Add an entry to `THEMES` in `src/themes/registry.ts` with `from` set to the
+   day it is merged or later (never earlier: that would restyle decks already
+   made in the old theme).
+4. Check it on a kit deck with a local `theme: <id>` (do not commit that line),
+   then run `npm run check:motion`, `npm run build` and `npm run check:slide-kit`.
+
 ## Slide Design Rules
 
 - Design for a 1280 x 1080 canvas.
