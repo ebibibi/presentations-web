@@ -1,7 +1,7 @@
 slug: sharepoint-classic-pages-readonly-2028
 title: SharePointのクラシックページが編集できなくなる｜2028年10月、全テナントで読み取り専用に
 summary: Microsoftが2026年8月31日に発表したSharePoint Onlineのクラシック廃止計画（MC1464926）を整理します。2027年3月にクラシック発行サイトの作成を止め、2028年10月に既存のクラシックページを読み取り専用にします。サイトもデータも消えません。ただし対象はページの種類で決まるので、「チームサイトだから関係ない」とは言えません。何が残り、何ができなくなるのか、今日どこから調べるのかをまとめました。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-11-04"
