@@ -5,12 +5,17 @@ status: draft
 visibility: public
 canvas: standard
 createdAt: "2026-11-04"
-updatedAt: "2026-11-04"
+updatedAt: "2026-11-07"
 tags:
   - microsoft-365
   - sharepoint
   - copilot
   - security
+youtube:
+  id: bfVMVLupCDU
+  url: https://www.youtube.com/watch?v=bfVMVLupCDU
+  title: "SharePointのクラシックページが編集できなくなる｜2028年10月、全テナントで読み取り専用に"
+  publishedAt: "2026-11-07"
 slides:
   - id: opening
     title: あなたのSharePoint、編集できなくなる？
