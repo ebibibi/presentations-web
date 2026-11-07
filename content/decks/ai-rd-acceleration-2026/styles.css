@@ -1,0 +1,19 @@
+.ara-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding-left: 30px;
+  font-size: 25px;
+  line-height: 1.45;
+}
+
+.ara-sources a {
+  color: var(--sk-accent, #0f766e);
+}
+
+.ara-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
