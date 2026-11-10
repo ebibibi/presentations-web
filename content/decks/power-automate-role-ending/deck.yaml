@@ -1,0 +1,59 @@
+slug: power-automate-role-ending
+title: Power Automateは役割を終えつつある｜設計画面のCopilotが11月30日で終了
+summary: 2026年11月5日、MicrosoftはPower Automateのデザイナーに組み込まれたCopilotを11月30日でサポート終了すると告知しました（MC1540258）。自然言語でフローを作りたいなら、GitHub CopilotやClaude Codeなど外のAIエージェントからプラグインで操作してほしい、というのがMicrosoft自身の案内です。告知の事実を整理したうえで、「ローコードでロジックを組む時代は終わりつつある」という主張を述べます。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-11-10"
+updatedAt: "2026-11-10"
+tags:
+  - power-platform
+  - power-automate
+  - copilot
+  - ai
+  - microsoft
+slides:
+  - id: opening
+    title: Power Automateのデザイナーから Copilotが消える
+    durationInFrames: 300
+    notes: 先に事実を言い切る。2026年11月5日、メッセージセンターMC1540258。11月30日で、クラウドフローとエージェントフローのデザイナーにあるCopilotはサポート終了。既存のフローは消えない。で、Microsoftは代わりに何と言っているか。「自然言語で作りたいなら、GitHub Copilotなど外のAIアシスタントでPower Automateプラグインを使え」。つまり、Power Automateの中にAIを置くのをやめて、AIの側からPower Automateを操作させる方向に変えた。この告知がXで話題になって、自分は「Power Automate自体がもう役割を終えつつある」と書いたら、思った以上に反応があった。今日はその話。
+  - id: mc1540258
+    title: 告知の中身（MC1540258）
+    durationInFrames: 300
+    notes: 告知の中身を正確に。終わるのはデザイナー内のCopilotだけ。Copilotで作ったフローも含めて、既存フローは削除も移動も変更もされない。デザイナーでの手作業、テンプレート、式エディタ、フローチェッカー、実行履歴は引き続き使える。管理者への影響は低、ユーザーへの影響は中。推奨は2つ。GitHub Copilotなど対応AIアシスタントのPower Automateプラグイン、またはMCPでCopilot Studioにつなぐこと。「使えなくなる」のではなく、「AIで作る場所が外に移る」。
+  - id: same-direction
+    title: 同じ方向の告知が続いている
+    durationInFrames: 330
+    notes: これは単発ではない。Power Platformの作る画面から、組み込みのCopilotが順番に外されている。1月にPower AppsキャンバスアプリのMaker Copilotのサイドパネルが廃止（MC1183604）。2月にプレビューのCopilotコントロールが削除（MC1215683）。11月3日に「説明して設計する（Describe it to design it）」の終了告知（MC1537406）、11月5日に今回のデザイナー内Copilotの終了告知（MC1540258）、どちらも11月30日。12月11日にはPower AppsでPower Fxの式をCopilotで書く機能も終わる（MC1532421）。なお「説明して設計する」も同じ11月30日に終わる。その一方で、Microsoftは2026年1月にGitHubでpower-platform-skillsというプラグイン集を始めていて、Claude CodeとGitHub Copilot CLIから使える。
+  - id: plugin
+    title: 代わりに案内されたもの
+    durationInFrames: 300
+    notes: Microsoftの公式リポジトリmicrosoft/power-platform-skills。Power AutomateプラグインはClaude CodeかGitHub Copilot CLIに入れる。中身はFlowAgentというMCPサーバーで、フローの作成・編集・コピー・公開、実行履歴、再実行、失敗の診断、接続の管理までできる。認証はaz login。ここが大事で、Microsoft自身が「フローを作るのはAIエージェントの仕事で、人がデザイナーでポチポチやるのは前提じゃない」と言っているのに近い。で、ここからが自分の主張。
+  - id: claim-role-ending
+    title: 主張：Power Automateは役割を終えつつある
+    durationInFrames: 210
+    notes: ここから自分の意見。Xに書いたのはこの一文。「正直なところ、Power Automate自体がもう役割を終えつつあると思うんですよね…」。告知が言っているのは「AIで作る場所が外に移る」。だったら、そもそもPower Automateというローコードの器に乗せる理由はどこに残るのか、という話。
+  - id: claim-words
+    title: 主張：ロジックを組むな、言葉で伝えろ
+    durationInFrames: 240
+    notes: 返信で書いたこと。Power Automateでロジックを組むんじゃなくて、Azureサブスクリプションを作って、AIにやりたいことを言葉で伝えればいい。そうしたら全部やってくれる。Azureじゃなくてもいい。その方がはるかにうまく、やりたいことを実現してもらえる。わざわざローコードを使う必要がない。自分の実例を話す（schedulerなど、毎日AIに作らせて回している仕組み）。
+  - id: claim-code-schedule
+    title: 主張：定型ならコードとスケジュール
+    durationInFrames: 240
+    notes: 「定型処理は残るでしょ」という反論はもっとも。でも定型なら、AIにコードを書いてもらって、それをスケジュール実行してもらえばいい。AIを定期的に呼び出したいなら、そうしてもらえばいい。定型処理が無くなるのではなく、定型処理を作る道具としてのローコードが要らなくなる、という話。
+  - id: claim-absorbed
+    title: 主張：良いところは言葉に吸収された
+    durationInFrames: 240
+    notes: ここが一番言いたいこと。Power Automateの良いところは「プログラムを書けない人でも自動化を作れる」だった。それは全部、言葉でAIに頼めることに吸収された。残るのは、画面でしか直せない、差分が見にくい、API呼び出しの上限、ライセンス、デバッグのしにくさ、といった悪いところ。
+  - id: claim-rpa
+    title: 主張：RPAははじめから筋悪
+    durationInFrames: 180
+    notes: ついでに言うと、画面操作を記録して再生するRPAは、最初から筋が悪い。画面が変わったら壊れる。APIやコードで直接やるべきことを、画面越しにやっているだけ。問題外。
+  - id: what-remains
+    title: それでも素敵な部分はある
+    durationInFrames: 270
+    notes: 公平に。返信でも書いたが、Power Automateには素敵な部分もある。フローの共有、接続の権限を管理できるところ、承認ワークフロー。つまり残る価値は「ロジックを書く道具」ではなく、「組織で自動化を管理・統制する基盤」の側。返信でも「フロー、エージェント、人がやるべきタスクの切り分けを考えたい」という意見をもらった。そこは同意で、問いは「何をPower Automateに残すか」になる。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: 告知は自分のテナントのメッセージセンターでも確認してほしい。
