@@ -5,7 +5,7 @@ status: draft
 visibility: public
 canvas: standard
 createdAt: "2026-11-10"
-updatedAt: "2026-11-10"
+updatedAt: "2026-11-11"
 tags:
   - power-platform
   - power-automate
@@ -15,7 +15,7 @@ tags:
 youtube:
   id: KZuRTHY17J0
   url: https://www.youtube.com/watch?v=KZuRTHY17J0
-  title: "Power AutomateのCopilotが11月30日で終了｜フローは外のAIで作る時代へ ─ Power Automateは役割を終えつつある"
+  title: "Power Automateは役割を終えつつある、と私は思う"
   publishedAt: "2026-11-10"
 slides:
   - id: opening
