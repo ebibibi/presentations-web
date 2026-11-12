@@ -1,7 +1,7 @@
 slug: power-automate-role-ending
 title: Power Automateは役割を終えつつある｜設計画面のCopilotが11月30日で終了
 summary: 2026年11月5日、MicrosoftはPower Automateのデザイナーに組み込まれたCopilotを11月30日でサポート終了すると告知しました（MC1540258）。自然言語でフローを作りたいなら、GitHub CopilotやClaude Codeなど外のAIエージェントからプラグインで操作してほしい、というのがMicrosoft自身の案内です。告知の事実を整理したうえで、「ローコードでロジックを組む時代は終わりつつある」という主張を述べます。
-status: draft
+status: public
 visibility: public
 canvas: standard
 createdAt: "2026-11-10"
