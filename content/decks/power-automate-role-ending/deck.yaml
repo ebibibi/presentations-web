@@ -5,7 +5,7 @@ status: public
 visibility: public
 canvas: standard
 createdAt: "2026-11-10"
-updatedAt: "2026-11-11"
+updatedAt: "2026-11-12"
 tags:
   - power-platform
   - power-automate
@@ -16,7 +16,7 @@ youtube:
   id: KZuRTHY17J0
   url: https://www.youtube.com/watch?v=KZuRTHY17J0
   title: "Power Automateは役割を終えつつある、と私は思う"
-  publishedAt: "2026-11-10"
+  publishedAt: "2026-11-12"
 slides:
   - id: opening
     title: Power Automateのデザイナーから Copilotが消える
