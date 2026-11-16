@@ -1,0 +1,125 @@
+slug: copilot-managed-runtime
+title: Copilot Managed Runtime登場｜AIで作った社内アプリをMicrosoftが統制つきで預かる時代へ
+summary: 「Power Automateは役割を終えつつある」回の最後に「誰か作ってみませんか」と話した、市民開発者がAIで安全にアプリを作れる基盤。調べたら、Microsoftが2026年9月から Copilot Managed Runtime としてプレビュー提供していました。中身は普通のWebアプリ、データと統制はPower Platform。外への通信はブラウザで塞ぎ、出口はコネクタだけ。Azureをそのまま渡すよりはるかに統制された置き場所です。公式ドキュメントで分かった仕組み・既定の統制・料金・弱いところをまとめます。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-11-16"
+updatedAt: "2026-11-16"
+tags:
+  - power-platform
+  - copilot
+  - microsoft-365
+  - ai
+  - microsoft
+slides:
+  - id: opening
+    title: 前回の「誰か作って」は、もうあった
+    durationInFrames: 300
+    notes: |
+      【えびフライ司会で入る】
+      えびフライ：「胡田さん、前回の動画の最後で『誰か作ってみませんか』って言ってたよね？」
+      胡田：言いました。市民開発者がAIに言葉で頼むだけで、安全にアプリが動く基盤。
+      えびフライ：「それ、もうあるらしいよ」
+      答えを先に言い切る。Microsoft の Copilot Managed Runtime。2026年9月からパブリックプレビュー。
+      AIで作った社内アプリを、Microsoftがテナントの中で、統制をかけた状態で預かって動かしてくれる。今日はこれを調べた話。
+  - id: last-time
+    title: 前回の最後に言ったこと
+    durationInFrames: 300
+    notes: |
+      前回（Power Automateは役割を終えつつある）の12分あたりで話したことをそのまま出す。
+      Azureサブスクリプションを1万人に配って好きにやっていいよ、は怖い。私でもやりたくない。
+      だから、裏では何かが動いているけど、危ないことは全部できないように安全弁がついていて、お金も使いすぎない、入口はAI。そういうものが求められている、ビジネスチャンスかも、誰か作ってみませんか、と言った。
+      えびフライ：「で、ぼくが『作っちゃおうかな？…いや、無理！』って言ったやつね」
+  - id: not-studied
+    title: 気がついたら、もうあった
+    durationInFrames: 240
+    notes: |
+      えびフライ：「ダメだね胡田さん、勉強を怠ってるぞ！」
+      胡田：はい、すみません（笑）。9月25日にはもう出ていた。Copilot の大きな刷新（Cowork・Copilot Code）と同じタイミング。
+      自分で「誰か作って」と言っておきながら、Microsoft がもう作っていたのを知らなかった。不勉強でした。
+  - id: comment
+    title: コメントで教えてもらった
+    durationInFrames: 270
+    notes: |
+      前回の動画にいただいたコメントで知った。TakuYone さん、ありがとうございます。
+      「Microsoftとしては Copilot Managed Runtime に誘導するつもりじゃないでしょうか。Copilot Code でスムーズにアプリ作ってデプロイできるので。実行も従量課金なのはもやっとしますが。」
+      「従量課金がもやっと」も含めて、ちゃんと調べてみた。ここから本題。
+      ※ドキュメントだけの調査。実機では試していない、と一言添える。
+  - id: what-is
+    title: Copilot Managed Runtimeとは
+    durationInFrames: 330
+    notes: |
+      一言でいうと、AIで作った社内向けの業務アプリを、Microsoftがテナントの中でホストする場所。
+      作る入口は4つ。Cowork（チャットで頼む。Frontier参加テナントのみ）、Copilot Studio、Copilot Code、それと開発者向けの CLI（ms コマンド）。どこで作っても同じものができる。
+      使う人は managedapps.cloud.microsoft というポータルから開く。管理者は M365 管理センターの「アプリ」で全部を一覧できる。
+      商用クラウドの対象テナントには、何もしなくても自動で有効になっている。
+  - id: app-shape
+    title: 中身は普通のWebアプリ、裏はPower Platform
+    durationInFrames: 330
+    notes: |
+      最初に気になったのは「Power Apps みたいなローコードなのか、普通のアプリなのか」。答えは両方。
+      中身は React と TypeScript と Vite。AI に「アプリ作って」と頼むとよく出てくる構成そのもの。Power Fx もフローも使わない。git push するとビルドされる。
+      一方で、データの取り方は Power Platform のコネクタ（1,500以上）。アプリは作った人の個人開発環境、つまり Power Platform のマネージド環境に置かれる。DLP やコネクタポリシーも Power Platform のもの。
+      前身は2025年の Power Apps code apps。それを AI 時代向けに作り直して、M365 側に持ってきた感じ。
+  - id: two-walls
+    title: 統制の要は「出口を一本にする」
+    durationInFrames: 360
+    notes: |
+      ここが一番おもしろかった。AI が書いたコードを、どうやって信用せずに済ませているか。
+      壁1：ブラウザの Content Security Policy。既定で connect-src が 'self'。アプリ自身のサーバー以外へは fetch できない。AI が勝手な外部 API を叩けない。
+      壁2：外へ出る道はコネクタだけ。既定で許可されているのは、Microsoft製・正式版・Entra認証のみ・テナント内で完結する18個だけ。SharePoint、Outlook、Teams、Excel、Dataverse など。サードパーティやカスタムコネクタは除外。
+      しかも許可したコネクタの中の「HTTP要求を送信」や「スクリプト実行」のような抜け道の操作は、既定で止めてある。
+      つまり、中身は自由に書かせて、出口を一本にして、そこで締める。AI が書くコードを前提にした、理にかなった作り。
+  - id: defaults
+    title: ほかの既定の統制
+    durationInFrames: 300
+    notes: |
+      ほかにも最初から効いているもの。
+      開発者ごとに隔離された個人の開発環境。Entra 認証と条件付きアクセス。アプリを共有しても、データの権限は渡らない（データ側の権限で守られる）。ビルドはプラットフォームが Git から自分でやってスキャンする。外でビルドしたものの持ち込みは既定で禁止。組織全体やゲストへの共有もオン・オフできる。
+      そして全アプリが M365 管理センターに出てきて、利用状況や正常性も見える。管理者が登録しなくても勝手に棚卸しされる。
+  - id: vs-azure
+    title: Azureをそのまま渡すより、はるかに統制されている
+    durationInFrames: 330
+    notes: |
+      前回の話に戻ると、怖かったのは「1万人に Azure サブスクリプションと AI エージェントを渡す」こと。
+      それと比べると、これは別物。Azure なら何でも作れるし、どこへでも通信できるし、統制は全部自分で作らないといけない。
+      こっちは作れるものがブラウザで動く社内アプリに絞られる代わりに、通信・データ・お金・棚卸しの安全弁が最初から付いている。
+      まさに前回言っていた「危ないことはできない、安全弁つき、入口はAI」の形。
+  - id: ms-aim
+    title: Microsoftはここを狙っている
+    durationInFrames: 240
+    notes: |
+      前回の話とつなげると流れが見える。Power Automate や Power Apps の作る画面からは Copilot が外されていって、AI で作る場所は外の AI エージェントへ。
+      その一方で、AI に作らせたものを置く場所はこうしてちゃんと用意している。作るのは AI、置き場所と統制は Microsoft。
+      コメントの「Microsoftはここに誘導するつもりでは」という読みは、たぶん当たっていると思う。
+  - id: money
+    title: お金：Power Platformだから高い？
+    durationInFrames: 330
+    notes: |
+      コメントの「従量課金がもやっと」の話。
+      使う人1人ずつに、Power Apps Premium か Copilot Credits が要る。Credits なら API 呼び出し1回が 0.1 クレジット、つまり約0.1円（0.001ドル）。
+      公式の試算では、25人のチームのアプリで月12〜22ドル、300人の部門アプリで月59〜119ドル。Premium を全員に配るよりはずっと安い。
+      ただし注意が3つ。起動時に読み込む JS や画像も1ファイルずつ課金されること。M365 E3/E5 に付いている Power Apps の利用権では動かないこと。作る側（Cowork・Code・Copilot Studio）は別料金なこと。
+      高いというより、1回ごとの従量課金で読みにくい。もやっとするのはそこだと思う。
+  - id: weak-points
+    title: まだ弱いところ
+    durationInFrames: 270
+    notes: |
+      公平に、ドキュメントに書いてある弱いところ。
+      管理者に見えるのは「どのコネクタを使っているか」まで。実際にどこへ何を送ったか、利用者ごとのデータ権限までは見えない、と FAQ に明記されている。
+      開発・テスト・本番と環境を分ける仕組み（ALM）はまだない。ゲストへの共有はオンにしてもまだ開けない（既知の不具合）。
+      そして全体がまだプレビュー。仕様は変わる。
+  - id: summary
+    title: まとめ
+    durationInFrames: 300
+    notes: |
+      これが本当に良いものかどうかは、正直まだ分からない。実際に試してもいないし、プレビューだし。
+      でも「市民開発者 × AI 開発」の置き場所としては、筋がいいと思う。前回自分が欲しいと言ったものに、かなり近い。
+      管理者の方は今日これだけ見ておいてほしい。Copilot Studio からアプリを作る経路は既定でオンになっている。使う人には Premium か支出ポリシーが要る。方針を決めておこう。
+      えびフライ：「ぼくが作らなくてよかった〜」
+      みなさんはどう思いますか、コメントで教えてください。前回みたいに、また教えてもらえると助かります。
+  - id: sources
+    title: 出典
+    durationInFrames: 180
+    notes: 公式ドキュメント（Microsoft Learn）。どれもプレビューの文書なので、最新は自分で確認を。
