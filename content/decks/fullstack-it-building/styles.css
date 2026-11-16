@@ -1,0 +1,584 @@
+/* Deck: fullstack-it-building
+   A 16-floor "IT building" (B2 facilities up to the 14F rooftop). Judgment boxes
+   and map cells are empty on purpose: the editor fills them in after recording.
+   Content stays above the theme's ambient layer, hence position + z-index. */
+
+.fsb-facts,
+.fsb-declare,
+.fsb-rules,
+.fsb-rules-total,
+.fsb-compact-head,
+.fsb-section,
+.fsb-shaft,
+.fsb-floor-main,
+.fsb-map-head,
+.fsb-map,
+.fsb-summary-template {
+  position: relative;
+  z-index: 2;
+}
+
+.fsb-badge,
+.fsb-floor-badge,
+.fsb-map-floor b {
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+}
+
+/* ── Opening ─────────────────────────────────────────────────────────── */
+
+.fsb-facts {
+  display: flex;
+  gap: 22px;
+}
+
+.fsb-fact {
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 26px;
+  background: var(--sk-card-bg, #fff);
+}
+
+.fsb-fact strong {
+  color: var(--ink);
+  font-size: 46px;
+  line-height: 1.1;
+}
+
+.fsb-fact span {
+  color: var(--muted);
+  font-size: 24px;
+}
+
+/* ── Declaration: two towers ─────────────────────────────────────────── */
+
+.fsb-declare {
+  display: flex;
+  flex: 1;
+  gap: 90px;
+  margin-top: 34px;
+  min-height: 0;
+}
+
+.fsb-declare-side {
+  align-items: flex-end;
+  display: flex;
+  gap: 26px;
+}
+
+.fsb-tower {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  margin: 0;
+}
+
+.fsb-tower-body {
+  border: 3px solid var(--line);
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  width: 150px;
+}
+
+.fsb-tower-floor {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+  display: flex;
+  flex: 1;
+  font-size: 15px;
+  font-weight: 800;
+  justify-content: center;
+}
+
+.fsb-tower-floor.is-lit {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--sk-table-head-accent-fg, #fff);
+}
+
+.fsb-tower figcaption {
+  color: var(--sk-body, var(--muted));
+  font-size: 24px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.fsb-declare-side.is-accent .fsb-tower figcaption {
+  color: var(--teal);
+}
+
+.remotion-slide .fsb-declare-note {
+  color: var(--sk-body, var(--ink));
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 50px;
+}
+
+/* ── Rules ───────────────────────────────────────────────────────────── */
+
+.fsb-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.fsb-rule {
+  --fsb-judge: var(--muted);
+  align-items: center;
+  background: var(--sk-card-bg, #fff);
+  border: 2px solid var(--line);
+  border-left: 12px solid var(--fsb-judge);
+  border-radius: 14px;
+  display: flex;
+  gap: 28px;
+  padding: 20px 30px;
+}
+
+.fsb-rule.is-top {
+  --fsb-judge: var(--teal);
+}
+
+.fsb-rule.is-hand {
+  --fsb-judge: var(--mustard);
+}
+
+.fsb-rule.is-seen {
+  --fsb-judge: var(--sk-callout-good-edge, #6b8f5e);
+}
+
+.fsb-rule-mark {
+  color: var(--fsb-judge);
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  width: 84px;
+}
+
+.fsb-rule-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fsb-rule-text strong {
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+.fsb-rule-text span {
+  color: var(--sk-body, var(--muted));
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.fsb-rule-points {
+  color: var(--fsb-judge);
+  font-size: 44px;
+  font-weight: 900;
+}
+
+.remotion-slide .fsb-rules-total {
+  color: var(--sk-body, var(--ink));
+  font-size: 32px;
+  font-weight: 700;
+  margin: 30px 0 0;
+}
+
+.fsb-rules-total b {
+  color: var(--teal);
+}
+
+/* ── Building overview ───────────────────────────────────────────────── */
+
+.remotion-slide.fsb-building-slide,
+.remotion-slide.fsb-map-slide {
+  padding: 56px 82px 48px;
+}
+
+.remotion-slide .fsb-compact-head h1,
+.remotion-slide .fsb-map-head h1 {
+  font-size: 54px;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.fsb-section {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 22px;
+  width: 760px;
+}
+
+.fsb-roof {
+  border-bottom: 4px solid var(--teal);
+  margin: 0 40px 4px;
+}
+
+.fsb-section-floor {
+  align-items: center;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  gap: 18px;
+  height: 47px;
+  padding: 0 14px;
+  background: var(--sk-card-bg, #fff);
+}
+
+.fsb-section-floor .fsb-badge {
+  color: var(--teal);
+  font-size: 22px;
+  width: 52px;
+}
+
+.fsb-section-name {
+  flex: 1;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.fsb-section-cells {
+  display: flex;
+  gap: 6px;
+}
+
+.fsb-section-cells i {
+  border: 2px solid var(--muted);
+  border-radius: 4px;
+  display: block;
+  height: 24px;
+  width: 30px;
+}
+
+.fsb-ground {
+  border-top: 3px dashed var(--mustard);
+  margin: 6px 0 1px;
+  position: relative;
+}
+
+.fsb-ground span {
+  color: var(--mustard);
+  font-size: 18px;
+  font-weight: 800;
+  left: calc(100% + 16px);
+  line-height: 1;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.fsb-ground span:first-child {
+  bottom: 6px;
+}
+
+.fsb-ground span + span {
+  top: 6px;
+}
+
+/* ── Floor slides: elevator shaft + item rows ────────────────────────── */
+
+.remotion-slide.fsb-floor-slide {
+  padding: 72px 82px 72px 64px;
+}
+
+.fsb-floor-layout {
+  display: flex;
+  flex: 1;
+  gap: 56px;
+  min-height: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.fsb-shaft {
+  border: 3px solid var(--line);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 92px;
+}
+
+.fsb-shaft-floor {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  display: flex;
+  flex: 1;
+  font-size: 17px;
+  font-weight: 800;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.fsb-shaft-floor:last-of-type {
+  border-bottom: 0;
+}
+
+.fsb-shaft-floor.is-passed {
+  color: var(--sk-body, var(--ink));
+}
+
+.fsb-shaft-floor.is-here {
+  color: var(--sk-table-head-accent-fg, #fff);
+}
+
+.fsb-car {
+  background: var(--teal);
+  border-radius: 5px;
+  left: 3px;
+  position: absolute;
+  right: 3px;
+  z-index: 0;
+}
+
+.fsb-floor-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+.fsb-floor-head {
+  align-items: center;
+  display: flex;
+  gap: 34px;
+}
+
+.fsb-floor-badge {
+  align-items: center;
+  border: 5px solid var(--teal);
+  border-radius: 22px;
+  color: var(--teal);
+  display: flex;
+  flex-shrink: 0;
+  font-size: 84px;
+  height: 156px;
+  justify-content: center;
+  line-height: 1;
+  width: 184px;
+}
+
+.remotion-slide .fsb-floor-title h1 {
+  font-size: 62px;
+  line-height: 1.12;
+  margin: 0;
+}
+
+.fsb-floor-title h1 small {
+  color: var(--sk-body, var(--muted));
+  display: block;
+  font-size: 34px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.fsb-floor-title .sk-kicker {
+  color: var(--mustard);
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.fsb-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fsb-item {
+  align-items: center;
+  border-bottom: 2px solid var(--line);
+  display: flex;
+  gap: 24px;
+  min-height: 132px;
+  padding-bottom: 20px;
+}
+
+.fsb-item-no {
+  color: var(--muted);
+  flex-shrink: 0;
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  width: 40px;
+}
+
+.fsb-judge {
+  border: 4px dashed var(--muted);
+  border-radius: 14px;
+  flex-shrink: 0;
+  height: 96px;
+  width: 96px;
+}
+
+.fsb-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.fsb-item-text strong {
+  font-size: 40px;
+  line-height: 1.25;
+}
+
+.fsb-item-text span {
+  color: var(--sk-body, var(--muted));
+  font-size: 26px;
+  line-height: 1.35;
+}
+
+.fsb-items.is-dense {
+  gap: 14px;
+}
+
+.fsb-items.is-dense .fsb-item {
+  min-height: 108px;
+  padding-bottom: 14px;
+}
+
+.fsb-items.is-dense .fsb-judge {
+  height: 84px;
+  width: 84px;
+}
+
+/* ── Map ─────────────────────────────────────────────────────────────── */
+
+.fsb-map-head {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.fsb-map-legend {
+  display: flex;
+  gap: 14px;
+}
+
+.fsb-legend {
+  align-items: center;
+  white-space: nowrap;
+  display: flex;
+  font-size: 22px;
+  font-weight: 800;
+  gap: 8px;
+}
+
+.fsb-legend::before {
+  border-radius: 4px;
+  content: '';
+  display: block;
+  height: 24px;
+  width: 30px;
+}
+
+.fsb-legend.is-filled::before {
+  background: var(--teal);
+}
+
+.fsb-legend.is-blank::before {
+  border: 2px solid var(--muted);
+}
+
+.fsb-map {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 20px;
+  min-height: 0;
+}
+
+.fsb-map-row {
+  display: grid;
+  flex: 1;
+  gap: 5px;
+  min-height: 0;
+}
+
+.fsb-map-row.is-ground {
+  border-bottom: 3px dashed var(--mustard);
+  padding-bottom: 6px;
+}
+
+.fsb-map-floor {
+  align-items: center;
+  display: flex;
+  font-size: 17px;
+  font-weight: 700;
+  gap: 8px;
+  line-height: 1.1;
+}
+
+.fsb-map-floor b {
+  color: var(--teal);
+  font-size: 19px;
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.fsb-map-cell {
+  align-items: center;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  font-size: 16px;
+  font-weight: 700;
+  gap: 6px;
+  line-height: 1.1;
+  min-width: 0;
+  padding: 0 8px;
+  background: var(--sk-card-bg, #fff);
+}
+
+.fsb-map-cell i {
+  color: var(--muted);
+  flex-shrink: 0;
+  font-size: 13px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.fsb-map-cell.is-void {
+  background: transparent;
+  border: 0;
+}
+
+/* ── Summary ─────────────────────────────────────────────────────────── */
+
+.fsb-summary-slide {
+  justify-content: center;
+}
+
+.remotion-slide .fsb-summary-template {
+  border: 3px dashed var(--mustard);
+  border-radius: 16px;
+  align-self: flex-start;
+  color: var(--sk-ink-tone-fg, #fff);
+  font-size: 44px;
+  font-weight: 800;
+  margin: 40px 0 0;
+  padding: 18px 34px;
+}
