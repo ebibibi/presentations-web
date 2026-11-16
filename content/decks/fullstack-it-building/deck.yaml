@@ -1,0 +1,150 @@
+slug: fullstack-it-building
+title: 本当のフルスタックエンジニアとは？ITの全部を64項目で数えた
+summary: ここで言うフルスタックは Web 開発（画面＋サーバー＋DB）のことではありません。データセンターの床から、お客さんとの契約まで、ITの全部です。地下2階の電気とラックから、屋上14階のビジネスまで、16階建ての「ITビル」に64項目を並べ、インフラ屋24年の自分が1つずつ ◎ ○ △ × で判定して、何マス埋まるかを数えます。あなたも一緒に数えてみてください。
+status: draft
+visibility: public
+canvas: standard
+createdAt: "2026-11-16"
+updatedAt: "2026-11-16"
+tags:
+  - infrastructure
+  - career
+  - cloud
+  - azure
+  - hybrid-cloud
+  - windows-server
+slides:
+  - id: opening
+    title: あなたは、ITの何マスを埋められますか？
+    durationInFrames: 240
+    notes: |
+      冒頭フック。編集で、最後に出る64マスの地図と％をここに持ってくる（撮影中に「ここ冒頭で使って」と言う）。
+      「データセンターの床から、お客さんとの契約まで。ITの全部を16階・64項目に分けて、自分が何マス埋まるか数えます」
+  - id: declaration
+    title: フルスタック＝Web開発だけ、ではない
+    durationInFrames: 240
+    notes: |
+      宣言。「最近フルスタックって、Webの画面とサーバーが両方できる人のことを言うけど、私の言うフルスタックは違う。
+      データセンターの床からお客さんとの契約まで、全部です」
+      「全部できる人は、いないと思う。だから、何％やったかを数えます」
+  - id: rules
+    title: 判定ルール
+    durationInFrames: 240
+    notes: |
+      判定の4段階を読み上げる。◎ 仕事で責任を持った（3点）／○ 自分の手でやった（2点）／△ 見た・触った（1点）／× やってない（0点）。
+      64項目 × 3点 ＝ 192点満点。最後に「△以上に手が届いた項目の％」と「点数」を両方出す。
+      点数は自己申告。各項目の最後に判定を声に出す（「これは◎」「×！」）。×は一言感想があれば足す。
+  - id: building
+    title: ITビルの地図
+    durationInFrames: 240
+    notes: |
+      ビルの断面を見せる。地下2階の電気とラックから、屋上14階のビジネスまで、16階。各階4項目（13階は3、屋上は5）。
+      「今日はこれを、地下から1階ずつエレベーターで上がっていきます」
+  - id: floor-b2
+    title: B2 建物・電気（ファシリティ）
+    durationInFrames: 240
+    notes: |
+      地下2階。1つずつ、やったこと・やってないことを話して、最後に判定を声に出す。
+  - id: floor-b1
+    title: B1 ハードウェア
+    durationInFrames: 240
+    notes: |
+      地下1階。
+      ▶ 思い出すきっかけ: 自宅の GPU サーバー（DGX Spark）、自作PC
+  - id: floor-1f
+    title: 1F 社内ネットワーク
+    durationInFrames: 240
+    notes: |
+      1階。ここから地上。
+  - id: floor-2f
+    title: 2F インターネット・キャリア
+    durationInFrames: 240
+    notes: |
+      2階。
+      ▶ 思い出すきっかけ: ドメインと DNS（いまは Cloudflare）、Exchange のメール配送
+  - id: floor-3f
+    title: 3F サーバーOS
+    durationInFrames: 240
+    notes: |
+      3階。
+      ▶ 思い出すきっかけ: 2002年からの Windows インフラ、MVP（Azure Hybrid & Windows Server）、自宅の Ubuntu 機
+  - id: floor-4f
+    title: 4F 仮想化・コンテナ
+    durationInFrames: 240
+    notes: |
+      4階。
+      ▶ 思い出すきっかけ: ネストした Hyper-V の検証環境、S2D の作業、Azure Stack の案件
+  - id: floor-5f
+    title: 5F Windows 基盤サービス
+    durationInFrames: 240
+    notes: |
+      5階。
+  - id: floor-6f
+    title: 6F クライアント管理
+    durationInFrames: 240
+    notes: |
+      6階。
+  - id: floor-7f
+    title: 7F クラウド・SaaS
+    durationInFrames: 240
+    notes: |
+      7階。
+      ▶ 思い出すきっかけ: AZ-900 講座、個人のサイトを Cloudflare に寄せた
+  - id: floor-8f
+    title: 8F ID・セキュリティ
+    durationInFrames: 240
+    notes: |
+      8階。
+  - id: floor-9f
+    title: 9F データ
+    durationInFrames: 240
+    notes: |
+      9階。
+      ▶ 思い出すきっかけ: kintone のバックアップと復元を作った
+  - id: floor-10f
+    title: 10F 低レイヤー開発
+    durationInFrames: 240
+    notes: |
+      10階。
+      ▶ 思い出すきっかけ: 大学（筑波大 情報学類）の講義・実習で触っていないか
+  - id: floor-11f
+    title: 11F アプリ開発
+    durationInFrames: 240
+    notes: |
+      11階。いわゆる「フルスタック」はこの階だけの話、と一言。
+      ▶ 思い出すきっかけ: PowerShell の自動化、Python のボット、TypeScript の Web アプリ。何言語書いたか数えると面白い
+  - id: floor-12f
+    title: 12F 自動化・DevOps
+    durationInFrames: 240
+    notes: |
+      12階。
+      ▶ 思い出すきっかけ: GitHub Actions のセルフホストランナー、Bicep、Ansible、ローカルの AI
+  - id: floor-13f
+    title: 13F 運用
+    durationInFrames: 240
+    notes: |
+      13階。この階は3項目。
+  - id: floor-14f
+    title: 14F（屋上）ビジネス
+    durationInFrames: 240
+    notes: |
+      屋上14階。技術の外の世界。この階は5項目。
+      ▶ 思い出すきっかけ: 書籍『Windowsインフラ管理者入門』、＠IT の連載、HCCJP、YouTube
+  - id: map
+    title: 地図を見る
+    durationInFrames: 240
+    notes: |
+      64マスの地図（判定の色は編集で重ねる）。どこが埋まって、どこが空白か。インフラ屋の形が見える。
+      「意外にやってた所」「一番やりたかった空白」を話す。最後に「△以上に届いた項目の％」と「点数（192点満点）」を言う。
+  - id: with-ai
+    title: AI込みなら？
+    durationInFrames: 240
+    notes: |
+      相棒のAIも乗せていいことにしたら、どの階まで届くか。
+      AIで届くようになった階と、AIでも届かない階を話す（ラックマウントはAIにはできない）。
+  - id: summary
+    title: あなたは何マス？
+    durationInFrames: 240
+    notes: |
+      視聴者へ「あなたは何マス埋まりますか？コメントで教えてください」。
+      このあと「ここからリアクション素材」と言って、1分ほど聞き顔（視線は右下）。
