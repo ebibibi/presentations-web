@@ -11115,3 +11115,60 @@ main {
 .paas-post-side a {
   word-break: break-all;
 }
+
+/* copilot-managed-runtime: the mascot MC and the comment screenshot */
+.cmr-mc {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.cmr-mc-img {
+  flex: none;
+  height: 220px;
+  width: auto;
+}
+
+.cmr-mc-bubble {
+  position: relative;
+  margin: 0 0 48px;
+  padding: 22px 28px;
+  border-radius: 24px;
+  background: var(--sk-card-bg, #fff);
+  border: 2px solid var(--mustard, #c9a46a);
+  color: var(--sk-ink, #222);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.cmr-mc-bubble::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  bottom: 26px;
+  width: 24px;
+  height: 24px;
+  background: inherit;
+  border-left: 2px solid var(--mustard, #c9a46a);
+  border-bottom: 2px solid var(--mustard, #c9a46a);
+  transform: rotate(45deg);
+}
+
+.cmr-mc-name {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--coral, #ea6a47);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+.cmr-comment-shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 8px 0 28px;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
