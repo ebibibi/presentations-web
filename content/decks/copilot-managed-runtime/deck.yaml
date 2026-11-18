@@ -1,11 +1,11 @@
 slug: copilot-managed-runtime
-title: Copilot Managed Runtime登場｜AIで作った社内アプリをMicrosoftが統制つきで預かる時代へ
-summary: 「Power Automateは役割を終えつつある」回の最後に「誰か作ってみませんか」と話した、市民開発者がAIで安全にアプリを作れる基盤。調べたら、Microsoftが2026年9月から Copilot Managed Runtime としてプレビュー提供していました。中身は普通のWebアプリ、データと統制はPower Platform。外への通信はブラウザで塞ぎ、出口はコネクタだけ。Azureをそのまま渡すよりはるかに統制された置き場所です。公式ドキュメントで分かった仕組み・既定の統制・料金・弱いところをまとめます。
+title: Copilot Code＋Managed RuntimeがMicrosoftの答え｜Igniteで正式提供へ
+summary: 前回「誰か作って」と話した市民開発×AIの基盤は、Copilot Codeで作り、Managed Runtimeで配る組み合わせへ。Ignite 2026のRuntime GA・CodeのGA予定・Fabric連携とローカル開発の追加プレビューを確認。社内Webアプリの既定の統制、作成と実行の別課金、運用で確認すべき点を公式情報で整理します。
 status: draft
 visibility: public
 canvas: standard
-createdAt: "2026-11-16"
-updatedAt: "2026-11-16"
+createdAt: 2026-11-16
+updatedAt: 2026-11-18
 tags:
   - power-platform
   - copilot
@@ -16,13 +16,12 @@ slides:
   - id: opening
     title: 前回の「誰か作って」は、もうあった
     durationInFrames: 300
-    notes: |
+    notes: |-
       【えびフライ司会で入る】
-      えびフライ：「胡田さん、前回の動画の最後で『誰か作ってみませんか』って言ってたよね？」
-      胡田：言いました。市民開発者がAIに言葉で頼むだけで、安全にアプリが動く基盤。
-      えびフライ：「それ、もうあるらしいよ」
-      答えを先に言い切る。Microsoft の Copilot Managed Runtime。2026年9月からパブリックプレビュー。
-      AIで作った社内アプリを、Microsoftがテナントの中で、統制をかけた状態で預かって動かしてくれる。今日はこれを調べた話。
+      えびフライ：「胡田さん、前回『誰か作ってみませんか』って言ってたよね？ それ、もうあるらしいよ！」
+      胡田：Microsoftの答えは、Copilot Codeで作って、Copilot Managed Runtimeで配る組み合わせでした。
+      9月にプレビューが始まり、11月17日のIgniteではRuntimeのGAと展開開始を発表。Codeは今後数週間でGA予定です。
+      最初に答えを出してから、前回の話、コメントで教えてもらった経緯、新発表、仕組みの順で話します。実機検証ではなく公式資料の調査です。
   - id: last-time
     title: 前回の最後に言ったこと
     durationInFrames: 300
@@ -46,31 +45,41 @@ slides:
       「Microsoftとしては Copilot Managed Runtime に誘導するつもりじゃないでしょうか。Copilot Code でスムーズにアプリ作ってデプロイできるので。実行も従量課金なのはもやっとしますが。」
       「従量課金がもやっと」も含めて、ちゃんと調べてみた。ここから本題。
       ※ドキュメントだけの調査。実機では試していない、と一言添える。
+  - id: ignite-update
+    title: Igniteで何が変わったか
+    durationInFrames: 330
+    notes: 11月17日付の公式発表でRuntimeはGAになりテナントへの展開を開始。Codeは現時点でFrontier、公式ブログでは今後数週間でGA予定。Fabric連携とCopilot Studioエージェント／ワークフローのローカル開発は別途プレビュー。すべてGAという言い方はしません。
+  - id: copilot-code
+    title: Codeで作り、Runtimeで配る
+    durationInFrames: 330
+    notes: Codeは自然言語でアプリ等を作り、プレビューを見ながら会話で修正する体験。許可に応じM365の仕事の文脈も使える。GitHub CopilotそのものではなくGitHub連携も任意。ローカル／クラウドで開発でき、対応アプリをRuntimeへ発行する。すべてのスクリプトや成果物がRuntimeで動くわけではない。作成中のネットワーク・コマンド・フォルダ権限と、発行後のアプリの統制は分けて説明する。
+  - id: new-previews
+    title: 新発表の追加プレビュー
+    durationInFrames: 300
+    notes: Fabric連携はアプリ固有の記録を永続化する追加の選択肢。最新Learnでは現在の対応はDatabaseのみで、他のバックエンド機能は将来予定。既存のSharePointやDataverseの接続を置換するものではなく任意。組織の環境グループ設定も確認が必要。もう一つはStudioエージェントとワークフローをローカルの道具で開発・編集し、CLIでCopilot Studioへ発行するpublic preview。エージェントもブラウザアプリと同じCSPで動くという意味ではない。
   - id: what-is
     title: Copilot Managed Runtimeとは
     durationInFrames: 330
-    notes: |
-      一言でいうと、AIで作った社内向けの業務アプリを、Microsoftがテナントの中でホストする場所。
-      作る入口は4つ。Cowork（チャットで頼む。Frontier参加テナントのみ）、Copilot Studio、Copilot Code、それと開発者向けの CLI（ms コマンド）。どこで作っても同じものができる。
-      使う人は managedapps.cloud.microsoft というポータルから開く。管理者は M365 管理センターの「アプリ」で全部を一覧できる。
-      商用クラウドの対象テナントには、何もしなくても自動で有効になっている。
+    notes: |-
+      ここからは、Runtime上で動かす社内Webアプリに絞って説明します。Runtime全体はアプリ以外へも拡張していますが、同じ仕様だとは扱いません。
+      作る側はCode、Cowork、Copilot Studio、SDK/CLI、Lovableなど。どの道具からでも対応するプロジェクトを管理されたホストへつなぐ、という分離です。
+      利用者は共有されたアプリを開き、管理者はM365管理センターで棚卸し・利用状況・正常性を確認。環境・データポリシーの詳細はPower Platform管理センターも使います。
+      初回のアプリ作成か管理者のSet up governanceで既定の統制が初期化されます。利用できる人は作成経路と支出ポリシーで制御するので、全社員が無条件に使えるという意味ではありません。
   - id: app-shape
     title: 中身は普通のWebアプリ、裏はPower Platform
     durationInFrames: 330
-    notes: |
-      最初に気になったのは「Power Apps みたいなローコードなのか、普通のアプリなのか」。答えは両方。
-      中身は React と TypeScript と Vite。AI に「アプリ作って」と頼むとよく出てくる構成そのもの。Power Fx もフローも使わない。git push するとビルドされる。
-      一方で、データの取り方は Power Platform のコネクタ（1,500以上）。アプリは作った人の個人開発環境、つまり Power Platform のマネージド環境に置かれる。DLP やコネクタポリシーも Power Platform のもの。
-      前身は2025年の Power Apps code apps。それを AI 時代向けに作り直して、M365 側に持ってきた感じ。
+    notes: |-
+      標準的な社内Webアプリの構成はReact・TypeScript・Vite。画面とロジックは普通のコード、データ接続と環境・ポリシーはPower Platformの基盤を活用します。
+      コネクタのカタログが広くても、既定ですべて使えるわけではありません。次のスライドで許可リストを説明。
+      Power Apps code appsに近い設計ですが、公式にPower Appsの廃止や全面置換が発表された、とは言いません。
   - id: two-walls
     title: 統制の要は「出口を一本にする」
     durationInFrames: 360
-    notes: |
-      ここが一番おもしろかった。AI が書いたコードを、どうやって信用せずに済ませているか。
-      壁1：ブラウザの Content Security Policy。既定で connect-src が 'self'。アプリ自身のサーバー以外へは fetch できない。AI が勝手な外部 API を叩けない。
-      壁2：外へ出る道はコネクタだけ。既定で許可されているのは、Microsoft製・正式版・Entra認証のみ・テナント内で完結する18個だけ。SharePoint、Outlook、Teams、Excel、Dataverse など。サードパーティやカスタムコネクタは除外。
-      しかも許可したコネクタの中の「HTTP要求を送信」や「スクリプト実行」のような抜け道の操作は、既定で止めてある。
-      つまり、中身は自由に書かせて、出口を一本にして、そこで締める。AI が書くコードを前提にした、理にかなった作り。
+    notes: |-
+      社内Webアプリの既定の統制の話。ブラウザのCSPはconnect-srcがselfで、外部へのfetchやWebSocketを制限します。
+      データ接続は許可コネクタが関所。11月18日確認の公式文書では19個で、以前の18個という説明から更新しています。Microsoft製・GA・Entra認証などの基準があり、任意のHTTP要求やOffice Scripts実行などは既定で制限されます。
+      ただし管理者はCSPやコネクタ設定を変えられます。「外部通信は絶対できない」「AIのコードを一切レビューしなくてよい」とは言いません。誤った更新・過剰な取得・業務ロジックの欠陥は、本人の権限内でも起こり得ます。
+      このCSPは発行後のアプリの話。Codeエージェント自体の作成中の権限や、ほかのワークロードの保護とは分けてください。
   - id: defaults
     title: ほかの既定の統制
     durationInFrames: 300
@@ -81,45 +90,42 @@ slides:
   - id: vs-azure
     title: Azureをそのまま渡すより、はるかに統制されている
     durationInFrames: 330
-    notes: |
-      前回の話に戻ると、怖かったのは「1万人に Azure サブスクリプションと AI エージェントを渡す」こと。
-      それと比べると、これは別物。Azure なら何でも作れるし、どこへでも通信できるし、統制は全部自分で作らないといけない。
-      こっちは作れるものがブラウザで動く社内アプリに絞られる代わりに、通信・データ・お金・棚卸しの安全弁が最初から付いている。
-      まさに前回言っていた「危ないことはできない、安全弁つき、入口はAI」の形。
+    notes: |-
+      比較しているのは、Azureを各自に渡すだけの場合と、社内Webアプリ用の管理基盤を使う場合です。AzureにもPolicy・RBAC・予算などの統制機能があり、統制できないという意味ではありません。
+      Runtimeは対象を絞る代わりに、既定の通信制限・データ権限・支出ポリシー・棚卸しを用意します。管理者の設定変更後は実効状態を確認します。
+      前回ほしいと言った「入口はAI、統制つきの置き場所」にかなり近い、という評価です。
   - id: ms-aim
     title: Microsoftはここを狙っている
     durationInFrames: 240
-    notes: |
-      前回の話とつなげると流れが見える。Power Automate や Power Apps の作る画面からは Copilot が外されていって、AI で作る場所は外の AI エージェントへ。
-      その一方で、AI に作らせたものを置く場所はこうしてちゃんと用意している。作るのは AI、置き場所と統制は Microsoft。
-      コメントの「Microsoftはここに誘導するつもりでは」という読みは、たぶん当たっていると思う。
+    notes: |-
+      ここは私の見立てです。Codeが作成体験、Runtimeが配置後の運用と統制という役割分担は公式資料で確認できます。その組み合わせを「市民開発×AIに対するMicrosoftの答え」と読むのが今回の主張。
+      前回のPower Automateの話への続編ですが、個別画面のCopilot廃止がこの戦略のためだったとか、Power AutomateやPower Apps全体が廃止されると公式が認めた、とまでは言いません。
+      Code以外の開発ツールも受け入れるので、作るツールを一社に限定せず、動かす共通基盤をMicrosoftが担う構図です。
   - id: money
     title: お金：Power Platformだから高い？
     durationInFrames: 330
-    notes: |
-      コメントの「従量課金がもやっと」の話。
-      使う人1人ずつに、Power Apps Premium か Copilot Credits が要る。Credits なら API 呼び出し1回が 0.1 クレジット、つまり約0.1円（0.001ドル）。
-      公式の試算では、25人のチームのアプリで月12〜22ドル、300人の部門アプリで月59〜119ドル。Premium を全員に配るよりはずっと安い。
-      ただし注意が3つ。起動時に読み込む JS や画像も1ファイルずつ課金されること。M365 E3/E5 に付いている Power Apps の利用権では動かないこと。作る側（Cowork・Code・Copilot Studio）は別料金なこと。
-      高いというより、1回ごとの従量課金で読みにくい。もやっとするのはそこだと思う。
+    notes: |-
+      作成と実行は別のメーター。Codeで作る側は対象のCopilotライセンスに加えCopilot Creditsと支出ポリシーが必要です。GitHub接続は任意で、Codeの利用にGitHub Copilotライセンスが必須という意味ではありません。
+      Runtimeで使う側は各人にPower Apps PremiumかRuntimeを含む支出ポリシーが必要。CreditsではAPI呼び出し1回0.1クレジット、US$0.001。為替で変わる円額は断定しません。
+      公式の月22日稼働の例では、25人が1日2回起動・各10データ呼び出しで月12.10〜22ドル、300人が1日1回起動・各8データ呼び出しで59.40〜118.80ドル。起動を1呼び出しか10呼び出しかで幅が出ます。起動時のJS・CSS・画像も1ファイルずつ数えます。これは作成費やWork IQなどの専門サービスを含む総額ではありません。
+      Premiumは通常の実行時クレジットを消費しませんが、リクエスト上限超過や専門サービスは別。M365 E3/E5付属のPower Apps権利だけでは動きません。Fabric連携をこのRuntime試算だけで無料と判断せず、個別条件も確認してください。
   - id: weak-points
     title: まだ弱いところ
     durationInFrames: 270
-    notes: |
-      公平に、ドキュメントに書いてある弱いところ。
-      管理者に見えるのは「どのコネクタを使っているか」まで。実際にどこへ何を送ったか、利用者ごとのデータ権限までは見えない、と FAQ に明記されている。
-      開発・テスト・本番と環境を分ける仕組み（ALM）はまだない。ゲストへの共有はオンにしてもまだ開けない（既知の不具合）。
-      そして全体がまだプレビュー。仕様は変わる。
+    notes: |-
+      RuntimeはGAですが全テナントへの展開完了や全機能GAとは区別します。CodeはGA予定、Fabric連携とStudioローカル開発はプレビューです。
+      ゲストが開けない問題は11月18日確認のgovernance文書にまだ既知の不具合としてあります。
+      最新FAQはコネクタ・データソース・依存関係の可視化と、アプリ権限とデータ権限が別であることを説明しています。旧版の「実際の送信先等は一切見えない」という断定は引き継ぎません。
+      開発・テスト・本番の環境分離が完全に不可能という断定も、現行文書で裏付けられないため外しました。バージョン管理と、組織の環境分離・承認・引き継ぎ設計は別の問題です。
+      実機未検証なので、業務要件に合うか、所有者退職時・更新・廃止をどう扱うかは試用で確認する必要があります。
   - id: summary
     title: まとめ
     durationInFrames: 300
-    notes: |
-      これが本当に良いものかどうかは、正直まだ分からない。実際に試してもいないし、プレビューだし。
-      でも「市民開発者 × AI 開発」の置き場所としては、筋がいいと思う。前回自分が欲しいと言ったものに、かなり近い。
-      管理者の方は今日これだけ見ておいてほしい。Copilot Studio からアプリを作る経路は既定でオンになっている。使う人には Premium か支出ポリシーが要る。方針を決めておこう。
-      えびフライ：「ぼくが作らなくてよかった〜」
-      みなさんはどう思いますか、コメントで教えてください。前回みたいに、また教えてもらえると助かります。
+    notes: |-
+      Microsoftの答えはCodeで作り、Runtimeで配る組み合わせ。RuntimeはGAになりましたが、実機で試していないので「本当に良い」はまだ判断できません。
+      管理者はCodeの利用対象と支出ポリシー、Runtime利用者のPremiumか実行支出ポリシー、CSP・コネクタ・共有・データ権限、所有者と保守方針を確認してください。
+      えびフライ：「ぼくが作らなくてよかった〜。みんなの意見もコメントで教えてね！」
   - id: sources
     title: 出典
     durationInFrames: 180
-    notes: 公式ドキュメント（Microsoft Learn）。どれもプレビューの文書なので、最新は自分で確認を。
+    notes: 2026年11月18日確認。11月17日付のIgnite発表とRuntime GA発表、最新Learnで照合。古いプレビュー文書や記事が検索に残るため、公開日・更新日・対象機能ごとの提供段階を見る。
