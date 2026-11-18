@@ -18,6 +18,9 @@ export const slides: SlideModule['slides'] = [
   { id: 'last-time', render: (props) => <LastTimeSlide {...props} /> },
   { id: 'not-studied', render: (props) => <NotStudiedSlide {...props} /> },
   { id: 'comment', render: (props) => <CommentSlide {...props} /> },
+  { id: 'ignite-update', render: (props) => <IgniteUpdateSlide {...props} /> },
+  { id: 'copilot-code', render: (props) => <CopilotCodeSlide {...props} /> },
+  { id: 'new-previews', render: (props) => <NewPreviewsSlide {...props} /> },
   { id: 'what-is', render: (props) => <WhatIsSlide {...props} /> },
   { id: 'app-shape', render: (props) => <AppShapeSlide {...props} /> },
   { id: 'two-walls', render: (props) => <TwoWallsSlide {...props} /> },
@@ -35,16 +38,19 @@ const ASSET = '/decks/copilot-managed-runtime'
 type Pose = 'standing' | 'face-up' | 'dark' | 'glasses-flash' | 'ageage'
 
 const SOURCES = [
+  { label: 'Ignite 2026：Copilot の新発表（11/17）', url: 'https://www.microsoft.com/en-us/copilot/blog/2026/11/17/copilot-at-microsoft-ignite-expanding-whats-possible-with-intelligence-built-for-work/' },
+  { label: 'Runtime GA と追加プレビュー（11/17）', url: 'https://techcommunity.microsoft.com/blog/copilot-managed-runtime-blog/copilot-managed-runtime-is-now-generally-available-with-additional-new-preview-f/4571846' },
+  { label: 'Copilot Code：作成・共有・権限', url: 'https://learn.microsoft.com/en-us/copilot/code/overview' },
   {
-    label: 'What is Microsoft Copilot Managed Runtime (preview)',
+    label: 'What is Microsoft Copilot Managed Runtime',
     url: 'https://learn.microsoft.com/en-us/microsoft-365/copilot-managed-runtime/',
   },
   {
-    label: 'Copilot Managed Runtime overview and key concepts for admins (preview)',
+    label: 'Copilot Managed Runtime overview and key concepts for admins',
     url: 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/apps/',
   },
   {
-    label: 'Review default governance settings for apps (preview)',
+    label: 'Review default governance settings for apps',
     url: 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/apps/governance',
   },
   {
@@ -52,12 +58,8 @@ const SOURCES = [
     url: 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/apps/licensing-credits',
   },
   {
-    label: 'FAQ about Microsoft Copilot Managed Runtime (preview)',
+    label: 'FAQ about Microsoft Copilot Managed Runtime',
     url: 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/apps/faq-about-apps',
-  },
-  {
-    label: 'Build apps with the Copilot Managed Runtime SDK (preview)',
-    url: 'https://learn.microsoft.com/en-us/microsoft-365/copilot-managed-runtime/developer/apps/',
   },
   {
     label: '前回の動画：Power Automateは役割を終えつつある、と私は思う',
@@ -85,7 +87,7 @@ function OpeningSlide({ frame }: SlideRenderContext) {
       frame={frame}
       kicker="前回の続き ─ えびフライの司会でお送りします"
       heading={'「誰か作って」と\n言った基盤、もうあった'}
-      lead="Copilot Managed Runtime ─ Microsoft が2026年9月からプレビュー提供"
+      lead="Copilot Code ＋ Managed Runtime ─ 作る入口と、統制つきの置き場所"
     >
       <EbiFry
         frame={frame}
@@ -144,8 +146,54 @@ function CommentSlide({ frame }: SlideRenderContext) {
         alt="前回の動画に寄せられた @TakuYone さんのコメントのスクリーンショット"
       />
       <Callout frame={frame} icon="🔍" label="今回やったこと">
-        <p>Microsoft Learn の公式ドキュメントを読んで整理した（実機ではまだ試していない）。「従量課金がもやっと」も確かめる。</p>
+        <p>Ignite 2026 の新発表と最新の公式ドキュメントで確認した（実機ではまだ試していない）。「従量課金がもやっと」も確かめる。</p>
       </Callout>
+    </Slide>
+  )
+}
+
+function IgniteUpdateSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="Ignite 2026 ─ 11月17日の発表" heading={'「もうあった」から\n正式提供の段階へ'} />
+      <ComparisonTable frame={frame} columns={[{ label: '提供段階を分ける', accent: true }]} rows={[
+        { label: 'Managed Runtime', cells: ['GAを発表。テナントへの展開を開始'] },
+        { label: 'Copilot Code', cells: ['現在はFrontier。今後数週間でGA予定'] },
+        { label: 'Fabric連携', cells: ['アプリ用データベース。Frontier public preview'] },
+        { label: 'エージェント開発', cells: ['Studioのローカル開発＋CLI発行。public preview'] },
+      ]} />
+      <Callout frame={frame} icon="📅" label="2026年11月18日時点"><p>RuntimeのGAと、すべての機能・全テナントへの展開完了は別。</p></Callout>
+    </Slide>
+  )
+}
+
+function CopilotCodeSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="Copilot Code ＋ Copilot Managed Runtime" heading={'言葉で作る。直す。\n組織の中で配る。'} />
+      <DiagramFrame frame={frame} caption="作る道具と、配った後の置き場所" note="GitHub Copilotとは別の体験。GitHub連携は任意">
+        <FlowDiagram frame={frame} items={[
+          { heading: 'Copilot Code', body: '要望を伝え、プレビューで直す' },
+          { heading: 'Managed Runtime', body: '対応アプリを発行。認証と統制', accent: true },
+          { heading: '同僚が使う', body: '管理者が一覧・利用状況・正常性を確認' },
+        ]} />
+      </DiagramFrame>
+      <Callout frame={frame} tone="warn" icon="🔑" label="作成中と、発行後の統制は別"><p>Codeはローカル／クラウドで作れる。ローカルの権限確認と、発行後のRuntimeのCSPを混同しない。</p></Callout>
+    </Slide>
+  )
+}
+
+function NewPreviewsSlide({ frame }: SlideRenderContext) {
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="Igniteで増えた選択肢 ─ ここはプレビュー" heading={'データの置き場所と\n開発のやり方も広がる'} />
+      <ComparisonTable frame={frame} columns={[{ label: '追加されたこと', accent: true }]} rows={[
+        { label: 'Fabric連携', cells: ['アプリ固有の記録を保存するDB。任意の連携'] },
+        { label: '既存データ', cells: ['SharePoint・Dataverseの接続も引き続き使える'] },
+        { label: 'ローカル開発', cells: ['Copilot Studioのエージェント／ワークフローを編集'] },
+        { label: 'CLIで発行', cells: ['Studioへ戻して共同開発。Gitでソース管理'] },
+      ]} />
+      <Callout frame={frame} icon="🧭" label="今回詳しく見るのは、社内Webアプリ"><p>Runtimeの全ワークロードに、同じ制約・課金・CSPが適用されるとは限らない。</p></Callout>
     </Slide>
   )
 }
@@ -158,7 +206,7 @@ function WhatIsSlide({ frame }: SlideRenderContext) {
         kicker="Copilot Managed Runtime とは"
         heading={'AIで作った社内アプリを\nMicrosoftがテナント内で預かる'}
       />
-      <DiagramFrame frame={frame} caption="作る → 預ける → 使う・管理する" note="対象の商用テナントでは自動で有効。管理者の操作は不要">
+      <DiagramFrame frame={frame} caption="作る → 預ける → 使う・管理する" note="GAの展開が開始。作成経路ごとに利用設定・支出ポリシーを確認">
         <FlowDiagram
           frame={frame}
           items={[
@@ -186,13 +234,13 @@ function AppShapeSlide({ frame }: SlideRenderContext) {
         rows={[
           { label: '画面とロジック', cells: ['React + TypeScript + Vite', '普通のWebアプリ'] },
           { label: 'ソース', cells: ['本物の Git（push でビルド）', '普通のWebアプリ'] },
-          { label: 'データ', cells: ['コネクタ（1,500以上）経由', 'Power Platform'] },
+          { label: 'データ', cells: ['Power Platform コネクタ経由', 'Power Platform'] },
           { label: '置き場所', cells: ['作った人の個人開発環境', 'Power Platform'] },
           { label: '統制', cells: ['DLP・コネクタポリシー', 'Power Platform'] },
         ]}
       />
       <Callout frame={frame} icon="🧬" label="前身">
-        <p>2025年の Power Apps code apps とほぼ同じ作り。ホストが変わり、Git 内蔵と M365 管理センターでの管理が加わった。</p>
+        <p>Power Apps code apps と共通する設計。普通のコードで作り、Power Platform の統制を使う。</p>
       </Callout>
     </Slide>
   )
@@ -203,7 +251,7 @@ function TwoWallsSlide({ frame }: SlideRenderContext) {
     <Slide>
       <SlideHeading
         frame={frame}
-        kicker="AIが書いたコードを、信用しなくて済む仕組み"
+        kicker="既定の統制 ─ コードの安全性・正しさの確認も必要"
         heading={'中身は自由、\n出口を一本にして締める'}
       />
       <DiagramFrame frame={frame} caption="アプリからデータへの道" note="外部APIへの fetch はブラウザが止める（CSP の connect-src 'self'）">
@@ -211,7 +259,7 @@ function TwoWallsSlide({ frame }: SlideRenderContext) {
           frame={frame}
           items={[
             { heading: 'AIが書いたアプリ', body: 'ブラウザで動く。外への通信は自分のサーバーだけ' },
-            { heading: 'コネクタ（関所）', body: '既定はMicrosoft製・Entra認証のみの18個だけ', accent: true },
+            { heading: 'コネクタ（関所）', body: '既定はMicrosoft製・Entra認証のみの19個（11/18確認）', accent: true },
             { heading: 'SharePoint ほか', body: '利用者本人の権限で読み書き' },
           ]}
         />
@@ -249,17 +297,17 @@ function VsAzureSlide({ frame }: SlideRenderContext) {
       <SlideHeading
         frame={frame}
         kicker="前回「怖い」と言ったものと比べる"
-        heading={'Azureをそのまま渡すより\nはるかに統制されている'}
+        heading={'Azureを無設定で渡すより\n統制が最初から付いている'}
       />
       <ComparisonTable
         frame={frame}
-        columns={[{ label: '1万人にAzureを配る' }, { label: 'Copilot Managed Runtime', accent: true }]}
+        columns={[{ label: 'Azureを個別に渡すだけ' }, { label: 'Copilot Managed Runtime', accent: true }]}
         rows={[
           { label: '作れるもの', cells: ['何でも', 'ブラウザで動く社内アプリ'] },
-          { label: '外への通信', cells: ['どこへでも', 'コネクタだけ'] },
+          { label: '外への通信', cells: ['制限を別途設計', '既定はCSP＋許可コネクタ'] },
           { label: 'データ', cells: ['設計しだい', '利用者本人の権限'] },
           { label: 'お金', cells: ['予算の仕組みは自分で組む', '1人ごとの月の上限'] },
-          { label: '棚卸し', cells: ['自分で作る', '管理センターに全部出る'] },
+          { label: '棚卸し', cells: ['資産管理を構成', '管理センターにアプリ一覧'] },
         ]}
       />
     </Slide>
@@ -273,7 +321,7 @@ function MsAimSlide({ frame }: SlideRenderContext) {
         frame={frame}
         kicker="胡田の見立て"
         heading={'作るのは AI\n置き場所と 統制は Microsoft'}
-        lead="作る画面からCopilotを外し、AIで作ったものの置き場所を用意した。狙いは市民開発者 × AI開発"
+        lead="Codeで作り、Managed Runtimeで配る。市民開発 × AIへの答えとして読む"
         start={1}
         enter={['slide', 'pop']}
       />
@@ -287,7 +335,7 @@ function MoneySlide({ frame }: SlideRenderContext) {
       <SlideHeading
         frame={frame}
         kicker="コメントの「従量課金がもやっと」"
-        heading={'API 1回 = 0.1クレジット\n（約0.1円）'}
+        heading={'API 1回 = 0.1クレジット\n（US$0.001）'}
         lead="使う人1人ずつに Power Apps Premium か Copilot Credits が要る"
       />
       <ComparisonTable
@@ -313,15 +361,15 @@ function MoneySlide({ frame }: SlideRenderContext) {
 function WeakPointsSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="公平に" heading="まだ弱いところ" lead="どれも公式ドキュメントに書いてある" />
+      <SlideHeading frame={frame} kicker="公平に" heading="GAでも確認すべきこと" lead="GAと追加プレビュー、既定値と設定変更後を分ける" />
       <ComparisonTable
         frame={frame}
         columns={[{ label: '現時点の制約', accent: true }]}
         rows={[
-          { label: '見えない所', cells: ['実際の送信先、実行した操作、利用者ごとのデータ権限'] },
-          { label: '環境分け', cells: ['開発・テスト・本番を分ける仕組みはまだない'] },
+          { label: '権限', cells: ['アプリの共有権限と、データの権限は別管理'] },
+          { label: '運用設計', cells: ['所有者の退職・引き継ぎ・更新・廃止は組織で設計'] },
           { label: 'ゲスト', cells: ['共有をオンにしても、まだ開けない（既知の不具合）'] },
-          { label: '状態', cells: ['全体がプレビュー。仕様は変わる'] },
+          { label: '提供段階', cells: ['RuntimeはGA展開中。追加機能はプレビュー'] },
         ]}
       />
     </Slide>
@@ -335,13 +383,13 @@ function SummarySlide({ frame }: SlideRenderContext) {
         frame={frame}
         kicker="まとめ"
         heading={'本当に良いかは まだ謎\nでも、筋はいい'}
-        lead="市民開発者 × AI開発 の置き場所としては、前回欲しいと言ったものにかなり近い"
+        lead="Code ＋ Managed Runtime は、前回欲しいと言った「入口はAI、統制つきの基盤」に近い"
       />
       <Callout frame={frame} icon="✅" label="管理者が今日確認すること">
         <ul>
-          <li>Copilot Studio からアプリを作る経路は既定でオン（CLI は既定でオフ）</li>
+          <li>Codeの対象者・支出ポリシーと、ほかの作成経路の設定</li>
           <li>使う人には Power Apps Premium か、支出ポリシーが必要</li>
-          <li>どこまで許すか、方針を先に決めておく</li>
+          <li>通信・共有・データ権限と、アプリの所有者・保守方針</li>
         </ul>
       </Callout>
       <EbiFry frame={frame} pose="glasses-flash" quote="ぼくが作らなくてよかった〜。みんなの意見もコメントで教えてね！" delay={56} />
@@ -352,8 +400,8 @@ function SummarySlide({ frame }: SlideRenderContext) {
 function SourcesSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="Sources" heading="出典" lead="どれもプレビューの文書。最新は自分で確認を" />
-      <Callout frame={frame} icon="📘" label="一次情報（Microsoft Learn）">
+      <SlideHeading frame={frame} kicker="Sources" heading="出典" lead="2026年11月18日確認 ─ 発表の提供段階と管理ドキュメントを照合" />
+      <Callout frame={frame} icon="📘" label="公式発表・Microsoft Learn・前回の動画">
         <ul>
           {SOURCES.map((s) => (
             <li key={s.url}>
