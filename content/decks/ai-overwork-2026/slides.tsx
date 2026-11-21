@@ -99,7 +99,7 @@ function ConfessionSlide({ frame }: SlideRenderContext) {
 function TimelineSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="何が起きたか" heading="楽しくて、止まれなかった" />
+      <SlideHeading frame={frame} kicker="何が起きたか" heading="効率は上がったが人間がついていけなかった" />
       <Timeline
         frame={frame}
         orientation="vertical"
