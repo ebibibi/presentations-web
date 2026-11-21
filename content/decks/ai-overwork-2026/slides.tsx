@@ -22,6 +22,7 @@ export const slides: SlideModule['slides'] = [
   { id: 'confession', render: (props) => <ConfessionSlide {...props} /> },
   { id: 'timeline', render: (props) => <TimelineSlide {...props} /> },
   { id: 'chart-load', render: (props) => <LoadChartSlide {...props} /> },
+  { id: 'bp-app', render: (props) => <BpAppSlide {...props} /> },
   { id: 'chart-hours', render: (props) => <HoursChartSlide {...props} /> },
   { id: 'chart-flow', render: (props) => <FlowChartSlide {...props} /> },
   { id: 'section-why', render: (props) => <SectionWhySlide {...props} /> },
@@ -66,8 +67,8 @@ function OpeningSlide({ frame }: SlideRenderContext) {
         columns={[{ label: '何が起きたか', accent: true }]}
         rows={[
           { label: '指示', cells: ['多い週で690件。そのうち夜9時〜朝5時が185件'] },
-          { label: '朝の血圧', cells: ['10月前半 131〜135/88 → 143.8/96.5'] },
-          { label: '受診', cells: ['胸の痛みと頭痛。「痛かったらすぐ救急車」'] },
+          { label: '朝の血圧の平均', cells: ['10月前半 131〜135/88 → 143.8/96.5'] },
+          { label: '受診', cells: ['胸の痛みと頭痛。160/109。「痛かったらすぐ救急車」'] },
         ]}
       />
     </HookSlide>
@@ -99,7 +100,7 @@ function ConfessionSlide({ frame }: SlideRenderContext) {
 function TimelineSlide({ frame }: SlideRenderContext) {
   return (
     <Slide>
-      <SlideHeading frame={frame} kicker="何が起きたか" heading="楽しくて、止まれなかった" />
+      <SlideHeading frame={frame} kicker="何が起きたか" heading="効率は上がったが人間がついていけなかった" />
       <Timeline
         frame={frame}
         orientation="vertical"
@@ -181,6 +182,37 @@ function LoadChartSlide({ frame }: SlideRenderContext) {
         </div>
       </div>
       <p className="aow-foot">血圧は自宅の血圧計で朝4〜10時に測った値の週平均。11/17夕から服薬開始。冬は上がりやすいので、単純な因果ではない</p>
+    </Slide>
+  )
+}
+
+const ASSET_BASE = '/decks/ai-overwork-2026'
+
+// Monthly view of the blood pressure app, as captured on 2026-11-21.
+const BP_SHOTS = [
+  { src: 'bp-oct.webp', month: '10月', avg: '132/87', max: '151/93' },
+  { src: 'bp-nov.webp', month: '11月（21日まで）', avg: '141/92', max: '157/96' },
+]
+
+function BpAppSlide({ frame }: SlideRenderContext) {
+  const styles = useStagger(frame, BP_SHOTS.length)
+  return (
+    <Slide>
+      <SlideHeading frame={frame} kicker="血圧計アプリの記録" heading="線がまるごと上がった" />
+      <div className="aow-shots">
+        {BP_SHOTS.map((shot, i) => (
+          <figure className="aow-shot" key={shot.src} style={styles[i]}>
+            <figcaption>
+              <strong>{shot.month}</strong>
+              <span>
+                平均 <b className={i === 1 ? 'aow-hot-text' : undefined}>{shot.avg}</b> ／ 最高 {shot.max}
+              </span>
+            </figcaption>
+            <img src={`${ASSET_BASE}/${shot.src}`} alt={`血圧計アプリの${shot.month}の月表示。平均${shot.avg}`} />
+          </figure>
+        ))}
+      </div>
+      <p className="aow-foot">自宅の血圧計アプリの月表示。11/17夕から降圧薬を服用</p>
     </Slide>
   )
 }
