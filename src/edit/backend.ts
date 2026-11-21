@@ -88,6 +88,27 @@ async function postJson<T>(url: string, body: unknown, headers: Record<string, s
   return result as T
 }
 
+/** What `vite-plugins/deck-git.mjs` reports after publishing a save. */
+type Published = {
+  branch: string
+  commit?: string
+  pushed: boolean
+  pullRequest?: { number: number; url: string }
+  autoMerge?: boolean
+}
+
+function describePublished(verb: string, published: Published) {
+  const { pullRequest } = published
+  if (pullRequest) {
+    // A save on main goes out through its own pull request (main takes no direct push).
+    return published.autoMerge
+      ? `${verb}: PR #${pullRequest.number} を自動マージ待ち（チェック通過後、数分で本番に反映）`
+      : `${verb}: PR #${pullRequest.number} を作成しました。自動マージを設定できなかったので手動でマージしてください ${pullRequest.url}`
+  }
+  const deploying = published.branch === 'main' ? '（1〜2分で本番に反映）' : ''
+  return `${verb}: ${published.branch} ${published.commit}${deploying}`
+}
+
 type DevCandidate = {
   slug: string
   source: 'tsx' | 'yaml'
@@ -136,7 +157,7 @@ function devBackend(): EditorBackend {
     async save(candidates, { text, publish, remove, duplicate }) {
       const result = await postJson<{
         files: string[]
-        published?: { branch: string; commit?: string; pushed: boolean }
+        published?: Published
         publishError?: string
       }>(
         '/__deck-text/patch',
@@ -162,11 +183,7 @@ function devBackend(): EditorBackend {
         return { tone: 'error', message: `保存はできましたが公開に失敗しました: ${result.publishError}` }
       }
       if (result.published?.pushed) {
-        const deploying = result.published.branch === 'main' ? '（1〜2分で本番に反映）' : ''
-        return {
-          tone: 'info',
-          message: `公開しました: ${result.published.branch} ${result.published.commit}${deploying}`
-        }
+        return { tone: 'info', message: describePublished('公開しました', result.published) }
       }
       return {
         tone: 'info',
@@ -184,7 +201,7 @@ function devBackend(): EditorBackend {
     async editSlide(slug, id, action, { offset, publish }) {
       const result = await postJson<{
         files: string[]
-        published?: { branch: string; commit?: string; pushed: boolean }
+        published?: Published
         publishError?: string
       }>('/__deck-text/slide', { slug, id, action, offset, publish }, headers)
 
@@ -192,11 +209,7 @@ function devBackend(): EditorBackend {
         return { tone: 'error', message: `保存はできましたが公開に失敗しました: ${result.publishError}` }
       }
       if (result.published?.pushed) {
-        const deploying = result.published.branch === 'main' ? '（1〜2分で本番に反映）' : ''
-        return {
-          tone: 'info',
-          message: `${slideVerb(action)}しました: ${result.published.branch} ${result.published.commit}${deploying}`
-        }
+        return { tone: 'info', message: describePublished(`${slideVerb(action)}しました`, result.published) }
       }
       return { tone: 'info', message: `${slideVerb(action)}しました: ${result.files.join(', ')}` }
     },
@@ -210,7 +223,7 @@ function devBackend(): EditorBackend {
           file: string
           changed: boolean
           hash: string
-          published?: { branch: string; commit?: string; pushed: boolean }
+          published?: Published
           publishError?: string
         }>('/__deck-text/source-save', { slug, name: file.name, text, hash: file.hash, publish }, headers)
 
@@ -224,13 +237,9 @@ function devBackend(): EditorBackend {
           return { hash: result.hash, outcome: { tone: 'info', message: '変更はありませんでした' } }
         }
         if (result.published?.pushed) {
-          const deploying = result.published.branch === 'main' ? '（1〜2分で本番に反映）' : ''
           return {
             hash: result.hash,
-            outcome: {
-              tone: 'info',
-              message: `公開しました: ${result.published.branch} ${result.published.commit}${deploying}`
-            }
+            outcome: { tone: 'info', message: describePublished('公開しました', result.published) }
           }
         }
         return { hash: result.hash, outcome: { tone: 'info', message: `保存しました: ${result.file}` } }
