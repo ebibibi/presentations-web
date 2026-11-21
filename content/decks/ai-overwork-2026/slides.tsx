@@ -66,8 +66,8 @@ function OpeningSlide({ frame }: SlideRenderContext) {
         columns={[{ label: '何が起きたか', accent: true }]}
         rows={[
           { label: '指示', cells: ['多い週で690件。そのうち夜9時〜朝5時が185件'] },
-          { label: '朝の血圧', cells: ['10月前半 131〜135/88 → 143.8/96.5'] },
-          { label: '受診', cells: ['胸の痛みと頭痛。「痛かったらすぐ救急車」'] },
+          { label: '朝の血圧の平均', cells: ['10月前半 131〜135/88 → 143.8/96.5'] },
+          { label: '受診', cells: ['胸の痛みと頭痛。160/109。「痛かったらすぐ救急車」'] },
         ]}
       />
     </HookSlide>
