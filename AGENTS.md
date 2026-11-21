@@ -24,7 +24,10 @@ This repository is intended to be public. Use English for code comments, README 
   Function, so ranges come from the build-time index (`scripts/build-text-index.mjs`)
   and are re-verified with `resolveRange`; encoding lives in `shared/deck-text-rewrite.mjs`
   and must stay dependency free.
-- Saving from the editor commits and pushes by default (`vite-plugins/deck-git.mjs`).
+- Saving from the editor commits and publishes by default (`vite-plugins/deck-git.mjs`).
+  `main` takes no direct push (ruleset: PR closing an issue), so a save on `main`
+  goes out through its own branch + issue + PR with auto-merge; keep it that way
+  and keep `npm run test:deck-git` passing.
   Keep git calls path-scoped to the files a save wrote: the checkout may hold
   unrelated work.
 - The extractor and rewriter are `scripts/deck-text-core.mjs`; changes there must keep

@@ -131,15 +131,25 @@ downloaded by a visitor):
 | `GITHUB_REPO` | `ebibibi/presentations-web` |
 | `GITHUB_TOKEN` | fine-grained token, **Contents: Read and write** on this repository only, stored as a secret |
 
-**Saving publishes.** By default a save also commits the touched files and pushes
-the current branch, so a fix from a phone is live without going back to a
-terminal — on `main` that means a production deploy about a minute later. The
-commit is restricted to the files the save wrote (`git commit -- <paths>`), so
-unrelated work in the checkout is never swept in. Uncheck "保存したら公開" in the
-editor to keep saves local; the choice is remembered. If the push is rejected
+**Saving publishes.** By default a save also commits the touched files and
+publishes them, so a fix from a phone is live without going back to a terminal.
+The commit is restricted to the files the save wrote (`git commit -- <paths>`),
+so unrelated work in the checkout is never swept in. Uncheck "保存したら公開" in
+the editor to keep saves local; the choice is remembered.
+
+`main` only accepts pull requests that close an issue (repository ruleset), so a
+save on `main` is never pushed to it directly. Instead the commit is pushed to a
+new `deck-editor/<timestamp>-<sha>` branch, and the editor opens an issue and a
+pull request (`Closes #n`) with `gh` and turns on auto-merge with a merge commit;
+production deploys a few minutes later, once the checks pass. The checkout stays
+on `main`, and because the PR is merged with a merge commit, a later `git pull`
+fast-forwards over the local commit. This needs `gh` signed in for the user the
+dev server runs as.
+
+On any other branch the save is pushed as before. If that push is rejected
 because the remote moved, the editor rebases and retries when the checkout is
-otherwise clean, and otherwise says so — the copy is already saved and committed
-locally either way.
+otherwise clean; a rejection by a repository rule is reported as such (pulling
+would not help). The copy is already saved and committed locally either way.
 
 **From a phone.** `npm run dev` already listens on `0.0.0.0`, so open
 `http://moviegen:5173/decks/<slug>` from a device on the same network or over
@@ -202,7 +212,7 @@ npm run check:text-edit-delete
 
 ## Deployment
 
-GitHub Actions runs lint and build for pull requests and pushes to `main`.
+GitHub Actions runs lint, unit tests (`npm test`) and build for pull requests and pushes to `main`.
 
 Required repository secrets:
 
